@@ -43,8 +43,8 @@ READY = {1, 2, 3, 4}
 LECTURES = {
     1: dict(
         deck=None,   # later: ("beamer", "Lecture_1/beamer/main.tex")
-        title="The Second Quantum Revolution and Course Organisation",
-        summary="The second quantum revolution: generating, storing, manipulating and detecting many-body entanglement, and machine learning for quantum technologies, from the variational quantum eigensolver and the optimisation of quantum circuits to quantum state tomography, error correction and error mitigation with neural networks. The organisation of the course: five blocks, from the fundamentals of deep learning to explainability and uncertainty, on-site lectures and hands-on workshops with computer labs in Google Colab, an assignment (a problem solution with a report) and an oral exam, followed by the literature on machine learning for physics and for science.",
+        title="The Second Quantum Revolution",
+        summary="The second quantum revolution: generating, storing, manipulating and detecting many-body entanglement, and machine learning for quantum technologies, from the variational quantum eigensolver and the optimisation of quantum circuits to quantum state tomography, error correction and error mitigation with neural networks. The lecture closes with the literature on machine learning for physics and for science.",
         table_note="",
         notebooks=[],
     ),

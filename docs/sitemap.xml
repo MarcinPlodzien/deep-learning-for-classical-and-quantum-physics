@@ -2,74 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/about.html</loc>
-    <lastmod>2026-10-15T11:29:30.976Z</lastmod>
+    <lastmod>2026-10-15T11:50:25.171Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/index.html</loc>
-    <lastmod>2026-10-15T11:29:31.557Z</lastmod>
+    <lastmod>2026-10-15T11:50:25.715Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/lectures/lecture-01.html</loc>
-    <lastmod>2026-10-15T11:29:32.006Z</lastmod>
+    <lastmod>2026-10-15T11:50:26.212Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/lectures/lecture-02.html</loc>
-    <lastmod>2026-10-15T11:29:32.489Z</lastmod>
+    <lastmod>2026-10-15T11:50:26.684Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/lectures/lecture-03.html</loc>
-    <lastmod>2026-10-15T11:29:33.244Z</lastmod>
+    <lastmod>2026-10-15T11:50:27.195Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/lectures/lecture-04.html</loc>
-    <lastmod>2026-10-15T11:29:33.772Z</lastmod>
+    <lastmod>2026-10-15T11:50:27.705Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-02/lab-001-python-matplotlib-pandas.html</loc>
-    <lastmod>2026-10-15T11:29:36.754Z</lastmod>
+    <lastmod>2026-10-15T11:50:30.386Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-02/lab-002-numpy.html</loc>
-    <lastmod>2026-10-15T11:29:38.398Z</lastmod>
+    <lastmod>2026-10-15T11:50:31.614Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-02/lab-003-pytorch.html</loc>
-    <lastmod>2026-10-15T11:29:41.388Z</lastmod>
+    <lastmod>2026-10-15T11:50:33.588Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-03/lab-004-automatic-differentiation.html</loc>
-    <lastmod>2026-10-15T11:29:44.082Z</lastmod>
+    <lastmod>2026-10-15T11:50:35.276Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-03/lab-005-n-pendulum.html</loc>
-    <lastmod>2026-10-15T11:29:48.064Z</lastmod>
+    <lastmod>2026-10-15T11:50:38.661Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-03/lab-006-uat-and-minimisers.html</loc>
-    <lastmod>2026-10-15T11:29:50.195Z</lastmod>
+    <lastmod>2026-10-15T11:50:40.897Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-03/lab-007-building-and-training.html</loc>
-    <lastmod>2026-10-15T11:29:53.108Z</lastmod>
+    <lastmod>2026-10-15T11:50:43.682Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-03/lab-008-analysing-networks.html</loc>
-    <lastmod>2026-10-15T11:29:54.904Z</lastmod>
+    <lastmod>2026-10-15T11:50:45.704Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-03/lab-009-mnist.html</loc>
-    <lastmod>2026-10-15T11:29:57.191Z</lastmod>
+    <lastmod>2026-10-15T11:50:47.848Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-04/lab-010-ising-monte-carlo.html</loc>
-    <lastmod>2026-10-15T11:29:58.336Z</lastmod>
+    <lastmod>2026-10-15T11:50:49.048Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-04/lab-011-cnn-tc.html</loc>
-    <lastmod>2026-10-15T11:29:59.518Z</lastmod>
+    <lastmod>2026-10-15T11:50:50.122Z</lastmod>
   </url>
   <url>
     <loc>https://marcinplodzien.github.io/deep-learning-for-classical-and-quantum-physics/notebooks/lecture-04/lab-012-onsager.html</loc>
-    <lastmod>2026-10-15T11:30:00.870Z</lastmod>
+    <lastmod>2026-10-15T11:50:51.322Z</lastmod>
   </url>
 </urlset>

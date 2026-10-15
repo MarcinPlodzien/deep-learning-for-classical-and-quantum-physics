@@ -6,7 +6,7 @@ website:
         href: index.qmd
       - text: "Lectures"
         menu:
-          - text: "1 · The Second Quantum Revolution and Course Organisation"
+          - text: "1 · The Second Quantum Revolution"
             href: lectures/lecture-01.qmd
           - text: "2 · From Artificial Intelligence to Deep Learning"
             href: lectures/lecture-02.qmd
@@ -20,7 +20,7 @@ website:
     contents:
       - text: "Start here"
         href: index.qmd
-      - section: "1 · The Second Quantum Revolution and Course Organisation"
+      - section: "1 · The Second Quantum Revolution"
         href: lectures/lecture-01.qmd
       - section: "2 · From Artificial Intelligence to Deep Learning"
         href: lectures/lecture-02.qmd

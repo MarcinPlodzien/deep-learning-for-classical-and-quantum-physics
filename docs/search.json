@@ -25,14 +25,14 @@
     "href": "index.html#the-course",
     "title": "Deep Learning in Classical and Quantum Physics",
     "section": "The course",
-    "text": "The course\nThe course consists of on-site lectures and hands-on workshops with computer labs in Google Colab; it is assessed by an assignment, a problem solution with a report, and an oral exam: the defence of the report and two questions. Each lecture comes with its slides and with Jupyter notebooks, shown with their stored outputs; each notebook page has an Open in Colab button."
+    "text": "The course\nThe course consists of lectures and hands-on workshops with computer labs. The lectures come with slides and Jupyter notebooks, shown with their stored outputs; each notebook page has an Open in Colab button."
   },
   {
     "objectID": "index.html#lectures",
     "href": "index.html#lectures",
     "title": "Deep Learning in Classical and Quantum Physics",
     "section": "Lectures",
-    "text": "Lectures\n\n\n\n\nLecture\nNotebooks\n\n\n\n\n1\nThe Second Quantum Revolution and Course Organisation\n\n\n\n2\nFrom Artificial Intelligence to Deep Learning\nLabs 001–003: Python, NumPy, PyTorch\n\n\n3\nElements of Deep Learning: from MNIST to the 2D Ising Model\nLabs 004–009: automatic differentiation, universal approximation, training, MNIST\n\n\n4\nCNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model\nLabs 010–012: Ising Monte Carlo, \\(T_c\\) from the confidence of a CNN, Onsager’s solution"
+    "text": "Lectures\n\n\n\n\nLecture\nNotebooks\n\n\n\n\n1\nThe Second Quantum Revolution\n\n\n\n2\nFrom Artificial Intelligence to Deep Learning\nLabs 001–003: Python, NumPy, PyTorch\n\n\n3\nElements of Deep Learning: from MNIST to the 2D Ising Model\nLabs 004–009: automatic differentiation, universal approximation, training, MNIST\n\n\n4\nCNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model\nLabs 010–012: Ising Monte Carlo, \\(T_c\\) from the confidence of a CNN, Onsager’s solution"
   },
   {
     "objectID": "index.html#main-reading",
@@ -44,9 +44,9 @@
   {
     "objectID": "lectures/lecture-01.html",
     "href": "lectures/lecture-01.html",
-    "title": "1 · The Second Quantum Revolution and Course Organisation",
+    "title": "1 · The Second Quantum Revolution",
     "section": "",
-    "text": "The second quantum revolution: generating, storing, manipulating and detecting many-body entanglement, and machine learning for quantum technologies, from the variational quantum eigensolver and the optimisation of quantum circuits to quantum state tomography, error correction and error mitigation with neural networks. The organisation of the course: five blocks, from the fundamentals of deep learning to explainability and uncertainty, on-site lectures and hands-on workshops with computer labs in Google Colab, an assignment (a problem solution with a report) and an oral exam, followed by the literature on machine learning for physics and for science."
+    "text": "The second quantum revolution: generating, storing, manipulating and detecting many-body entanglement, and machine learning for quantum technologies, from the variational quantum eigensolver and the optimisation of quantum circuits to quantum state tomography, error correction and error mitigation with neural networks. The lecture closes with the literature on machine learning for physics and for science."
   },
   {
     "objectID": "lectures/lecture-02.html",

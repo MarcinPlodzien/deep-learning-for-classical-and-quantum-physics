@@ -25,7 +25,7 @@ code-fold: false
 
 ## The course
 
-The course consists of on-site lectures and hands-on workshops with computer labs in Google Colab; it is assessed by an assignment, a problem solution with a report, and an oral exam: the defence of the report and two questions. Each lecture comes with its slides and with Jupyter notebooks, shown with their stored outputs; each notebook page has an *Open in Colab* button.
+The course consists of lectures and hands-on workshops with computer labs. The lectures come with slides and Jupyter notebooks, shown with their stored outputs; each notebook page has an *Open in Colab* button.
 
 ## Lectures {#lectures}
 
