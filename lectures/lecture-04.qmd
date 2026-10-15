@@ -4,7 +4,7 @@ code-tools: false
 toc: false
 ---
 
-CIFAR-10 with dense and convolutional networks: convolution, continuous and discrete, kernels and Sobel filters, stride, padding, channels and pooling, and regularisation with L1/L2 penalties, dropout and batch normalisation. Class activation maps and Grad-CAM show where a CNN looks; adversarial examples, from the fast gradient sign method to the one-pixel attack, show where it fails; the optimisers from stochastic gradient descent to Adam, under the hood. The 2D Ising model: the partition function, the 1D chain and Onsager's solution in 2D, criticality, Metropolis sampling of spin configurations, and a CNN trained far from the transition whose prediction confidence drops at the critical temperature.
+CIFAR-10 with dense and convolutional networks: convolution, kernels and Sobel filters, stride, padding, channels and pooling, and regularisation with L1/L2 penalties, dropout and batch normalisation. Class activation maps and Grad-CAM show where a CNN looks; adversarial examples show where it fails; the optimisers from stochastic gradient descent to Adam. The 2D Ising model: the partition function, the 1D chain and Onsager's solution in 2D, criticality, Metropolis sampling, and a CNN trained far from the transition whose prediction confidence drops at the critical temperature, for lattice sizes 10 to 50. The lecture closes with the Chinese Room thought experiment.
 
 ## Slides
 
@@ -29,5 +29,11 @@ A CNN trained only far from the transition, its confidence at all temperatures, 
 ::: {.nb-item}
 [Lab 012: Onsager's exact solution of the 2D Ising model](../notebooks/lecture-04/lab-012-onsager.ipynb)
 
-The transfer matrix, the high- and low-temperature expansions and Kramers–Wannier duality, each checked by a computation.
+The transfer matrix, the high- and low-temperature expansions, Kramers–Wannier duality and an outline of the free-fermion solution, each checked by a computation.
+:::
+
+::: {.nb-item}
+[The 2D Ising model in JAX: Monte Carlo data, exact results and $T_c$ from a CNN](../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.ipynb)
+
+The figures of the lecture: data sets for L = 10 to 50 and the CNN estimate of T_c for each size.
 :::

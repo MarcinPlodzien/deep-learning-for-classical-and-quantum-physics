@@ -1,0 +1,63 @@
+---
+title: "5 · Unsupervised Learning and Phase Diagrams without Labels"
+code-tools: false
+toc: false
+---
+
+Learning without labels: principal component analysis, t-SNE, k-means and DBSCAN clustering, and autoencoders whose reconstruction error detects anomalies. Anomaly detection for phase diagrams. The 2D Ising model: finite-size scaling, Swendsen–Wang cluster updates, the first principal component as the magnetisation, and autoencoders whose signal sharpens towards T_c with the lattice size, depending on the training region. The frustrated J1–J2 model: ground states, frustration and mean field, PCA finding both order parameters, and the phase diagram recovered by autoencoders trained on three corners, from a coarse scan.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-05.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-05.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 016: PCA, t-SNE and clustering in JAX](../notebooks/lecture-05/lab-016-pca-tsne-clustering.ipynb)
+
+Low-dimensional maps of MNIST and groups of samples found without labels.
+:::
+
+::: {.nb-item}
+[Lab 017: Autoencoders and anomaly detection](../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.ipynb)
+
+Images compressed through a narrow latent layer, and anomalies found from the reconstruction error.
+:::
+
+::: {.nb-item}
+[Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model](../notebooks/lecture-05/lab-018-spin-models-monte-carlo.ipynb)
+
+Metropolis and Swendsen–Wang samples of the 2D Ising model and of the frustrated J1–J2 model.
+:::
+
+::: {.nb-item}
+[Lab 019: The 2D Ising transition without labels](../notebooks/lecture-05/lab-019-ising-without-labels.ipynb)
+
+PCA, autoencoders and finite-size scaling.
+:::
+
+::: {.nb-item}
+[Lab 020: The J1–J2 phase diagram without labels](../notebooks/lecture-05/lab-020-j1j2-without-labels.ipynb)
+
+PCA and autoencoders trained on one corner of the phase diagram.
+:::
+
+::: {.nb-item}
+[Lab 029: Physics of the frustrated J1–J2 Ising model](../notebooks/lecture-05/lab-029-physics-j1j2.ipynb)
+
+Ground states, domain walls, exact limits, mean field, transfer matrices and Binder cumulants.
+:::
+
+::: {.nb-item}
+[Lab 031: Physics of the Ising lattice gauge theory](../notebooks/lecture-05/lab-031-physics-ising-gauge.ipynb)
+
+Gauge symmetry, Elitzur's theorem, the exact 2D solution, Wegner duality and Wilson loops.
+:::
+
+::: {.nb-item}
+[Lab 032: Physics of the Sherrington–Kirkpatrick spin glass](../notebooks/lecture-05/lab-032-physics-sk-spin-glass.ipynb)
+
+Frustration, replicas and overlaps, parallel tempering, the energy landscape and the Mattis model.
+:::

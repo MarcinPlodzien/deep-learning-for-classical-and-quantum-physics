@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Lab 003a: Working with trained networks in PyTorch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" rel="next">
+<link href="../../notebooks/lecture-01/lab-003c-jax.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational and Conditional Autoencoders</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lab 003a: Working with trained networks in PyTorch</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link active">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational and Conditional Autoencoders</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
+  <li><a href="#lab-003a-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-pytorch" id="toc-lab-003a-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-pytorch" class="nav-link" data-scroll-target="#lab-003a-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-pytorch">Lab 003a — Working with trained networks: saving, inspecting, modifying and fine-tuning (PyTorch)</a>
+  <ul class="collapse">
+  <li><a href="#train-once-and-save" id="toc-train-once-and-save" class="nav-link" data-scroll-target="#train-once-and-save">1. Train once and save</a>
+  <ul class="collapse">
+  <li><a href="#the-data-two-tasks-from-one-data-set" id="toc-the-data-two-tasks-from-one-data-set" class="nav-link" data-scroll-target="#the-data-two-tasks-from-one-data-set">1.1 The data: two tasks from one data set</a></li>
+  <li><a href="#the-architecture-a-convolutional-body-and-a-dense-head" id="toc-the-architecture-a-convolutional-body-and-a-dense-head" class="nav-link" data-scroll-target="#the-architecture-a-convolutional-body-and-a-dense-head">1.2 The architecture: a convolutional body and a dense head</a></li>
+  <li><a href="#training-on-the-source-task" id="toc-training-on-the-source-task" class="nav-link" data-scroll-target="#training-on-the-source-task">1.3 Training on the source task</a></li>
+  <li><a href="#saving-and-loading-the-parameters" id="toc-saving-and-loading-the-parameters" class="nav-link" data-scroll-target="#saving-and-loading-the-parameters">1.4 Saving and loading the parameters</a></li>
+  </ul></li>
+  <li><a href="#inspect" id="toc-inspect" class="nav-link" data-scroll-target="#inspect">2. Inspect</a>
+  <ul class="collapse">
+  <li><a href="#layers-parameter-shapes-and-counts" id="toc-layers-parameter-shapes-and-counts" class="nav-link" data-scroll-target="#layers-parameter-shapes-and-counts">2.1 Layers, parameter shapes and counts</a></li>
+  <li><a href="#access-to-a-single-layer" id="toc-access-to-a-single-layer" class="nav-link" data-scroll-target="#access-to-a-single-layer">2.2 Access to a single layer</a></li>
+  <li><a href="#trainable-and-frozen-parameters" id="toc-trainable-and-frozen-parameters" class="nav-link" data-scroll-target="#trainable-and-frozen-parameters">2.3 Trainable and frozen parameters</a></li>
+  </ul></li>
+  <li><a href="#look-inside" id="toc-look-inside" class="nav-link" data-scroll-target="#look-inside">3. Look inside</a>
+  <ul class="collapse">
+  <li><a href="#first-layer-kernels" id="toc-first-layer-kernels" class="nav-link" data-scroll-target="#first-layer-kernels">3.1 First-layer kernels</a></li>
+  <li><a href="#feature-maps-with-forward-hooks" id="toc-feature-maps-with-forward-hooks" class="nav-link" data-scroll-target="#feature-maps-with-forward-hooks">3.2 Feature maps with forward hooks</a></li>
+  </ul></li>
+  <li><a href="#model-surgery" id="toc-model-surgery" class="nav-link" data-scroll-target="#model-surgery">4. Model surgery</a>
+  <ul class="collapse">
+  <li><a href="#cutting-the-network-a-feature-extractor" id="toc-cutting-the-network-a-feature-extractor" class="nav-link" data-scroll-target="#cutting-the-network-a-feature-extractor">4.1 Cutting the network: a feature extractor</a></li>
+  <li><a href="#trained-body-new-head" id="toc-trained-body-new-head" class="nav-link" data-scroll-target="#trained-body-new-head">4.2 Trained body, new head</a></li>
+  <li><a href="#inserting-a-layer" id="toc-inserting-a-layer" class="nav-link" data-scroll-target="#inserting-a-layer">4.3 Inserting a layer</a></li>
+  <li><a href="#replacing-a-layer" id="toc-replacing-a-layer" class="nav-link" data-scroll-target="#replacing-a-layer">4.4 Replacing a layer</a></li>
+  </ul></li>
+  <li><a href="#freezing-and-transfer-learning" id="toc-freezing-and-transfer-learning" class="nav-link" data-scroll-target="#freezing-and-transfer-learning">5. Freezing and transfer learning</a>
+  <ul class="collapse">
+  <li><a href="#the-target-task-with-few-labels" id="toc-the-target-task-with-few-labels" class="nav-link" data-scroll-target="#the-target-task-with-few-labels">5.1 The target task with few labels</a></li>
+  <li><a href="#a-random-initialisation" id="toc-a-random-initialisation" class="nav-link" data-scroll-target="#a-random-initialisation">5.2 (a) Random initialisation</a></li>
+  <li><a href="#b-frozen-body-new-head" id="toc-b-frozen-body-new-head" class="nav-link" data-scroll-target="#b-frozen-body-new-head">5.3 (b) Frozen body, new head</a></li>
+  <li><a href="#c-fine-tuning-everything-with-a-smaller-learning-rate" id="toc-c-fine-tuning-everything-with-a-smaller-learning-rate" class="nav-link" data-scroll-target="#c-fine-tuning-everything-with-a-smaller-learning-rate">5.4 (c) Fine-tuning everything with a smaller learning rate</a></li>
+  <li><a href="#accuracy-vs-number-of-labelled-images" id="toc-accuracy-vs-number-of-labelled-images" class="nav-link" data-scroll-target="#accuracy-vs-number-of-labelled-images">5.5 Accuracy vs number of labelled images</a></li>
+  </ul></li>
+  <li><a href="#cheat-sheet-pytorch-and-jaxflax-nnx" id="toc-cheat-sheet-pytorch-and-jaxflax-nnx" class="nav-link" data-scroll-target="#cheat-sheet-pytorch-and-jaxflax-nnx">6. Cheat sheet: PyTorch and JAX/Flax NNX</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-01/lab-003a-trained-networks-pytorch.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Lab 003a: Working with trained networks in PyTorch</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-01/lab-003a-trained-networks-pytorch.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<hr>
+<section id="deep-learning-in-classical-and-quantum-physics" class="level1">
+<h1>Deep Learning in Classical and Quantum Physics</h1>
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 003a
+<hr>
+</section>
+<section id="lab-003a-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-pytorch" class="level1">
+<h1>Lab 003a — Working with trained networks: saving, inspecting, modifying and fine-tuning (PyTorch)</h1>
+<p>Training a network is rarely the last step. A trained network is a set of arrays (the parameters) together with a description of the computation (the architecture), and most of the daily work consists of doing things <em>with</em> it: storing it, reloading it, looking at what it has learned, cutting it into pieces, adding layers, and re-using it for a new problem. This lab is the toolbox for these operations.</p>
+<p>We train one small <strong>convolutional neural network (CNN)</strong> on the handwritten digits 0–4 of MNIST and then use it in every section:</p>
+<ol type="1">
+<li><strong>Train once and save.</strong> Train the CNN, write its parameters to disk, load them into a fresh model, and check that the predictions are identical.</li>
+<li><strong>Inspect.</strong> Layers, parameter shapes and counts, access to single weights, trainable vs frozen parameters.</li>
+<li><strong>Look inside.</strong> First-layer kernels as images, and the feature maps of one digit after each convolutional layer (forward hooks).</li>
+<li><strong>Model surgery.</strong> Cut the network into a feature extractor, attach a new head, insert a layer, replace a layer.</li>
+<li><strong>Freezing and transfer learning.</strong> A new task, the digits 5–9, with few labelled images: (a) random initialisation, (b) the trained body frozen and only a new head trained, (c) fine-tuning of all parameters after (b).</li>
+<li><strong>Cheat sheet.</strong> Every operation of this lab in PyTorch and in JAX/Flax side by side.</li>
+</ol>
+<p>The twin notebook <strong>Lab 003b</strong> does exactly the same in JAX with Flax NNX and optax: same data, same architecture, same sections, same printed quantities. The two can be read side by side.</p>
+<p>Abbreviations used below: CNN (convolutional neural network), ReLU (rectified linear unit, <span class="math inline">\(\mathrm{ReLU}(z)=\max(0,z)\)</span>), Adam (adaptive moment estimation, the optimiser), CPU / GPU (central / graphics processing unit).</p>
+<blockquote class="blockquote">
+<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em>. The notebook runs on the <strong>CPU</strong> (the first code cell hides all GPUs); the model and the data sets are small enough to finish in a few minutes. 2. <code>numpy</code>, <code>matplotlib</code> and <code>torch</code> are pre-installed in Colab. 3. The data are read from <code>data/MNIST_raw/</code> (the four <code>*-ubyte.gz</code> files). If they are missing, the notebook downloads them. 4. Run the cells <em>in order</em>: later cells use variables defined earlier. If the state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
+</blockquote>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"CUDA_VISIBLE_DEVICES"</span>] <span class="op">=</span> <span class="st">""</span>     <span class="co"># hide all GPUs: everything runs on the CPU (set before importing torch)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"JAX_PLATFORMS"</span>] <span class="op">=</span> <span class="st">"cpu"</span>         <span class="co"># the same choice for JAX, in case it is imported in this session</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> copy, gzip, time, urllib.request</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> OrderedDict</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>UJBlue, UJNavy, DSOrange, UJGray <span class="op">=</span> <span class="st">"#005CA7"</span>, <span class="st">"#002B5C"</span>, <span class="st">"#D35A05"</span>, <span class="st">"#5A6270"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"figure.dpi"</span>: <span class="dv">110</span>, <span class="st">"axes.spines.top"</span>: <span class="va">False</span>, <span class="st">"axes.spines.right"</span>: <span class="va">False</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"axes.titlesize"</span>: <span class="dv">11</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">10</span>, <span class="st">"legend.frameon"</span>: <span class="va">False</span>})</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> noframe(ax):                            <span class="co"># image panels: no ticks, no frame</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks([])<span class="op">;</span> ax.set_yticks([])</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> sp <span class="kw">in</span> ax.spines.values(): sp.set_visible(<span class="va">False</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>torch.set_num_threads(<span class="bu">min</span>(<span class="dv">4</span>, os.cpu_count()))   <span class="co"># small convolutions: more threads add more synchronisation than speed</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>t_start <span class="op">=</span> time.time()</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"PyTorch"</span>, torch.__version__, <span class="st">"| CPU threads used:"</span>, torch.get_num_threads(), <span class="st">"| GPU visible:"</span>, torch.cuda.is_available())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>PyTorch 2.9.0+cpu | CPU threads used: 4 | GPU visible: False</code></pre>
+</div>
+</div>
+<hr>
+<section id="train-once-and-save" class="level2">
+<h2 class="anchored" data-anchor-id="train-once-and-save">1. Train once and save</h2>
+<section id="the-data-two-tasks-from-one-data-set" class="level3">
+<h3 class="anchored" data-anchor-id="the-data-two-tasks-from-one-data-set">1.1 The data: two tasks from one data set</h3>
+<p>MNIST contains <span class="math inline">\(28\times28\)</span> grayscale images of handwritten digits, <span class="math inline">\(60\,000\)</span> for training and <span class="math inline">\(10\,000\)</span> for testing. We split it into two tasks:</p>
+<ul>
+<li><strong>source task</strong>: digits 0–4, all training images of these digits. The CNN is trained on it in this section;</li>
+<li><strong>target task</strong>: digits 5–9, used in Section 5. Their labels are shifted, <span class="math inline">\(5\to0,\dots,9\to4\)</span>, so both tasks have 5 classes.</li>
+</ul>
+<p>The files are in the raw IDX format: a short big-endian header (a magic number, then the sizes), followed by one byte per pixel; we read them with <code>gzip</code> and <code>numpy</code>. Pixels are scaled to <span class="math inline">\([0,1]\)</span>.</p>
+<p><strong>Layout of image tensors.</strong> PyTorch convolutions expect <code>(N, C, H, W)</code>: batch size, channels, height, width. Our images are therefore stored as <code>(N, 1, 28, 28)</code>. (JAX/Flax uses <code>(N, H, W, C)</code>, see Lab 003b.)</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>MNIST_DIR <span class="op">=</span> <span class="st">"data/MNIST_raw"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>MNIST_FILES <span class="op">=</span> [<span class="st">"train-images-idx3-ubyte.gz"</span>, <span class="st">"train-labels-idx1-ubyte.gz"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"t10k-images-idx3-ubyte.gz"</span>, <span class="st">"t10k-labels-idx1-ubyte.gz"</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> <span class="bu">all</span>(os.path.exists(<span class="ss">f"</span><span class="sc">{</span>MNIST_DIR<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>f<span class="sc">}</span><span class="ss">"</span>) <span class="cf">for</span> f <span class="kw">in</span> MNIST_FILES):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    os.makedirs(MNIST_DIR, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> f <span class="kw">in</span> MNIST_FILES:</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        urllib.request.urlretrieve(<span class="ss">f"https://storage.googleapis.com/cvdf-datasets/mnist/</span><span class="sc">{</span>f<span class="sc">}</span><span class="ss">"</span>, <span class="ss">f"</span><span class="sc">{</span>MNIST_DIR<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>f<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_idx(path):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> gzip.<span class="bu">open</span>(path, <span class="st">"rb"</span>) <span class="im">as</span> fh:</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> fh.read()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    ndim <span class="op">=</span> data[<span class="dv">3</span>]                                                  <span class="co"># 3 for images, 1 for labels</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    shape <span class="op">=</span> np.frombuffer(data[<span class="dv">4</span>:<span class="dv">4</span> <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> ndim], dtype<span class="op">=</span><span class="st">"&gt;i4"</span>)        <span class="co"># big-endian int32 sizes</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.frombuffer(data[<span class="dv">4</span> <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> ndim:], dtype<span class="op">=</span>np.uint8).reshape(shape)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>Xtr_all <span class="op">=</span> read_idx(<span class="ss">f"</span><span class="sc">{</span>MNIST_DIR<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>MNIST_FILES[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>).astype(np.float32) <span class="op">/</span> <span class="fl">255.0</span>   <span class="co"># (60000, 28, 28)</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>ytr_all <span class="op">=</span> read_idx(<span class="ss">f"</span><span class="sc">{</span>MNIST_DIR<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>MNIST_FILES[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>).astype(np.int64)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>Xte_all <span class="op">=</span> read_idx(<span class="ss">f"</span><span class="sc">{</span>MNIST_DIR<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>MNIST_FILES[<span class="dv">2</span>]<span class="sc">}</span><span class="ss">"</span>).astype(np.float32) <span class="op">/</span> <span class="fl">255.0</span>   <span class="co"># (10000, 28, 28)</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>yte_all <span class="op">=</span> read_idx(<span class="ss">f"</span><span class="sc">{</span>MNIST_DIR<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>MNIST_FILES[<span class="dv">3</span>]<span class="sc">}</span><span class="ss">"</span>).astype(np.int64)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> task(X, y, digits):</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># images of the given digits as (N, 1, 28, 28) float32 and labels shifted to 0 .. len(digits)-1</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    keep <span class="op">=</span> np.isin(y, digits)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.tensor(X[keep][:, <span class="va">None</span>, :, :]), torch.tensor(y[keep] <span class="op">-</span> digits[<span class="dv">0</span>])</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>Xs_tr, ys_tr <span class="op">=</span> task(Xtr_all, ytr_all, [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])     <span class="co"># source task: digits 0-4</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>Xs_te, ys_te <span class="op">=</span> task(Xte_all, yte_all, [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>Xt_pool, yt_pool <span class="op">=</span> task(Xtr_all, ytr_all, [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>]) <span class="co"># target task: labelled images are drawn from this pool in Section 5</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>Xt_te, yt_te <span class="op">=</span> task(Xte_all, yte_all, [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>])</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> Xs_tr.shape[<span class="dv">1</span>:] <span class="op">==</span> (<span class="dv">1</span>, <span class="dv">28</span>, <span class="dv">28</span>) <span class="kw">and</span> Xs_tr.dtype <span class="op">==</span> torch.float32</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"source task (digits 0-4): train"</span>, <span class="bu">tuple</span>(Xs_tr.shape), <span class="st">"| test"</span>, <span class="bu">tuple</span>(Xs_te.shape))</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"target task (digits 5-9): pool "</span>, <span class="bu">tuple</span>(Xt_pool.shape), <span class="st">"| test"</span>, <span class="bu">tuple</span>(Xt_te.shape))</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"pixel range:"</span>, Xs_tr.<span class="bu">min</span>().item(), <span class="st">"to"</span>, Xs_tr.<span class="bu">max</span>().item())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>source task (digits 0-4): train (30596, 1, 28, 28) | test (5139, 1, 28, 28)
+target task (digits 5-9): pool  (29404, 1, 28, 28) | test (4861, 1, 28, 28)
+pixel range: 0.0 to 1.0</code></pre>
+</div>
+</div>
+</section>
+<section id="the-architecture-a-convolutional-body-and-a-dense-head" class="level3">
+<h3 class="anchored" data-anchor-id="the-architecture-a-convolutional-body-and-a-dense-head">1.2 The architecture: a convolutional body and a dense head</h3>
+<p>The network (conv–pool–conv–pool–dense–output) is split into two named parts, because Sections 4 and 5 treat them separately:</p>
+<ul>
+<li>the <strong>body</strong> (the convolutional feature extractor) maps an image to a feature vector of <span class="math inline">\(32\cdot7\cdot7=1568\)</span> numbers, <span class="math display">\[
+(N,1,28,28)\xrightarrow{\text{conv }5\times5,\ 16}(N,16,28,28)\xrightarrow{\text{ReLU, max-pool }2}(N,16,14,14)\xrightarrow{\text{conv }3\times3,\ 32}(N,32,14,14)\xrightarrow{\text{ReLU, max-pool }2}(N,32,7,7)\xrightarrow{\text{flatten}}(N,1568);
+\]</span></li>
+<li>the <strong>head</strong> (the classifier) is a dense layer with ReLU and an output layer, <span class="math inline">\((N,1568)\xrightarrow{\text{fc, ReLU}}(N,64)\xrightarrow{\text{out}}(N,5)\)</span>, giving 5 logits (unnormalised log-probabilities of the classes).</li>
+</ul>
+<p><code>padding=2</code> for the <span class="math inline">\(5\times5\)</span> kernel and <code>padding=1</code> for the <span class="math inline">\(3\times3\)</span> kernel keep the height and width unchanged, so only the pooling layers halve them. Both parts are <code>nn.Sequential</code> containers built from an <code>OrderedDict</code>: every layer gets a readable name (<code>conv1</code>, <code>relu1</code>, …), which appears in the parameter names (<code>body.conv1.weight</code>) and lets us address single layers later.</p>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SmallCNN(nn.Module):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, n_classes<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.body <span class="op">=</span> nn.Sequential(OrderedDict([</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"conv1"</span>,   nn.Conv2d(<span class="dv">1</span>, <span class="dv">16</span>, kernel_size<span class="op">=</span><span class="dv">5</span>, padding<span class="op">=</span><span class="dv">2</span>)),    <span class="co"># (N,1,28,28)  -&gt; (N,16,28,28)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"relu1"</span>,   nn.ReLU()),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"pool1"</span>,   nn.MaxPool2d(<span class="dv">2</span>)),                               <span class="co"># -&gt; (N,16,14,14)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"conv2"</span>,   nn.Conv2d(<span class="dv">16</span>, <span class="dv">32</span>, kernel_size<span class="op">=</span><span class="dv">3</span>, padding<span class="op">=</span><span class="dv">1</span>)),   <span class="co"># -&gt; (N,32,14,14)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"relu2"</span>,   nn.ReLU()),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"pool2"</span>,   nn.MaxPool2d(<span class="dv">2</span>)),                               <span class="co"># -&gt; (N,32,7,7)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"flatten"</span>, nn.Flatten()),                                  <span class="co"># -&gt; (N,1568), order (channel, row, column)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        ]))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Sequential(OrderedDict([</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"fc"</span>,      nn.Linear(<span class="dv">32</span> <span class="op">*</span> <span class="dv">7</span> <span class="op">*</span> <span class="dv">7</span>, <span class="dv">64</span>)),                     <span class="co"># (N,1568) -&gt; (N,64)</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"relu3"</span>,   nn.ReLU()),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"out"</span>,     nn.Linear(<span class="dv">64</span>, n_classes)),                      <span class="co"># (N,64) -&gt; (N,n_classes) logits</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        ]))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.head(<span class="va">self</span>.body(x))</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">0</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SmallCNN()</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> model(Xs_tr[:<span class="dv">8</span>])</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> out.shape <span class="op">==</span> (<span class="dv">8</span>, <span class="dv">5</span>) <span class="kw">and</span> model.body(Xs_tr[:<span class="dv">8</span>]).shape <span class="op">==</span> (<span class="dv">8</span>, <span class="dv">1568</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"logits of 8 images:"</span>, <span class="bu">tuple</span>(out.shape), <span class="st">"| feature vectors:"</span>, <span class="bu">tuple</span>(model.body(Xs_tr[:<span class="dv">8</span>]).shape))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>logits of 8 images: (8, 5) | feature vectors: (8, 1568)</code></pre>
+</div>
+</div>
+</section>
+<section id="training-on-the-source-task" class="level3">
+<h3 class="anchored" data-anchor-id="training-on-the-source-task">1.3 Training on the source task</h3>
+<p>Standard supervised training: cross-entropy loss on the logits, Adam with learning rate <span class="math inline">\(10^{-3}\)</span>, minibatches of 128 images, one epoch (one pass over the <span class="math inline">\(30\,596\)</span> training images, 239 steps). The minibatch order comes from a NumPy generator with a fixed seed, so Lab 003b sees exactly the same sequence of minibatches.</p>
+<p>Two helpers are used for the rest of the notebook: <code>train_steps</code> performs a given number of gradient steps on randomly drawn minibatches, and <code>accuracy</code> evaluates in chunks of 2000 images under <code>torch.inference_mode()</code> (no computational graph is recorded). <code>model.train()</code> / <code>model.eval()</code> switch layers such as dropout or batch normalisation between their training and evaluation behaviour; our network has none, but calling them is a habit worth having.</p>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> accuracy(model, X, y, chunk<span class="op">=</span><span class="dv">2000</span>):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fraction of correctly classified images</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> torch.cat([model(X[i:i <span class="op">+</span> chunk]).argmax(dim<span class="op">=</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(X), chunk)])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (pred <span class="op">==</span> y).<span class="bu">float</span>().mean().item()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_epochs(model, X, y, epochs, batch_size, lr, seed):</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plain training loop: one random permutation of the data per epoch</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    opt <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span>lr)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    n_batches <span class="op">=</span> <span class="bu">len</span>(X) <span class="op">//</span> batch_size                  <span class="co"># the last incomplete batch is dropped</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        model.train()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        perm <span class="op">=</span> rng.permutation(<span class="bu">len</span>(X))[: n_batches <span class="op">*</span> batch_size].reshape(n_batches, batch_size)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        losses <span class="op">=</span> []</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> idx <span class="kw">in</span> perm:</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            idx <span class="op">=</span> torch.from_numpy(idx)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> F.cross_entropy(model(X[idx]), y[idx])</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            opt.zero_grad()<span class="op">;</span> loss.backward()<span class="op">;</span> opt.step()</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>            losses.append(loss.item())</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"epoch </span><span class="sc">{</span>epoch <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">: mean training loss </span><span class="sc">{</span>np<span class="sc">.</span>mean(losses)<span class="sc">:.4f}</span><span class="ss"> | test accuracy (digits 0-4) </span><span class="sc">{</span>accuracy(model, Xs_te, ys_te)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.time()</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">0</span>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SmallCNN()</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>train_epochs(model, Xs_tr, ys_tr, epochs<span class="op">=</span><span class="dv">1</span>, batch_size<span class="op">=</span><span class="dv">128</span>, lr<span class="op">=</span><span class="fl">1e-3</span>, seed<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>acc_source <span class="op">=</span> accuracy(model, Xs_te, ys_te)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"training time: </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s | final test accuracy on digits 0-4: </span><span class="sc">{</span>acc_source<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>epoch 1: mean training loss 0.1997 | test accuracy (digits 0-4) 0.9887</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>training time: 10.0 s | final test accuracy on digits 0-4: 0.9887</code></pre>
+</div>
+</div>
+</section>
+<section id="saving-and-loading-the-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="saving-and-loading-the-parameters">1.4 Saving and loading the parameters</h3>
+<p><strong>What is saved.</strong> <code>model.state_dict()</code> is an ordered dictionary <code>{parameter name: tensor}</code>, e.g.&nbsp;<code>"body.conv1.weight" → tensor of shape (16, 1, 5, 5)</code>. It contains the numbers only, not the code of the class. <code>torch.save</code> writes it to a file (a zip archive of the tensors).</p>
+<p><strong>Loading</strong> requires the architecture: we create a <em>fresh</em> <code>SmallCNN</code> (random parameters) and copy the stored numbers into it with <code>load_state_dict</code>. The names and shapes must match; otherwise PyTorch raises an error listing the missing or unexpected keys. <code>torch.load(..., weights_only=True)</code> reads tensors only and refuses arbitrary Python objects, which makes loading a file from an unknown source safe.</p>
+<p>(The alternative <code>torch.save(model)</code> pickles the whole object including a reference to its class; such a file breaks as soon as the class definition is moved or renamed, and is therefore not recommended.)</p>
+<p>The check: before loading, the fresh model gives different logits; after loading, the logits on the whole test set are <strong>bit-for-bit identical</strong> (<code>torch.equal</code>, not just close).</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">"checkpoints"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>CKPT <span class="op">=</span> <span class="st">"checkpoints/cnn_digits04_torch.pt"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>torch.save(model.state_dict(), CKPT)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"saved </span><span class="sc">{</span><span class="bu">len</span>(model.state_dict())<span class="sc">}</span><span class="ss"> tensors to </span><span class="sc">{</span>CKPT<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>getsize(CKPT) <span class="op">/</span> <span class="fl">1e3</span><span class="sc">:.0f}</span><span class="ss"> kB)"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">123</span>)                                  <span class="co"># a different seed: different random parameters</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>fresh <span class="op">=</span> SmallCNN()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"fresh model, logits equal to the trained model before loading:"</span>, torch.equal(fresh(Xs_te), model(Xs_te)))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> torch.load(CKPT, weights_only<span class="op">=</span><span class="va">True</span>)             <span class="co"># dict {name: tensor}</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>fresh.load_state_dict(state)                            <span class="co"># copies the numbers into the existing parameters</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>fresh.<span class="bu">eval</span>()<span class="op">;</span> model.<span class="bu">eval</span>()</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    same_logits <span class="op">=</span> torch.equal(fresh(Xs_te), model(Xs_te))</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> same_logits</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"after load_state_dict, logits on all"</span>, <span class="bu">len</span>(Xs_te), <span class="st">"test images identical:"</span>, same_logits)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"test accuracy of the reloaded model: </span><span class="sc">{</span>accuracy(fresh, Xs_te, ys_te)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>saved 8 tensors to checkpoints/cnn_digits04_torch.pt (427 kB)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>fresh model, logits equal to the trained model before loading: False</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>after load_state_dict, logits on all 5139 test images identical: True</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>test accuracy of the reloaded model: 0.9887</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="inspect" class="level2">
+<h2 class="anchored" data-anchor-id="inspect">2. Inspect</h2>
+<section id="layers-parameter-shapes-and-counts" class="level3">
+<h3 class="anchored" data-anchor-id="layers-parameter-shapes-and-counts">2.1 Layers, parameter shapes and counts</h3>
+<p><code>print(model)</code> shows the module tree. <code>model.named_parameters()</code> yields every trainable array with its full name. PyTorch shapes follow the convention <strong>(output, input, …)</strong>:</p>
+<ul>
+<li><code>Conv2d</code> weight: <code>(out_channels, in_channels, kernel_height, kernel_width)</code>, bias: <code>(out_channels,)</code>;</li>
+<li><code>Linear</code> weight: <code>(out_features, in_features)</code>, so that <span class="math inline">\(y = x W^{T} + b\)</span>, bias: <code>(out_features,)</code>.</li>
+</ul>
+<p>The number of parameters of a layer is the number of weights plus the number of biases, e.g.&nbsp;for <code>conv1</code>: <span class="math inline">\(16\cdot1\cdot5\cdot5+16=416\)</span>.</p>
+<div class="cell" data-execution_count="6">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'parameter'</span><span class="sc">:22s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'shape'</span><span class="sc">:&gt;18s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'count'</span><span class="sc">:&gt;8s}</span><span class="ss">"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, p <span class="kw">in</span> model.named_parameters():</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:22s}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">str</span>(<span class="bu">tuple</span>(p.shape))<span class="sc">:&gt;18s}</span><span class="ss"> </span><span class="sc">{</span>p<span class="sc">.</span>numel()<span class="sc">:8d}</span><span class="ss">"</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>n_total <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model.parameters())</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'total'</span><span class="sc">:22s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">''</span><span class="sc">:&gt;18s}</span><span class="ss"> </span><span class="sc">{</span>n_total<span class="sc">:8d}</span><span class="ss">"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># per layer: weights + biases of each module that owns parameters</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lname, layer <span class="kw">in</span> model.named_modules():</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    own <span class="op">=</span> <span class="bu">list</span>(layer.parameters(recurse<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> own:</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"layer </span><span class="sc">{</span>lname<span class="sc">:12s}</span><span class="ss"> (</span><span class="sc">{</span><span class="bu">type</span>(layer)<span class="sc">.</span><span class="va">__name__</span><span class="sc">:6s}</span><span class="ss">): </span><span class="sc">{</span><span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> own)<span class="sc">:6d}</span><span class="ss"> parameters"</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> n_total <span class="op">==</span> (<span class="dv">16</span><span class="op">*</span><span class="dv">1</span><span class="op">*</span><span class="dv">5</span><span class="op">*</span><span class="dv">5</span> <span class="op">+</span> <span class="dv">16</span>) <span class="op">+</span> (<span class="dv">32</span><span class="op">*</span><span class="dv">16</span><span class="op">*</span><span class="dv">3</span><span class="op">*</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">32</span>) <span class="op">+</span> (<span class="dv">1568</span><span class="op">*</span><span class="dv">64</span> <span class="op">+</span> <span class="dv">64</span>) <span class="op">+</span> (<span class="dv">64</span><span class="op">*</span><span class="dv">5</span> <span class="op">+</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>SmallCNN(
+  (body): Sequential(
+    (conv1): Conv2d(1, 16, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+    (relu1): ReLU()
+    (pool1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (conv2): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (relu2): ReLU()
+    (pool2): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    (flatten): Flatten(start_dim=1, end_dim=-1)
+  )
+  (head): Sequential(
+    (fc): Linear(in_features=1568, out_features=64, bias=True)
+    (relu3): ReLU()
+    (out): Linear(in_features=64, out_features=5, bias=True)
+  )
+)
+
+parameter                           shape    count
+body.conv1.weight           (16, 1, 5, 5)      400
+body.conv1.bias                     (16,)       16
+body.conv2.weight          (32, 16, 3, 3)     4608
+body.conv2.bias                     (32,)       32
+head.fc.weight                 (64, 1568)   100352
+head.fc.bias                        (64,)       64
+head.out.weight                   (5, 64)      320
+head.out.bias                        (5,)        5
+total                                       105797
+
+layer body.conv1   (Conv2d):    416 parameters
+layer body.conv2   (Conv2d):   4640 parameters
+layer head.fc      (Linear): 100416 parameters
+layer head.out     (Linear):    325 parameters</code></pre>
+</div>
+</div>
+<p>Almost all parameters (<span class="math inline">\(100\,416\)</span> of <span class="math inline">\(105\,797\)</span>) sit in the dense layer <code>head.fc</code>, which connects all <span class="math inline">\(1568\)</span> outputs of the convolutional part to 64 units; the two convolutional layers together have only <span class="math inline">\(5\,056\)</span>, because a kernel is shared over all positions of the image.</p>
+</section>
+<section id="access-to-a-single-layer" class="level3">
+<h3 class="anchored" data-anchor-id="access-to-a-single-layer">2.2 Access to a single layer</h3>
+<p>A layer is reached by attribute access along its name: <code>model.body.conv1</code>. Its parameters are <code>.weight</code> and <code>.bias</code>, tensors with <code>requires_grad=True</code>. To use them as plain numbers, call <code>.detach()</code> (a tensor without a gradient history, sharing the memory) and <code>.numpy()</code>; to modify them by hand, do it inside <code>torch.no_grad()</code> so that the change is not recorded by automatic differentiation.</p>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>conv1 <span class="op">=</span> model.body.conv1                              <span class="co"># the same object as model.body[0]</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> conv1 <span class="kw">is</span> model.body[<span class="dv">0</span>]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>W1 <span class="op">=</span> conv1.weight.detach().numpy()                    <span class="co"># (16, 1, 5, 5)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>b1 <span class="op">=</span> conv1.bias.detach().numpy()                      <span class="co"># (16,)</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"conv1 weight:"</span>, W1.shape, <span class="st">"| bias:"</span>, b1.shape, <span class="st">"| requires_grad:"</span>, conv1.weight.requires_grad)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"kernel 0 (5 x 5):</span><span class="ch">\n</span><span class="st">"</span>, np.<span class="bu">round</span>(W1[<span class="dv">0</span>, <span class="dv">0</span>], <span class="dv">3</span>))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"output layer weight:"</span>, <span class="bu">tuple</span>(model.head.out.weight.shape), <span class="st">"(out_features, in_features) | bias:"</span>, np.<span class="bu">round</span>(model.head.out.bias.detach().numpy(), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>conv1 weight: (16, 1, 5, 5) | bias: (16,) | requires_grad: True
+kernel 0 (5 x 5):
+ [[ 0.032  0.129 -0.18  -0.223 -0.159]
+ [ 0.099  0.027  0.158 -0.063  0.003]
+ [-0.012  0.002 -0.17  -0.111 -0.059]
+ [ 0.063  0.134  0.178 -0.074 -0.031]
+ [ 0.125  0.225  0.022  0.214  0.036]]
+output layer weight: (5, 64) (out_features, in_features) | bias: [ 0.     0.088  0.08   0.011 -0.018]</code></pre>
+</div>
+</div>
+</section>
+<section id="trainable-and-frozen-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="trainable-and-frozen-parameters">2.3 Trainable and frozen parameters</h3>
+<p>A parameter is <strong>trainable</strong> in PyTorch if <code>p.requires_grad</code> is <code>True</code>: then <code>loss.backward()</code> computes its gradient and an optimiser can change it. Setting <code>requires_grad=False</code> <strong>freezes</strong> it. The function below counts both groups; we use it in Section 5. At this point everything is trainable.</p>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count_params(model):</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (number of trainable, number of frozen) parameters</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    trainable <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model.parameters() <span class="cf">if</span> p.requires_grad)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    frozen <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model.parameters() <span class="cf">if</span> <span class="kw">not</span> p.requires_grad)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> trainable, frozen</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>tr, fr <span class="op">=</span> count_params(model)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"trainable parameters: </span><span class="sc">{</span>tr<span class="sc">}</span><span class="ss"> | frozen parameters: </span><span class="sc">{</span>fr<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>trainable parameters: 105797 | frozen parameters: 0</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="look-inside" class="level2">
+<h2 class="anchored" data-anchor-id="look-inside">3. Look inside</h2>
+<section id="first-layer-kernels" class="level3">
+<h3 class="anchored" data-anchor-id="first-layer-kernels">3.1 First-layer kernels</h3>
+<p>Each of the 16 kernels of <code>conv1</code> is a <span class="math inline">\(5\times5\)</span> array of weights acting on the single input channel, so it can be drawn as a small image. A kernel responds most strongly (largest output before the ReLU) to an image patch that looks like the kernel itself: red weights reward ink, blue weights penalise it. Each kernel is drawn with its own symmetric colour scale <span class="math inline">\([-\max|w|,\,\max|w|]\)</span>, so that its pattern is visible regardless of its overall magnitude.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>W1 <span class="op">=</span> model.body.conv1.weight.detach().numpy()[:, <span class="dv">0</span>]          <span class="co"># (16, 5, 5): drop the input-channel axis</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">8</span>, figsize<span class="op">=</span>(<span class="fl">8.5</span>, <span class="fl">3.0</span>))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axs.flat):</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> np.<span class="bu">abs</span>(W1[k]).<span class="bu">max</span>()</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    ax.imshow(W1[k], cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span>v, vmax<span class="op">=</span>v)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"kernel </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> noframe(ax)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"conv1: the 16 learned $5</span><span class="ch">\\</span><span class="st">times5$ kernels (red &gt; 0, blue &lt; 0)"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-003a-trained-networks-pytorch_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="feature-maps-with-forward-hooks" class="level3">
+<h3 class="anchored" data-anchor-id="feature-maps-with-forward-hooks">3.2 Feature maps with forward hooks</h3>
+<p>A <strong>feature map</strong> is the output of one channel of a convolutional layer: an image showing where in the input the corresponding pattern was found. To see it we need the output of an <em>intermediate</em> layer, which <code>model(x)</code> does not return.</p>
+<p><strong>Forward hooks.</strong> <code>layer.register_forward_hook(fn)</code> attaches a function that PyTorch calls every time <code>layer</code> has computed its output, as <code>fn(module, inputs, output)</code>. We store the output in a dictionary. The model code stays untouched; the call returns a <em>handle</em>, and <code>handle.remove()</code> detaches the hook again (hooks left behind keep running and keep memory).</p>
+<p>We hook <code>relu1</code> and <code>relu2</code>, i.e.&nbsp;we record the maps after the activation, which is what the next layer receives:</p>
+<ul>
+<li>after <code>relu1</code>: shape <code>(1, 16, 28, 28)</code>, 16 maps at full resolution;</li>
+<li>after <code>relu2</code>: shape <code>(1, 32, 14, 14)</code>, 32 maps at half resolution.</li>
+</ul>
+<div class="cell" data-execution_count="10">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> {}</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_output(name):</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> hook(module, inputs, output):</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>        features[name] <span class="op">=</span> output.detach()</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> hook</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>handles <span class="op">=</span> [model.body.relu1.register_forward_hook(save_output(<span class="st">"relu1"</span>)),</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>           model.body.relu2.register_forward_hook(save_output(<span class="st">"relu2"</span>))]</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>i_img <span class="op">=</span> <span class="bu">int</span>(np.flatnonzero(ys_te.numpy() <span class="op">==</span> <span class="dv">3</span>)[<span class="dv">0</span>])          <span class="co"># the first test image of a 3</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>x_one <span class="op">=</span> Xs_te[i_img:i_img <span class="op">+</span> <span class="dv">1</span>]                              <span class="co"># (1, 1, 28, 28): a batch of one image</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> model(x_one)                                   <span class="co"># the hooks fill `features` during this call</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> h <span class="kw">in</span> handles:</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    h.remove()                                              <span class="co"># detach the hooks</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> features[<span class="st">"relu1"</span>].shape <span class="op">==</span> (<span class="dv">1</span>, <span class="dv">16</span>, <span class="dv">28</span>, <span class="dv">28</span>) <span class="kw">and</span> features[<span class="st">"relu2"</span>].shape <span class="op">==</span> (<span class="dv">1</span>, <span class="dv">32</span>, <span class="dv">14</span>, <span class="dv">14</span>)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"predicted digit:"</span>, logits.argmax().item(), <span class="st">"| true digit:"</span>, ys_te[i_img].item())</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, v <span class="kw">in</span> features.items():</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    frac <span class="op">=</span> (v <span class="op">&gt;</span> <span class="dv">0</span>).<span class="bu">float</span>().mean().item()</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: shape </span><span class="sc">{</span><span class="bu">tuple</span>(v.shape)<span class="sc">}</span><span class="ss">, fraction of positive (active) entries </span><span class="sc">{</span>frac<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>predicted digit: 3 | true digit: 3
+relu1: shape (1, 16, 28, 28), fraction of positive (active) entries 0.645
+relu2: shape (1, 32, 14, 14), fraction of positive (active) entries 0.634</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show_maps(maps, ncols, title, img):</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># maps: (C, H, W); the input image is shown in the first panel</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> maps.shape[<span class="dv">0</span>]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    nrows <span class="op">=</span> <span class="bu">int</span>(np.ceil((C <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> ncols))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(nrows, ncols, figsize<span class="op">=</span>(<span class="fl">1.05</span> <span class="op">*</span> ncols, <span class="fl">1.1</span> <span class="op">*</span> nrows))</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    axs <span class="op">=</span> axs.flat</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].imshow(img, cmap<span class="op">=</span><span class="st">"gray_r"</span>)<span class="op">;</span> axs[<span class="dv">0</span>].set_title(<span class="st">"input"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(C):</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        axs[c <span class="op">+</span> <span class="dv">1</span>].imshow(maps[c], cmap<span class="op">=</span><span class="st">"magma"</span>)<span class="op">;</span> axs[c <span class="op">+</span> <span class="dv">1</span>].set_title(<span class="ss">f"ch </span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axs: noframe(ax)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    fig.suptitle(title, fontsize<span class="op">=</span><span class="dv">10</span>)<span class="op">;</span> plt.tight_layout()<span class="op">;</span> plt.show()</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> x_one[<span class="dv">0</span>, <span class="dv">0</span>].numpy()</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>show_maps(features[<span class="st">"relu1"</span>][<span class="dv">0</span>].numpy(), <span class="dv">9</span>, <span class="st">"after conv1 + ReLU: 16 maps of 28 x 28"</span>, img)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>show_maps(features[<span class="st">"relu2"</span>][<span class="dv">0</span>].numpy(), <span class="dv">11</span>, <span class="st">"after conv2 + ReLU: 32 maps of 14 x 14"</span>, img)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-003a-trained-networks-pytorch_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-003a-trained-networks-pytorch_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>Reading the maps.</strong> Most first-layer maps are filtered copies of the digit. In several of them only one side of the strokes, or only the strokes of one orientation, light up: a kernel with adjacent positive (red) and negative (blue) regions in Section 3.1 responds to a change of brightness in one direction, i.e.&nbsp;it is an oriented edge detector. Other maps respond to the background next to the ink. Second-layer maps have half the resolution, and each channel combines all 16 first-layer maps; the channels respond to more specific configurations, such as strokes of one direction in one part of the digit, and some are sparse for this image. This is the hierarchy of Lecture 4: local, generic patterns (edges, stroke directions) in the first layer, and combinations of them, more specific to the task, deeper in the network.</p>
+<hr>
+</section>
+</section>
+<section id="model-surgery" class="level2">
+<h2 class="anchored" data-anchor-id="model-surgery">4. Model surgery</h2>
+<p>All operations of this section create new models from pieces of the trained one. One rule matters throughout: <strong>assigning a module to a new model does not copy it</strong>. <code>nn.Sequential(model.body, ...)</code> contains <em>the same</em> <code>body</code> object; training the new model would also change <code>model</code>. Use <code>copy.deepcopy</code> whenever the original must stay intact.</p>
+<section id="cutting-the-network-a-feature-extractor" class="level3">
+<h3 class="anchored" data-anchor-id="cutting-the-network-a-feature-extractor">4.1 Cutting the network: a feature extractor</h3>
+<p><code>model.body</code> alone maps images to feature vectors of 1568 numbers, <code>(N, 1, 28, 28) → (N, 1568)</code>. An <code>nn.Sequential</code> can be sliced like a list: <code>model.body[:6]</code> stops before the flattening and returns the 32 feature maps, <code>(N, 32, 7, 7)</code>; <code>model.head[:2]</code> (dense layer + ReLU) applied to the body’s output gives the 64 features of the next level, <code>(N, 64)</code>.</p>
+<p>We compute both kinds of features for 2000 test images of the source digits 0–4 and 2000 of the unseen digits 5–9 and count active units (positive after the ReLU). A unit that is zero for every image (“dead” unit) carries no information about these images. Features that stay active and varied for 5–9 are candidates for re-use in Section 5.</p>
+<div class="cell" data-execution_count="12">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>extractor <span class="op">=</span> model.body                                      <span class="co"># (N,1,28,28) -&gt; (N,1568); shares the parameters with `model`</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>conv_maps <span class="op">=</span> model.body[:<span class="dv">6</span>]                                  <span class="co"># conv1 ... pool2: (N,1,28,28) -&gt; (N,32,7,7)</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>dense_part <span class="op">=</span> model.head[:<span class="dv">2</span>]                                 <span class="co"># fc + ReLU:       (N,1568) -&gt; (N,64)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    m_src <span class="op">=</span> conv_maps(Xs_te[:<span class="dv">2000</span>])                         <span class="co"># (2000, 32, 7, 7)</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    feats <span class="op">=</span> {<span class="st">"digits 0-4 (seen)  "</span>: extractor(Xs_te[:<span class="dv">2000</span>]),     <span class="co"># (2000, 1568)</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">"digits 5-9 (unseen)"</span>: extractor(Xt_te[:<span class="dv">2000</span>])}</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    dense <span class="op">=</span> {k: dense_part(f) <span class="cf">for</span> k, f <span class="kw">in</span> feats.items()}    <span class="co"># (2000, 64)</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> m_src.shape <span class="op">==</span> (<span class="dv">2000</span>, <span class="dv">32</span>, <span class="dv">7</span>, <span class="dv">7</span>) <span class="kw">and</span> feats[<span class="st">"digits 0-4 (seen)  "</span>].shape <span class="op">==</span> (<span class="dv">2000</span>, <span class="dv">1568</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"feature maps:"</span>, <span class="bu">tuple</span>(m_src.shape), <span class="st">"| body features:"</span>, <span class="bu">tuple</span>(feats[<span class="st">"digits 0-4 (seen)  "</span>].shape),</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| dense features:"</span>, <span class="bu">tuple</span>(dense[<span class="st">"digits 0-4 (seen)  "</span>].shape))</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> activity(f):</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    active <span class="op">=</span> (f <span class="op">&gt;</span> <span class="dv">0</span>).<span class="bu">float</span>()</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> active.mean().item(), <span class="bu">int</span>((active.<span class="bu">sum</span>(<span class="dv">0</span>) <span class="op">==</span> <span class="dv">0</span>).<span class="bu">sum</span>())</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> feats:</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    a1, d1 <span class="op">=</span> activity(feats[k])<span class="op">;</span> a2, d2 <span class="op">=</span> activity(dense[k])</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: body features: active fraction </span><span class="sc">{</span>a1<span class="sc">:.3f}</span><span class="ss">, never active </span><span class="sc">{</span>d1<span class="sc">:4d}</span><span class="ss"> of 1568 | "</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"dense features: active fraction </span><span class="sc">{</span>a2<span class="sc">:.3f}</span><span class="ss">, never active </span><span class="sc">{</span>d2<span class="sc">:2d}</span><span class="ss"> of 64"</span>)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>f_tgt <span class="op">=</span> feats[<span class="st">"digits 5-9 (unseen)"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>feature maps: (2000, 32, 7, 7) | body features: (2000, 1568) | dense features: (2000, 64)
+digits 0-4 (seen)  : body features: active fraction 0.762, never active   51 of 1568 | dense features: active fraction 0.531, never active 20 of 64
+digits 5-9 (unseen): body features: active fraction 0.767, never active   48 of 1568 | dense features: active fraction 0.566, never active 20 of 64</code></pre>
+</div>
+</div>
+</section>
+<section id="trained-body-new-head" class="level3">
+<h3 class="anchored" data-anchor-id="trained-body-new-head">4.2 Trained body, new head</h3>
+<p>For the digits 5–9 we need a network with the trained body and a <em>new</em>, randomly initialised head with 5 outputs. We create a fresh <code>SmallCNN(n_classes=5)</code> and copy the body’s numbers with <code>new.body.load_state_dict(model.body.state_dict())</code>. This copies values: the new body is independent of <code>model</code>.</p>
+<p>Checks: the new body gives the same feature vectors as the trained one; the new head is random, so the accuracy on the digits 5–9 is near chance level, <span class="math inline">\(1/5=0.2\)</span>.</p>
+<div class="cell" data-execution_count="13">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">1</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>new <span class="op">=</span> SmallCNN(n_classes<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>new.body.load_state_dict(model.body.state_dict())          <span class="co"># copy the trained body; the head stays random</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>new.<span class="bu">eval</span>()</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> torch.equal(new.body(Xt_te[:<span class="dv">2000</span>]), f_tgt)      <span class="co"># identical features</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> new.body.conv1.weight.data_ptr() <span class="op">!=</span> model.body.conv1.weight.data_ptr()   <span class="co"># separate memory: no sharing</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"new body gives identical features:"</span>, <span class="va">True</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"accuracy on digits 5-9 with the untrained head: </span><span class="sc">{</span>accuracy(new, Xt_te, yt_te)<span class="sc">:.3f}</span><span class="ss"> (chance level 0.2)"</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># the pitfall: building a model from the *same* module object shares the parameters</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>shared <span class="op">=</span> nn.Sequential(model.body, nn.Linear(<span class="dv">1568</span>, <span class="dv">5</span>))</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"nn.Sequential(model.body, ...) shares model.body:"</span>, shared[<span class="dv">0</span>] <span class="kw">is</span> model.body,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| after copy.deepcopy:"</span>, copy.deepcopy(model.body) <span class="kw">is</span> model.body)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>new body gives identical features: True</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy on digits 5-9 with the untrained head: 0.200 (chance level 0.2)
+nn.Sequential(model.body, ...) shares model.body: True | after copy.deepcopy: False</code></pre>
+</div>
+</div>
+</section>
+<section id="inserting-a-layer" class="level3">
+<h3 class="anchored" data-anchor-id="inserting-a-layer">4.3 Inserting a layer</h3>
+<p>We insert an extra dense layer, <span class="math inline">\(64\to64\)</span> followed by a ReLU, inside the head, between <code>relu3</code> and <code>out</code>. If it is initialised as the identity (<span class="math inline">\(W=I\)</span>, <span class="math inline">\(b=0\)</span>), the network computes exactly the same function as before: its input <span class="math inline">\(h\)</span> is non-negative (it comes out of a ReLU), so <span class="math inline">\(\mathrm{ReLU}(Ih+0)=h\)</span>. This is a useful way to enlarge a trained network without losing what it knows; training can then move the new layer away from the identity.</p>
+<p>Shapes: body <code>(N,1568)</code> → fc, ReLU <code>(N,64)</code> → extra, ReLU <code>(N,64)</code> → out <code>(N,5)</code>. The parameter count grows by <span class="math inline">\(64\cdot64+64=4160\)</span>.</p>
+<div class="cell" data-execution_count="14">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>extra <span class="op">=</span> nn.Linear(<span class="dv">64</span>, <span class="dv">64</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():                                       <span class="co"># manual assignment: not recorded by autograd</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    extra.weight.copy_(torch.eye(<span class="dv">64</span>))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    extra.bias.zero_()</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>deeper <span class="op">=</span> nn.Sequential(OrderedDict([</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"body"</span>, copy.deepcopy(model.body)),                    <span class="co"># copies: `model` stays untouched</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"fc"</span>, copy.deepcopy(model.head.fc)),</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"relu3"</span>, nn.ReLU()),</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"extra"</span>, extra),                                       <span class="co"># the inserted layer</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"extra_relu"</span>, nn.ReLU()),</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"out"</span>, copy.deepcopy(model.head.out)),</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>]))</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>deeper.<span class="bu">eval</span>()</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.inference_mode():</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    same <span class="op">=</span> torch.allclose(deeper(Xs_te), model(Xs_te))</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> same</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"deeper model, logits equal to the original:"</span>, same)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"parameters: original"</span>, <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model.parameters()),</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| deeper"</span>, <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> deeper.parameters()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>deeper model, logits equal to the original: True
+parameters: original 105797 | deeper 109957</code></pre>
+</div>
+</div>
+</section>
+<section id="replacing-a-layer" class="level3">
+<h3 class="anchored" data-anchor-id="replacing-a-layer">4.4 Replacing a layer</h3>
+<p>A layer can be exchanged by assigning a new module to its name, <code>net.body.pool1 = nn.AvgPool2d(2)</code>. The replacement must produce an output of the same shape, otherwise the next layer fails. The rest of the network was trained for the <em>old</em> layer, so its accuracy changes. Two examples on copies of the trained model:</p>
+<ul>
+<li>max-pooling → average-pooling in <code>pool1</code> (same shape <code>(N,16,14,14)</code>, different numbers);</li>
+<li><code>conv1</code> → a new, randomly initialised convolution of the same shape: everything after it receives inputs it was never trained on.</li>
+</ul>
+<div class="cell" data-execution_count="15">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>net_avg <span class="op">=</span> copy.deepcopy(model)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>net_avg.body.pool1 <span class="op">=</span> nn.AvgPool2d(<span class="dv">2</span>)                        <span class="co"># replace by name</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">2</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>net_rnd <span class="op">=</span> copy.deepcopy(model)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>net_rnd.body.conv1 <span class="op">=</span> nn.Conv2d(<span class="dv">1</span>, <span class="dv">16</span>, kernel_size<span class="op">=</span><span class="dv">5</span>, padding<span class="op">=</span><span class="dv">2</span>)   <span class="co"># fresh random kernels, same shapes</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(net_avg.body.pool1, <span class="st">"|"</span>, net_rnd.body.conv1)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"test accuracy (digits 0-4): original </span><span class="sc">{</span>accuracy(model, Xs_te, ys_te)<span class="sc">:.4f}</span><span class="ss"> | "</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"pool1 -&gt; average </span><span class="sc">{</span>accuracy(net_avg, Xs_te, ys_te)<span class="sc">:.4f}</span><span class="ss"> | conv1 re-initialised </span><span class="sc">{</span>accuracy(net_rnd, Xs_te, ys_te)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>AvgPool2d(kernel_size=2, stride=2, padding=0) | Conv2d(1, 16, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>test accuracy (digits 0-4): original 0.9887 | pool1 -&gt; average 0.9889 | conv1 re-initialised 0.5600</code></pre>
+</div>
+</div>
+<p>Average pooling changes the numbers passed on but keeps their meaning (the same channels, the same positions), so the accuracy hardly changes. A re-initialised first layer destroys the meaning of all 16 channels for the layers after it, and the accuracy falls far: a trained network is a chain in which each layer is adapted to the layers before it.</p>
+<hr>
+</section>
+</section>
+<section id="freezing-and-transfer-learning" class="level2">
+<h2 class="anchored" data-anchor-id="freezing-and-transfer-learning">5. Freezing and transfer learning</h2>
+<section id="the-target-task-with-few-labels" class="level3">
+<h3 class="anchored" data-anchor-id="the-target-task-with-few-labels">5.1 The target task with few labels</h3>
+<p>The new task is to classify the digits 5–9, with only a few labelled images, <span class="math inline">\(n\)</span> per class. <strong>Transfer learning</strong> re-uses the body trained on 0–4: strokes, edges and loops are common to all digits, so the convolutional features of Section 4.1 may also help for 5–9. We compare three strategies with the same number of gradient steps in total (300, minibatches of <span class="math inline">\(\min(64, 5n)\)</span> images, Adam):</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>initial body</th>
+<th>trained parameters</th>
+<th>steps</th>
+<th>learning rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(a) random initialisation</td>
+<td>random</td>
+<td>all</td>
+<td>300</td>
+<td><span class="math inline">\(10^{-3}\)</span></td>
+</tr>
+<tr class="even">
+<td>(b) frozen body</td>
+<td>trained on 0–4</td>
+<td>head only</td>
+<td>200</td>
+<td><span class="math inline">\(10^{-3}\)</span></td>
+</tr>
+<tr class="odd">
+<td>(c) fine-tuning</td>
+<td>the result of (b)</td>
+<td>all</td>
+<td>+100</td>
+<td>body <span class="math inline">\(10^{-4}\)</span>, head <span class="math inline">\(3\cdot10^{-4}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>In (c) the learning rate is smaller: the body is already trained, and large steps driven by a few hundred images would overwrite it (and overfit). The labelled subset is drawn with a NumPy generator (<code>seed</code>), class by class, so Lab 003b uses exactly the same images. Below we first run the three strategies in detail for <span class="math inline">\(n=100\)</span> images per class (500 labelled images), and in Section 5.5 for several <span class="math inline">\(n\)</span>.</p>
+<div class="cell" data-execution_count="16">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> labelled_subset(n_per_class, seed):</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># n_per_class images of each target class, drawn from the pool without replacement</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> yt_pool.numpy()</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> np.concatenate([rng.choice(np.flatnonzero(y <span class="op">==</span> c), n_per_class, replace<span class="op">=</span><span class="va">False</span>) <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Xt_pool[idx], yt_pool[idx]</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_steps(model, opt, X, y, steps, seed):</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `steps` Adam steps on minibatches of min(64, len(X)) images drawn at random</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    bs <span class="op">=</span> <span class="bu">min</span>(<span class="dv">64</span>, <span class="bu">len</span>(X))</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(steps):</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">=</span> torch.from_numpy(rng.choice(<span class="bu">len</span>(X), bs, replace<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> F.cross_entropy(model(X[idx]), y[idx])</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>        opt.zero_grad()<span class="op">;</span> loss.backward()<span class="op">;</span> opt.step()</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss.item()</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> transfer_model(seed):</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># trained body (copied), new random head with 5 outputs</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(seed)</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> SmallCNN(<span class="dv">5</span>)</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>    m.body.load_state_dict(model.body.state_dict())</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> m</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>X_lab, y_lab <span class="op">=</span> labelled_subset(<span class="dv">100</span>, seed<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> X_lab.shape <span class="op">==</span> (<span class="dv">500</span>, <span class="dv">1</span>, <span class="dv">28</span>, <span class="dv">28</span>) <span class="kw">and</span> torch.equal(torch.bincount(y_lab), torch.full((<span class="dv">5</span>,), <span class="dv">100</span>))</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"labelled set:"</span>, <span class="bu">tuple</span>(X_lab.shape), <span class="st">"| images per class:"</span>, torch.bincount(y_lab).tolist())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>labelled set: (500, 1, 28, 28) | images per class: [100, 100, 100, 100, 100]</code></pre>
+</div>
+</div>
+</section>
+<section id="a-random-initialisation" class="level3">
+<h3 class="anchored" data-anchor-id="a-random-initialisation">5.2 (a) Random initialisation</h3>
+<p>All 105 797 parameters start random and are trained on the 500 labelled images only.</p>
+<div class="cell" data-execution_count="17">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">10</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>net_a <span class="op">=</span> SmallCNN(<span class="dv">5</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> torch.optim.Adam(net_a.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>last <span class="op">=</span> train_steps(net_a, opt, X_lab, y_lab, steps<span class="op">=</span><span class="dv">300</span>, seed<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>acc_a <span class="op">=</span> accuracy(net_a, Xt_te, yt_te)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(a) last minibatch loss </span><span class="sc">{</span>last<span class="sc">:.4f}</span><span class="ss"> | test accuracy on digits 5-9: </span><span class="sc">{</span>acc_a<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(a) last minibatch loss 0.0121 | test accuracy on digits 5-9: 0.9317</code></pre>
+</div>
+</div>
+</section>
+<section id="b-frozen-body-new-head" class="level3">
+<h3 class="anchored" data-anchor-id="b-frozen-body-new-head">5.3 (b) Frozen body, new head</h3>
+<p><strong>The mechanism in PyTorch</strong> has two parts:</p>
+<ol type="1">
+<li><code>p.requires_grad_(False)</code> for every parameter of the body: <code>backward()</code> no longer computes their gradients (<code>p.grad</code> stays <code>None</code>), which also saves computation;</li>
+<li>the optimiser receives only the head’s parameters, <code>torch.optim.Adam(net.head.parameters())</code>, so it cannot change anything else.</li>
+</ol>
+<p>Either part alone would already keep the body fixed for plain Adam; using both is the safe habit. (One caution for other networks: batch normalisation layers update their running statistics in <code>train()</code> mode even when their parameters are frozen; a frozen body containing them is put in <code>eval()</code> mode.)</p>
+<p><strong>Check.</strong> We copy the body’s parameters before training and assert afterwards that they are bit-for-bit unchanged, while the head did change.</p>
+<div class="cell" data-execution_count="18">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>net_b <span class="op">=</span> transfer_model(seed<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> net_b.body.parameters():</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    p.requires_grad_(<span class="va">False</span>)                                   <span class="co"># freeze the body</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>tr, fr <span class="op">=</span> count_params(net_b)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"trainable parameters: </span><span class="sc">{</span>tr<span class="sc">}</span><span class="ss"> (head) | frozen parameters: </span><span class="sc">{</span>fr<span class="sc">}</span><span class="ss"> (body)"</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> tr <span class="op">==</span> (<span class="dv">1568</span> <span class="op">*</span> <span class="dv">64</span> <span class="op">+</span> <span class="dv">64</span>) <span class="op">+</span> (<span class="dv">64</span> <span class="op">*</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">5</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>body_before <span class="op">=</span> copy.deepcopy(net_b.body.state_dict())          <span class="co"># snapshot for the check</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>head_before <span class="op">=</span> copy.deepcopy(net_b.head.state_dict())</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> torch.optim.Adam(net_b.head.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)      <span class="co"># the optimiser sees only the head</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>last <span class="op">=</span> train_steps(net_b, opt, X_lab, y_lab, steps<span class="op">=</span><span class="dv">200</span>, seed<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>body_after, head_after <span class="op">=</span> net_b.body.state_dict(), net_b.head.state_dict()</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>(torch.equal(body_before[k], body_after[k]) <span class="cf">for</span> k <span class="kw">in</span> body_before), <span class="st">"frozen body changed!"</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="kw">not</span> torch.equal(head_before[<span class="st">"fc.weight"</span>], head_after[<span class="st">"fc.weight"</span>])</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"body parameters unchanged:"</span>, <span class="va">True</span>, <span class="st">"| head changed:"</span>, <span class="va">True</span>, <span class="st">"| body.conv1.weight.grad:"</span>, net_b.body.conv1.weight.grad)</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>acc_b <span class="op">=</span> accuracy(net_b, Xt_te, yt_te)</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(b) last minibatch loss </span><span class="sc">{</span>last<span class="sc">:.4f}</span><span class="ss"> | test accuracy on digits 5-9: </span><span class="sc">{</span>acc_b<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>trainable parameters: 100741 (head) | frozen parameters: 5056 (body)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>body parameters unchanged: True | head changed: True | body.conv1.weight.grad: None</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(b) last minibatch loss 0.0520 | test accuracy on digits 5-9: 0.9461</code></pre>
+</div>
+</div>
+<p><strong>The place of the cut matters.</strong> Section 3 suggested that early layers compute generic patterns and later layers task-specific ones. A direct test: cut one layer later, i.e.&nbsp;keep the trained dense layer <code>head.fc</code> frozen as well and train only a new output layer (325 parameters) on the same 500 images, with the same 200 steps.</p>
+<div class="cell" data-execution_count="19">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>net_b2 <span class="op">=</span> copy.deepcopy(model)                                  <span class="co"># trained body and trained dense layer</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">10</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>net_b2.head.out <span class="op">=</span> nn.Linear(<span class="dv">64</span>, <span class="dv">5</span>)                             <span class="co"># new output layer</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, p <span class="kw">in</span> net_b2.named_parameters():</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    p.requires_grad_(name.startswith(<span class="st">"head.out"</span>))              <span class="co"># freeze everything except the output layer</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"trainable / frozen parameters:"</span>, count_params(net_b2))</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>train_steps(net_b2, torch.optim.Adam(net_b2.head.out.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>), X_lab, y_lab, steps<span class="op">=</span><span class="dv">200</span>, seed<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>acc_b2 <span class="op">=</span> accuracy(net_b2, Xt_te, yt_te)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"test accuracy on digits 5-9: cut after the convolutional body </span><span class="sc">{</span>acc_b<span class="sc">:.4f}</span><span class="ss"> | cut after the dense layer </span><span class="sc">{</span>acc_b2<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>trainable / frozen parameters: (325, 105472)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>test accuracy on digits 5-9: cut after the convolutional body 0.9461 | cut after the dense layer 0.6589</code></pre>
+</div>
+</div>
+</section>
+<section id="c-fine-tuning-everything-with-a-smaller-learning-rate" class="level3">
+<h3 class="anchored" data-anchor-id="c-fine-tuning-everything-with-a-smaller-learning-rate">5.4 (c) Fine-tuning everything with a smaller learning rate</h3>
+<p>We continue from the result of (b): unfreeze the body (<code>requires_grad_(True)</code>) and train all parameters for 100 more steps. <strong>Parameter groups</strong> give different parts of the network different hyperparameters within one optimiser: a list of dictionaries, each with its own <code>"params"</code> and <code>"lr"</code>. Here the body moves with <span class="math inline">\(10^{-4}\)</span> and the head with <span class="math inline">\(3\cdot10^{-4}\)</span>.</p>
+<div class="cell" data-execution_count="20">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>net_c <span class="op">=</span> copy.deepcopy(net_b)                                   <span class="co"># (b) stays available</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> net_c.body.parameters():</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    p.requires_grad_(<span class="va">True</span>)                                     <span class="co"># unfreeze</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"trainable / frozen parameters:"</span>, count_params(net_c))</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> torch.optim.Adam([</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"params"</span>: net_c.body.parameters(), <span class="st">"lr"</span>: <span class="fl">1e-4</span>},           <span class="co"># group 0: body, small steps</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"params"</span>: net_c.head.parameters(), <span class="st">"lr"</span>: <span class="fl">3e-4</span>},           <span class="co"># group 1: head</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"learning rates of the parameter groups:"</span>, [g[<span class="st">"lr"</span>] <span class="cf">for</span> g <span class="kw">in</span> opt.param_groups])</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>last <span class="op">=</span> train_steps(net_c, opt, X_lab, y_lab, steps<span class="op">=</span><span class="dv">100</span>, seed<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="kw">not</span> torch.equal(net_c.body.conv1.weight, net_b.body.conv1.weight)   <span class="co"># the body did move this time</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>acc_c <span class="op">=</span> accuracy(net_c, Xt_te, yt_te)</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(c) last minibatch loss </span><span class="sc">{</span>last<span class="sc">:.4f}</span><span class="ss"> | test accuracy on digits 5-9: </span><span class="sc">{</span>acc_c<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">n = 100 images per class: (a) </span><span class="sc">{</span>acc_a<span class="sc">:.4f}</span><span class="ss"> | (b) </span><span class="sc">{</span>acc_b<span class="sc">:.4f}</span><span class="ss"> | (c) </span><span class="sc">{</span>acc_c<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>trainable / frozen parameters: (105797, 0)
+learning rates of the parameter groups: [0.0001, 0.0003]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(c) last minibatch loss 0.0074 | test accuracy on digits 5-9: 0.9475
+
+n = 100 images per class: (a) 0.9317 | (b) 0.9461 | (c) 0.9475</code></pre>
+</div>
+</div>
+</section>
+<section id="accuracy-vs-number-of-labelled-images" class="level3">
+<h3 class="anchored" data-anchor-id="accuracy-vs-number-of-labelled-images">5.5 Accuracy vs number of labelled images</h3>
+<p>We repeat (a), (b), (c) for <span class="math inline">\(n\in\{10, 30, 100, 300\}\)</span> images per class, i.e.&nbsp;50 to 1500 labelled images, each with 3 different labelled subsets (seeds 0, 1, 2). The figure shows the mean test accuracy on all 4861 test images of the digits 5–9; the error bars are the standard deviation over the 3 subsets.</p>
+<div class="cell" data-execution_count="21">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_all(n_per_class, seed):</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    X, y <span class="op">=</span> labelled_subset(n_per_class, seed)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(<span class="dv">100</span> <span class="op">+</span> seed)                               <span class="co"># (a) random initialisation</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> SmallCNN(<span class="dv">5</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    train_steps(m, torch.optim.Adam(m.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>), X, y, <span class="dv">300</span>, seed)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> [accuracy(m, Xt_te, yt_te)]</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> transfer_model(<span class="dv">100</span> <span class="op">+</span> seed)                              <span class="co"># (b) frozen body</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> p <span class="kw">in</span> m.body.parameters(): p.requires_grad_(<span class="va">False</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    train_steps(m, torch.optim.Adam(m.head.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>), X, y, <span class="dv">200</span>, seed)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    acc.append(accuracy(m, Xt_te, yt_te))</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> p <span class="kw">in</span> m.body.parameters(): p.requires_grad_(<span class="va">True</span>)       <span class="co"># (c) fine-tuning, continues from (b)</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>    opt <span class="op">=</span> torch.optim.Adam([{<span class="st">"params"</span>: m.body.parameters(), <span class="st">"lr"</span>: <span class="fl">1e-4</span>}, {<span class="st">"params"</span>: m.head.parameters(), <span class="st">"lr"</span>: <span class="fl">3e-4</span>}])</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>    train_steps(m, opt, X, y, <span class="dv">100</span>, seed <span class="op">+</span> <span class="dv">1000</span>)</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>    acc.append(accuracy(m, Xt_te, yt_te))</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> acc</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.time()</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>N_PER_CLASS <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">100</span>, <span class="dv">300</span>]</span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>SEEDS <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> np.array([[run_all(n, s) <span class="cf">for</span> s <span class="kw">in</span> SEEDS] <span class="cf">for</span> n <span class="kw">in</span> N_PER_CLASS])   <span class="co"># (n values, seeds, strategies)</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"sweep time: </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"test accuracy on digits 5-9, mean ± std over 3 labelled subsets"</span>)</span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'n per class'</span><span class="sc">:&gt;12s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'(a) random init'</span><span class="sc">:&gt;18s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'(b) frozen body'</span><span class="sc">:&gt;18s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'(c) fine-tuned'</span><span class="sc">:&gt;18s}</span><span class="ss">"</span>)</span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(N_PER_CLASS):</span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>n<span class="sc">:12d}</span><span class="ss"> "</span> <span class="op">+</span> <span class="st">" "</span>.join(<span class="ss">f"</span><span class="sc">{</span>acc[i, :, j]<span class="sc">.</span>mean()<span class="sc">:11.4f}</span><span class="ss"> ± </span><span class="sc">{</span>acc[i, :, j]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">"</span> <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>sweep time: 127 s
+
+test accuracy on digits 5-9, mean ± std over 3 labelled subsets
+ n per class    (a) random init    (b) frozen body     (c) fine-tuned
+          10      0.8542 ± 0.0146      0.8709 ± 0.0213      0.8686 ± 0.0213
+          30      0.9085 ± 0.0116      0.9226 ± 0.0062      0.9223 ± 0.0065
+         100      0.9423 ± 0.0007      0.9504 ± 0.0017      0.9526 ± 0.0026
+         300      0.9717 ± 0.0022      0.9625 ± 0.0047      0.9689 ± 0.0016</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="22">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">"(a) random initialisation"</span>, <span class="st">"(b) frozen body, new head"</span>, <span class="st">"(c) fine-tuned after (b)"</span>]</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>colors, markers <span class="op">=</span> [UJGray, UJBlue, DSOrange], [<span class="st">"s"</span>, <span class="st">"o"</span>, <span class="st">"^"</span>]</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.8</span>))</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    m, s <span class="op">=</span> acc[:, :, j].mean(<span class="dv">1</span>), acc[:, :, j].std(<span class="dv">1</span>)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    ax.errorbar(N_PER_CLASS, m, yerr<span class="op">=</span>s, color<span class="op">=</span>colors[j], marker<span class="op">=</span>markers[j], ms<span class="op">=</span><span class="dv">6</span>, lw<span class="op">=</span><span class="dv">2</span>, capsize<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span>labels[j])</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)<span class="op">;</span> ax.set_xticks(N_PER_CLASS)<span class="op">;</span> ax.set_xticklabels(N_PER_CLASS)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"labelled images per class $n$ (5 classes)"</span>)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"test accuracy, digits 5–9"</span>)</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Transfer from digits 0–4 to digits 5–9 (PyTorch)"</span>)</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span> ax.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-003a-trained-networks-pytorch_files/figure-html/cell-23-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>Reading the figure.</strong> For <span class="math inline">\(n=30\)</span> and <span class="math inline">\(n=100\)</span> images per class the trained body helps: (b) and (c) lie above (a) by more than the spread over the labelled subsets. For <span class="math inline">\(n=10\)</span> the mean is also higher, but the spread over subsets is of the same size as the difference. At <span class="math inline">\(n=300\)</span> the network trained from a random initialisation catches up: with enough labels it learns features for 5–9 by itself, while the frozen body keeps the features learned for 0–4. Fine-tuning (c) gives at most a small gain over (b) with these 100 extra steps.</p>
+<p>The gains from transfer are modest here because the target task is easy: a small CNN trained from a random initialisation on 50 images already classifies most test digits correctly. The choice of the cut (Section 5.3) mattered much more: a frozen dense layer trained on 0–4 left far fewer correctly classified digits than the frozen convolutional body. Generic early features transfer; task-specific late features do not.</p>
+<hr>
+</section>
+</section>
+<section id="cheat-sheet-pytorch-and-jaxflax-nnx" class="level2">
+<h2 class="anchored" data-anchor-id="cheat-sheet-pytorch-and-jaxflax-nnx">6. Cheat sheet: PyTorch and JAX/Flax NNX</h2>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>operation</th>
+<th>PyTorch</th>
+<th>JAX / Flax NNX</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>image layout</td>
+<td><code>(N, C, H, W)</code></td>
+<td><code>(N, H, W, C)</code></td>
+</tr>
+<tr class="even">
+<td>conv kernel shape</td>
+<td><code>(out, in, kh, kw)</code></td>
+<td><code>(kh, kw, in, out)</code></td>
+</tr>
+<tr class="odd">
+<td>dense weight shape</td>
+<td><code>weight: (out, in)</code>, <span class="math inline">\(y=xW^T+b\)</span></td>
+<td><code>kernel: (in, out)</code>, <span class="math inline">\(y=xK+b\)</span></td>
+</tr>
+<tr class="even">
+<td>save</td>
+<td><code>torch.save(model.state_dict(), "f.pt")</code></td>
+<td><code>flat = flatten_dict(nnx.to_pure_dict(nnx.state(model, nnx.Param)), sep="/")</code>; <code>np.savez("f.npz", **flat)</code></td>
+</tr>
+<tr class="odd">
+<td>load into fresh model</td>
+<td><code>fresh.load_state_dict(torch.load("f.pt", weights_only=True))</code></td>
+<td><code>st = nnx.state(fresh, nnx.Param)</code>; <code>nnx.replace_by_pure_dict(st, unflatten_dict(dict(np.load("f.npz")), sep="/"))</code>; <code>nnx.update(fresh, st)</code></td>
+</tr>
+<tr class="even">
+<td>list parameters</td>
+<td><code>for name, p in model.named_parameters()</code></td>
+<td><code>flatten_dict(nnx.to_pure_dict(nnx.state(model, nnx.Param)), sep="/")</code></td>
+</tr>
+<tr class="odd">
+<td>one layer’s weights</td>
+<td><code>model.body.conv1.weight.detach().numpy()</code></td>
+<td><code>np.asarray(model.body.conv1.kernel[...])</code></td>
+</tr>
+<tr class="even">
+<td>set weights by hand</td>
+<td><code>with torch.no_grad(): layer.weight.copy_(W)</code></td>
+<td><code>layer.kernel[...] = W</code></td>
+</tr>
+<tr class="odd">
+<td>intermediate outputs</td>
+<td><code>layer.register_forward_hook(fn)</code>, <code>handle.remove()</code></td>
+<td>call submodules step by step, or <code>nnx.capture(model, nnx.Intermediate, method_outputs=nnx.Intermediate)(x)</code></td>
+</tr>
+<tr class="even">
+<td>feature extractor</td>
+<td><code>model.body</code>, or slice <code>model.body[:6]</code></td>
+<td><code>model.body</code>; a partial forward pass is written as a function</td>
+</tr>
+<tr class="odd">
+<td>new head on trained body</td>
+<td><code>new.body.load_state_dict(model.body.state_dict())</code></td>
+<td><code>nnx.update(new.body, nnx.state(model.body))</code></td>
+</tr>
+<tr class="even">
+<td>copy a module</td>
+<td><code>copy.deepcopy(m)</code></td>
+<td><code>nnx.clone(m)</code></td>
+</tr>
+<tr class="odd">
+<td>insert a layer</td>
+<td><code>nn.Sequential(body, extra, nn.ReLU(), head)</code></td>
+<td><code>nnx.Sequential(body, extra, nnx.relu, head)</code></td>
+</tr>
+<tr class="even">
+<td>replace a layer</td>
+<td><code>net.body.pool1 = nn.AvgPool2d(2)</code></td>
+<td><code>net.body.pool1 = partial(nnx.avg_pool, window_shape=(2, 2), strides=(2, 2))</code></td>
+</tr>
+<tr class="odd">
+<td>freeze</td>
+<td><code>p.requires_grad_(False)</code>; optimiser gets <code>net.head.parameters()</code></td>
+<td><code>nnx.Optimizer(net, tx, wrt=head_filter)</code> and <code>nnx.grad(..., argnums=nnx.DiffState(0, head_filter))</code>, or <code>optax.multi_transform</code> with <code>optax.set_to_zero()</code> for the body</td>
+</tr>
+<tr class="even">
+<td>where “frozen” lives</td>
+<td>in the parameter (<code>requires_grad</code>)</td>
+<td>in the optimiser and the gradient call (the model has no such flag)</td>
+</tr>
+<tr class="odd">
+<td>per-part learning rates</td>
+<td>parameter groups <code>[{"params": ..., "lr": ...}, ...]</code></td>
+<td><code>optax.multi_transform({"body": optax.adam(1e-4), "head": optax.adam(3e-4)}, labels)</code></td>
+</tr>
+</tbody>
+</table>
+<div class="cell" data-execution_count="23">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"total run time of the notebook: </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t_start<span class="sc">:.0f}</span><span class="ss"> s"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>total run time of the notebook: 167 s</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="pagination-link">
+        <span class="nav-page-text">Lab 003b: Working with trained networks in JAX and Flax NNX</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

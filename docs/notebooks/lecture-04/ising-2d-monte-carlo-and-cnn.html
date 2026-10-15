@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../lectures/lecture-05.html" rel="next">
+<link href="../../notebooks/lecture-04/lab-012-onsager.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational and Conditional Autoencoders</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link active">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational and Conditional Autoencoders</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
+  <li><a href="#the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn" id="toc-the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn" class="nav-link" data-scroll-target="#the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn">The 2D Ising model: Monte Carlo data, exact results and the critical temperature from a CNN</a>
+  <ul class="collapse">
+  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">1. The model</a></li>
+  <li><a href="#the-data-sets" id="toc-the-data-sets" class="nav-link" data-scroll-target="#the-data-sets">2. The data sets</a></li>
+  <li><a href="#checks-against-onsager" id="toc-checks-against-onsager" class="nav-link" data-scroll-target="#checks-against-onsager">3. Checks against Onsager</a></li>
+  <li><a href="#pictures-for-the-lecture" id="toc-pictures-for-the-lecture" class="nav-link" data-scroll-target="#pictures-for-the-lecture">4. Pictures for the lecture</a></li>
+  <li><a href="#a-cnn-locates-t_c-and-how-the-answer-depends-on-l" id="toc-a-cnn-locates-t_c-and-how-the-answer-depends-on-l" class="nav-link" data-scroll-target="#a-cnn-locates-t_c-and-how-the-answer-depends-on-l">5. A CNN locates <span class="math inline">\(T_c\)</span>, and how the answer depends on <span class="math inline">\(L\)</span></a>
+  <ul class="collapse">
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<hr>
+<section id="deep-learning-in-classical-and-quantum-physics" class="level1">
+<h1>Deep Learning in Classical and Quantum Physics</h1>
+<strong>Author:</strong> Marcin Płodzień
+<hr>
+</section>
+<section id="the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn" class="level1">
+<h1>The 2D Ising model: Monte Carlo data, exact results and the critical temperature from a CNN</h1>
+<p>Everything the lecture shows about the Ising model, reproducible on a laptop CPU:</p>
+<ol type="1">
+<li>the model and a Metropolis sampler written in JAX (<code>jit</code>, <code>vmap</code>, <code>lax.scan</code>);</li>
+<li>data sets of configurations for <span class="math inline">\(L = 10, 20, 30, 40, 50\)</span>, saved to <code>data/ising_L{L}.npz</code>;</li>
+<li>checks against Onsager’s exact results;</li>
+<li>the pictures of the lecture: a 1D chain, snapshots across <span class="math inline">\(T_c\)</span>, the data set;</li>
+<li>a CNN trained only far from the transition, its confidence at every temperature, and how the estimate of <span class="math inline">\(T_c\)</span> depends on <span class="math inline">\(L\)</span>.</li>
+</ol>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"JAX_PLATFORMS"</span>] <span class="op">=</span> <span class="st">"cpu"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time, json</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> ellipk</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax, jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax <span class="im">import</span> lax</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> optax</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax <span class="im">import</span> nnx</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"JAX"</span>, jax.__version__, <span class="st">"| devices:"</span>, jax.devices())</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>blue, orange, navy, grey <span class="op">=</span> <span class="st">"#005CA7"</span>, <span class="st">"#D35A05"</span>, <span class="st">"#002B5C"</span>, <span class="st">"#5A6270"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"axes.spines.top"</span>: <span class="va">False</span>, <span class="st">"axes.spines.right"</span>: <span class="va">False</span>, <span class="st">"font.size"</span>: <span class="dv">10</span>})</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>OUT, DATA <span class="op">=</span> <span class="st">"../beamer/figures"</span>, <span class="st">"data"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>os.makedirs(OUT, exist_ok<span class="op">=</span><span class="va">True</span>)<span class="op">;</span> os.makedirs(DATA, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>NUMBERS <span class="op">=</span> {}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>TC <span class="op">=</span> <span class="fl">2.0</span> <span class="op">/</span> np.log(<span class="fl">1.0</span> <span class="op">+</span> np.sqrt(<span class="fl">2.0</span>))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Onsager: T_c = 2/ln(1+sqrt 2) = </span><span class="sc">{</span>TC<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAX 0.11.0 | devices: [CpuDevice(id=0)]
+Onsager: T_c = 2/ln(1+sqrt 2) = 2.2692</code></pre>
+</div>
+</div>
+<section id="the-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-model">1. The model</h2>
+<p>Spins <span class="math inline">\(s_i=\pm1\)</span> on an <span class="math inline">\(L\times L\)</span> lattice with periodic boundaries, <span class="math inline">\(N=L^2\)</span>, <span class="math display">\[
+H(\mathbf s) = -J\sum_{\langle i,j\rangle} s_is_j,\qquad p(\mathbf s)=\frac{e^{-\beta H(\mathbf s)}}{Z},\qquad Z=\sum_{\mathbf s}e^{-\beta H(\mathbf s)},
+\]</span> with <span class="math inline">\(J=k_B=1\)</span>. Observables per spin: <span class="math inline">\(m=\frac1N\sum_i s_i\)</span> and <span class="math inline">\(e=H/N\)</span>.</p>
+<p><strong>Metropolis.</strong> Propose to flip <span class="math inline">\(s_i\)</span>; the energy changes by <span class="math inline">\(\Delta E = 2s_i\sum_{j\in{\rm nn}(i)}s_j\)</span>; accept with probability <span class="math inline">\(\min(1,e^{-\beta\Delta E})\)</span>. Spins of one colour of a chessboard do not interact, so all of them are updated at once; one <strong>sweep</strong> = black half + white half. In JAX: the sweep is a pure function, <code>lax.scan</code> repeats it, <code>vmap</code> runs many independent chains in parallel, <code>jit</code> compiles everything.</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> chessboard(L):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> np.meshgrid(np.arange(L), np.arange(L), indexing<span class="op">=</span><span class="st">"ij"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.asarray((x <span class="op">+</span> y) <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sweep(s, key, beta, black):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> colour <span class="kw">in</span> (black, <span class="op">~</span>black):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        key, sub <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        nn <span class="op">=</span> jnp.roll(s, <span class="dv">1</span>, <span class="dv">0</span>) <span class="op">+</span> jnp.roll(s, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>) <span class="op">+</span> jnp.roll(s, <span class="dv">1</span>, <span class="dv">1</span>) <span class="op">+</span> jnp.roll(s, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        accept <span class="op">=</span> jax.random.uniform(sub, s.shape) <span class="op">&lt;</span> jnp.exp(<span class="op">-</span>beta <span class="op">*</span> <span class="fl">2.0</span> <span class="op">*</span> s <span class="op">*</span> nn)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        s <span class="op">=</span> jnp.where(colour <span class="op">&amp;</span> accept, <span class="op">-</span>s, s)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> s, key</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">@partial</span>(jax.jit, static_argnames<span class="op">=</span>(<span class="st">"n_equil"</span>, <span class="st">"n_samples"</span>, <span class="st">"n_between"</span>))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample_chains(s0, keys, Ts, black, n_equil, n_samples, n_between):</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># every chain is cooled through Ts; at each T: n_equil sweeps, then n_samples stored every n_between sweeps</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> chain(s, key):</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> at_T(carry, T):</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            step <span class="op">=</span> <span class="kw">lambda</span> c, _: (sweep(c[<span class="dv">0</span>], c[<span class="dv">1</span>], <span class="fl">1.0</span> <span class="op">/</span> T, black), <span class="va">None</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            carry, _ <span class="op">=</span> lax.scan(step, carry, <span class="va">None</span>, length<span class="op">=</span>n_equil)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            <span class="kw">def</span> store(c, _):</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                c, _ <span class="op">=</span> lax.scan(step, c, <span class="va">None</span>, length<span class="op">=</span>n_between)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> c, c[<span class="dv">0</span>].astype(jnp.int8)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> lax.scan(store, carry, <span class="va">None</span>, length<span class="op">=</span>n_samples)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> lax.scan(at_T, (s, key), Ts)[<span class="dv">1</span>]</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jax.vmap(chain)(s0, keys)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="the-data-sets" class="level2">
+<h2 class="anchored" data-anchor-id="the-data-sets">2. The data sets</h2>
+<p>For every <span class="math inline">\(L\)</span>: 51 temperatures from 3.5 down to 1.0 (step 0.05), 40 independent chains cooled through the grid, 5 configurations per chain and temperature, separated by <span class="math inline">\(2L\)</span> sweeps: <strong>200 configurations per temperature</strong>. Stored as</p>
+<ul>
+<li><code>configs</code>: <code>int8</code>, shape <code>(n_T, 200, L, L)</code>, values <span class="math inline">\(\pm1\)</span>;</li>
+<li><code>T</code>: the temperatures (ascending);</li>
+<li>the generation settings, so that every file documents itself.</li>
+</ul>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>L_LIST <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>T_GRID <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">1.0</span>, <span class="fl">3.5001</span>, <span class="fl">0.05</span>), <span class="dv">3</span>)          <span class="co"># ascending, 51 values</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>N_CHAINS, N_SAMPLES, N_EQUIL <span class="op">=</span> <span class="dv">40</span>, <span class="dv">5</span>, <span class="dv">1000</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate(L, seed):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    k0, k1 <span class="op">=</span> jax.random.split(jax.random.PRNGKey(seed))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    s0 <span class="op">=</span> jnp.where(jax.random.bernoulli(k0, <span class="fl">0.5</span>, (N_CHAINS, L, L)), <span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> sample_chains(s0, jax.random.split(k1, N_CHAINS), jnp.asarray(T_GRID[::<span class="op">-</span><span class="dv">1</span>], jnp.float32), chessboard(L),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                        N_EQUIL, N_SAMPLES, <span class="dv">2</span> <span class="op">*</span> L)                         <span class="co"># (chains, nT, samples, L, L), cooling order</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> np.asarray(out)[:, ::<span class="op">-</span><span class="dv">1</span>]                                           <span class="co"># ascending T</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out.transpose(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>).reshape(<span class="bu">len</span>(T_GRID), N_CHAINS <span class="op">*</span> N_SAMPLES, L, L)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {}</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L <span class="kw">in</span> L_LIST:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">/ising_L</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">.npz"</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    t0 <span class="op">=</span> time.time()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(path):</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        f <span class="op">=</span> np.load(path)<span class="op">;</span> data[L] <span class="op">=</span> f[<span class="st">"configs"</span>]<span class="op">;</span> how <span class="op">=</span> <span class="st">"loaded"</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        data[L] <span class="op">=</span> generate(L, seed<span class="op">=</span><span class="dv">10</span> <span class="op">+</span> L)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        np.savez_compressed(path, configs<span class="op">=</span>data[L], T<span class="op">=</span>T_GRID, L<span class="op">=</span>L, n_chains<span class="op">=</span>N_CHAINS, n_samples_per_chain<span class="op">=</span>N_SAMPLES,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                            n_equil<span class="op">=</span>N_EQUIL, n_between<span class="op">=</span><span class="dv">2</span> <span class="op">*</span> L, sampler<span class="op">=</span><span class="st">"checkerboard Metropolis, cooled from T=3.5"</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        how <span class="op">=</span> <span class="st">"generated"</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"L = </span><span class="sc">{</span>L<span class="sc">:2d}</span><span class="ss">: </span><span class="sc">{</span>how<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>data[L]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 10: loaded (51, 200, 10, 10) in 0 s
+L = 20: loaded (51, 200, 20, 20) in 0 s
+L = 30: loaded (51, 200, 30, 30) in 0 s</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 40: generated (51, 200, 40, 40) in 407 s</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 50: generated (51, 200, 50, 50) in 649 s</code></pre>
+</div>
+</div>
+</section>
+<section id="checks-against-onsager" class="level2">
+<h2 class="anchored" data-anchor-id="checks-against-onsager">3. Checks against Onsager</h2>
+<p>For the infinite lattice: <span class="math inline">\(M(T) = \left(1-\sinh^{-4}(2/T)\right)^{1/8}\)</span> below <span class="math inline">\(T_c\)</span> (Yang) and <span class="math inline">\(u(T) = -\coth(2\beta)\left[1+\frac{2}{\pi}\left(2\tanh^2(2\beta)-1\right)K(\kappa)\right]\)</span>, <span class="math inline">\(\kappa = 2\sinh(2\beta)/\cosh^2(2\beta)\)</span> (Onsager). On finite lattices <span class="math inline">\(\langle|m|\rangle\)</span> stays non-zero above <span class="math inline">\(T_c\)</span> and the transition is rounded; the rounding shrinks as <span class="math inline">\(L\)</span> grows.</p>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> M_exact(T):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> np.asarray(T, <span class="bu">float</span>)<span class="op">;</span> out <span class="op">=</span> np.zeros_like(T)<span class="op">;</span> low <span class="op">=</span> T <span class="op">&lt;</span> TC</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    out[low] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> np.sinh(<span class="dv">2</span> <span class="op">/</span> T[low]) <span class="op">**</span> <span class="op">-</span><span class="dv">4</span>) <span class="op">**</span> <span class="fl">0.125</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> u_exact(T):</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> np.asarray(T, <span class="bu">float</span>)<span class="op">;</span> kap <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.sinh(<span class="dv">2</span> <span class="op">*</span> K) <span class="op">/</span> np.cosh(<span class="dv">2</span> <span class="op">*</span> K) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span> <span class="op">/</span> np.tanh(<span class="dv">2</span> <span class="op">*</span> K) <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">/</span> np.pi <span class="op">*</span> (<span class="dv">2</span> <span class="op">*</span> np.tanh(<span class="dv">2</span> <span class="op">*</span> K) <span class="op">**</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> ellipk(kap <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> energy(c):</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> c.astype(np.float32)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>(c <span class="op">*</span> np.roll(c, <span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>) <span class="op">+</span> c <span class="op">*</span> np.roll(c, <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>)).mean((<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>colors_L <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">zip</span>(L_LIST, plt.cm.viridis(np.linspace(<span class="fl">0.05</span>, <span class="fl">0.85</span>, <span class="bu">len</span>(L_LIST)))))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>Tf <span class="op">=</span> np.linspace(<span class="fl">1.0</span>, <span class="fl">3.5</span>, <span class="dv">400</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">3.4</span>))</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L <span class="kw">in</span> L_LIST:</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].plot(T_GRID, np.<span class="bu">abs</span>(data[L].mean((<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>))).mean(<span class="dv">1</span>), <span class="st">".-"</span>, ms<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span>colors_L[L], label<span class="op">=</span><span class="ss">f"$L=</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">1</span>].plot(T_GRID, energy(data[L]).mean(<span class="dv">1</span>), <span class="st">".-"</span>, ms<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span>colors_L[L])</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(Tf, M_exact(Tf), <span class="st">"--"</span>, color<span class="op">=</span><span class="st">"red"</span>, label<span class="op">=</span><span class="st">"Onsager / Yang"</span>)<span class="op">;</span> ax[<span class="dv">1</span>].plot(Tf, u_exact(Tf), <span class="st">"--"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, lab <span class="kw">in</span> <span class="bu">zip</span>(ax, [<span class="vs">r"$\langle|m|\rangle$"</span>, <span class="vs">r"$\langle e\rangle$"</span>]):</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    a.axvline(TC, color<span class="op">=</span>grey, ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span> a.set_xlabel(<span class="st">"$T$"</span>)<span class="op">;</span> a.set_ylabel(lab)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> fig.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/gen_Ising_M_E_vs_T.png"</span>, dpi<span class="op">=</span><span class="dv">170</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="ising-2d-monte-carlo-and-cnn_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="pictures-for-the-lecture" class="level2">
+<h2 class="anchored" data-anchor-id="pictures-for-the-lecture">4. Pictures for the lecture</h2>
+<p><strong>A 1D chain.</strong> With <span class="math inline">\(h=0\)</span> the bonds of a 1D chain are independent: neighbours are parallel with probability <span class="math inline">\(p=e^{\beta J}/(e^{\beta J}+e^{-\beta J})\)</span>, so chains can be sampled exactly. The correlation length is <span class="math inline">\(\xi=-1/\ln\tanh(\beta J)\)</span>.</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rng1 <span class="op">=</span> np.random.default_rng(<span class="dv">3</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">2.8</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, T <span class="kw">in</span> <span class="bu">zip</span>(axs, [<span class="fl">0.6</span>, <span class="fl">1.0</span>, <span class="fl">5.0</span>]):</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    p_par <span class="op">=</span> np.exp(<span class="dv">1</span> <span class="op">/</span> T) <span class="op">/</span> (np.exp(<span class="dv">1</span> <span class="op">/</span> T) <span class="op">+</span> np.exp(<span class="op">-</span><span class="dv">1</span> <span class="op">/</span> T))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    s1 <span class="op">=</span> np.empty(<span class="dv">120</span>, <span class="bu">int</span>)<span class="op">;</span> s1[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">1</span> <span class="cf">if</span> rng1.random() <span class="op">&lt;</span> <span class="fl">0.5</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">120</span>):</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        s1[i] <span class="op">=</span> s1[i <span class="op">-</span> <span class="dv">1</span>] <span class="cf">if</span> rng1.random() <span class="op">&lt;</span> p_par <span class="cf">else</span> <span class="op">-</span>s1[i <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    a.imshow(s1[<span class="va">None</span>, :], cmap<span class="op">=</span>ListedColormap([orange, blue]), aspect<span class="op">=</span><span class="st">"auto"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    a.set_xticks([])<span class="op">;</span> a.set_yticks([])<span class="op">;</span> a.set_ylabel(<span class="ss">f"$T/J=</span><span class="sc">{</span>T<span class="sc">:g}</span><span class="ss">$"</span>, rotation<span class="op">=</span><span class="dv">0</span>, ha<span class="op">=</span><span class="st">"right"</span>, va<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    a.text(<span class="fl">1.02</span>, <span class="fl">0.5</span>, <span class="ss">f"$m=</span><span class="sc">{</span>s1<span class="sc">.</span>mean()<span class="sc">:+.2f}</span><span class="ss">$,  $</span><span class="ch">\\</span><span class="ss">xi=</span><span class="sc">{</span><span class="op">-</span><span class="dv">1</span> <span class="op">/</span> np<span class="sc">.</span>log(np.tanh(<span class="dv">1</span> <span class="op">/</span> T))<span class="sc">:.1f}</span><span class="ss">$"</span>, transform<span class="op">=</span>a.transAxes, va<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/gen_ising1d_chains.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="ising-2d-monte-carlo-and-cnn_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>T_row <span class="op">=</span> [<span class="fl">1.2</span>, <span class="fl">1.9</span>, <span class="fl">2.2</span>, <span class="fl">2.4</span>, <span class="fl">3.2</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">5</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">2.2</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, Tv <span class="kw">in</span> <span class="bu">zip</span>(axs, T_row):</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> <span class="bu">int</span>(np.argmin(<span class="bu">abs</span>(T_GRID <span class="op">-</span> Tv)))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    a.imshow(data[<span class="dv">50</span>][i, <span class="dv">0</span>], cmap<span class="op">=</span><span class="st">"gray"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, interpolation<span class="op">=</span><span class="st">"nearest"</span>)<span class="op">;</span> a.set_xticks([])<span class="op">;</span> a.set_yticks([])</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    a.set_title(<span class="ss">f"$T = </span><span class="sc">{</span>T_GRID[i]<span class="sc">:.2f}</span><span class="ss">$"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/gen_Ising_configs_L50_row.png"</span>, dpi<span class="op">=</span><span class="dv">170</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>T_show <span class="op">=</span> [<span class="fl">1.5</span>, <span class="fl">2.0</span>, <span class="fl">2.25</span>, <span class="fl">2.5</span>, <span class="fl">3.0</span>]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="bu">len</span>(L_LIST), <span class="bu">len</span>(T_show), figsize<span class="op">=</span>(<span class="fl">7.5</span>, <span class="fl">7.6</span>))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r, L <span class="kw">in</span> <span class="bu">enumerate</span>(L_LIST):</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, Tv <span class="kw">in</span> <span class="bu">enumerate</span>(T_show):</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        i <span class="op">=</span> <span class="bu">int</span>(np.argmin(<span class="bu">abs</span>(T_GRID <span class="op">-</span> Tv)))<span class="op">;</span> a <span class="op">=</span> axs[r, k]</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        a.imshow(data[L][i, <span class="dv">0</span>], cmap<span class="op">=</span><span class="st">"gray"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, interpolation<span class="op">=</span><span class="st">"nearest"</span>)<span class="op">;</span> a.set_xticks([])<span class="op">;</span> a.set_yticks([])</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r <span class="op">==</span> <span class="dv">0</span>: a.set_title(<span class="ss">f"$T = </span><span class="sc">{</span>T_GRID[i]<span class="sc">:.2f}</span><span class="ss">$"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> k <span class="op">==</span> <span class="dv">0</span>: a.set_ylabel(<span class="ss">f"$L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">$"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/gen_Ising_dataset.png"</span>, dpi<span class="op">=</span><span class="dv">170</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="ising-2d-monte-carlo-and-cnn_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="ising-2d-monte-carlo-and-cnn_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="a-cnn-locates-t_c-and-how-the-answer-depends-on-l" class="level2">
+<h2 class="anchored" data-anchor-id="a-cnn-locates-t_c-and-how-the-answer-depends-on-l">5. A CNN locates <span class="math inline">\(T_c\)</span>, and how the answer depends on <span class="math inline">\(L\)</span></h2>
+<p><strong>Training only where the answer is clear:</strong> configurations with <span class="math inline">\(T&lt;1.5\)</span> get the label 0 (ordered), those with <span class="math inline">\(T&gt;3\)</span> the label 1 (disordered). Nothing between 1.5 and 3 is used for training.</p>
+<p><strong>The network</strong> (Flax NNX): two blocks of a <span class="math inline">\(3\times3\)</span> convolution with 16 channels (periodic boundaries, like the lattice), ReLU and <span class="math inline">\(2\times2\)</span> max pooling; global average pooling; a dense layer of 32 ReLU units; 2 outputs with softmax; cross-entropy loss, Adam. Global average pooling makes the same network work for every <span class="math inline">\(L\)</span>.</p>
+<p><strong>After training</strong> we predict at every temperature. For one configuration the network gives <span class="math inline">\(p_1\)</span>, the probability of “disordered”; its <strong>confidence</strong> is <span class="math inline">\(\max(p_0,p_1)\)</span>. Two estimates of <span class="math inline">\(T_c\)</span>: the temperature where the average confidence is lowest, and the temperature where <span class="math inline">\(\langle p_1\rangle_T\)</span> crosses <span class="math inline">\(1/2\)</span>.</p>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> IsingCNN(nnx.Module):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">*</span>, rngs):</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c1 <span class="op">=</span> nnx.Conv(<span class="dv">1</span>, <span class="dv">16</span>, (<span class="dv">3</span>, <span class="dv">3</span>), padding<span class="op">=</span><span class="st">"CIRCULAR"</span>, rngs<span class="op">=</span>rngs)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c2 <span class="op">=</span> nnx.Conv(<span class="dv">16</span>, <span class="dv">16</span>, (<span class="dv">3</span>, <span class="dv">3</span>), padding<span class="op">=</span><span class="st">"CIRCULAR"</span>, rngs<span class="op">=</span>rngs)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d1 <span class="op">=</span> nnx.Linear(<span class="dv">16</span>, <span class="dv">32</span>, rngs<span class="op">=</span>rngs)<span class="op">;</span> <span class="va">self</span>.d2 <span class="op">=</span> nnx.Linear(<span class="dv">32</span>, <span class="dv">2</span>, rngs<span class="op">=</span>rngs)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> x[..., <span class="va">None</span>]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> nnx.max_pool(nnx.relu(<span class="va">self</span>.c1(h)), (<span class="dv">2</span>, <span class="dv">2</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> nnx.max_pool(nnx.relu(<span class="va">self</span>.c2(h)), (<span class="dv">2</span>, <span class="dv">2</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> h.mean(axis<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">2</span>))                                  <span class="co"># global average pooling</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.d2(nnx.relu(<span class="va">self</span>.d1(h)))                     <span class="co"># logits</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step(model, opt, x, y):</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> loss_fn(m):</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> optax.softmax_cross_entropy_with_integer_labels(m(x), y).mean()</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    loss, grads <span class="op">=</span> nnx.value_and_grad(loss_fn)(model)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    opt.update(model, grads)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prob_disordered(model, x):</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jax.nn.softmax(model(x))[:, <span class="dv">1</span>]</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>T_MIN, T_MAX <span class="op">=</span> <span class="fl">1.5</span>, <span class="fl">3.0</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_cnn(L, seed, epochs<span class="op">=</span><span class="dv">8</span>, batch<span class="op">=</span><span class="dv">64</span>):</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> data[L]</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    low, high <span class="op">=</span> T_GRID <span class="op">&lt;</span> T_MIN, T_GRID <span class="op">&gt;</span> T_MAX</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.concatenate([c[low].reshape(<span class="op">-</span><span class="dv">1</span>, L, L), c[high].reshape(<span class="op">-</span><span class="dv">1</span>, L, L)]).astype(np.float32)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> np.concatenate([np.zeros(c[low].shape[<span class="dv">0</span>] <span class="op">*</span> c.shape[<span class="dv">1</span>], <span class="bu">int</span>), np.ones(c[high].shape[<span class="dv">0</span>] <span class="op">*</span> c.shape[<span class="dv">1</span>], <span class="bu">int</span>)])</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> IsingCNN(rngs<span class="op">=</span>nnx.Rngs(seed))<span class="op">;</span> opt <span class="op">=</span> nnx.Optimizer(model, optax.adam(<span class="fl">1e-3</span>), wrt<span class="op">=</span>nnx.Param)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    X, y <span class="op">=</span> jnp.asarray(X), jnp.asarray(y)<span class="op">;</span> key <span class="op">=</span> jax.random.PRNGKey(seed)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>        key, k <span class="op">=</span> jax.random.split(key)<span class="op">;</span> perm <span class="op">=</span> jax.random.permutation(k, <span class="bu">len</span>(y))</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(y) <span class="op">-</span> batch <span class="op">+</span> <span class="dv">1</span>, batch):</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>            train_step(model, opt, X[perm[i:i <span class="op">+</span> batch]], y[perm[i:i <span class="op">+</span> batch]])</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> <span class="bu">float</span>(((prob_disordered(model, X) <span class="op">&gt;</span> <span class="fl">0.5</span>) <span class="op">==</span> y).mean())</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, acc</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict_all(model, L):</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> jnp.asarray(data[L].reshape(<span class="op">-</span><span class="dv">1</span>, L, L), jnp.float32)</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.asarray(prob_disordered(model, c)).reshape(<span class="bu">len</span>(T_GRID), <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> estimates(p1):</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    conf <span class="op">=</span> np.maximum(p1, <span class="dv">1</span> <span class="op">-</span> p1).mean(<span class="dv">1</span>)<span class="op">;</span> p1m <span class="op">=</span> p1.mean(<span class="dv">1</span>)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> <span class="bu">int</span>(np.argmin(conf))<span class="op">;</span> T_conf <span class="op">=</span> T_GRID[i]</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>    j <span class="op">=</span> <span class="bu">int</span>(np.where(np.diff(np.sign(p1m <span class="op">-</span> <span class="fl">0.5</span>)) <span class="op">!=</span> <span class="dv">0</span>)[<span class="dv">0</span>][<span class="dv">0</span>])</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>    T_cross <span class="op">=</span> T_GRID[j] <span class="op">+</span> (<span class="fl">0.5</span> <span class="op">-</span> p1m[j]) <span class="op">*</span> (T_GRID[j <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> T_GRID[j]) <span class="op">/</span> (p1m[j <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> p1m[j])</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> conf, p1m, T_conf, T_cross</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>SEEDS <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> {}</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.time()</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L <span class="kw">in</span> L_LIST:</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>    runs <span class="op">=</span> []</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> seed <span class="kw">in</span> SEEDS:</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>        model, acc <span class="op">=</span> train_cnn(L, seed)</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>        runs.append((acc,) <span class="op">+</span> estimates(predict_all(model, L)))</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>    results[L] <span class="op">=</span> runs</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>    Tc_conf <span class="op">=</span> np.array([r[<span class="dv">3</span>] <span class="cf">for</span> r <span class="kw">in</span> runs])<span class="op">;</span> Tc_cross <span class="op">=</span> np.array([r[<span class="dv">4</span>] <span class="cf">for</span> r <span class="kw">in</span> runs])</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"L = </span><span class="sc">{</span>L<span class="sc">:2d}</span><span class="ss">: training accuracy </span><span class="sc">{</span>np<span class="sc">.</span>mean([r[<span class="dv">0</span>] <span class="cf">for</span> r <span class="kw">in</span> runs])<span class="sc">:.4f}</span><span class="ss">; T_c from the confidence minimum "</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>Tc_conf<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> +- </span><span class="sc">{</span>Tc_conf<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">; from &lt;p1&gt; = 1/2: </span><span class="sc">{</span>Tc_cross<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> +- </span><span class="sc">{</span>Tc_cross<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">"</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"   (</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 10: training accuracy 0.9998; T_c from the confidence minimum 2.267 +- 0.103; from &lt;p1&gt; = 1/2: 2.281 +- 0.030   (23 s)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 20: training accuracy 1.0000; T_c from the confidence minimum 2.283 +- 0.024; from &lt;p1&gt; = 1/2: 2.286 +- 0.030   (55 s)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 30: training accuracy 1.0000; T_c from the confidence minimum 2.283 +- 0.024; from &lt;p1&gt; = 1/2: 2.293 +- 0.018   (127 s)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 40: training accuracy 1.0000; T_c from the confidence minimum 2.283 +- 0.024; from &lt;p1&gt; = 1/2: 2.285 +- 0.027   (252 s)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 50: training accuracy 1.0000; T_c from the confidence minimum 2.283 +- 0.024; from &lt;p1&gt; = 1/2: 2.285 +- 0.031   (433 s)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="fl">3.8</span>), gridspec_kw<span class="op">=</span><span class="bu">dict</span>(width_ratios<span class="op">=</span>[<span class="fl">1.3</span>, <span class="fl">1.3</span>, <span class="dv">1</span>]))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a <span class="kw">in</span> ax[:<span class="dv">2</span>]:</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    a.axvspan(T_GRID.<span class="bu">min</span>(), T_MIN, color<span class="op">=</span>blue, alpha<span class="op">=</span><span class="fl">0.12</span>, lw<span class="op">=</span><span class="dv">0</span>)<span class="op">;</span> a.axvspan(T_MAX, T_GRID.<span class="bu">max</span>(), color<span class="op">=</span>orange, alpha<span class="op">=</span><span class="fl">0.12</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    a.axvline(TC, color<span class="op">=</span>grey, ls<span class="op">=</span><span class="st">":"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L <span class="kw">in</span> L_LIST:</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    conf <span class="op">=</span> np.mean([r[<span class="dv">1</span>] <span class="cf">for</span> r <span class="kw">in</span> results[L]], axis<span class="op">=</span><span class="dv">0</span>)<span class="op">;</span> p1m <span class="op">=</span> np.mean([r[<span class="dv">2</span>] <span class="cf">for</span> r <span class="kw">in</span> results[L]], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].plot(T_GRID, conf, <span class="st">".-"</span>, ms<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span>colors_L[L], label<span class="op">=</span><span class="ss">f"$L=</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">1</span>].plot(T_GRID, p1m, <span class="st">".-"</span>, ms<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span>colors_L[L])</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_ylabel(<span class="vs">r"average confidence $\langle\max(p_0,p_1)\rangle_T$"</span>)<span class="op">;</span> ax[<span class="dv">0</span>].set_xlabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].axhline(<span class="fl">0.5</span>, color<span class="op">=</span>grey, lw<span class="op">=</span><span class="fl">0.8</span>)<span class="op">;</span> ax[<span class="dv">1</span>].set_ylabel(<span class="vs">r"$\langle p_1\rangle_T$"</span>)<span class="op">;</span> ax[<span class="dv">1</span>].set_xlabel(<span class="st">"$T$"</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>invL <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> np.array(L_LIST)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>tc_conf <span class="op">=</span> np.array([np.mean([r[<span class="dv">3</span>] <span class="cf">for</span> r <span class="kw">in</span> results[L]]) <span class="cf">for</span> L <span class="kw">in</span> L_LIST])<span class="op">;</span> tc_conf_e <span class="op">=</span> np.array([np.std([r[<span class="dv">3</span>] <span class="cf">for</span> r <span class="kw">in</span> results[L]]) <span class="cf">for</span> L <span class="kw">in</span> L_LIST])</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>tc_cross <span class="op">=</span> np.array([np.mean([r[<span class="dv">4</span>] <span class="cf">for</span> r <span class="kw">in</span> results[L]]) <span class="cf">for</span> L <span class="kw">in</span> L_LIST])<span class="op">;</span> tc_cross_e <span class="op">=</span> np.array([np.std([r[<span class="dv">4</span>] <span class="cf">for</span> r <span class="kw">in</span> results[L]]) <span class="cf">for</span> L <span class="kw">in</span> L_LIST])</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].errorbar(invL, tc_conf, tc_conf_e, fmt<span class="op">=</span><span class="st">"o"</span>, color<span class="op">=</span>navy, capsize<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"confidence minimum"</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].errorbar(invL, tc_cross, tc_cross_e, fmt<span class="op">=</span><span class="st">"s"</span>, color<span class="op">=</span>orange, capsize<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="vs">r"$\langle p_1\rangle = 1/2$"</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> np.polyfit(invL, tc_cross, <span class="dv">1</span>)<span class="op">;</span> xx <span class="op">=</span> np.linspace(<span class="dv">0</span>, invL.<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.05</span>, <span class="dv">50</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].plot(xx, np.polyval(fit, xx), <span class="st">"--"</span>, color<span class="op">=</span>orange, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].axhline(TC, color<span class="op">=</span>grey, ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span> ax[<span class="dv">2</span>].set_xlabel(<span class="st">"$1/L$"</span>)<span class="op">;</span> ax[<span class="dv">2</span>].set_ylabel(<span class="st">"estimate of $T_c$"</span>)<span class="op">;</span> ax[<span class="dv">2</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> fig.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/gen_Ising_confidence_vs_T_L.png"</span>, dpi<span class="op">=</span><span class="dv">170</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"&lt;p1&gt; = 1/2 crossing extrapolated to L -&gt; infinity (linear in 1/L): </span><span class="sc">{</span>fit[<span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">   (exact </span><span class="sc">{</span>TC<span class="sc">:.4f}</span><span class="ss">)"</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(tc_conf<span class="op">=</span>{<span class="bu">str</span>(L): [<span class="bu">round</span>(<span class="bu">float</span>(a), <span class="dv">3</span>), <span class="bu">round</span>(<span class="bu">float</span>(b), <span class="dv">3</span>)] <span class="cf">for</span> L, a, b <span class="kw">in</span> <span class="bu">zip</span>(L_LIST, tc_conf, tc_conf_e)},</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>               tc_cross<span class="op">=</span>{<span class="bu">str</span>(L): [<span class="bu">round</span>(<span class="bu">float</span>(a), <span class="dv">3</span>), <span class="bu">round</span>(<span class="bu">float</span>(b), <span class="dv">3</span>)] <span class="cf">for</span> L, a, b <span class="kw">in</span> <span class="bu">zip</span>(L_LIST, tc_cross, tc_cross_e)},</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>               tc_cross_extrap<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(fit[<span class="dv">1</span>]), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="ising-2d-monte-carlo-and-cnn_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;p1&gt; = 1/2 crossing extrapolated to L -&gt; infinity (linear in 1/L): 2.290   (exact 2.2692)</code></pre>
+</div>
+</div>
+<p>The figure of one size for the slide: <span class="math inline">\(L=50\)</span>, seed 0, with every configuration’s confidence coloured by the predicted phase.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>model, _ <span class="op">=</span> train_cnn(L, seed<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> predict_all(model, L)<span class="op">;</span> conf_all <span class="op">=</span> np.maximum(p1, <span class="dv">1</span> <span class="op">-</span> p1)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>conf, p1m, T_conf, T_cross <span class="op">=</span> estimates(p1)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>fig, (axb, ax) <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="fl">7.0</span>, <span class="fl">4.2</span>), sharex<span class="op">=</span><span class="va">True</span>, gridspec_kw<span class="op">=</span><span class="bu">dict</span>(height_ratios<span class="op">=</span>[<span class="fl">0.9</span>, <span class="dv">3</span>], hspace<span class="op">=</span><span class="fl">0.08</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a <span class="kw">in</span> (axb, ax):</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    a.axvspan(T_GRID.<span class="bu">min</span>(), T_MIN, color<span class="op">=</span>blue, alpha<span class="op">=</span><span class="fl">0.18</span>, lw<span class="op">=</span><span class="dv">0</span>)<span class="op">;</span> a.axvspan(T_MAX, T_GRID.<span class="bu">max</span>(), color<span class="op">=</span>orange, alpha<span class="op">=</span><span class="fl">0.22</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>axb.axvspan(T_MIN, T_MAX, color<span class="op">=</span>grey, alpha<span class="op">=</span><span class="fl">0.12</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>axb.text(<span class="fl">1.25</span>, <span class="fl">0.5</span>, <span class="st">"training</span><span class="ch">\n</span><span class="st">ordered, $y=0$"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>axb.text(<span class="fl">2.25</span>, <span class="fl">0.5</span>, <span class="st">"no labels: prediction only"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>axb.text(<span class="fl">3.25</span>, <span class="fl">0.5</span>, <span class="st">"training</span><span class="ch">\n</span><span class="st">disordered, $y=1$"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> axb.axis(<span class="st">"off"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>TT <span class="op">=</span> np.repeat(T_GRID, conf_all.shape[<span class="dv">1</span>])</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>ax.scatter(TT, conf_all.ravel(), s<span class="op">=</span><span class="dv">2</span>, c<span class="op">=</span>np.where(p1.ravel() <span class="op">&gt;</span> <span class="fl">0.5</span>, orange, blue), alpha<span class="op">=</span><span class="fl">0.25</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>ax.plot(T_GRID, conf, <span class="st">"k-"</span>, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"average confidence"</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>ax.axvline(T_conf, color<span class="op">=</span><span class="st">"k"</span>, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="dv">1</span>)<span class="op">;</span> ax.axvline(TC, color<span class="op">=</span><span class="st">"red"</span>, ls<span class="op">=</span><span class="st">":"</span>, lw<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>ax.text(T_conf <span class="op">+</span> <span class="fl">0.03</span>, <span class="fl">0.52</span>, <span class="ss">f"minimum at </span><span class="sc">{</span>T_conf<span class="sc">:.2f}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> ax.set_xlabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"confidence"</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>, loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/gen_Ising_confidence_vs_T.png"</span>, dpi<span class="op">=</span><span class="dv">170</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(slide_L<span class="op">=</span>L, slide_T_conf<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(T_conf), <span class="dv">3</span>), slide_T_cross<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(T_cross), <span class="dv">3</span>))</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(NUMBERS)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/numbers_ising2d.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    json.dump(NUMBERS, f, indent<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="ising-2d-monte-carlo-and-cnn_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'tc_conf': {'10': [2.267, 0.103], '20': [2.283, 0.024], '30': [2.283, 0.024], '40': [2.283, 0.024], '50': [2.283, 0.024]}, 'tc_cross': {'10': [2.281, 0.03], '20': [2.286, 0.03], '30': [2.293, 0.018], '40': [2.285, 0.027], '50': [2.285, 0.031]}, 'tc_cross_extrap': 2.29, 'slide_L': 50, 'slide_T_conf': 2.25, 'slide_T_cross': 2.241}</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>Try it.</strong> 1. Train with the windows <span class="math inline">\(T&lt;2.0\)</span> and <span class="math inline">\(T&gt;2.6\)</span>, closer to <span class="math inline">\(T_c\)</span>. Does the estimate improve, and does it depend less on <span class="math inline">\(L\)</span>? 2. Replace the global average pooling by flattening. Why does the network then work only for the <span class="math inline">\(L\)</span> it was trained on? 3. Use the network trained on <span class="math inline">\(L=20\)</span> to predict on <span class="math inline">\(L=50\)</span> configurations. What happens to the confidence curve?</p>
+</blockquote>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<ul>
+<li>L. Onsager, Phys. Rev.&nbsp;<strong>65</strong>, 117 (1944), <a href="https://doi.org/10.1103/PhysRev.65.117">doi:10.1103/PhysRev.65.117</a>; C. N. Yang, Phys. Rev.&nbsp;<strong>85</strong>, 808 (1952), <a href="https://doi.org/10.1103/PhysRev.85.808">doi:10.1103/PhysRev.85.808</a></li>
+<li>J. Carrasquilla, R. G. Melko, <em>Machine learning phases of matter</em>, Nature Physics (2017), <a href="https://arxiv.org/abs/1605.01735">arXiv:1605.01735</a></li>
+<li>M. E. J. Newman, G. T. Barkema, <em>Monte Carlo Methods in Statistical Physics</em>, Oxford University Press (1999)</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 012: Onsager’s exact solution of the 2D Ising model</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../lectures/lecture-05.html" class="pagination-link">
+        <span class="nav-page-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

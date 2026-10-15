@@ -1,42 +1,18 @@
 ---
-title: "3 · Elements of Deep Learning: from MNIST to the 2D Ising Model"
+title: "3 · MNIST: Training a Network by Hand"
 code-tools: false
 toc: false
 ---
 
-The anatomy of a neural network, loss functions for regression and classification, the zoo of architectures and training by gradient descent. Two "hello world" examples: MNIST digits, classified by a feed-forward network with the categorical cross-entropy, and CIFAR-10 images, where convolutional networks capture spatial correlations and L1/L2 regularisation, dropout and batch normalisation fight overfitting; optimisers from stochastic gradient descent to Adam. A physics example: the 2D Ising model, Onsager's solution, Monte Carlo samples from the Gibbs distribution, and the prediction confidence of a network that locates the critical temperature; the lecture closes with the Chinese Room thought experiment and the Hopfield network.
+MNIST digit classification step by step: the feed-forward pass, and the parameter update of the output and the hidden layer derived by hand and checked against automatic differentiation. A single output trained with the mean squared error against ten outputs trained with the categorical cross-entropy.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-03.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-03.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
 
 ## Notebooks
-
-::: {.nb-item}
-[Lab 004: Automatic differentiation](../notebooks/lecture-03/lab-004-automatic-differentiation.ipynb)
-
-Derivatives computed by the machine, exactly.
-:::
-
-::: {.nb-item}
-[Lab 005: The N-link pendulum with SymPy and automatic differentiation](../notebooks/lecture-03/lab-005-n-pendulum.ipynb)
-
-Equations of motion obtained symbolically and by automatic differentiation.
-:::
-
-::: {.nb-item}
-[Lab 006: Universal approximation and the choice of minimiser](../notebooks/lecture-03/lab-006-uat-and-minimisers.ipynb)
-
-Fitting functions with networks, and the role of the optimiser.
-:::
-
-::: {.nb-item}
-[Lab 007: Building and training neural networks](../notebooks/lecture-03/lab-007-building-and-training.ipynb)
-
-A complete training loop in PyTorch.
-:::
-
-::: {.nb-item}
-[Lab 008: Analysing a neural network](../notebooks/lecture-03/lab-008-analysing-networks.ipynb)
-
-Architecture, parameter counts and what a trained network does.
-:::
 
 ::: {.nb-item}
 [Lab 009: MNIST, regression versus cross-entropy](../notebooks/lecture-03/lab-009-mnist.ipynb)

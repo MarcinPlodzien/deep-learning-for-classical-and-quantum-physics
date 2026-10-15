@@ -6,14 +6,18 @@ website:
         href: index.qmd
       - text: "Lectures"
         menu:
-          - text: "1 · The Second Quantum Revolution"
+          - text: "1 · From Artificial Intelligence to Neural Networks"
             href: lectures/lecture-01.qmd
-          - text: "2 · From Artificial Intelligence to Deep Learning"
+          - text: "2 · Elements of Deep Learning"
             href: lectures/lecture-02.qmd
-          - text: "3 · Elements of Deep Learning: from MNIST to the 2D Ising Model"
+          - text: "3 · MNIST: Training a Network by Hand"
             href: lectures/lecture-03.qmd
           - text: "4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model"
             href: lectures/lecture-04.qmd
+          - text: "5 · Unsupervised Learning and Phase Diagrams without Labels"
+            href: lectures/lecture-05.qmd
+          - text: "6 · Generative Models: Variational and Conditional Autoencoders"
+            href: lectures/lecture-06.qmd
       - text: "Resources"
         href: resources.qmd
       - text: "About"
@@ -22,22 +26,28 @@ website:
     contents:
       - text: "Start here"
         href: index.qmd
-      - section: "1 · The Second Quantum Revolution"
+      - section: "1 · From Artificial Intelligence to Neural Networks"
         href: lectures/lecture-01.qmd
-      - section: "2 · From Artificial Intelligence to Deep Learning"
+        contents:
+          - notebooks/lecture-01/lab-001-python-matplotlib-pandas.ipynb
+          - notebooks/lecture-01/lab-002-numpy.ipynb
+          - notebooks/lecture-01/lab-003-pytorch.ipynb
+          - notebooks/lecture-01/lab-003c-jax.ipynb
+          - notebooks/lecture-01/lab-003a-trained-networks-pytorch.ipynb
+          - notebooks/lecture-01/lab-003b-trained-networks-jax.ipynb
+          - notebooks/lecture-01/lab-003d-framework-benchmark.ipynb
+          - notebooks/lecture-01/nonlinearity-and-universal-approximation.ipynb
+      - section: "2 · Elements of Deep Learning"
         href: lectures/lecture-02.qmd
         contents:
-          - notebooks/lecture-02/lab-001-python-matplotlib-pandas.ipynb
-          - notebooks/lecture-02/lab-002-numpy.ipynb
-          - notebooks/lecture-02/lab-003-pytorch.ipynb
-      - section: "3 · Elements of Deep Learning: from MNIST to the 2D Ising Model"
+          - notebooks/lecture-02/lab-004-automatic-differentiation.ipynb
+          - notebooks/lecture-02/lab-005-n-pendulum.ipynb
+          - notebooks/lecture-02/lab-006-uat-and-minimisers.ipynb
+          - notebooks/lecture-02/lab-007-building-and-training.ipynb
+          - notebooks/lecture-02/lab-008-analysing-networks.ipynb
+      - section: "3 · MNIST: Training a Network by Hand"
         href: lectures/lecture-03.qmd
         contents:
-          - notebooks/lecture-03/lab-004-automatic-differentiation.ipynb
-          - notebooks/lecture-03/lab-005-n-pendulum.ipynb
-          - notebooks/lecture-03/lab-006-uat-and-minimisers.ipynb
-          - notebooks/lecture-03/lab-007-building-and-training.ipynb
-          - notebooks/lecture-03/lab-008-analysing-networks.ipynb
           - notebooks/lecture-03/lab-009-mnist.ipynb
       - section: "4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model"
         href: lectures/lecture-04.qmd
@@ -45,6 +55,23 @@ website:
           - notebooks/lecture-04/lab-010-ising-monte-carlo.ipynb
           - notebooks/lecture-04/lab-011-cnn-tc.ipynb
           - notebooks/lecture-04/lab-012-onsager.ipynb
+          - notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.ipynb
+      - section: "5 · Unsupervised Learning and Phase Diagrams without Labels"
+        href: lectures/lecture-05.qmd
+        contents:
+          - notebooks/lecture-05/lab-016-pca-tsne-clustering.ipynb
+          - notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.ipynb
+          - notebooks/lecture-05/lab-018-spin-models-monte-carlo.ipynb
+          - notebooks/lecture-05/lab-019-ising-without-labels.ipynb
+          - notebooks/lecture-05/lab-020-j1j2-without-labels.ipynb
+          - notebooks/lecture-05/lab-029-physics-j1j2.ipynb
+          - notebooks/lecture-05/lab-031-physics-ising-gauge.ipynb
+          - notebooks/lecture-05/lab-032-physics-sk-spin-glass.ipynb
+      - section: "6 · Generative Models: Variational and Conditional Autoencoders"
+        href: lectures/lecture-06.qmd
+        contents:
+          - notebooks/lecture-06/lab-024-vae-cvae.ipynb
+          - notebooks/lecture-06/lab-025-cvae-physics.ipynb
       - text: "Resources"
         href: resources.qmd
       - text: "About"

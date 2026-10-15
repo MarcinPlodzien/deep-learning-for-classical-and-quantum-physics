@@ -136,6 +136,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
     </a>
@@ -156,19 +159,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
         <li>
     <a class="dropdown-item" href="../../lectures/lecture-01.html">
- <span class="dropdown-text">1 · The Second Quantum Revolution</span></a>
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../lectures/lecture-02.html">
- <span class="dropdown-text">2 · From Artificial Intelligence to Deep Learning</span></a>
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../lectures/lecture-03.html">
- <span class="dropdown-text">3 · Elements of Deep Learning: from MNIST to the 2D Ising Model</span></a>
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../lectures/lecture-04.html">
  <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational and Conditional Autoencoders</span></a>
   </li>  
     </ul>
   </li>
@@ -215,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
       <a href="../../index.html" class="sidebar-logo-link">
-      <img src="../../assets/qusml_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       </div>
       <div class="mt-2 flex-shrink-0 align-items-center">
@@ -231,11 +242,58 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">1 · The Second Quantum Revolution</span>
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · From Artificial Intelligence to Deep Learning</a>
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -243,54 +301,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-02/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-02/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-02/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · Elements of Deep Learning: from MNIST to the 2D Ising Model</a>
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-03/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-03/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-03/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-03/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-03/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
-  </div>
-</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
@@ -319,6 +362,81 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational and Conditional Autoencoders</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
   </div>
 </li>
       </ul>
@@ -386,7 +504,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <section id="deep-learning-in-classical-and-quantum-physics" class="level1">
 <h1>Deep Learning in Classical and Quantum Physics</h1>
-2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 011 <br> <strong>Reading:</strong> Lecture Notes, Chapter 2 (<em>Fundamentals of Deep Learning</em>), Section <em>Deep Learning in the Classical 2D Ising Model</em>; Section <em>Understanding Deep Learning through the Chinese Room Thought Experiment</em>
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 011
 <hr>
 </section>
 <section id="lab-011-finding-t_c-of-the-2d-ising-model-from-the-confidence-of-a-cnn" class="level1">

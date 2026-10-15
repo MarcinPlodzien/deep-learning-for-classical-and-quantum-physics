@@ -1,27 +1,45 @@
 ---
-title: "2 · From Artificial Intelligence to Deep Learning"
+title: "2 · Elements of Deep Learning"
 code-tools: false
 toc: false
 ---
 
-Big goals of quantum physics that machine learning can serve, from the compilation of quantum circuits to neural-network quantum states. The approaches to artificial intelligence, the hierarchy of AI, machine learning and deep learning, the three paradigms of machine learning (unsupervised, supervised and reinforcement learning), and the step from algorithm-driven to data-driven programming, with features extracted by hand or learned automatically. Neural networks as non-linear parametrised functions with nested structure, the universal approximation theorem, and the elements of deep learning: the loss function, from the Kullback–Leibler divergence to the categorical cross-entropy, the architecture and gradient descent; a neural network learns the probability distribution of its training data.
+Loss functions for regression and classification, the zoo of architectures, gradient descent with mini-batches, iterations and epochs, and what a well-trained network is. A neural network learns the probability distribution of its training data; the factors behind today's deep learning. The first example: MNIST digit classification as non-linear function fitting, with the categorical cross-entropy.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-02.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-02.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
 
 ## Notebooks
 
 ::: {.nb-item}
-[Lab 001: Python, Matplotlib and Pandas](../notebooks/lecture-02/lab-001-python-matplotlib-pandas.ipynb)
+[Lab 004: Automatic differentiation](../notebooks/lecture-02/lab-004-automatic-differentiation.ipynb)
 
-A warm-up with the tools used in every later notebook.
+Derivatives computed by the machine, exactly.
 :::
 
 ::: {.nb-item}
-[Lab 002: NumPy, thinking in arrays](../notebooks/lecture-02/lab-002-numpy.ipynb)
+[Lab 005: The N-link pendulum with SymPy and automatic differentiation](../notebooks/lecture-02/lab-005-n-pendulum.ipynb)
 
-Vectorised computation instead of loops.
+Equations of motion obtained symbolically and by automatic differentiation.
 :::
 
 ::: {.nb-item}
-[Lab 003: PyTorch tensors, devices and layers](../notebooks/lecture-02/lab-003-pytorch.ipynb)
+[Lab 006: Universal approximation and the choice of minimiser](../notebooks/lecture-02/lab-006-uat-and-minimisers.ipynb)
 
-The basic objects of PyTorch.
+Fitting functions with networks, and the role of the optimiser.
+:::
+
+::: {.nb-item}
+[Lab 007: Building and training neural networks](../notebooks/lecture-02/lab-007-building-and-training.ipynb)
+
+A complete training loop in PyTorch.
+:::
+
+::: {.nb-item}
+[Lab 008: Analysing a neural network](../notebooks/lecture-02/lab-008-analysing-networks.ipynb)
+
+Architecture, parameter counts and what a trained network does.
 :::

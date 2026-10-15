@@ -24,6 +24,8 @@ website:
   repo-actions: [source]
   page-navigation: true
   navbar:
+    logo: assets/course_logo.svg
+    logo-alt: "Deep Learning in Classical and Quantum Physics"
     background: primary
     search: true
     pinned: true
@@ -35,7 +37,7 @@ website:
         href: "https://chaos.if.uj.edu.pl/marcinplodzien/"
         aria-label: Homepage
   sidebar:
-    logo: assets/qusml_logo.svg
+    logo: assets/course_logo.svg
     style: floating
     search: true
     collapse-level: 1
