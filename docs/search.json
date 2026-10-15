@@ -98,6 +98,20 @@
     "text": "Notebooks\n\nLab 010: Monte Carlo samples of the 2D Ising model\nThe Metropolis algorithm, equilibration and decorrelation, and the data set of spin configurations, checked against Onsager’s exact results.\n\n\nLab 011: \\(T_c\\) of the 2D Ising model from the confidence of a CNN\nA CNN trained only far from the transition, its confidence at all temperatures, and finite-size effects.\n\n\nLab 012: Onsager’s exact solution of the 2D Ising model\nThe transfer matrix, the high- and low-temperature expansions and Kramers–Wannier duality, each checked by a computation."
   },
   {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "Deep Learning in Classical and Quantum Physics\n\n\nDedicated lecture notes · T. Heightman, M. Płodzień\n\n\narXiv:2508.10666\n\n\n\n\n\n\n\n\n\nModern applications of machine learning in quantum sciences\n\n\nMachine learning in quantum sciences · A. Dawid et al.\n\n\narXiv:2204.04198\n\n\n\n\n\n\n\n\n\nA high-bias, low-variance introduction to Machine Learning for physicists\n\n\nPhys. Rep. 810, 1–124 · P. Mehta et al.\n\n\ndoi:10.1016/j.physrep.2019.03.001\n\n\n\n\n\n\n\n\n\nIntroduction to Machine Learning for the Sciences\n\n\nT. Neupert, M. H. Fischer, E. Greplova, K. Choo, M. M. Denner\n\n\narXiv:2102.04883\n\n\n\n\n\n\n\n\n\nScientific discovery in the age of artificial intelligence\n\n\nNature 620, 47–60 · H. Wang et al.\n\n\n\n\n\n\n\n\n\nOn scientific understanding with artificial intelligence\n\n\nNature Reviews Physics 4, 761–769 · M. Krenn et al."
+  },
+  {
+    "objectID": "resources.html#mathematics-and-the-broader-context-of-ai",
+    "href": "resources.html#mathematics-and-the-broader-context-of-ai",
+    "title": "Resources",
+    "section": "Mathematics and the broader context of AI",
+    "text": "Mathematics and the broader context of AI\n\n\n\n\n\n\n\nPattern Recognition and Machine Learning\n\n\nC. M. Bishop\n\n\n\n\n\n\n\n\n\nDeep Learning\n\n\nI. Goodfellow, Y. Bengio, A. Courville\n\n\n\n\n\n\n\n\n\nUnderstanding Deep Learning\n\n\nS. J. D. Prince\n\n\n\n\n\n\n\n\n\nThe Deep Learning Revolution\n\n\nT. J. Sejnowski\n\n\n\n\n\n\n\n\n\nThe Myth of Artificial Intelligence: Why Computers Can’t Think the Way We Do\n\n\nE. J. Larson"
+  },
+  {
     "objectID": "notebooks/lecture-02/lab-001-python-matplotlib-pandas.html#python-in-10-minutes",
     "href": "notebooks/lecture-02/lab-001-python-matplotlib-pandas.html#python-in-10-minutes",
     "title": "Lab 001: Python, Matplotlib and Pandas",

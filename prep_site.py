@@ -25,6 +25,7 @@ The lecture folders are never modified.
 """
 import os, re, glob, shutil, subprocess, tempfile, sys, zipfile
 import nbformat
+from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 COURSE = os.path.dirname(HERE)
@@ -104,6 +105,15 @@ LECTURES = {
         notebooks=None,   # None: every Lab_*.ipynb in Lecture_6/Notebooks is taken
     ),
 }
+
+# the Resources page: the literature tiles (\restile calls) of the Lecture 1 deck,
+# one group per frame, with these headings
+RESOURCES = dict(
+    tex="Lecture_1/beamer/sections/03_literature.tex",
+    figures="Lecture_1/beamer/figures",
+    groups=["Lecture notes, ML for physics and science",
+            "Mathematics and the broader context of AI"],
+)
 
 MONTHS = "January|February|March|April|May|June|July|August|September|October|November|December"
 DATE_PATTERNS = [
@@ -264,6 +274,7 @@ def build_notebooks():
             badge = nbformat.v4.new_markdown_cell(
                 f'<a href="https://colab.research.google.com/github/{REPO}/blob/main/{rel}">'
                 f'<img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a>')
+            front.id, badge.id = "web-title", "web-colab-badge"   # fixed ids: no churn between builds
             nb.cells = [front, badge] + nb.cells
             os.makedirs(os.path.dirname(os.path.join(HERE, rel)), exist_ok=True)
             nbformat.write(nb, os.path.join(HERE, rel))
@@ -312,13 +323,74 @@ def build_pages():
            "website:", "  navbar:", "    left:",
            "      - text: \"Start here\"", "        href: index.qmd",
            "      - text: \"Lectures\"", "        menu:", *nav,
+           "      - text: \"Resources\"", "        href: resources.qmd",
            "      - text: \"About\"", "        href: about.qmd",
            "  sidebar:", "    contents:",
            "      - text: \"Start here\"", "        href: index.qmd", *side,
+           "      - text: \"Resources\"", "        href: resources.qmd",
            "      - text: \"About\"", "        href: about.qmd", ""]
     open(os.path.join(HERE, "_lectures.yml"), "w").write("\n".join(yml))
     md = ["| | Lecture | Notebooks |", "|---|---|---|", *table, ""]
     open(os.path.join(HERE, "_lectures_table.md"), "w").write("\n".join(md))
+
+
+# ------------------------------------------------------------------ resources
+def brace_args(text, pos, n):
+    """The n brace-delimited arguments starting at text[pos:]; returns (args, end)."""
+    args = []
+    while len(args) < n:
+        while text[pos] in " \t\n%":
+            pos = text.index("\n", pos) + 1 if text[pos] == "%" else pos + 1
+        assert text[pos] == "{", text[pos:pos + 40]
+        depth, start = 0, pos
+        while True:
+            if text[pos] == "\\":
+                pos += 2; continue
+            depth += {"{": 1, "}": -1}.get(text[pos], 0)
+            pos += 1
+            if depth == 0:
+                break
+        args.append(text[start + 1:pos - 1])
+    return args, pos
+
+
+def latex_to_md(t):
+    t = re.sub(r"\\href\{([^}]*)\}\{([^}]*)\}", r"[\2](\1)", t)
+    for a, b in [(r"\(\cdot\)", "·"), ("\\l{}", "ł"), ("\\'n", "ń"), ("\\'e", "é"), ("\\ ", " "),
+                 ("--", "–"), ("~", " ")]:
+        t = t.replace(a, b)
+    return " ".join(t.split())
+
+
+def build_resources():
+    tex = open(os.path.join(COURSE, RESOURCES["tex"])).read()
+    frames = re.split(r"\\begin\{frame\}", tex)[1:]
+    assert len(frames) == len(RESOURCES["groups"]), "one heading per literature frame"
+    out = os.path.join(HERE, "assets", "resources")
+    if os.path.isdir(out):
+        shutil.rmtree(out)
+    os.makedirs(out)
+    md = ['---\ntitle: "Resources"\ntoc: false\ncode-tools: false\n---\n']
+    for heading, frame in zip(RESOURCES["groups"], frames):
+        md.append(f"## {heading}\n\n::: {{.res-grid}}")
+        for m in re.finditer(r"\\restile(?=\{)", frame):
+            (thumb, _, title, line, link), _ = brace_args(frame, m.end(), 5)
+            src = os.path.join(COURSE, RESOURCES["figures"], thumb)
+            img = Image.open(src)
+            if img.height > 450:                       # covers: web size
+                img.thumbnail((10000, 450))
+            img.save(os.path.join(out, thumb))
+            title, line, link = latex_to_md(title), latex_to_md(line), latex_to_md(link)
+            card = [f"::: {{.res-card}}", f"::: {{.res-thumb}}",
+                    f'![](assets/resources/{thumb}){{fig-alt="{title}"}}', ":::", "::: {.res-body}",
+                    f"::: {{.res-title}}\n{title}\n:::", f"::: {{.res-line}}\n{line}\n:::"]
+            if link:
+                card.append(f"::: {{.res-link}}\n{link}\n:::")
+            card += [":::", ":::"]
+            md.append("\n".join(card))
+        md.append(":::\n")
+    open(os.path.join(HERE, "resources.qmd"), "w").write("\n\n".join(md))
+    print(f"page    resources.qmd: {sum(len(re.findall(r'restile(?=\{)', f)) for f in frames)} items")
 
 
 if __name__ == "__main__":
@@ -329,3 +401,4 @@ if __name__ == "__main__":
         build_notebooks()
     if "pages" in what:
         build_pages()
+        build_resources()

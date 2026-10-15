@@ -14,6 +14,8 @@ website:
             href: lectures/lecture-03.qmd
           - text: "4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model"
             href: lectures/lecture-04.qmd
+      - text: "Resources"
+        href: resources.qmd
       - text: "About"
         href: about.qmd
   sidebar:
@@ -43,5 +45,7 @@ website:
           - notebooks/lecture-04/lab-010-ising-monte-carlo.ipynb
           - notebooks/lecture-04/lab-011-cnn-tc.ipynb
           - notebooks/lecture-04/lab-012-onsager.ipynb
+      - text: "Resources"
+        href: resources.qmd
       - text: "About"
         href: about.qmd
