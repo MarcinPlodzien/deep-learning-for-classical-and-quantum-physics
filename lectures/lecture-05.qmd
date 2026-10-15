@@ -51,6 +51,12 @@ Ground states, domain walls, exact limits, mean field, transfer matrices and Bin
 :::
 
 ::: {.nb-item}
+[Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition](../notebooks/lecture-05/lab-030-physics-2d-xy.ipynb)
+
+Spin waves and Mermin–Wagner, vortices, the helicity modulus and its universal jump, and three Monte Carlo samplers.
+:::
+
+::: {.nb-item}
 [Lab 031: Physics of the Ising lattice gauge theory](../notebooks/lecture-05/lab-031-physics-ising-gauge.ipynb)
 
 Gauge symmetry, Elitzur's theorem, the exact 2D solution, Wegner duality and Wilson loops.

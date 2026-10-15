@@ -65,6 +65,7 @@ website:
           - notebooks/lecture-05/lab-019-ising-without-labels.ipynb
           - notebooks/lecture-05/lab-020-j1j2-without-labels.ipynb
           - notebooks/lecture-05/lab-029-physics-j1j2.ipynb
+          - notebooks/lecture-05/lab-030-physics-2d-xy.ipynb
           - notebooks/lecture-05/lab-031-physics-ising-gauge.ipynb
           - notebooks/lecture-05/lab-032-physics-sk-spin-glass.ipynb
       - section: "6 · Generative Models: Variational and Conditional Autoencoders"

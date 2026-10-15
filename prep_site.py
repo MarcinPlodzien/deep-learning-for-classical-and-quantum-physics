@@ -95,7 +95,7 @@ LECTURES = {
         deck=("beamer", "Lecture_5/beamer/main.tex"),
         title="Unsupervised Learning and Phase Diagrams without Labels",
         summary="Learning without labels: principal component analysis, t-SNE, k-means and DBSCAN clustering, and autoencoders whose reconstruction error detects anomalies. Anomaly detection for phase diagrams. The 2D Ising model: finite-size scaling, Swendsen–Wang cluster updates, the first principal component as the magnetisation, and autoencoders whose signal sharpens towards T_c with the lattice size, depending on the training region. The frustrated J1–J2 model: ground states, frustration and mean field, PCA finding both order parameters, and the phase diagram recovered by autoencoders trained on three corners, from a coarse scan.",
-        table_note="Labs 016–020, 029, 031, 032: PCA, t-SNE, clustering, autoencoders, spin models in JAX, physics of the J1–J2 model, lattice gauge theory and spin glasses",
+        table_note="Labs 016–020, 029–032: PCA, t-SNE, clustering, autoencoders, spin models in JAX, physics of the J1–J2 model, the 2D XY model, lattice gauge theory and spin glasses",
         notebooks=[
             ("Lecture_5/Notebooks/Lab_016_PCA_tSNE_and_clustering.ipynb", "lab-016-pca-tsne-clustering", "Lab 016: PCA, t-SNE and clustering in JAX", "Low-dimensional maps of MNIST and groups of samples found without labels."),
             ("Lecture_5/Notebooks/Lab_017_Autoencoders_and_anomaly_detection.ipynb", "lab-017-autoencoders-anomaly-detection", "Lab 017: Autoencoders and anomaly detection", "Images compressed through a narrow latent layer, and anomalies found from the reconstruction error."),
@@ -103,6 +103,7 @@ LECTURES = {
             ("Lecture_5/Notebooks/Lab_019_Ising_phases_without_labels.ipynb", "lab-019-ising-without-labels", "Lab 019: The 2D Ising transition without labels", "PCA, autoencoders and finite-size scaling."),
             ("Lecture_5/Notebooks/Lab_020_J1J2_phase_diagram_without_labels.ipynb", "lab-020-j1j2-without-labels", "Lab 020: The J1–J2 phase diagram without labels", "PCA and autoencoders trained on one corner of the phase diagram."),
             ("Lecture_5/Notebooks/Lab_029_Physics_of_the_J1_J2_Ising_model.ipynb", "lab-029-physics-j1j2", "Lab 029: Physics of the frustrated J1–J2 Ising model", "Ground states, domain walls, exact limits, mean field, transfer matrices and Binder cumulants."),
+            ("Lecture_5/Notebooks/Lab_030_Physics_of_the_2D_XY_model.ipynb", "lab-030-physics-2d-xy", "Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition", "Spin waves and Mermin–Wagner, vortices, the helicity modulus and its universal jump, and three Monte Carlo samplers."),
             ("Lecture_5/Notebooks/Lab_031_Physics_of_the_Ising_lattice_gauge_theory.ipynb", "lab-031-physics-ising-gauge", "Lab 031: Physics of the Ising lattice gauge theory", "Gauge symmetry, Elitzur's theorem, the exact 2D solution, Wegner duality and Wilson loops."),
             ("Lecture_5/Notebooks/Lab_032_Physics_of_the_Sherrington_Kirkpatrick_spin_glass.ipynb", "lab-032-physics-sk-spin-glass", "Lab 032: Physics of the Sherrington–Kirkpatrick spin glass", "Frustration, replicas and overlaps, parallel tempering, the energy landscape and the Mattis model."),
         ],
