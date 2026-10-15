@@ -1,0 +1,27 @@
+---
+title: "2 · From Artificial Intelligence to Deep Learning"
+code-tools: false
+toc: false
+---
+
+Big goals of quantum physics that machine learning can serve, from the compilation of quantum circuits to neural-network quantum states. The approaches to artificial intelligence, the hierarchy of AI, machine learning and deep learning, the three paradigms of machine learning (unsupervised, supervised and reinforcement learning), and the step from algorithm-driven to data-driven programming, with features extracted by hand or learned automatically. Neural networks as non-linear parametrised functions with nested structure, the universal approximation theorem, and the elements of deep learning: the loss function, from the Kullback–Leibler divergence to the categorical cross-entropy, the architecture and gradient descent; a neural network learns the probability distribution of its training data.
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 001: Python, Matplotlib and Pandas](../notebooks/lecture-02/lab-001-python-matplotlib-pandas.ipynb)
+
+A warm-up with the tools used in every later notebook.
+:::
+
+::: {.nb-item}
+[Lab 002: NumPy, thinking in arrays](../notebooks/lecture-02/lab-002-numpy.ipynb)
+
+Vectorised computation instead of loops.
+:::
+
+::: {.nb-item}
+[Lab 003: PyTorch tensors, devices and layers](../notebooks/lecture-02/lab-003-pytorch.ipynb)
+
+The basic objects of PyTorch.
+:::

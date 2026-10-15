@@ -1,0 +1,45 @@
+---
+title: "3 · Elements of Deep Learning: from MNIST to the 2D Ising Model"
+code-tools: false
+toc: false
+---
+
+The anatomy of a neural network, loss functions for regression and classification, the zoo of architectures and training by gradient descent. Two "hello world" examples: MNIST digits, classified by a feed-forward network with the categorical cross-entropy, and CIFAR-10 images, where convolutional networks capture spatial correlations and L1/L2 regularisation, dropout and batch normalisation fight overfitting; optimisers from stochastic gradient descent to Adam. A physics example: the 2D Ising model, Onsager's solution, Monte Carlo samples from the Gibbs distribution, and the prediction confidence of a network that locates the critical temperature; the lecture closes with the Chinese Room thought experiment and the Hopfield network.
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 004: Automatic differentiation](../notebooks/lecture-03/lab-004-automatic-differentiation.ipynb)
+
+Derivatives computed by the machine, exactly.
+:::
+
+::: {.nb-item}
+[Lab 005: The N-link pendulum with SymPy and automatic differentiation](../notebooks/lecture-03/lab-005-n-pendulum.ipynb)
+
+Equations of motion obtained symbolically and by automatic differentiation.
+:::
+
+::: {.nb-item}
+[Lab 006: Universal approximation and the choice of minimiser](../notebooks/lecture-03/lab-006-uat-and-minimisers.ipynb)
+
+Fitting functions with networks, and the role of the optimiser.
+:::
+
+::: {.nb-item}
+[Lab 007: Building and training neural networks](../notebooks/lecture-03/lab-007-building-and-training.ipynb)
+
+A complete training loop in PyTorch.
+:::
+
+::: {.nb-item}
+[Lab 008: Analysing a neural network](../notebooks/lecture-03/lab-008-analysing-networks.ipynb)
+
+Architecture, parameter counts and what a trained network does.
+:::
+
+::: {.nb-item}
+[Lab 009: MNIST, regression versus cross-entropy](../notebooks/lecture-03/lab-009-mnist.ipynb)
+
+The same network trained with a single output and the mean squared error, and with ten outputs and the categorical cross-entropy.
+:::
