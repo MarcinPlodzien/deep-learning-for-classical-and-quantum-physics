@@ -64,6 +64,9 @@ website:
           - notebooks/lecture-05/lab-018-spin-models-monte-carlo.ipynb
           - notebooks/lecture-05/lab-019-ising-without-labels.ipynb
           - notebooks/lecture-05/lab-020-j1j2-without-labels.ipynb
+          - notebooks/lecture-05/lab-021-xy-without-labels.ipynb
+          - notebooks/lecture-05/lab-022-gauge-without-labels.ipynb
+          - notebooks/lecture-05/lab-023-sk-without-labels.ipynb
           - notebooks/lecture-05/lab-029-physics-j1j2.ipynb
           - notebooks/lecture-05/lab-030-physics-2d-xy.ipynb
           - notebooks/lecture-05/lab-031-physics-ising-gauge.ipynb
