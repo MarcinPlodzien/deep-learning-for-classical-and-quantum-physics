@@ -113,12 +113,15 @@ LECTURES = {
     ),
     6: dict(
         deck=("beamer", "Lecture_6/beamer/main.tex"),
-        title="Generative Models: Variational and Conditional Autoencoders",
-        summary="Learning a probability distribution: likelihood and maximum likelihood, the variational autoencoder, the evidence lower bound as a variational free energy, and the reparametrisation trick. Synthetic data judged by classifiers trained on real data. The conditional VAE generates digits on demand. Generated spins and the Hamiltonian: conditional VAEs for the 2D Ising and the J1–J2 model reproduce the phase, the order parameter and the phase diagram at unseen parameters, but not the energy and its fluctuations.",
-        table_note="Labs 024–025: VAE and cVAE, synthetic spin configurations tested against the Hamiltonian",
+        title="Generative Models: Variational Autoencoders and Disentanglement",
+        summary="Learning a probability distribution from data. The autoencoder maps the data to a discrete set of codes; the variational autoencoder (VAE) replaces them by a continuous distribution in latent space, trained with the evidence lower bound and sampled from the prior to generate new data. Sampling a trained VAE: reconstruction against generation, decoder mean against samples, interpolation and the coverage of the prior. Synthetic data judged by classifiers trained on real data. The conditional VAE generates at a chosen condition; for spin configurations at a chosen temperature it reproduces the phase and the order parameter but not the energy, because given the latent vector the spins are drawn independently. Disentangled representations with the β-VAE: rate and distortion, latent traversals, the mutual information gap, faces, and the physics learned from spin configurations, noisy trajectories and galaxy images.",
+        table_note="Labs 024–028: VAE and cVAE, spin configurations from a cVAE, the β-VAE, physical parameters from trajectories, galaxy morphology",
         notebooks=[
             ("Lecture_6/Notebooks/Lab_024_Generative_models_VAE_cVAE.ipynb", "lab-024-vae-cvae", "Lab 024: Variational and conditional autoencoders", "The ELBO derived step by step, VAE and cVAE on MNIST, and synthetic images judged by a classifier."),
             ("Lecture_6/Notebooks/Lab_025_cVAE_physics_synthetic_vs_real.ipynb", "lab-025-cvae-physics", "Lab 025: Synthetic spin configurations from a conditional VAE", "Generated Ising and J1–J2 configurations tested against Monte Carlo and the Hamiltonian."),
+            ("Lecture_6/Notebooks/Lab_026_Disentangled_representations_beta_VAE.ipynb", "lab-026-beta-vae", "Lab 026: Disentangled representations and the β-VAE", "The β-weighted loss, rate and distortion, dSprites and the mutual information gap, CelebA faces, and the physics learned from spin configurations, noisy trajectories and galaxy images."),
+            ("Lecture_6/Notebooks/Lab_028_Physical_parameters_from_trajectories.ipynb", "lab-028-trajectories", "Lab 028: Physical parameters from trajectories", "A β-VAE on noisy oscillator and coupled-mass trajectories: which latent coordinates follow the physical parameters, and a reimplementation of the question-and-answer network of Iten et al."),
+            ("Lecture_6/Notebooks/Lab_027_Galaxy_morphology_beta_VAE.ipynb", "lab-027-galaxy-morphology", "Lab 027: Galaxy morphology with a β-VAE", "Galaxy10 DECaLS images in PyTorch: latent coordinates against measured size, brightness and shape, and counterfactual images for a morphology classifier."),
         ],
     ),
 }

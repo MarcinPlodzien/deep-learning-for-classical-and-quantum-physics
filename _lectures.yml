@@ -16,7 +16,7 @@ website:
             href: lectures/lecture-04.qmd
           - text: "5 · Unsupervised Learning and Phase Diagrams without Labels"
             href: lectures/lecture-05.qmd
-          - text: "6 · Generative Models: Variational and Conditional Autoencoders"
+          - text: "6 · Generative Models: Variational Autoencoders and Disentanglement"
             href: lectures/lecture-06.qmd
       - text: "Resources"
         href: resources.qmd
@@ -71,11 +71,14 @@ website:
           - notebooks/lecture-05/lab-030-physics-2d-xy.ipynb
           - notebooks/lecture-05/lab-031-physics-ising-gauge.ipynb
           - notebooks/lecture-05/lab-032-physics-sk-spin-glass.ipynb
-      - section: "6 · Generative Models: Variational and Conditional Autoencoders"
+      - section: "6 · Generative Models: Variational Autoencoders and Disentanglement"
         href: lectures/lecture-06.qmd
         contents:
           - notebooks/lecture-06/lab-024-vae-cvae.ipynb
           - notebooks/lecture-06/lab-025-cvae-physics.ipynb
+          - notebooks/lecture-06/lab-026-beta-vae.ipynb
+          - notebooks/lecture-06/lab-028-trajectories.ipynb
+          - notebooks/lecture-06/lab-027-galaxy-morphology.ipynb
       - text: "Resources"
         href: resources.qmd
       - text: "About"

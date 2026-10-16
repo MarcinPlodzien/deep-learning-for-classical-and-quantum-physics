@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Deep Learning in Classical and Quantum Physics - 6 · Generative Models: Variational and Conditional Autoencoders</title>
+<title>Deep Learning in Classical and Quantum Physics - 6 · Generative Models: Variational Autoencoders and Disentanglement</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li>
     <a class="dropdown-item" href="../lectures/lecture-06.html">
- <span class="dropdown-text">6 · Generative Models: Variational and Conditional Autoencoders</span></a>
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
   </li>  
     </ul>
   </li>
@@ -149,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">6 · Generative Models: Variational and Conditional Autoencoders</h1>
+      <h1 class="quarto-secondary-nav-title">6 · Generative Models: Variational Autoencoders and Disentanglement</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -379,7 +379,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../lectures/lecture-06.html" class="sidebar-item-text sidebar-link active">6 · Generative Models: Variational and Conditional Autoencoders</a>
+            <a href="../lectures/lecture-06.html" class="sidebar-item-text sidebar-link active">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -393,6 +393,21 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
   </div>
 </li>
       </ul>
@@ -417,7 +432,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">6 · Generative Models: Variational and Conditional Autoencoders</h1>
+<h1 class="title d-none d-lg-block">6 · Generative Models: Variational Autoencoders and Disentanglement</h1>
 </div>
 
 
@@ -432,7 +447,7 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Learning a probability distribution: likelihood and maximum likelihood, the variational autoencoder, the evidence lower bound as a variational free energy, and the reparametrisation trick. Synthetic data judged by classifiers trained on real data. The conditional VAE generates digits on demand. Generated spins and the Hamiltonian: conditional VAEs for the 2D Ising and the J1–J2 model reproduce the phase, the order parameter and the phase diagram at unseen parameters, but not the energy and its fluctuations.</p>
+<p>Learning a probability distribution from data. The autoencoder maps the data to a discrete set of codes; the variational autoencoder (VAE) replaces them by a continuous distribution in latent space, trained with the evidence lower bound and sampled from the prior to generate new data. Sampling a trained VAE: reconstruction against generation, decoder mean against samples, interpolation and the coverage of the prior. Synthetic data judged by classifiers trained on real data. The conditional VAE generates at a chosen condition; for spin configurations at a chosen temperature it reproduces the phase and the order parameter but not the energy, because given the latent vector the spins are drawn independently. Disentangled representations with the β-VAE: rate and distortion, latent traversals, the mutual information gap, faces, and the physics learned from spin configurations, noisy trajectories and galaxy images.</p>
 <section id="slides" class="level2">
 <h2 class="anchored" data-anchor-id="slides">Slides</h2>
 <p><a href="../slides/lecture-06.pdf" class="btn btn-outline-primary">Download the slides (PDF)</a></p>
@@ -448,6 +463,18 @@ ul.task-list li input[type="checkbox"] {
 <div class="nb-item">
 <p><a href="../notebooks/lecture-06/lab-025-cvae-physics.html">Lab 025: Synthetic spin configurations from a conditional VAE</a></p>
 <p>Generated Ising and J1–J2 configurations tested against Monte Carlo and the Hamiltonian.</p>
+</div>
+<div class="nb-item">
+<p><a href="../notebooks/lecture-06/lab-026-beta-vae.html">Lab 026: Disentangled representations and the β-VAE</a></p>
+<p>The β-weighted loss, rate and distortion, dSprites and the mutual information gap, CelebA faces, and the physics learned from spin configurations, noisy trajectories and galaxy images.</p>
+</div>
+<div class="nb-item">
+<p><a href="../notebooks/lecture-06/lab-028-trajectories.html">Lab 028: Physical parameters from trajectories</a></p>
+<p>A β-VAE on noisy oscillator and coupled-mass trajectories: which latent coordinates follow the physical parameters, and a reimplementation of the question-and-answer network of Iten et al.</p>
+</div>
+<div class="nb-item">
+<p><a href="../notebooks/lecture-06/lab-027-galaxy-morphology.html">Lab 027: Galaxy morphology with a β-VAE</a></p>
+<p>Galaxy10 DECaLS images in PyTorch: latent coordinates against measured size, brightness and shape, and counterfactual images for a morphology classifier.</p>
 </div>
 
 
