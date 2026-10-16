@@ -2486,7 +2486,7 @@ z_5: R^2 = 0.989;  largest coefficients: m_y +0.58, m_x -0.08</code></pre>
 <p>The difference is also a difference in how the models are <em>sampled</em>. A trained β-VAE is sampled by ancestral sampling, <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>, then the decoder (Section 1.4); to control a property we must first find the coordinate or the direction that carries it (Sections 3.6, 5.4, 5.5). A trained cVAE is sampled with the condition chosen by us: <span class="math inline">\(\mathbf c\)</span> fixed and <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span> drawn, which gives many variants of the requested digit, or the same <span class="math inline">\(\mathbf z\)</span> decoded with different <span class="math inline">\(\mathbf c\)</span>, which keeps the style and changes the digit. The figure from Lab 024 shows both at once: each row is one condition <span class="math inline">\(\mathbf c=0,\dots,9\)</span>, each column one random <span class="math inline">\(\mathbf z\)</span>, the same in every row.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../beamer/figures/gen_cvae_mnist.png" class="img-fluid figure-img"></p>
+<p><img src="figures/gen_cvae_mnist.png" class="img-fluid figure-img"></p>
 <p></p><figcaption class="figure-caption">cVAE of Lab 024: rows are the conditions c = 0, …, 9, columns are random z, the same in every row</figcaption><p></p>
 </figure>
 </div>

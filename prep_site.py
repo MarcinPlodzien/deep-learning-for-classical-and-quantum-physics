@@ -297,6 +297,22 @@ def drop_slide_export(cells):
     return keep
 
 
+def copy_md_figures(md, src_nb, out_dir):
+    """Images referenced in markdown by a relative path (e.g. ../beamer/figures/x.png) are copied
+    next to the web notebook (figures/x.png) and the reference is rewritten."""
+    def fix(m):
+        alt, path = m.group(1), m.group(2)
+        if path.startswith(("http", "data:", "figures/")):
+            return m.group(0)
+        full = os.path.normpath(os.path.join(os.path.dirname(src_nb), path))
+        if not os.path.exists(full):
+            return m.group(0)
+        os.makedirs(os.path.join(out_dir, "figures"), exist_ok=True)
+        shutil.copyfile(full, os.path.join(out_dir, "figures", os.path.basename(full)))
+        return f"![{alt}](figures/{os.path.basename(full)})"
+    return re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)", fix, md)
+
+
 def build_notebooks():
     dst = os.path.join(HERE, "notebooks")
     if os.path.isdir(dst):
@@ -310,6 +326,7 @@ def build_notebooks():
                 c.metadata.pop("execution", None)   # run timestamps
                 if c.cell_type == "markdown":
                     c.source = strip_dates(c.source)
+                    c.source = copy_md_figures(c.source, src, os.path.join(HERE, os.path.dirname(rel)))
                     c.source = re.sub(r"(?m)^\s*---\s*$", "<hr/>", c.source)
                 elif c.cell_type == "code":
                     c.source = standalone_paths(c.source)
