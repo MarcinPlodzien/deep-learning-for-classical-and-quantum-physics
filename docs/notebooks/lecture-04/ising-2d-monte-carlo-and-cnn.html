@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Deep Learning in Classical and Quantum Physics - The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</title>
+<title>Deep Learning in Classical and Quantum Physics - The 2D Ising model and a CNN</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -213,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</h1>
+      <h1 class="quarto-secondary-nav-title">The 2D Ising model and a CNN</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link active">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link active">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,14 +466,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn" id="toc-the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn" class="nav-link" data-scroll-target="#the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn">The 2D Ising model: Monte Carlo data, exact results and the critical temperature from a CNN</a>
+  <li><a href="#the-2d-ising-model-and-a-cnn" id="toc-the-2d-ising-model-and-a-cnn" class="nav-link" data-scroll-target="#the-2d-ising-model-and-a-cnn">The 2D Ising model and a CNN</a>
   <ul class="collapse">
-  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">1. The model</a></li>
-  <li><a href="#the-data-sets" id="toc-the-data-sets" class="nav-link" data-scroll-target="#the-data-sets">2. The data sets</a></li>
-  <li><a href="#checks-against-onsager" id="toc-checks-against-onsager" class="nav-link" data-scroll-target="#checks-against-onsager">3. Checks against Onsager</a></li>
-  <li><a href="#pictures-for-the-lecture" id="toc-pictures-for-the-lecture" class="nav-link" data-scroll-target="#pictures-for-the-lecture">4. Pictures for the lecture</a></li>
-  <li><a href="#a-cnn-locates-t_c-and-how-the-answer-depends-on-l" id="toc-a-cnn-locates-t_c-and-how-the-answer-depends-on-l" class="nav-link" data-scroll-target="#a-cnn-locates-t_c-and-how-the-answer-depends-on-l">5. A CNN locates <span class="math inline">\(T_c\)</span>, and how the answer depends on <span class="math inline">\(L\)</span></a>
+  <li><a href="#the-model-and-the-metropolis-sampler" id="toc-the-model-and-the-metropolis-sampler" class="nav-link" data-scroll-target="#the-model-and-the-metropolis-sampler">1. The model and the Metropolis sampler</a></li>
+  <li><a href="#the-datasets" id="toc-the-datasets" class="nav-link" data-scroll-target="#the-datasets">2. The datasets</a></li>
+  <li><a href="#magnetisation-and-energy-of-finite-lattices" id="toc-magnetisation-and-energy-of-finite-lattices" class="nav-link" data-scroll-target="#magnetisation-and-energy-of-finite-lattices">3. Magnetisation and energy of finite lattices</a></li>
+  <li><a href="#configurations-across-the-transition" id="toc-configurations-across-the-transition" class="nav-link" data-scroll-target="#configurations-across-the-transition">4. Configurations across the transition</a></li>
+  <li><a href="#the-critical-temperature-from-cnn-confidence" id="toc-the-critical-temperature-from-cnn-confidence" class="nav-link" data-scroll-target="#the-critical-temperature-from-cnn-confidence">5. The critical temperature from CNN confidence</a>
   <ul class="collapse">
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul></li>
@@ -485,7 +486,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">The 2D Ising model and a CNN</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
 </div>
 
 
@@ -507,16 +508,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <strong>Author:</strong> Marcin Płodzień
 <hr>
 </section>
-<section id="the-2d-ising-model-monte-carlo-data-exact-results-and-the-critical-temperature-from-a-cnn" class="level1">
-<h1>The 2D Ising model: Monte Carlo data, exact results and the critical temperature from a CNN</h1>
-<p>Everything the lecture shows about the Ising model, reproducible on a laptop CPU:</p>
-<ol type="1">
-<li>the model and a Metropolis sampler written in JAX (<code>jit</code>, <code>vmap</code>, <code>lax.scan</code>);</li>
-<li>data sets of configurations for <span class="math inline">\(L = 10, 20, 30, 40, 50\)</span>, saved to <code>data/ising_L{L}.npz</code>;</li>
-<li>checks against Onsager’s exact results;</li>
-<li>the pictures of the lecture: a 1D chain, snapshots across <span class="math inline">\(T_c\)</span>, the data set;</li>
-<li>a CNN trained only far from the transition, its confidence at every temperature, and how the estimate of <span class="math inline">\(T_c\)</span> depends on <span class="math inline">\(L\)</span>.</li>
-</ol>
+<section id="the-2d-ising-model-and-a-cnn" class="level1">
+<h1>The 2D Ising model and a CNN</h1>
+<p>This notebook gathers everything the lecture shows about the Ising model in a form that runs on a laptop CPU. We first set up the model and a Metropolis sampler implemented in JAX, using <code>jit</code> for compilation, <code>vmap</code> for many chains in parallel and <code>lax.scan</code> for the loop over sweeps. With it we generate datasets of configurations for <span class="math inline">\(L = 10, 20, 30, 40, 50\)</span>, saved to <code>data/ising_L{L}.npz</code>, and compare their magnetisation and energy with Onsager’s exact results. We then draw the pictures used in the lecture — a 1D chain, snapshots across <span class="math inline">\(T_c\)</span>, the dataset — and finally train a convolutional neural network (CNN) only far from the transition, read off its confidence at every temperature, and follow how the resulting estimate of <span class="math inline">\(T_c\)</span> depends on <span class="math inline">\(L\)</span>.</p>
 <div class="cell" data-execution_count="1">
 <details open="">
 <summary>Code</summary>
@@ -547,12 +541,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Onsager: T_c = 2/ln(1+sqrt 2) = 2.2692</code></pre>
 </div>
 </div>
-<section id="the-model" class="level2">
-<h2 class="anchored" data-anchor-id="the-model">1. The model</h2>
-<p>Spins <span class="math inline">\(s_i=\pm1\)</span> on an <span class="math inline">\(L\times L\)</span> lattice with periodic boundaries, <span class="math inline">\(N=L^2\)</span>, <span class="math display">\[
+<section id="the-model-and-the-metropolis-sampler" class="level2">
+<h2 class="anchored" data-anchor-id="the-model-and-the-metropolis-sampler">1. The model and the Metropolis sampler</h2>
+<p>Spins <span class="math inline">\(s_i=\pm1\)</span> sit on an <span class="math inline">\(L\times L\)</span> lattice with periodic boundaries, <span class="math inline">\(N=L^2\)</span>, with <span class="math display">\[
 H(\mathbf s) = -J\sum_{\langle i,j\rangle} s_is_j,\qquad p(\mathbf s)=\frac{e^{-\beta H(\mathbf s)}}{Z},\qquad Z=\sum_{\mathbf s}e^{-\beta H(\mathbf s)},
-\]</span> with <span class="math inline">\(J=k_B=1\)</span>. Observables per spin: <span class="math inline">\(m=\frac1N\sum_i s_i\)</span> and <span class="math inline">\(e=H/N\)</span>.</p>
-<p><strong>Metropolis.</strong> Propose to flip <span class="math inline">\(s_i\)</span>; the energy changes by <span class="math inline">\(\Delta E = 2s_i\sum_{j\in{\rm nn}(i)}s_j\)</span>; accept with probability <span class="math inline">\(\min(1,e^{-\beta\Delta E})\)</span>. Spins of one colour of a chessboard do not interact, so all of them are updated at once; one <strong>sweep</strong> = black half + white half. In JAX: the sweep is a pure function, <code>lax.scan</code> repeats it, <code>vmap</code> runs many independent chains in parallel, <code>jit</code> compiles everything.</p>
+\]</span> and <span class="math inline">\(J=k_B=1\)</span>. The observables per spin are <span class="math inline">\(m=\frac1N\sum_i s_i\)</span> and <span class="math inline">\(e=H/N\)</span>.</p>
+<p>The Metropolis algorithm proposes to flip a spin <span class="math inline">\(s_i\)</span>, which changes the energy by <span class="math inline">\(\Delta E = 2s_i\sum_{j\in{\rm nn}(i)}s_j\)</span>, and accepts the flip with probability <span class="math inline">\(\min(1,e^{-\beta\Delta E})\)</span>. Spins of one colour of a chessboard do not interact with each other, so all of them can be updated at once; one <strong>sweep</strong> is the black half followed by the white half. In JAX the sweep is a pure function, <code>lax.scan</code> repeats it, <code>vmap</code> runs many independent chains in parallel, and <code>jit</code> compiles the whole procedure.</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -584,14 +578,15 @@ H(\mathbf s) = -J\sum_{\langle i,j\rangle} s_is_j,\qquad p(\mathbf s)=\frac{e^{-
 </details>
 </div>
 </section>
-<section id="the-data-sets" class="level2">
-<h2 class="anchored" data-anchor-id="the-data-sets">2. The data sets</h2>
-<p>For every <span class="math inline">\(L\)</span>: 51 temperatures from 3.5 down to 1.0 (step 0.05), 40 independent chains cooled through the grid, 5 configurations per chain and temperature, separated by <span class="math inline">\(2L\)</span> sweeps: <strong>200 configurations per temperature</strong>. Stored as</p>
+<section id="the-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="the-datasets">2. The datasets</h2>
+<p>For every <span class="math inline">\(L\)</span> we use 51 temperatures from 3.5 down to 1.0 (step 0.05). Forty independent chains are cooled through this grid, and at each temperature every chain contributes 5 configurations separated by <span class="math inline">\(2L\)</span> sweeps, which gives <strong>200 configurations per temperature</strong>. Each file stores</p>
 <ul>
 <li><code>configs</code>: <code>int8</code>, shape <code>(n_T, 200, L, L)</code>, values <span class="math inline">\(\pm1\)</span>;</li>
 <li><code>T</code>: the temperatures (ascending);</li>
 <li>the generation settings, so that every file documents itself.</li>
 </ul>
+<p>Files already present in <code>data/</code> are loaded; the others are generated, which takes several minutes for the largest lattices.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
@@ -633,9 +628,9 @@ L = 30: loaded (51, 200, 30, 30) in 0 s</code></pre>
 </div>
 </div>
 </section>
-<section id="checks-against-onsager" class="level2">
-<h2 class="anchored" data-anchor-id="checks-against-onsager">3. Checks against Onsager</h2>
-<p>For the infinite lattice: <span class="math inline">\(M(T) = \left(1-\sinh^{-4}(2/T)\right)^{1/8}\)</span> below <span class="math inline">\(T_c\)</span> (Yang) and <span class="math inline">\(u(T) = -\coth(2\beta)\left[1+\frac{2}{\pi}\left(2\tanh^2(2\beta)-1\right)K(\kappa)\right]\)</span>, <span class="math inline">\(\kappa = 2\sinh(2\beta)/\cosh^2(2\beta)\)</span> (Onsager). On finite lattices <span class="math inline">\(\langle|m|\rangle\)</span> stays non-zero above <span class="math inline">\(T_c\)</span> and the transition is rounded; the rounding shrinks as <span class="math inline">\(L\)</span> grows.</p>
+<section id="magnetisation-and-energy-of-finite-lattices" class="level2">
+<h2 class="anchored" data-anchor-id="magnetisation-and-energy-of-finite-lattices">3. Magnetisation and energy of finite lattices</h2>
+<p>The exact results for the infinite lattice serve as the reference. Below <span class="math inline">\(T_c\)</span> the spontaneous magnetisation is <span class="math inline">\(M(T) = \left(1-\sinh^{-4}(2/T)\right)^{1/8}\)</span> (Yang), and the energy per spin is <span class="math inline">\(u(T) = -\coth(2\beta)\left[1+\frac{2}{\pi}\left(2\tanh^2(2\beta)-1\right)K(\kappa)\right]\)</span> with <span class="math inline">\(\kappa = 2\sinh(2\beta)/\cosh^2(2\beta)\)</span> (Onsager). On finite lattices <span class="math inline">\(\langle|m|\rangle\)</span> stays non-zero above <span class="math inline">\(T_c\)</span> and the transition is rounded; in the figure this rounding should shrink as <span class="math inline">\(L\)</span> grows.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
@@ -669,9 +664,9 @@ L = 30: loaded (51, 200, 30, 30) in 0 s</code></pre>
 </div>
 </div>
 </section>
-<section id="pictures-for-the-lecture" class="level2">
-<h2 class="anchored" data-anchor-id="pictures-for-the-lecture">4. Pictures for the lecture</h2>
-<p><strong>A 1D chain.</strong> With <span class="math inline">\(h=0\)</span> the bonds of a 1D chain are independent: neighbours are parallel with probability <span class="math inline">\(p=e^{\beta J}/(e^{\beta J}+e^{-\beta J})\)</span>, so chains can be sampled exactly. The correlation length is <span class="math inline">\(\xi=-1/\ln\tanh(\beta J)\)</span>.</p>
+<section id="configurations-across-the-transition" class="level2">
+<h2 class="anchored" data-anchor-id="configurations-across-the-transition">4. Configurations across the transition</h2>
+<p>We start with a 1D chain. With <span class="math inline">\(h=0\)</span> its bonds are independent: neighbours are parallel with probability <span class="math inline">\(p=e^{\beta J}/(e^{\beta J}+e^{-\beta J})\)</span>, so chains can be sampled exactly, bond by bond. The correlation length is <span class="math inline">\(\xi=-1/\ln\tanh(\beta J)\)</span>, and the three rows below, at <span class="math inline">\(T = 0.6\)</span>, <span class="math inline">\(1.0\)</span> and <span class="math inline">\(5.0\)</span>, show domains whose length shrinks with temperature. The next cell turns to two dimensions and shows <span class="math inline">\(L=50\)</span> snapshots across <span class="math inline">\(T_c\)</span>, followed by a second figure with a grid of configurations from the dataset.</p>
 <div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
@@ -720,11 +715,11 @@ L = 30: loaded (51, 200, 30, 30) in 0 s</code></pre>
 </div>
 </div>
 </section>
-<section id="a-cnn-locates-t_c-and-how-the-answer-depends-on-l" class="level2">
-<h2 class="anchored" data-anchor-id="a-cnn-locates-t_c-and-how-the-answer-depends-on-l">5. A CNN locates <span class="math inline">\(T_c\)</span>, and how the answer depends on <span class="math inline">\(L\)</span></h2>
-<p><strong>Training only where the answer is clear:</strong> configurations with <span class="math inline">\(T&lt;1.5\)</span> get the label 0 (ordered), those with <span class="math inline">\(T&gt;3\)</span> the label 1 (disordered). Nothing between 1.5 and 3 is used for training.</p>
-<p><strong>The network</strong> (Flax NNX): two blocks of a <span class="math inline">\(3\times3\)</span> convolution with 16 channels (periodic boundaries, like the lattice), ReLU and <span class="math inline">\(2\times2\)</span> max pooling; global average pooling; a dense layer of 32 ReLU units; 2 outputs with softmax; cross-entropy loss, Adam. Global average pooling makes the same network work for every <span class="math inline">\(L\)</span>.</p>
-<p><strong>After training</strong> we predict at every temperature. For one configuration the network gives <span class="math inline">\(p_1\)</span>, the probability of “disordered”; its <strong>confidence</strong> is <span class="math inline">\(\max(p_0,p_1)\)</span>. Two estimates of <span class="math inline">\(T_c\)</span>: the temperature where the average confidence is lowest, and the temperature where <span class="math inline">\(\langle p_1\rangle_T\)</span> crosses <span class="math inline">\(1/2\)</span>.</p>
+<section id="the-critical-temperature-from-cnn-confidence" class="level2">
+<h2 class="anchored" data-anchor-id="the-critical-temperature-from-cnn-confidence">5. The critical temperature from CNN confidence</h2>
+<p>The network is trained only where the answer is clear: configurations with <span class="math inline">\(T&lt;1.5\)</span> get the label 0 (ordered), those with <span class="math inline">\(T&gt;3\)</span> the label 1 (disordered), and nothing between 1.5 and 3 is used for training.</p>
+<p>The network, built with Flax NNX, consists of two blocks of a <span class="math inline">\(3\times3\)</span> convolution with 16 channels (with periodic boundaries, like the lattice), ReLU and <span class="math inline">\(2\times2\)</span> max pooling, followed by global average pooling, a dense layer of 32 ReLU units and 2 outputs with softmax; it is trained with the cross-entropy loss and Adam. Global average pooling makes the same network work for every <span class="math inline">\(L\)</span>.</p>
+<p>After training we predict at every temperature. For one configuration the network gives <span class="math inline">\(p_1\)</span>, the probability of “disordered”, and its <strong>confidence</strong> is <span class="math inline">\(\max(p_0,p_1)\)</span>. This yields two estimates of <span class="math inline">\(T_c\)</span>: the temperature where the average confidence is lowest, and the temperature where <span class="math inline">\(\langle p_1\rangle_T\)</span> crosses <span class="math inline">\(1/2\)</span>. Each lattice size is trained with three seeds, and the printout gives the mean and spread of both estimates.</p>
 <div class="cell" data-execution_count="7">
 <details open="">
 <summary>Code</summary>
@@ -842,7 +837,7 @@ L = 30: loaded (51, 200, 30, 30) in 0 s</code></pre>
 <pre><code>&lt;p1&gt; = 1/2 crossing extrapolated to L -&gt; infinity (linear in 1/L): 2.290   (exact 2.2692)</code></pre>
 </div>
 </div>
-<p>The figure of one size for the slide: <span class="math inline">\(L=50\)</span>, seed 0, with every configuration’s confidence coloured by the predicted phase.</p>
+<p>The estimates lie between <span class="math inline">\(2.267\)</span> and <span class="math inline">\(2.293\)</span> for all sizes, and the linear extrapolation of the crossing in <span class="math inline">\(1/L\)</span> gives <span class="math inline">\(2.290\)</span>, against the exact <span class="math inline">\(2.2692\)</span>. The final figure, used on the slide, shows a single size, <span class="math inline">\(L=50\)</span> with seed 0, with the confidence of every configuration coloured by the predicted phase; its minimum lies at <span class="math inline">\(T=2.25\)</span>.</p>
 <div class="cell" data-execution_count="9">
 <details open="">
 <summary>Code</summary>
@@ -876,9 +871,14 @@ L = 30: loaded (51, 200, 30, 30) in 0 s</code></pre>
 <pre><code>{'tc_conf': {'10': [2.267, 0.103], '20': [2.283, 0.024], '30': [2.283, 0.024], '40': [2.283, 0.024], '50': [2.283, 0.024]}, 'tc_cross': {'10': [2.281, 0.03], '20': [2.286, 0.03], '30': [2.293, 0.018], '40': [2.285, 0.027], '50': [2.285, 0.031]}, 'tc_cross_extrap': 2.29, 'slide_L': 50, 'slide_T_conf': 2.25, 'slide_T_cross': 2.241}</code></pre>
 </div>
 </div>
-<blockquote class="blockquote">
-<p><strong>Try it.</strong> 1. Train with the windows <span class="math inline">\(T&lt;2.0\)</span> and <span class="math inline">\(T&gt;2.6\)</span>, closer to <span class="math inline">\(T_c\)</span>. Does the estimate improve, and does it depend less on <span class="math inline">\(L\)</span>? 2. Replace the global average pooling by flattening. Why does the network then work only for the <span class="math inline">\(L\)</span> it was trained on? 3. Use the network trained on <span class="math inline">\(L=20\)</span> to predict on <span class="math inline">\(L=50\)</span> configurations. What happens to the confidence curve?</p>
-</blockquote>
+<section id="exercises" class="level3">
+<h3 class="anchored" data-anchor-id="exercises">Exercises</h3>
+<ol type="1">
+<li>Train with the windows <span class="math inline">\(T&lt;2.0\)</span> and <span class="math inline">\(T&gt;2.6\)</span>, closer to <span class="math inline">\(T_c\)</span>. Does the estimate improve, and does it depend less on <span class="math inline">\(L\)</span>?</li>
+<li>Replace the global average pooling by flattening. Why does the network then work only for the <span class="math inline">\(L\)</span> it was trained on?</li>
+<li>Use the network trained on <span class="math inline">\(L=20\)</span> to predict on <span class="math inline">\(L=50\)</span> configurations. What happens to the confidence curve?</li>
+</ol>
+</section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>

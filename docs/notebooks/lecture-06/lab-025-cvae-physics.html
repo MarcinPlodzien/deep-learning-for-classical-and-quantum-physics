@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,28 +466,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-025-synthetic-spin-configurations-from-a-conditional-vae-tested-against-the-hamiltonian" id="toc-lab-025-synthetic-spin-configurations-from-a-conditional-vae-tested-against-the-hamiltonian" class="nav-link" data-scroll-target="#lab-025-synthetic-spin-configurations-from-a-conditional-vae-tested-against-the-hamiltonian">Lab 025 — Synthetic spin configurations from a conditional VAE: tested against the Hamiltonian</a>
+  <li><a href="#lab-025-spin-configurations-from-a-conditional-vae" id="toc-lab-025-spin-configurations-from-a-conditional-vae" class="nav-link" data-scroll-target="#lab-025-spin-configurations-from-a-conditional-vae">Lab 025 — Spin configurations from a conditional VAE</a>
   <ul class="collapse">
-  <li><a href="#a.-recap-hamiltonian-boltzmann-distribution-observables" id="toc-a.-recap-hamiltonian-boltzmann-distribution-observables" class="nav-link" data-scroll-target="#a.-recap-hamiltonian-boltzmann-distribution-observables">0a. Recap: Hamiltonian, Boltzmann distribution, observables</a></li>
-  <li><a href="#b.-recap-the-conditional-elbo-for-spins" id="toc-b.-recap-the-conditional-elbo-for-spins" class="nav-link" data-scroll-target="#b.-recap-the-conditional-elbo-for-spins">0b. Recap: the conditional ELBO for spins</a></li>
-  <li><a href="#part-a-the-2d-ising-model" id="toc-part-a-the-2d-ising-model" class="nav-link" data-scroll-target="#part-a-the-2d-ising-model">Part A: the 2D Ising model</a>
+  <li><a href="#hamiltonian-boltzmann-distribution-and-observables" id="toc-hamiltonian-boltzmann-distribution-and-observables" class="nav-link" data-scroll-target="#hamiltonian-boltzmann-distribution-and-observables">1. Hamiltonian, Boltzmann distribution and observables</a></li>
+  <li><a href="#the-conditional-evidence-lower-bound-for-spins" id="toc-the-conditional-evidence-lower-bound-for-spins" class="nav-link" data-scroll-target="#the-conditional-evidence-lower-bound-for-spins">2. The conditional evidence lower bound for spins</a></li>
+  <li><a href="#the-2d-ising-model" id="toc-the-2d-ising-model" class="nav-link" data-scroll-target="#the-2d-ising-model">3. The 2D Ising model</a>
   <ul class="collapse">
-  <li><a href="#a.1-data-and-split" id="toc-a.1-data-and-split" class="nav-link" data-scroll-target="#a.1-data-and-split">A.1 Data and split</a></li>
-  <li><a href="#a.2-observables-fixed-by-the-hamiltonian" id="toc-a.2-observables-fixed-by-the-hamiltonian" class="nav-link" data-scroll-target="#a.2-observables-fixed-by-the-hamiltonian">A.2 Observables fixed by the Hamiltonian</a></li>
-  <li><a href="#a.3-evaluator-networks-trained-on-real-simulations" id="toc-a.3-evaluator-networks-trained-on-real-simulations" class="nav-link" data-scroll-target="#a.3-evaluator-networks-trained-on-real-simulations">A.3 Evaluator networks trained on real simulations</a></li>
-  <li><a href="#a.4-the-conditional-vae" id="toc-a.4-the-conditional-vae" class="nav-link" data-scroll-target="#a.4-the-conditional-vae">A.4 The conditional VAE</a></li>
-  <li><a href="#a.5-synthetic-data-at-the-same-conditions" id="toc-a.5-synthetic-data-at-the-same-conditions" class="nav-link" data-scroll-target="#a.5-synthetic-data-at-the-same-conditions">A.5 Synthetic data at the same conditions</a></li>
-  <li><a href="#a.6-test-1-networks-trained-on-real-simulations" id="toc-a.6-test-1-networks-trained-on-real-simulations" class="nav-link" data-scroll-target="#a.6-test-1-networks-trained-on-real-simulations">A.6 Test 1: networks trained on real simulations</a></li>
-  <li><a href="#a.7-test-2-the-hamiltonian" id="toc-a.7-test-2-the-hamiltonian" class="nav-link" data-scroll-target="#a.7-test-2-the-hamiltonian">A.7 Test 2: the Hamiltonian</a></li>
-  <li><a href="#a.8-generator-quality-two-sample-test-and-memorisation" id="toc-a.8-generator-quality-two-sample-test-and-memorisation" class="nav-link" data-scroll-target="#a.8-generator-quality-two-sample-test-and-memorisation">A.8 Generator quality: two-sample test and memorisation</a></li>
-  <li><a href="#a.9-reading-part-a" id="toc-a.9-reading-part-a" class="nav-link" data-scroll-target="#a.9-reading-part-a">A.9 Reading Part A</a></li>
+  <li><a href="#monte-carlo-data" id="toc-monte-carlo-data" class="nav-link" data-scroll-target="#monte-carlo-data">3.1 Monte Carlo data</a></li>
+  <li><a href="#observables-fixed-by-the-hamiltonian" id="toc-observables-fixed-by-the-hamiltonian" class="nav-link" data-scroll-target="#observables-fixed-by-the-hamiltonian">3.2 Observables fixed by the Hamiltonian</a></li>
+  <li><a href="#evaluator-networks-trained-on-real-simulations" id="toc-evaluator-networks-trained-on-real-simulations" class="nav-link" data-scroll-target="#evaluator-networks-trained-on-real-simulations">3.3 Evaluator networks trained on real simulations</a></li>
+  <li><a href="#the-conditional-vae" id="toc-the-conditional-vae" class="nav-link" data-scroll-target="#the-conditional-vae">3.4 The conditional VAE</a></li>
+  <li><a href="#synthetic-data-at-the-same-conditions" id="toc-synthetic-data-at-the-same-conditions" class="nav-link" data-scroll-target="#synthetic-data-at-the-same-conditions">3.5 Synthetic data at the same conditions</a></li>
+  <li><a href="#evaluation-by-networks-trained-on-real-simulations" id="toc-evaluation-by-networks-trained-on-real-simulations" class="nav-link" data-scroll-target="#evaluation-by-networks-trained-on-real-simulations">3.6 Evaluation by networks trained on real simulations</a></li>
+  <li><a href="#hamiltonian-observables-of-the-synthetic-data" id="toc-hamiltonian-observables-of-the-synthetic-data" class="nav-link" data-scroll-target="#hamiltonian-observables-of-the-synthetic-data">3.7 Hamiltonian observables of the synthetic data</a></li>
+  <li><a href="#two-sample-test-and-memorisation" id="toc-two-sample-test-and-memorisation" class="nav-link" data-scroll-target="#two-sample-test-and-memorisation">3.8 Two-sample test and memorisation</a></li>
+  <li><a href="#pattern-level-and-hamiltonian-level-tests" id="toc-pattern-level-and-hamiltonian-level-tests" class="nav-link" data-scroll-target="#pattern-level-and-hamiltonian-level-tests">3.9 Pattern-level and Hamiltonian-level tests</a></li>
   </ul></li>
-  <li><a href="#part-b-the-j_1j_2-model" id="toc-part-b-the-j_1j_2-model" class="nav-link" data-scroll-target="#part-b-the-j_1j_2-model">Part B: the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model</a>
+  <li><a href="#the-j_1j_2-model" id="toc-the-j_1j_2-model" class="nav-link" data-scroll-target="#the-j_1j_2-model">4. The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model</a>
   <ul class="collapse">
-  <li><a href="#b.1-reading-part-b" id="toc-b.1-reading-part-b" class="nav-link" data-scroll-target="#b.1-reading-part-b">B.1 Reading Part B</a></li>
+  <li><a href="#interpolation-of-the-phase-diagram" id="toc-interpolation-of-the-phase-diagram" class="nav-link" data-scroll-target="#interpolation-of-the-phase-diagram">4.1 Interpolation of the phase diagram</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a>
+  <li><a href="#synthetic-data-and-thermodynamics" id="toc-synthetic-data-and-thermodynamics" class="nav-link" data-scroll-target="#synthetic-data-and-thermodynamics">5. Synthetic data and thermodynamics</a>
   <ul class="collapse">
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul></li>
@@ -518,92 +519,114 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <section id="deep-learning-in-classical-and-quantum-physics" class="level1">
 <h1>Deep Learning in Classical and Quantum Physics</h1>
-<strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 025
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 025 <br>
 <hr>
 </section>
-<section id="lab-025-synthetic-spin-configurations-from-a-conditional-vae-tested-against-the-hamiltonian" class="level1">
-<h1>Lab 025 — Synthetic spin configurations from a conditional VAE: tested against the Hamiltonian</h1>
-<p>A conditional variational autoencoder (cVAE, Lab 024) produces new configurations of a spin model at a requested temperature <span class="math inline">\(T\)</span>, or at a requested point <span class="math inline">\((g,T)\)</span> of a phase diagram. A generated snapshot can <em>look</em> like a Monte Carlo snapshot and still violate the physics fixed by the Hamiltonian. This lab tests the synthetic data in two independent ways:</p>
-<ol type="1">
-<li><strong>with networks trained on real Monte Carlo data</strong>: a regressor that reads <span class="math inline">\(T\)</span> from a snapshot and classifiers of the phase;</li>
-<li><strong>with the Hamiltonian itself</strong>: energy, magnetisation, specific heat, susceptibility, Binder cumulant, the distributions <span class="math inline">\(P(e)\)</span> and <span class="math inline">\(P(m)\)</span> and the correlation function, computed from the snapshots.</li>
-</ol>
-<p>Every test is run <strong>first on held-out real data</strong> (this fixes the baseline and the statistical noise), <strong>then, identically, on synthetic data at the same conditions</strong>. Before the physics we check that the generator is trained properly (training curves, active latent units, a classifier two-sample test, memorisation).</p>
-<p>Models: the 2D Ising model (<span class="math inline">\(L=30\)</span>, Part A) and the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> Ising model (<span class="math inline">\(L=32\)</span>, Part B), with the Monte Carlo data of Lab 018.</p>
-<blockquote class="blockquote">
-<p><strong>Data.</strong> Run Lab 018 and copy <code>ising_L30.npz</code> and <code>j1j2_L32.npz</code> into <code>data/</code>. Everything runs on the CPU.</p>
-</blockquote>
-<section id="a.-recap-hamiltonian-boltzmann-distribution-observables" class="level2">
-<h2 class="anchored" data-anchor-id="a.-recap-hamiltonian-boltzmann-distribution-observables">0a. Recap: Hamiltonian, Boltzmann distribution, observables</h2>
-<p>A classical spin model assigns an energy <span class="math inline">\(H(\mathbf s)\)</span> to every configuration <span class="math inline">\(\mathbf s=(s_1,\dots,s_N)\)</span>, <span class="math inline">\(s_i=\pm1\)</span>, on an <span class="math inline">\(L\times L\)</span> lattice with periodic boundaries (<span class="math inline">\(N=L^2\)</span>): <span class="math display">\[
+<section id="lab-025-spin-configurations-from-a-conditional-vae" class="level1">
+<h1>Lab 025 — Spin configurations from a conditional VAE</h1>
+<p>A conditional variational autoencoder (cVAE, Lab 024) produces new configurations of a spin model at a requested temperature <span class="math inline">\(T\)</span>, or at a requested point <span class="math inline">\((g,T)\)</span> of a phase diagram. A generated snapshot can <em>look</em> like a Monte Carlo snapshot and still violate the physics fixed by the Hamiltonian. In this lab we therefore test the synthetic data in two independent ways. The first test uses networks trained on real Monte Carlo data, a regressor that reads <span class="math inline">\(T\)</span> from a snapshot and classifiers of the phase: they tell us whether the synthetic snapshots carry the patterns that a network has learned to associate with a temperature or a phase. The second test uses the Hamiltonian itself: from the snapshots we compute the energy, the magnetisation, the specific heat, the susceptibility, the Binder cumulant, the distributions <span class="math inline">\(P(e)\)</span> and <span class="math inline">\(P(m)\)</span> and the correlation function, and compare them with their Monte Carlo values.</p>
+<p>Every test is run first on held-out real data, which fixes the baseline and the statistical noise of the estimate, and then, identically, on synthetic data at the same conditions. Before turning to the physics we make sure that the generator itself is trained properly, by looking at the training curves, the active latent units, a classifier two-sample test and possible memorisation of the training set.</p>
+<p>We work with two models and the Monte Carlo data of Lab 018: the 2D Ising model with <span class="math inline">\(L=30\)</span> (Section 3) and the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> Ising model with <span class="math inline">\(L=32\)</span> (Section 4). Before running the notebook, run Lab 018 and copy <code>ising_L30.npz</code> and <code>j1j2_L32.npz</code> into <code>data/</code>; everything runs on the CPU.</p>
+<section id="hamiltonian-boltzmann-distribution-and-observables" class="level2">
+<h2 class="anchored" data-anchor-id="hamiltonian-boltzmann-distribution-and-observables">1. Hamiltonian, Boltzmann distribution and observables</h2>
+<p>We start by recalling what a “correct” sample of a spin model is. A classical spin model assigns an energy <span class="math inline">\(H(\mathbf s)\)</span> to every configuration <span class="math inline">\(\mathbf s=(s_1,\dots,s_N)\)</span>, <span class="math inline">\(s_i=\pm1\)</span>, on an <span class="math inline">\(L\times L\)</span> lattice with periodic boundaries (<span class="math inline">\(N=L^2\)</span>): <span class="math display">\[
 \text{Ising: } H=-J\sum_{\langle ij\rangle}s_is_j,\qquad
 J_1\text{–}J_2:\ H=-J_1\sum_{\langle ij\rangle}s_is_j+J_2\sum_{\langle\langle ij\rangle\rangle}s_is_j ,
-\]</span> with <span class="math inline">\(\langle ij\rangle\)</span> nearest neighbours and <span class="math inline">\(\langle\langle ij\rangle\rangle\)</span> diagonal neighbours; <span class="math inline">\(J=J_1=1\)</span>, <span class="math inline">\(k_B=1\)</span>. In thermal equilibrium at temperature <span class="math inline">\(T\)</span> (inverse temperature <span class="math inline">\(\beta=1/T\)</span>) a configuration occurs with the <strong>Boltzmann probability</strong> <span class="math display">\[
+\]</span> with <span class="math inline">\(\langle ij\rangle\)</span> nearest neighbours and <span class="math inline">\(\langle\langle ij\rangle\rangle\)</span> diagonal neighbours; we set <span class="math inline">\(J=J_1=1\)</span> and <span class="math inline">\(k_B=1\)</span>. In thermal equilibrium at temperature <span class="math inline">\(T\)</span> (inverse temperature <span class="math inline">\(\beta=1/T\)</span>) a configuration occurs with the Boltzmann probability <span class="math display">\[
 p(\mathbf s)=\frac{e^{-\beta H(\mathbf s)}}{Z},\qquad Z=\sum_{\mathbf s}e^{-\beta H(\mathbf s)} .
-\]</span> Low <span class="math inline">\(T\)</span>: low-energy (ordered) configurations dominate; high <span class="math inline">\(T\)</span>: all configurations become nearly equally likely (disorder). Monte Carlo produces samples from <span class="math inline">\(p(\mathbf s)\)</span>; a generator should produce samples from the same distribution. What the observables measure:</p>
+\]</span> At low <span class="math inline">\(T\)</span> the low-energy, ordered configurations dominate; at high <span class="math inline">\(T\)</span> all configurations become nearly equally likely and the system is disordered.</p>
+<p>Every observable we use is an average over this distribution: for a quantity <span class="math inline">\(O(\mathbf s)\)</span> of a single configuration, <span class="math display">\[
+\langle O\rangle=\frac1Z\sum_{\mathbf s}O(\mathbf s)\,e^{-\beta H(\mathbf s)} .
+\]</span> The partition function also generates the thermodynamics: the energy per spin is the first derivative of <span class="math inline">\(\ln Z\)</span> with respect to <span class="math inline">\(\beta\)</span>, and the specific heat per spin is the second derivative, which equals the variance of the energy, <span class="math display">\[
+\begin{aligned}
+\langle e\rangle&amp;=\frac{\langle H\rangle}{N}=-\frac1N\,\frac{\partial\ln Z}{\partial\beta},\\
+c&amp;=\frac{\beta^2}{N}\,\frac{\partial^2\ln Z}{\partial\beta^2}=\frac{\beta^2}{N}\big(\langle H^2\rangle-\langle H\rangle^2\big)
+=N\beta^2\big(\langle e^2\rangle-\langle e\rangle^2\big).
+\end{aligned}
+\]</span> The sums run over all <span class="math inline">\(2^N\)</span> configurations and cannot be performed for <span class="math inline">\(N=900\)</span> or <span class="math inline">\(N=1024\)</span>. Monte Carlo instead draws <span class="math inline">\(n\)</span> configurations <span class="math inline">\(\mathbf s^{(1)},\dots,\mathbf s^{(n)}\)</span> with probability <span class="math inline">\(p(\mathbf s)\)</span> at each temperature, and every average <span class="math inline">\(\langle O\rangle\)</span> is estimated by the plain sample mean <span class="math inline">\(\overline{O}=\frac1n\sum_{k=1}^n O(\mathbf s^{(k)})\)</span>. A generator is judged by computing exactly the same sample means over its own configurations. The table lists each observable in both forms: the definition through the Boltzmann distribution, and the estimator that the functions <code>ising_observables</code> and <code>j1j2_observables</code> below compute. Here <span class="math inline">\(e_k=H(\mathbf s^{(k)})/N\)</span> and <span class="math inline">\(m_k=\frac1N\sum_i s_i^{(k)}\)</span> are the energy and magnetisation per spin of sample <span class="math inline">\(k\)</span>, <span class="math inline">\(\overline{x}\)</span> is the mean over the <span class="math inline">\(n\)</span> samples, and on a finite lattice without a field <span class="math inline">\(\langle m\rangle=0\)</span> by the symmetry <span class="math inline">\(\mathbf s\to-\mathbf s\)</span>, which is why <span class="math inline">\(|m|\)</span> is used.</p>
 <table class="table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>observable</th>
+<th>definition through <span class="math inline">\(Z\)</span></th>
+<th>estimator from <span class="math inline">\(n\)</span> samples (as in the code)</th>
 <th>physical meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(e=H/N\)</span></td>
-<td>energy per spin: counts satisfied and broken bonds (local structure)</td>
+<td>energy per spin</td>
+<td><span class="math inline">\(\langle e\rangle=-\frac1N\partial_\beta\ln Z\)</span></td>
+<td><span class="math inline">\(\overline{e}=\frac1n\sum_k e_k\)</span></td>
+<td>counts satisfied and broken bonds (local structure)</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(m=\frac1N\sum_i s_i\)</span></td>
-<td>magnetisation: ferromagnetic order (large below <span class="math inline">\(T_c\)</span>, small above)</td>
+<td>magnetisation</td>
+<td><span class="math inline">\(\langle\lvert m\rvert\rangle=\frac1Z\sum_{\mathbf s}\lvert m(\mathbf s)\rvert e^{-\beta H}\)</span></td>
+<td><span class="math inline">\(\overline{\lvert m\rvert}=\frac1n\sum_k\lvert m_k\rvert\)</span></td>
+<td>ferromagnetic order (large below <span class="math inline">\(T_c\)</span>, small above)</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(m_{\rm str}\)</span></td>
-<td>stripe order of the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model (spins alternating along one lattice direction)</td>
+<td>stripe order (<span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span>)</td>
+<td><span class="math inline">\(\langle m_{\rm str}\rangle\)</span>, <span class="math inline">\(m_{\rm str}=\sqrt{m_{(\pi,0)}^2+m_{(0,\pi)}^2}\)</span>, <span class="math inline">\(m_{(\pi,0)}=\frac1N\sum_{\mathbf x}(-1)^{x}s_{\mathbf x}\)</span></td>
+<td><span class="math inline">\(\overline{m_{\rm str}}=\frac1n\sum_k m_{{\rm str},k}\)</span></td>
+<td>spins alternating along one lattice direction</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(c=N\,\mathrm{Var}(e)/T^2\)</span></td>
-<td>specific heat: energy fluctuations, peaks at a transition</td>
+<td>specific heat</td>
+<td><span class="math inline">\(c=N\beta^2\big(\langle e^2\rangle-\langle e\rangle^2\big)\)</span></td>
+<td><span class="math inline">\(N\beta^2\big(\overline{e^2}-\overline{e}^{\,2}\big)\)</span></td>
+<td>energy fluctuations, peaks at a transition</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(\chi=N\,\mathrm{Var}(\lvert m\rvert)/T\)</span></td>
-<td>susceptibility: magnetisation fluctuations, peaks at a transition</td>
+<td>susceptibility</td>
+<td><span class="math inline">\(\chi=N\beta\big(\langle m^2\rangle-\langle\lvert m\rvert\rangle^2\big)\)</span></td>
+<td><span class="math inline">\(N\beta\big(\overline{m^2}-\overline{\lvert m\rvert}^{\,2}\big)\)</span></td>
+<td>magnetisation fluctuations, peaks at a transition</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(U_4=1-\langle m^4\rangle/3\langle m^2\rangle^2\)</span></td>
-<td>Binder cumulant: shape of <span class="math inline">\(P(m)\)</span>; <span class="math inline">\(2/3\)</span> for two sharp peaks (ordered), <span class="math inline">\(\to0\)</span> for a Gaussian (disordered)</td>
+<td>Binder cumulant</td>
+<td><span class="math inline">\(U_4=1-\dfrac{\langle m^4\rangle}{3\langle m^2\rangle^2}\)</span></td>
+<td><span class="math inline">\(1-\dfrac{\overline{m^4}}{3\,\overline{m^2}^{\,2}}\)</span></td>
+<td>shape of <span class="math inline">\(P(m)\)</span>: <span class="math inline">\(2/3\)</span> for two sharp peaks, <span class="math inline">\(\to0\)</span> for a Gaussian</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(G(r)=\langle s_{\mathbf x}s_{\mathbf x+r}\rangle\)</span></td>
-<td>spin–spin correlation at distance <span class="math inline">\(r\)</span>: how far order extends</td>
+<td>correlation function</td>
+<td><span class="math inline">\(G(r)=\frac{1}{2N}\sum_{\mathbf x}\sum_{\mu=1,2}\langle s_{\mathbf x}s_{\mathbf x+r\hat e_\mu}\rangle\)</span></td>
+<td><span class="math inline">\(\frac{1}{2nN}\sum_k\sum_{\mathbf x}\sum_{\mu}s^{(k)}_{\mathbf x}s^{(k)}_{\mathbf x+r\hat e_\mu}\)</span></td>
+<td>how far order extends (<span class="math inline">\(\hat e_\mu\)</span>: lattice unit vectors)</td>
+</tr>
+<tr class="even">
+<td>distributions</td>
+<td><span class="math inline">\(P(e')=\frac1Z\sum_{\mathbf s}\delta\big(e'-H(\mathbf s)/N\big)e^{-\beta H}\)</span>, same for <span class="math inline">\(P(m')\)</span></td>
+<td>histograms of <span class="math inline">\(e_k\)</span> and of <span class="math inline">\(m_k\)</span></td>
+<td>full fluctuations, not only means</td>
 </tr>
 </tbody>
 </table>
-<p>For the 2D Ising model the transition is exactly known (Onsager): <span class="math inline">\(T_c=2/\ln(1+\sqrt2)\approx2.269\)</span>.</p>
+<p>For <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> the energy per spin includes the diagonal bonds, <span class="math inline">\(e_k=\frac1N H(\mathbf s^{(k)})\)</span> with the Hamiltonian above, and <span class="math inline">\(m_{(0,\pi)}\)</span> is defined like <span class="math inline">\(m_{(\pi,0)}\)</span> with <span class="math inline">\((-1)^{y}\)</span>; the larger of the two tells which stripe orientation a snapshot has. All variances are the population variances (division by <span class="math inline">\(n\)</span>), as computed by <code>numpy.var</code>.</p>
+<p>For the 2D Ising model the transition temperature is known exactly from Onsager’s solution: <span class="math inline">\(T_c=2/\ln(1+\sqrt2)\approx2.269\)</span>.</p>
 </section>
-<section id="b.-recap-the-conditional-elbo-for-spins" class="level2">
-<h2 class="anchored" data-anchor-id="b.-recap-the-conditional-elbo-for-spins">0b. Recap: the conditional ELBO for spins</h2>
-<p>A configuration <span class="math inline">\(\mathbf s=(s_1,\dots,s_N)\)</span>, <span class="math inline">\(s_i=\pm1\)</span>, is stored as bits <span class="math inline">\(b_i=(s_i+1)/2\in\{0,1\}\)</span>. The condition is <span class="math inline">\(c\)</span> (<span class="math inline">\(c=T\)</span> for Ising, <span class="math inline">\(c=(g,T)\)</span> for <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span>). The cVAE has three parts:</p>
-<ul>
-<li>prior <span class="math inline">\(p(\mathbf z)=\mathcal N(\mathbf 0,\mathbb 1)\)</span> over a latent vector <span class="math inline">\(\mathbf z\in\mathbb R^{d}\)</span>,</li>
-<li>decoder <span class="math inline">\(p_\theta(\mathbf s\mid\mathbf z,c)=\prod_{i=1}^N \sigma(\ell_i)^{b_i}\,\big(1-\sigma(\ell_i)\big)^{1-b_i}\)</span>, with one logit <span class="math inline">\(\ell_i(\mathbf z,c)\)</span> per site and <span class="math inline">\(\sigma(\ell)=1/(1+e^{-\ell})\)</span>,</li>
-<li>encoder <span class="math inline">\(q_\phi(\mathbf z\mid\mathbf s,c)=\mathcal N\big(\boldsymbol\mu(\mathbf s,c),\mathrm{diag}\,\boldsymbol\sigma^2(\mathbf s,c)\big)\)</span>.</li>
-</ul>
-<p>For every training configuration (Lab 024 derives this bound in full) <span class="math display">\[
+<section id="the-conditional-evidence-lower-bound-for-spins" class="level2">
+<h2 class="anchored" data-anchor-id="the-conditional-evidence-lower-bound-for-spins">2. The conditional evidence lower bound for spins</h2>
+<p>Next we recall the generator. A configuration <span class="math inline">\(\mathbf s=(s_1,\dots,s_N)\)</span>, <span class="math inline">\(s_i=\pm1\)</span>, is stored as bits <span class="math inline">\(b_i=(s_i+1)/2\in\{0,1\}\)</span>, and the condition is <span class="math inline">\(c\)</span>, with <span class="math inline">\(c=T\)</span> for the Ising model and <span class="math inline">\(c=(g,T)\)</span> for the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model. The cVAE consists of a prior <span class="math inline">\(p(\mathbf z)=\mathcal N(\mathbf 0,\mathbb 1)\)</span> over a latent vector <span class="math inline">\(\mathbf z\in\mathbb R^{d}\)</span>; a decoder <span class="math inline">\(p_\theta(\mathbf s\mid\mathbf z,c)=\prod_{i=1}^N \sigma(\ell_i)^{b_i}\,\big(1-\sigma(\ell_i)\big)^{1-b_i}\)</span>, which outputs one logit <span class="math inline">\(\ell_i(\mathbf z,c)\)</span> per site, with <span class="math inline">\(\sigma(\ell)=1/(1+e^{-\ell})\)</span>; and an encoder <span class="math inline">\(q_\phi(\mathbf z\mid\mathbf s,c)=\mathcal N\big(\boldsymbol\mu(\mathbf s,c),\mathrm{diag}\,\boldsymbol\sigma^2(\mathbf s,c)\big)\)</span>.</p>
+<p>Training should make the log-likelihood <span class="math inline">\(\log p_\theta(\mathbf s\mid c)\)</span> of the Monte Carlo configurations large, but this quantity is an integral over all latent vectors and cannot be computed. We therefore maximise a quantity that can be computed and is never larger: the <strong>evidence lower bound (ELBO)</strong>. “Evidence” is the traditional name of the log-likelihood of the data, <span class="math inline">\(\log p_\theta(\mathbf s\mid c)\)</span>, and the ELBO is a lower bound on it; the derivation is given in full in Lab 024. For every training configuration <span class="math display">\[
 \log p_\theta(\mathbf s\mid c)\;\ge\;\mathbb E_{q_\phi(\mathbf z|\mathbf s,c)}\big[\log p_\theta(\mathbf s\mid\mathbf z,c)\big]\;-\;
 \mathrm{KL}\big(q_\phi(\mathbf z\mid\mathbf s,c)\,\|\,p(\mathbf z)\big)\;=\;\mathrm{ELBO},
-\]</span> <span class="math display">\[
+\]</span> where the Bernoulli reconstruction term and the Kullback–Leibler (KL) divergence between two Gaussians take the closed forms <span class="math display">\[
 \log p_\theta(\mathbf s\mid\mathbf z,c)=\sum_{i=1}^N\Big[b_i\log\sigma(\ell_i)+(1-b_i)\log\big(1-\sigma(\ell_i)\big)\Big],\qquad
 \mathrm{KL}=\frac12\sum_{j=1}^{d}\big(\sigma_j^2+\mu_j^2-1-\log\sigma_j^2\big).
-\]</span> Here <span class="math inline">\(p(\mathbf z)=\mathcal N(0,\mathbb 1)\)</span>; in A.4 we also use a prior that depends on the condition, <span class="math inline">\(p_\psi(\mathbf z\mid c)\)</span>, and the KL term is then taken with respect to it. We minimise <span class="math inline">\(-\mathrm{ELBO}\)</span> averaged over the data, with <span class="math inline">\(\mathbf z=\boldsymbol\mu+\boldsymbol\sigma\odot\boldsymbol\epsilon\)</span>, <span class="math inline">\(\boldsymbol\epsilon\sim\mathcal N(0,\mathbb 1)\)</span> (reparametrisation). <strong>Generation at a condition <span class="math inline">\(c\)</span>:</strong> draw <span class="math inline">\(\mathbf z\)</span> from the prior, compute the logits, draw every spin from its Bernoulli distribution. Alternatively take the <strong>most likely configuration</strong> <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span>.</p>
-<p><strong>The physics behind the tests.</strong> The generator defines a model distribution <span class="math inline">\(p_\theta(\mathbf s\mid c)=\int d\mathbf z\,p(\mathbf z)\, p_\theta(\mathbf s\mid\mathbf z,c)\)</span> that should approximate the Boltzmann distribution <span class="math inline">\(p(\mathbf s)=e^{-\beta H(\mathbf s)}/Z\)</span>. At fixed <span class="math inline">\(\mathbf z\)</span> the decoder is a <strong>product over sites</strong>, the same structure as a mean-field ansatz: <span class="math inline">\(\langle s_i\rangle_{\mathbf z}=\tanh(\ell_i/2)\)</span> and <span class="math display">\[
+\]</span> Here <span class="math inline">\(p(\mathbf z)=\mathcal N(0,\mathbb 1)\)</span>; in Section 3.4 we will also use a prior that depends on the condition, <span class="math inline">\(p_\psi(\mathbf z\mid c)\)</span>, and the KL term is then taken with respect to it. We minimise <span class="math inline">\(-\mathrm{ELBO}\)</span> averaged over the data, sampling <span class="math inline">\(\mathbf z=\boldsymbol\mu+\boldsymbol\sigma\odot\boldsymbol\epsilon\)</span> with <span class="math inline">\(\boldsymbol\epsilon\sim\mathcal N(0,\mathbb 1)\)</span> (the reparametrisation trick). To generate a configuration at a condition <span class="math inline">\(c\)</span> we draw <span class="math inline">\(\mathbf z\)</span> from the prior, compute the logits and draw every spin from its Bernoulli distribution. Alternatively, we can take the most likely configuration <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span>.</p>
+<p>This structure already tells us which tests will be hard. The generator defines a model distribution <span class="math inline">\(p_\theta(\mathbf s\mid c)=\int d\mathbf z\,p(\mathbf z)\,p_\theta(\mathbf s\mid\mathbf z,c)\)</span> that should approximate the Boltzmann distribution <span class="math inline">\(p(\mathbf s)=e^{-\beta H(\mathbf s)}/Z\)</span>. At fixed <span class="math inline">\(\mathbf z\)</span>, however, the decoder is a product over sites, the same structure as a mean-field ansatz: <span class="math inline">\(\langle s_i\rangle_{\mathbf z}=\tanh(\ell_i/2)\)</span> and <span class="math display">\[
 \langle s_is_j\rangle_{\mathbf z}=\tanh(\ell_i/2)\tanh(\ell_j/2)\quad (i\neq j),\qquad
 \mathrm{Cov}(s_i,s_j)=\mathrm{Cov}_{\mathbf z}\big(\tanh(\ell_i/2),\tanh(\ell_j/2)\big).
-\]</span> All correlations between spins must be carried by the few latent variables <span class="math inline">\(\mathbf z\)</span>. The energy <span class="math inline">\(H=-J\sum_{\langle ij\rangle}s_is_j\)</span> is a sum of nearest-neighbour correlations; a site-independent Bernoulli draw breaks bonds at random. This is why the energy, the specific heat and <span class="math inline">\(G(r)\)</span> are the sharp tests here.</p>
+\]</span> All correlations between spins must therefore be carried by the few latent variables <span class="math inline">\(\mathbf z\)</span>. The energy <span class="math inline">\(H=-J\sum_{\langle ij\rangle}s_is_j\)</span> is a sum of nearest-neighbour correlations, and a site-independent Bernoulli draw breaks bonds at random. This is why the energy, the specific heat and <span class="math inline">\(G(r)\)</span> are the sharp tests in this lab.</p>
 <div class="cell" data-execution_count="1">
 <details open="">
 <summary>Code</summary>
@@ -640,16 +663,11 @@ p(\mathbf s)=\frac{e^{-\beta H(\mathbf s)}}{Z},\qquad Z=\sum_{\mathbf s}e^{-\bet
 </div>
 <hr>
 </section>
-<section id="part-a-the-2d-ising-model" class="level2">
-<h2 class="anchored" data-anchor-id="part-a-the-2d-ising-model">Part A: the 2D Ising model</h2>
-<section id="a.1-data-and-split" class="level3">
-<h3 class="anchored" data-anchor-id="a.1-data-and-split">A.1 Data and split</h3>
-<p><code>ising_L30.npz</code> holds 256 Swendsen–Wang configurations at each of 37 temperatures, <span class="math inline">\(T\in[1.5,3.5]\)</span>, denser near <span class="math inline">\(T_c\)</span>. Per temperature we split them into</p>
-<ul>
-<li><code>S_train</code> (128): training set of the generator <strong>and</strong> of the evaluator networks,</li>
-<li><code>S_A</code>, <code>S_B</code> (64 each): two independent held-out real sets. <code>S_A</code> is the reference for every test; the difference between <code>S_A</code> and <code>S_B</code> measures the statistical noise of a 64-snapshot estimate (<strong>real-vs-real baseline</strong>).</li>
-</ul>
-<p>Array shapes: <code>(n_T, n, L, L)</code> = (temperatures, snapshots, rows, columns).</p>
+<section id="the-2d-ising-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-2d-ising-model">3. The 2D Ising model</h2>
+<section id="monte-carlo-data" class="level3">
+<h3 class="anchored" data-anchor-id="monte-carlo-data">3.1 Monte Carlo data</h3>
+<p>The file <code>ising_L30.npz</code> holds 256 Swendsen–Wang configurations at each of 37 temperatures, <span class="math inline">\(T\in[1.5,3.5]\)</span>, sampled more densely near <span class="math inline">\(T_c\)</span>. At every temperature we split them into three sets. The 128 configurations of <code>S_train</code> are the training set both of the generator and of the evaluator networks. The remaining configurations form two independent held-out real sets, <code>S_A</code> and <code>S_B</code>, of 64 snapshots each. <code>S_A</code> is the reference for every test, while the difference between <code>S_A</code> and <code>S_B</code> measures the statistical noise of a 64-snapshot estimate; we call it the real-vs-real baseline. All arrays have the shape <code>(n_T, n, L, L)</code>, that is (temperatures, snapshots, rows, columns).</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -676,15 +694,15 @@ per temperature: 128 training, 64 + 64 held-out real configurations</code></pre>
 </div>
 </div>
 </section>
-<section id="a.2-observables-fixed-by-the-hamiltonian" class="level3">
-<h3 class="anchored" data-anchor-id="a.2-observables-fixed-by-the-hamiltonian">A.2 Observables fixed by the Hamiltonian</h3>
-<p>For one snapshot, with each nearest-neighbour bond counted once (right and down neighbour, periodic boundaries), <span class="math display">\[
+<section id="observables-fixed-by-the-hamiltonian" class="level3">
+<h3 class="anchored" data-anchor-id="observables-fixed-by-the-hamiltonian">3.2 Observables fixed by the Hamiltonian</h3>
+<p>We now turn the observables of Section 1 into formulas for a finite set of snapshots. For one snapshot, with each nearest-neighbour bond counted once (right and down neighbour, periodic boundaries), <span class="math display">\[
 e=\frac{H}{N}=-\frac1N\sum_{\langle ij\rangle}s_is_j\in[-2,2],\qquad m=\frac1N\sum_i s_i .
-\]</span> For a set of snapshots at one temperature (<span class="math inline">\(k_B=J=1\)</span>): <span class="math display">\[
+\]</span> For a set of snapshots at one temperature (<span class="math inline">\(k_B=J=1\)</span>) we compute <span class="math display">\[
 \langle e\rangle,\quad \langle|m|\rangle,\quad c=\frac{N}{T^2}\big(\langle e^2\rangle-\langle e\rangle^2\big),\quad
 \chi=\frac{N}{T}\big(\langle m^2\rangle-\langle|m|\rangle^2\big),\quad U_4=1-\frac{\langle m^4\rangle}{3\langle m^2\rangle^2},
-\]</span> and the correlation function along the lattice axes, <span class="math inline">\(G(r)=\langle s_{\mathbf x}\,s_{\mathbf x+r\hat{\mathbf e}}\rangle\)</span> (averaged over <span class="math inline">\(\mathbf x\)</span>, both axes and snapshots), <span class="math inline">\(r=0,\dots,L/2\)</span>.</p>
-<p><code>ising_observables(S, T)</code> takes <code>S</code> of shape <code>(n_T, n, L, L)</code> and <code>T</code> of shape <code>(n_T,)</code> and returns per-temperature averages (shape <code>(n_T,)</code>), the per-snapshot <span class="math inline">\(e\)</span> and <span class="math inline">\(m\)</span> (shape <code>(n_T, n)</code>) and <span class="math inline">\(G\)</span> (shape <code>(n_T, L/2+1)</code>).</p>
+\]</span> together with the correlation function along the lattice axes, <span class="math inline">\(G(r)=\langle s_{\mathbf x}\,s_{\mathbf x+r\hat{\mathbf e}}\rangle\)</span>, averaged over <span class="math inline">\(\mathbf x\)</span>, both axes and the snapshots, for <span class="math inline">\(r=0,\dots,L/2\)</span>.</p>
+<p>The function <code>ising_observables(S, T)</code> takes <code>S</code> of shape <code>(n_T, n, L, L)</code> and <code>T</code> of shape <code>(n_T,)</code>. It returns the per-temperature averages (shape <code>(n_T,)</code>), the per-snapshot <span class="math inline">\(e\)</span> and <span class="math inline">\(m\)</span> (shape <code>(n_T, n)</code>) and <span class="math inline">\(G\)</span> (shape <code>(n_T, L/2+1)</code>). The cell ends with two configurations whose values we know exactly: the all-up state must give <span class="math inline">\(e=-2\)</span>, <span class="math inline">\(m=1\)</span>, and the chessboard state <span class="math inline">\(e=+2\)</span>, <span class="math inline">\(m=0\)</span>.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
@@ -720,12 +738,12 @@ e=\frac{H}{N}=-\frac1N\sum_{\langle ij\rangle}s_is_j\in[-2,2],\qquad m=\frac1N\s
 <pre><code>checks passed: all-up e = -2, m = 1;  chessboard e = +2, m = 0</code></pre>
 </div>
 </div>
-<p><strong>Distances between distributions.</strong> Averages can agree while the distributions differ. For two samples <span class="math inline">\(x_1..x_n\)</span> and <span class="math inline">\(y_1..y_n\)</span> of equal size, the 1D Wasserstein-1 distance is the mean absolute difference of the sorted values, <span class="math display">\[
+<p>Averages can agree while the distributions differ, so we also need a distance between distributions. For two samples <span class="math inline">\(x_1..x_n\)</span> and <span class="math inline">\(y_1..y_n\)</span> of equal size, the 1D Wasserstein-1 distance is the mean absolute difference of the sorted values, <span class="math display">\[
 W_1=\frac1n\sum_{k=1}^n\big|x_{(k)}-y_{(k)}\big| ,
-\]</span> i.e.&nbsp;the average distance one has to move probability mass to turn one histogram into the other (in units of <span class="math inline">\(e\)</span> or <span class="math inline">\(m\)</span>).</p>
-<p><strong>Noise units.</strong> For an observable <span class="math inline">\(O(T)\)</span> we compare the synthetic estimate with <code>S_A</code> and normalise by the real-vs-real difference: <span class="math display">\[
+\]</span> which is the average distance one has to move probability mass to turn one histogram into the other, measured in units of <span class="math inline">\(e\)</span> or <span class="math inline">\(m\)</span>.</p>
+<p>A raw difference between a synthetic and a real estimate means little without knowing how large the difference between two real sets would be. For an observable <span class="math inline">\(O(T)\)</span> we therefore compare the synthetic estimate with <code>S_A</code> and express the result in noise units, normalising by the real-vs-real difference: <span class="math display">\[
 R_O=\frac{\mathrm{mean}_T\,|O_{\rm syn}(T)-O_A(T)|}{\mathrm{mean}_T\,|O_B(T)-O_A(T)|}.
-\]</span> <span class="math inline">\(R_O\approx 1\)</span>: the synthetic set is as close to <code>S_A</code> as an independent Monte Carlo set of the same size. <span class="math inline">\(R_O\gg1\)</span>: a real discrepancy.</p>
+\]</span> A value <span class="math inline">\(R_O\approx 1\)</span> means that the synthetic set is as close to <code>S_A</code> as an independent Monte Carlo set of the same size; <span class="math inline">\(R_O\gg1\)</span> signals a real discrepancy. The next cell checks the <span class="math inline">\(W_1\)</span> implementation on a shifted sample and prints the real-vs-real noise levels that enter the denominators.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
@@ -764,14 +782,10 @@ real-vs-real noise  mean_T W1(P_A(e), P_B(e)) = 0.0174,  mean_T W1(P_A(m), P_B(m
 </div>
 </div>
 </section>
-<section id="a.3-evaluator-networks-trained-on-real-simulations" class="level3">
-<h3 class="anchored" data-anchor-id="a.3-evaluator-networks-trained-on-real-simulations">A.3 Evaluator networks trained on real simulations</h3>
-<p>Two small CNNs, trained only on <code>S_train</code> (real data). Architecture: two <span class="math inline">\(3\times3\)</span> convolutions with periodic (<code>CIRCULAR</code>) padding, a <span class="math inline">\(2\times2\)</span> max pooling between them, global average pooling (so the network sees local patterns, not positions), one hidden dense layer.</p>
-<ul>
-<li><strong>temperature regressor</strong>, output <span class="math inline">\(\hat T\)</span>, loss <span class="math inline">\((\hat T-T)^2\)</span>, trained on all 37 temperatures;</li>
-<li><strong>phase classifier</strong>, trained only far from the transition: <span class="math inline">\(T\le1.8\)</span> (ordered, label 0) and <span class="math inline">\(T\ge2.8\)</span> (disordered, label 1); cross-entropy; <span class="math inline">\(p_1\)</span> is the probability of “disordered” and <span class="math inline">\(\max(p_0,p_1)\)</span> its confidence (Lecture 4).</li>
-</ul>
-<p>One generic trainer is used for every network of the lab: one epoch is a single jit-compiled <code>jax.lax.scan</code> over minibatches, Adam with a cosine-decaying learning rate. The data arrays are passed as arguments (not captured as constants), spins stay <code>int8</code> and are converted to <code>float32</code> per minibatch.</p>
+<section id="evaluator-networks-trained-on-real-simulations" class="level3">
+<h3 class="anchored" data-anchor-id="evaluator-networks-trained-on-real-simulations">3.3 Evaluator networks trained on real simulations</h3>
+<p>The first family of tests asks what a network that has only ever seen real Monte Carlo data thinks of the synthetic snapshots. We train two small convolutional neural networks (CNNs) on <code>S_train</code> only. Both consist of two <span class="math inline">\(3\times3\)</span> convolutions with periodic (<code>CIRCULAR</code>) padding, a <span class="math inline">\(2\times2\)</span> max pooling between them, global average pooling (so that the network sees local patterns, not positions) and one hidden dense layer. The temperature regressor outputs an estimate <span class="math inline">\(\hat T\)</span>, is trained with the loss <span class="math inline">\((\hat T-T)^2\)</span> and uses all 37 temperatures. The phase classifier is trained only far from the transition, on <span class="math inline">\(T\le1.8\)</span> (ordered, label 0) and <span class="math inline">\(T\ge2.8\)</span> (disordered, label 1), with the cross-entropy loss; its output <span class="math inline">\(p_1\)</span> is the probability of “disordered”, and <span class="math inline">\(\max(p_0,p_1)\)</span> is its confidence (Lecture 4). Near the transition the classifier becomes uncertain, so the minimum of the confidence as a function of <span class="math inline">\(T\)</span> marks the transition it sees.</p>
+<p>One generic trainer is used for every network of the lab. One epoch is a single jit-compiled <code>jax.lax.scan</code> over minibatches, optimised with Adam and a cosine-decaying learning rate. The data arrays are passed as arguments rather than captured as constants, and the spins stay <code>int8</code> and are converted to <code>float32</code> per minibatch, which keeps the memory small. On the real held-out sets the regressor reaches a root-mean-square error (RMSE) of about 0.12, and the confidence minimum lies at <span class="math inline">\(T=2.28\)</span> for both <code>S_A</code> and <code>S_B</code>, next to <span class="math inline">\(T_c=2.269\)</span>; these are the baselines for the synthetic data.</p>
 <div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
@@ -890,19 +904,17 @@ real held-out data: classifier confidence minimum at T = 2.28 (S_A), 2.28 (S_B);
 </div>
 </div>
 </section>
-<section id="a.4-the-conditional-vae" class="level3">
-<h3 class="anchored" data-anchor-id="a.4-the-conditional-vae">A.4 The conditional VAE</h3>
-<p>Dense encoder and decoder (the spins are flattened, <code>x</code> has shape <code>(B, N)</code>, the condition <code>c</code> has shape <code>(B, 1)</code> and is <span class="math inline">\(c=T-2.5\)</span>): <span class="math display">\[
+<section id="the-conditional-vae" class="level3">
+<h3 class="anchored" data-anchor-id="the-conditional-vae">3.4 The conditional VAE</h3>
+<p>The generator has a dense encoder and decoder. The spins are flattened, so <code>x</code> has shape <code>(B, N)</code>, and the condition <code>c</code> has shape <code>(B, 1)</code> with <span class="math inline">\(c=T-2.5\)</span>: <span class="math display">\[
 \text{encoder: } [\mathbf s, c]\;\xrightarrow{\;N+1\to512\to256\;}\;(\boldsymbol\mu,\log\boldsymbol\sigma^2)\in\mathbb R^{d}\times\mathbb R^{d},\qquad
 \text{decoder: } [\mathbf z, c]\;\xrightarrow{\;d+1\to256\to512\to N\;}\;\boldsymbol\ell ,
-\]</span> ReLU activations, latent dimension <span class="math inline">\(d=16\)</span>. We train three variants; each adds one physics-motivated ingredient to the previous one.</p>
-<ol type="1">
-<li><strong>cVAE</strong>: the model of Lab 024, prior <span class="math inline">\(p(\mathbf z)=\mathcal N(0,\mathbb 1)\)</span>, raw data.</li>
-<li><strong>cVAE+Z2</strong>: the Ising Hamiltonian is invariant under the global flip <span class="math inline">\(\mathbf s\to-\mathbf s\)</span>. Below <span class="math inline">\(T_c\)</span> the data consist of two mirror-image families (<span class="math inline">\(m\approx\pm|m|\)</span>) that the generator would have to place separately in the Gaussian latent space; prior samples that fall between them decode to mixtures. We impose the symmetry by construction: every training snapshot is replaced by its representative with <span class="math inline">\(m\ge0\)</span>, and every generated snapshot is flipped with probability 1/2, so that <span class="math inline">\(p(\mathbf s)=\tfrac12\big[p_+(\mathbf s)+p_+(-\mathbf s)\big]\)</span> exactly.</li>
-<li><strong>cVAE+Z2+p(z|T)</strong>: a <strong>conditional prior</strong> <span class="math inline">\(p_\psi(\mathbf z\mid c)=\mathcal N\big(\boldsymbol\mu_\psi(c),\mathrm{diag}\,\boldsymbol\sigma^2_\psi(c)\big)\)</span>, computed by a small network <span class="math inline">\(c\xrightarrow{1\to64\to}(\boldsymbol\mu_\psi,\log\boldsymbol\sigma_\psi^2)\)</span> (the prior network of Sohn, Lee and Yan). The encoder sees the configuration, and a configuration itself reveals its temperature (ordered or disordered, large or small domains). The encoded snapshots of different temperatures therefore occupy different regions of <span class="math inline">\(\mathbf z\)</span>-space. With the fixed prior <span class="math inline">\(\mathcal N(0,\mathbb 1)\)</span>, generation at temperature <span class="math inline">\(T\)</span> draws <span class="math inline">\(\mathbf z\)</span> from all these regions and produces a mixture of temperatures; with <span class="math inline">\(p_\psi(\mathbf z|T)\)</span> it draws from the region of <span class="math inline">\(T\)</span>. The KL term becomes <span class="math display">\[
+\]</span> with ReLU activations and latent dimension <span class="math inline">\(d=16\)</span>. We train three variants, each of which adds one physics-motivated ingredient to the previous one.</p>
+<p>The first variant, called cVAE, is the model of Lab 024 with the prior <span class="math inline">\(p(\mathbf z)=\mathcal N(0,\mathbb 1)\)</span>, trained on the raw data.</p>
+<p>The second variant, cVAE+Z2, uses the symmetry of the Hamiltonian. The Ising Hamiltonian is invariant under the global flip <span class="math inline">\(\mathbf s\to-\mathbf s\)</span>, so below <span class="math inline">\(T_c\)</span> the data consist of two mirror-image families (<span class="math inline">\(m\approx\pm|m|\)</span>) that the generator would have to place separately in the Gaussian latent space; prior samples that fall between them decode to mixtures of the two. We impose the symmetry by construction instead: every training snapshot is replaced by its representative with <span class="math inline">\(m\ge0\)</span>, and every generated snapshot is flipped with probability 1/2, so that <span class="math inline">\(p(\mathbf s)=\tfrac12\big[p_+(\mathbf s)+p_+(-\mathbf s)\big]\)</span> holds exactly.</p>
+<p>The third variant, cVAE+Z2+p(z|T), adds a conditional prior <span class="math inline">\(p_\psi(\mathbf z\mid c)=\mathcal N\big(\boldsymbol\mu_\psi(c),\mathrm{diag}\,\boldsymbol\sigma^2_\psi(c)\big)\)</span>, computed by a small network <span class="math inline">\(c\xrightarrow{1\to64\to}(\boldsymbol\mu_\psi,\log\boldsymbol\sigma_\psi^2)\)</span> (the prior network of Sohn, Lee and Yan). The reason is that the encoder sees the configuration, and a configuration itself reveals its temperature: it is ordered or disordered, with large or small domains. The encoded snapshots of different temperatures therefore occupy different regions of <span class="math inline">\(\mathbf z\)</span>-space. With the fixed prior <span class="math inline">\(\mathcal N(0,\mathbb 1)\)</span>, generation at temperature <span class="math inline">\(T\)</span> draws <span class="math inline">\(\mathbf z\)</span> from all these regions and produces a mixture of temperatures; with <span class="math inline">\(p_\psi(\mathbf z|T)\)</span> it draws from the region that belongs to <span class="math inline">\(T\)</span>. The KL term becomes <span class="math display">\[
 \mathrm{KL}\big(q\,\|\,p_\psi\big)=\frac12\sum_{j=1}^d\Big[\log\frac{\sigma_{\psi,j}^2}{\sigma_j^2}+\frac{\sigma_j^2+(\mu_j-\mu_{\psi,j})^2}{\sigma_{\psi,j}^2}-1\Big],
-\]</span> which reduces to the formula of Section 0b for <span class="math inline">\(\boldsymbol\mu_\psi=0\)</span>, <span class="math inline">\(\boldsymbol\sigma_\psi=1\)</span>.</li>
-</ol>
+\]</span> which reduces to the formula of Section 2 for <span class="math inline">\(\boldsymbol\mu_\psi=0\)</span>, <span class="math inline">\(\boldsymbol\sigma_\psi=1\)</span>. The cell below checks the Bernoulli negative log-likelihood and compares this closed-form KL with a Monte Carlo estimate (1.2077 against 1.2124).</p>
 <div class="cell" data-execution_count="7">
 <details open="">
 <summary>Code</summary>
@@ -972,7 +984,8 @@ real held-out data: classifier confidence minimum at T = 2.28 (S_A), 2.28 (S_B);
 <pre><code>checks: Bernoulli NLL ok;  KL closed form 1.2077  vs  Monte Carlo 1.2124</code></pre>
 </div>
 </div>
-<p><strong>Training and training health.</strong> During training we record the training <span class="math inline">\(-\)</span>ELBO (per epoch) and, every 5 epochs, the <span class="math inline">\(-\)</span>ELBO on the held-out real data <code>S_A</code> + <code>S_B</code>. A held-out value that rises while the training value falls means overfitting: with 128 snapshots per temperature and <span class="math inline">\(\sim1.2\times10^6\)</span> parameters this starts after a few tens of epochs, so we train for 40 epochs. After training we look at the KL per latent dimension on held-out data: a dimension with <span class="math inline">\(\mathrm{KL}_j\approx0\)</span> is ignored by the decoder (<em>inactive unit</em>); if all are inactive the model has collapsed to <span class="math inline">\(p(\mathbf s|c)\)</span> without latent structure (<em>posterior collapse</em>). We also report the fraction of spins that the decoder reproduces from <span class="math inline">\(\mathbf z=\boldsymbol\mu(\mathbf s,c)\)</span> with <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span>.</p>
+<p>Before generating anything we monitor the health of the training. During training we record the training <span class="math inline">\(-\)</span>ELBO per epoch and, every 5 epochs, the <span class="math inline">\(-\)</span>ELBO on the held-out real data <code>S_A</code> + <code>S_B</code>. A held-out value that rises while the training value falls signals overfitting: with 128 snapshots per temperature and <span class="math inline">\(\sim1.2\times10^6\)</span> parameters this starts after a few tens of epochs, so we train for 40 epochs.</p>
+<p>After training we look at the KL per latent dimension on held-out data. A dimension with <span class="math inline">\(\mathrm{KL}_j\approx0\)</span> is ignored by the decoder (an inactive unit); if all of them are inactive, the model has collapsed to <span class="math inline">\(p(\mathbf s|c)\)</span> without latent structure (posterior collapse). We also report the fraction of spins that the decoder reproduces from <span class="math inline">\(\mathbf z=\boldsymbol\mu(\mathbf s,c)\)</span> with <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span>. For comparison, uniformly random spins would cost <span class="math inline">\(N\log 2=623.8\)</span> nats per configuration; the three variants reach a held-out <span class="math inline">\(-\)</span>ELBO between 387 and 392 nats, keep all 16 latent units active and reproduce about 80% of the spins.</p>
 <div class="cell" data-execution_count="8">
 <details open="">
 <summary>Code</summary>
@@ -1068,9 +1081,9 @@ cVAE+Z2+p(z|T) : held-out reconstruction 371.5 nats, KL 16.5 nats, spins reprodu
 </div>
 </div>
 </section>
-<section id="a.5-synthetic-data-at-the-same-conditions" class="level3">
-<h3 class="anchored" data-anchor-id="a.5-synthetic-data-at-the-same-conditions">A.5 Synthetic data at the same conditions</h3>
-<p>For each of the 37 temperatures every model generates 64 configurations (the size of <code>S_A</code> and <code>S_B</code>) with Bernoulli sampling. For the best model we also keep the most likely configuration <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span> from the same latent vectors.</p>
+<section id="synthetic-data-at-the-same-conditions" class="level3">
+<h3 class="anchored" data-anchor-id="synthetic-data-at-the-same-conditions">3.5 Synthetic data at the same conditions</h3>
+<p>With the three generators trained, each of them produces 64 configurations at every one of the 37 temperatures, the same number as in <code>S_A</code> and <code>S_B</code>, using Bernoulli sampling. For the best model we also keep the most likely configuration <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span> obtained from the same latent vectors, to see what happens when the sampling noise of the decoder is removed. The figure compares snapshots of all sets side by side.</p>
 <div class="cell" data-execution_count="10">
 <details open="">
 <summary>Code</summary>
@@ -1126,9 +1139,9 @@ cVAE+Z2+p(z|T) : held-out reconstruction 371.5 nats, KL 16.5 nats, spins reprodu
 </div>
 </div>
 </section>
-<section id="a.6-test-1-networks-trained-on-real-simulations" class="level3">
-<h3 class="anchored" data-anchor-id="a.6-test-1-networks-trained-on-real-simulations">A.6 Test 1: networks trained on real simulations</h3>
-<p>The same regressor and classifier, applied to <code>S_A</code>, <code>S_B</code> and to the synthetic sets. A synthetic snapshot “looks like temperature <span class="math inline">\(T\)</span>” to the regressor if <span class="math inline">\(\hat T\approx T\)</span>; the classifier’s confidence minimum marks the transition it sees.</p>
+<section id="evaluation-by-networks-trained-on-real-simulations" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-by-networks-trained-on-real-simulations">3.6 Evaluation by networks trained on real simulations</h3>
+<p>We now apply the regressor and the classifier of Section 3.3 to <code>S_A</code>, <code>S_B</code> and to the synthetic sets. A synthetic snapshot “looks like temperature <span class="math inline">\(T\)</span>” to the regressor if <span class="math inline">\(\hat T\approx T\)</span>, and the minimum of the classifier’s confidence marks the transition it sees. In the output, the real sets give an RMSE of 0.12 and a confidence minimum at <span class="math inline">\(T=2.28\)</span>. The plain cVAE reads as far too hot at low temperature (mean <span class="math inline">\(\hat T=2.77\)</span> at <span class="math inline">\(T=1.5\)</span>) and puts the confidence minimum at <span class="math inline">\(T=1.7\)</span>. The conditional prior brings the low-temperature end back (<span class="math inline">\(\hat T=1.69\)</span> at <span class="math inline">\(T=1.5\)</span>) and the confidence minimum to <span class="math inline">\(T=2.2\)</span>, yet the RMSE of 0.62 is still five times that of real data, while the most likely configurations are read as far too cold.</p>
 <div class="cell" data-execution_count="11">
 <details open="">
 <summary>Code</summary>
@@ -1168,9 +1181,9 @@ cVAE+Z2+p(z|T) (most likely)   regressor RMSE 0.715   mean T_hat at T = 1.5 / 2.
 </div>
 </div>
 </section>
-<section id="a.7-test-2-the-hamiltonian" class="level3">
-<h3 class="anchored" data-anchor-id="a.7-test-2-the-hamiltonian">A.7 Test 2: the Hamiltonian</h3>
-<p>All observables of A.2 for <code>S_A</code>, <code>S_B</code> and the synthetic sets. The shaded band is the real-vs-real spread between <code>S_A</code> and <code>S_B</code>.</p>
+<section id="hamiltonian-observables-of-the-synthetic-data" class="level3">
+<h3 class="anchored" data-anchor-id="hamiltonian-observables-of-the-synthetic-data">3.7 Hamiltonian observables of the synthetic data</h3>
+<p>The second family of tests uses the Hamiltonian. We compute all observables of Section 3.2 for <code>S_A</code>, <code>S_B</code> and the synthetic sets; in the figure the shaded band is the real-vs-real spread between <code>S_A</code> and <code>S_B</code>, and the table below it gives the noise ratios <span class="math inline">\(R\)</span> together with the values of <span class="math inline">\(\langle e\rangle\)</span>, <span class="math inline">\(\langle|m|\rangle\)</span> and <span class="math inline">\(c\)</span> at a few temperatures. Look first at the column for the energy: even the best model, cVAE+Z2+p(z|T), is 34.8 noise units away from the Monte Carlo energy, while its magnetisation is within 2.8 noise units.</p>
 <div class="cell" data-execution_count="12">
 <details open="">
 <summary>Code</summary>
@@ -1250,7 +1263,7 @@ T                              [1.5  2.   2.26 2.5  3.   3.5 ]
 &lt;c&gt; cVAE+Z2+p(z|T) (most likely) [0.    0.095 2.282 3.412 1.338 1.949]</code></pre>
 </div>
 </div>
-<p><strong>Distributions.</strong> <span class="math inline">\(W_1\)</span> between the synthetic and the real <code>S_A</code> distributions of <span class="math inline">\(e\)</span> and <span class="math inline">\(m\)</span> at every temperature, against the real-vs-real value <span class="math inline">\(W_1(A,B)\)</span>; histograms of <span class="math inline">\(P(e)\)</span> and <span class="math inline">\(P(m)\)</span> at three temperatures.</p>
+<p>Agreement of averages does not imply agreement of distributions, so we compare the full distributions as well. We compute <span class="math inline">\(W_1\)</span> between the synthetic and the real <code>S_A</code> distributions of <span class="math inline">\(e\)</span> and <span class="math inline">\(m\)</span> at every temperature, against the real-vs-real value <span class="math inline">\(W_1(A,B)\)</span>, and show the histograms of <span class="math inline">\(P(e)\)</span> and <span class="math inline">\(P(m)\)</span> at three temperatures. Below <span class="math inline">\(T_c\)</span> we also count the snapshots whose <span class="math inline">\(|m|\)</span> is less than half the Monte Carlo value: these are mixtures of the two ordered states. In the Monte Carlo data their fraction is 0.011, for the plain cVAE it is 0.450, with the <span class="math inline">\(\mathbb Z_2\)</span> symmetry it drops to 0.271, and with the conditional prior to 0.009.</p>
 <div class="cell" data-execution_count="13">
 <details open="">
 <summary>Code</summary>
@@ -1295,12 +1308,12 @@ cVAE+Z2+p(z|T)  T &lt; T_c: fraction with m &gt; 0: 0.477;  fraction with |m| &l
 </div>
 </div>
 </section>
-<section id="a.8-generator-quality-two-sample-test-and-memorisation" class="level3">
-<h3 class="anchored" data-anchor-id="a.8-generator-quality-two-sample-test-and-memorisation">A.8 Generator quality: two-sample test and memorisation</h3>
-<p><strong>Classifier two-sample test (C2ST).</strong> If two sets come from the same distribution, no classifier can tell them apart better than chance. At three temperatures we train a fresh small CNN to separate real from synthetic snapshots (balanced classes, 75% for training, 25% held-out) and report the held-out accuracy: 0.5 means indistinguishable, 1.0 means trivially separable. Sanity check first: real (<code>S_train</code>) against real (<code>S_A</code>+<code>S_B</code>) must give <span class="math inline">\(\approx0.5\)</span>.</p>
-<p><strong>Memorisation.</strong> A generator that copies its training set would pass every physics test. For every synthetic and every held-out real snapshot we compute the normalised Hamming distance to the nearest training snapshot at the same <span class="math inline">\(T\)</span>, minimised over the global flip: <span class="math display">\[
+<section id="two-sample-test-and-memorisation" class="level3">
+<h3 class="anchored" data-anchor-id="two-sample-test-and-memorisation">3.8 Two-sample test and memorisation</h3>
+<p>The physics tests check selected observables; a classifier two-sample test (C2ST) checks the distribution as a whole. If two sets come from the same distribution, no classifier can tell them apart better than chance. At three temperatures we train a fresh small CNN to separate real from synthetic snapshots (balanced classes, 75% for training, 25% held out) and report the held-out accuracy: 0.5 means indistinguishable, 1.0 means trivially separable. As a sanity check, real (<code>S_train</code>) against real (<code>S_A</code>+<code>S_B</code>) must give <span class="math inline">\(\approx0.5\)</span>.</p>
+<p>A generator that copies its training set would pass every physics test, so we must also exclude memorisation. For every synthetic and every held-out real snapshot we compute the normalised Hamming distance to the nearest training snapshot at the same <span class="math inline">\(T\)</span>, minimised over the global flip: <span class="math display">\[
 d_{\rm NN}(\mathbf s)=\min_{\mathbf t\in\text{train}}\ \frac{1-|\mathbf s\cdot\mathbf t|/N}{2}\in[0,\tfrac12].
-\]</span> Real held-out snapshots are new draws from the Boltzmann distribution, so their <span class="math inline">\(d_{\rm NN}\)</span> is the reference. Synthetic <span class="math inline">\(d_{\rm NN}\)</span> much smaller than real means copying.</p>
+\]</span> Real held-out snapshots are new draws from the Boltzmann distribution, so their <span class="math inline">\(d_{\rm NN}\)</span> is the reference; a synthetic <span class="math inline">\(d_{\rm NN}\)</span> much smaller than the real one would mean copying.</p>
 <div class="cell" data-execution_count="14">
 <details open="">
 <summary>Code</summary>
@@ -1381,27 +1394,22 @@ nearest-neighbour distance to the training set, median at T = 1.80: 0.033, 2.26:
 </div>
 </div>
 </section>
-<section id="a.9-reading-part-a" class="level3">
-<h3 class="anchored" data-anchor-id="a.9-reading-part-a">A.9 Reading Part A</h3>
-<p>What the tests show:</p>
-<ul>
-<li><strong>Training health</strong> is similar for the three models: the held-out <span class="math inline">\(-\)</span>ELBO is close, all latent units are active, about 80% of the spins are reproduced from <span class="math inline">\(\mathbf z=\boldsymbol\mu\)</span>. The ELBO alone does not tell which model generates the right physics.</li>
-<li><strong>cVAE.</strong> Generation at a fixed <span class="math inline">\(T\)</span> produces a mixture of temperatures: <span class="math inline">\(\langle|m|\rangle\)</span> is far too small below <span class="math inline">\(T_c\)</span> and too large above, the regressor reads temperatures that depend only weakly on the requested one, and below <span class="math inline">\(T_c\)</span> a large fraction of the snapshots are mixtures of the two ordered states.</li>
-<li><strong>cVAE+Z2</strong> removes part of the mixtures, but the temperature is still not followed.</li>
-<li><strong>cVAE+Z2+p(z|T)</strong> follows the temperature: <span class="math inline">\(\langle|m|\rangle\)</span>, <span class="math inline">\(\chi\)</span>, <span class="math inline">\(P(m)\)</span> and the regressor below <span class="math inline">\(T_c\)</span> are now close to the Monte Carlo values (within a few noise units). The local tests fail: <span class="math inline">\(\langle e\rangle\)</span> is too high around and above <span class="math inline">\(T_c\)</span> by tens of noise units, <span class="math inline">\(c\)</span> is an order of magnitude too large, and <span class="math inline">\(P(e)\)</span> is far too broad. Given <span class="math inline">\(\mathbf z\)</span> the spins are drawn independently, and every spin whose logit is not saturated breaks its bonds at random.</li>
-<li><strong>Most likely configuration</strong> <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span> removes that noise and over-smooths: <span class="math inline">\(\langle e\rangle\)</span> too low, large compact domains, <span class="math inline">\(G(r)\)</span> too large at all distances, a regressor that reads temperatures far too low.</li>
-<li>The <strong>C2ST</strong> separates every synthetic set from Monte Carlo data, clearly so near and above <span class="math inline">\(T_c\)</span>; real against real gives 0.5. The generator does not <strong>memorise</strong>: the nearest-neighbour distances of the best model to the training set are those of new Monte Carlo snapshots.</li>
-</ul>
-<p>Global, pattern-level quantities (<span class="math inline">\(\langle|m|\rangle\)</span>, the regressor, the classifier) are more forgiving than the local, Hamiltonian-level ones (<span class="math inline">\(\langle e\rangle\)</span>, <span class="math inline">\(c\)</span>, <span class="math inline">\(P(e)\)</span>). A generator that passes only the first kind of test <em>looks</em> right.</p>
+<section id="pattern-level-and-hamiltonian-level-tests" class="level3">
+<h3 class="anchored" data-anchor-id="pattern-level-and-hamiltonian-level-tests">3.9 Pattern-level and Hamiltonian-level tests</h3>
+<p>Taken together, the tests of this section draw a consistent picture. The training health is similar for the three models: the held-out <span class="math inline">\(-\)</span>ELBO is close, all latent units are active and about 80% of the spins are reproduced from <span class="math inline">\(\mathbf z=\boldsymbol\mu\)</span>. The ELBO alone therefore does not tell which model generates the right physics.</p>
+<p>The plain cVAE, asked for a fixed <span class="math inline">\(T\)</span>, produces a mixture of temperatures. Its <span class="math inline">\(\langle|m|\rangle\)</span> is far too small below <span class="math inline">\(T_c\)</span> and too large above, the regressor reads temperatures that depend only weakly on the requested one, and below <span class="math inline">\(T_c\)</span> a large fraction of the snapshots are mixtures of the two ordered states. Imposing the <span class="math inline">\(\mathbb Z_2\)</span> symmetry removes part of these mixtures, but the temperature is still not followed. Only with the conditional prior does the generator follow the temperature: <span class="math inline">\(\langle|m|\rangle\)</span>, <span class="math inline">\(\chi\)</span>, <span class="math inline">\(P(m)\)</span> and the regressor below <span class="math inline">\(T_c\)</span> are now close to the Monte Carlo values, within a few noise units.</p>
+<p>The local tests nevertheless fail. The energy <span class="math inline">\(\langle e\rangle\)</span> is too high around and above <span class="math inline">\(T_c\)</span>, by tens of noise units; the specific heat is several times to more than ten times too large; and <span class="math inline">\(P(e)\)</span> is far too broad. The reason is the one anticipated in Section 2: given <span class="math inline">\(\mathbf z\)</span> the spins are drawn independently, and every spin whose logit is not saturated breaks its bonds at random. Taking the most likely configuration <span class="math inline">\(\hat s_i=\mathrm{sign}\,\ell_i\)</span> removes that noise and over-smooths instead: <span class="math inline">\(\langle e\rangle\)</span> is too low, the domains are large and compact, <span class="math inline">\(G(r)\)</span> is too large at all distances and the regressor reads temperatures far too low.</p>
+<p>The C2ST separates every synthetic set from the Monte Carlo data, clearly so near and above <span class="math inline">\(T_c\)</span>, while real against real gives 0.5. The generator does not memorise: the nearest-neighbour distances of the best model to the training set are those of new Monte Carlo snapshots.</p>
+<p>The lesson of the Ising model is that global, pattern-level quantities (<span class="math inline">\(\langle|m|\rangle\)</span>, the regressor, the classifier) are more forgiving than local, Hamiltonian-level ones (<span class="math inline">\(\langle e\rangle\)</span>, <span class="math inline">\(c\)</span>, <span class="math inline">\(P(e)\)</span>). A generator that passes only the first kind of test merely <em>looks</em> right.</p>
 <hr>
 </section>
 </section>
-<section id="part-b-the-j_1j_2-model" class="level2">
-<h2 class="anchored" data-anchor-id="part-b-the-j_1j_2-model">Part B: the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model</h2>
-<p><span class="math display">\[
+<section id="the-j_1j_2-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-j_1j_2-model">4. The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model</h2>
+<p>We now move to a model with a richer phase diagram, <span class="math display">\[
 H=-J_1\sum_{\langle ij\rangle}s_is_j+J_2\sum_{\langle\langle ij\rangle\rangle}s_is_j,\qquad g=J_2/J_1,\quad J_1=1 ,
-\]</span> ferromagnet for <span class="math inline">\(g&lt;1/2\)</span>, stripes for <span class="math inline">\(g&gt;1/2\)</span> (Lab 018). Per snapshot: <span class="math inline">\(|m|\)</span>, the stripe order parameter <span class="math inline">\(m_{\rm str}=\sqrt{m_{(\pi,0)}^2+m_{(0,\pi)}^2}\)</span> with <span class="math inline">\(m_{(\pi,0)}=\frac1N\sum_{x,y}(-1)^x s_{x,y}\)</span>, the energy per spin <span class="math inline">\(e=-\frac1{2N}\sum_i s_i h_i\)</span> with <span class="math inline">\(h_i=\sum_{\rm nn}s_j-g\sum_{\rm nnn}s_j\)</span>, and per grid point <span class="math inline">\(c=N\,\mathrm{Var}(e)/T^2\)</span>.</p>
-<p><strong>Protocol.</strong> The condition is <span class="math inline">\(c=(g,T)\)</span>. At every grid point the 100 snapshots are split into training (60), <code>S_A</code> (20) and <code>S_B</code> (20). The cVAE is trained only at <strong>every second <span class="math inline">\(g\)</span> and every second <span class="math inline">\(T\)</span></strong> (a quarter of the grid, “seen”) and generates at <strong>every</strong> grid point, so three quarters of the conditions were never seen in training. The phase classifier is trained on real training snapshots at all points.</p>
+\]</span> which is a ferromagnet for <span class="math inline">\(g&lt;1/2\)</span> and forms stripes for <span class="math inline">\(g&gt;1/2\)</span> (Lab 018). For every snapshot we compute <span class="math inline">\(|m|\)</span>, the stripe order parameter <span class="math inline">\(m_{\rm str}=\sqrt{m_{(\pi,0)}^2+m_{(0,\pi)}^2}\)</span> with <span class="math inline">\(m_{(\pi,0)}=\frac1N\sum_{x,y}(-1)^x s_{x,y}\)</span>, and the energy per spin <span class="math inline">\(e=-\frac1{2N}\sum_i s_i h_i\)</span> with the local field <span class="math inline">\(h_i=\sum_{\rm nn}s_j-g\sum_{\rm nnn}s_j\)</span>; per grid point we compute <span class="math inline">\(c=N\,\mathrm{Var}(e)/T^2\)</span>.</p>
+<p>The condition is now <span class="math inline">\(c=(g,T)\)</span>, and this model lets us ask a new question: can the generator produce correct configurations at conditions it has never seen? At every grid point the 100 snapshots are split into training (60), <code>S_A</code> (20) and <code>S_B</code> (20). The cVAE is trained only at every second <span class="math inline">\(g\)</span> and every second <span class="math inline">\(T\)</span>, a quarter of the grid that we call “seen”, and generates at every grid point, so three quarters of the conditions were never seen in training. The phase classifier, in contrast, is trained on real training snapshots at all points.</p>
 <div class="cell" data-execution_count="15">
 <details open="">
 <summary>Code</summary>
@@ -1422,7 +1430,7 @@ H=-J_1\sum_{\langle ij\rangle}s_is_j+J_2\sum_{\langle\langle ij\rangle\rangle}s_
 split per point: 60 training, 20 + 20 held-out;  seen conditions: 1640 of 6399</code></pre>
 </div>
 </div>
-<p><code>j1j2_observables(S)</code> takes <code>S</code> of shape <code>(nG, nT, n, L, L)</code> and returns per-snapshot arrays of shape <code>(nG, nT, n)</code>: <span class="math inline">\(|m|\)</span>, <span class="math inline">\(m_{\rm str}\)</span>, <span class="math inline">\(e\)</span> and the stripe orientation (<span class="math inline">\(+1\)</span> if <span class="math inline">\(|m_{(\pi,0)}|&gt;|m_{(0,\pi)}|\)</span>, i.e.&nbsp;the spins alternate along <span class="math inline">\(x\)</span>, else <span class="math inline">\(-1\)</span>). The loop runs over <span class="math inline">\(g\)</span> to keep the memory small.</p>
+<p>The function <code>j1j2_observables(S)</code> takes <code>S</code> of shape <code>(nG, nT, n, L, L)</code> and returns per-snapshot arrays of shape <code>(nG, nT, n)</code>: <span class="math inline">\(|m|\)</span>, <span class="math inline">\(m_{\rm str}\)</span>, <span class="math inline">\(e\)</span> and the stripe orientation, which is <span class="math inline">\(+1\)</span> if <span class="math inline">\(|m_{(\pi,0)}|&gt;|m_{(0,\pi)}|\)</span> (the spins alternate along <span class="math inline">\(x\)</span>) and <span class="math inline">\(-1\)</span> otherwise. The loop runs over <span class="math inline">\(g\)</span> to keep the memory small. The cell first checks the energy formula on a ferromagnet and on a perfect stripe state at <span class="math inline">\(g=0.75\)</span>, where the exact energies are <span class="math inline">\(-0.5\)</span> and <span class="math inline">\(-1.5\)</span>.</p>
 <div class="cell" data-execution_count="16">
 <details open="">
 <summary>Code</summary>
@@ -1468,7 +1476,7 @@ check passed at g = 0.750: stripes e = -1.500 (exact -1.500), m_str = 1</code></
 <pre><code>real observables computed in 48 s</code></pre>
 </div>
 </div>
-<p><strong>Phase classifier trained on real data.</strong> A three-class CNN (ferromagnet, stripes, paramagnet). Labels come from the order parameters of the real <strong>training</strong> snapshots at each grid point: ferromagnet if <span class="math inline">\(\langle|m|\rangle&gt;0.5\)</span>, stripes if <span class="math inline">\(\langle m_{\rm str}\rangle&gt;0.5\)</span>, paramagnet if both are below 0.2; points in between are not used for training. 5 snapshots per labelled point.</p>
+<p>As in the Ising case, we first need an evaluator that has only seen real data. Here it is a three-class CNN that distinguishes the ferromagnet, the stripe phase and the paramagnet. The labels come from the order parameters of the real training snapshots at each grid point: ferromagnet if <span class="math inline">\(\langle|m|\rangle&gt;0.5\)</span>, stripes if <span class="math inline">\(\langle m_{\rm str}\rangle&gt;0.5\)</span>, paramagnet if both are below 0.2. Points in between are not used for training, and 5 snapshots per labelled point enter the training set. Applied to the two real held-out sets, the classifier gives the same majority phase for <code>S_A</code> and <code>S_B</code> at 99.7% of the grid points, which is the real-vs-real baseline.</p>
 <div class="cell" data-execution_count="17">
 <details open="">
 <summary>Code</summary>
@@ -1502,7 +1510,7 @@ check passed at g = 0.750: stripes e = -1.500 (exact -1.500), m_str = 1</code></
 <pre><code>real-vs-real: majority phase of S_A and S_B agree at 99.7% of the grid points</code></pre>
 </div>
 </div>
-<p><strong>The cVAE for <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span>.</strong> The same dense architecture with <span class="math inline">\(N=1024\)</span> and a two-component condition <span class="math inline">\(c=\big(2(g-\tfrac12),\,(T-2)/2\big)\)</span>, latent dimension 16, with both ingredients of the best Ising model: the <span class="math inline">\(\mathbb Z_2\)</span> symmetry imposed by construction (the global flip leaves <span class="math inline">\(H\)</span> invariant for every <span class="math inline">\(g\)</span>) and a conditional prior <span class="math inline">\(p_\psi(\mathbf z\mid g,T)\)</span>. Training set: the 60 training snapshots at the seen grid points. The held-out <span class="math inline">\(-\)</span>ELBO is evaluated on <code>S_A</code> at seen and at unseen grid points separately.</p>
+<p>The cVAE for the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model has the same dense architecture with <span class="math inline">\(N=1024\)</span> and a two-component condition <span class="math inline">\(c=\big(2(g-\tfrac12),\,(T-2)/2\big)\)</span>, latent dimension 16, and both ingredients of the best Ising model: the <span class="math inline">\(\mathbb Z_2\)</span> symmetry imposed by construction (the global flip leaves <span class="math inline">\(H\)</span> invariant for every <span class="math inline">\(g\)</span>) and a conditional prior <span class="math inline">\(p_\psi(\mathbf z\mid g,T)\)</span>. The training set consists of the 60 training snapshots at the seen grid points. To see whether the model generalises, the held-out <span class="math inline">\(-\)</span>ELBO is evaluated on <code>S_A</code> separately at seen and at unseen grid points; the two values (476.5 and 481.7) are close to each other and to the training value 476.0.</p>
 <div class="cell" data-execution_count="18">
 <details open="">
 <summary>Code</summary>
@@ -1617,20 +1625,16 @@ stripe orientation, cVAE+Z2+p(z|g,T): fraction alternating along x = 0.485  (105
 <p><img src="lab-025-cvae-physics_files/figure-html/cell-21-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<section id="b.1-reading-part-b" class="level3">
-<h3 class="anchored" data-anchor-id="b.1-reading-part-b">B.1 Reading Part B</h3>
-<ul>
-<li>The phase classifier trained on real data assigns the synthetic snapshots to the same phase as the Monte Carlo snapshots at most grid points, at seen and at unseen <span class="math inline">\((g,T)\)</span> alike (real-vs-real: almost 100%): the generator <strong>interpolates the phase diagram</strong>. The phase boundary of the synthetic data is smeared, and near <span class="math inline">\(g=1/2\)</span> and close to the transition lines the two maps differ.</li>
-<li>The order parameters <span class="math inline">\(\langle|m|\rangle\)</span> and <span class="math inline">\(\langle m_{\rm str}\rangle\)</span> are reproduced within a few noise units; the two stripe orientations are generated with equal frequency, as in the Monte Carlo data.</li>
-<li>The energy fails as in the Ising case: in the paramagnet the synthetic <span class="math inline">\(\langle e\rangle\approx0\)</span>, the value for independent spins, while the Monte Carlo energy shows the short-range correlations of the paramagnet; the specific heat is wrong by orders of magnitude.</li>
-<li>The most likely configurations are ordered almost everywhere: the classifier sees ferromagnets or stripes deep in the paramagnet.</li>
-</ul>
+<section id="interpolation-of-the-phase-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="interpolation-of-the-phase-diagram">4.1 Interpolation of the phase diagram</h3>
+<p>The phase classifier trained on real data assigns the synthetic snapshots to the same phase as the Monte Carlo snapshots at 95.4% of the grid points, compared with 99.7% for real against real, and it does so equally at seen and at unseen <span class="math inline">\((g,T)\)</span>: the generator interpolates the phase diagram. The phase boundary of the synthetic data is smeared, and near <span class="math inline">\(g=1/2\)</span> and close to the transition lines the two maps differ. The order parameters <span class="math inline">\(\langle|m|\rangle\)</span> and <span class="math inline">\(\langle m_{\rm str}\rangle\)</span> are reproduced within a few noise units, and the two stripe orientations are generated with equal frequency, as in the Monte Carlo data.</p>
+<p>The energy fails as in the Ising case. In the paramagnet the synthetic <span class="math inline">\(\langle e\rangle\approx0\)</span>, the value for independent spins, while the Monte Carlo energy shows the short-range correlations of the paramagnet; the specific heat is wrong by orders of magnitude. The most likely configurations are ordered almost everywhere, so the classifier sees ferromagnets or stripes deep in the paramagnet and agrees with <code>S_A</code> at only 35% of the grid points.</p>
 <hr>
 </section>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>The table collects all numbers. Every test is run on the second real held-out set <code>S_B</code> (the noise level) and on the synthetic data at the same conditions; for the noise ratios <span class="math inline">\(R\)</span>, 1 means “as close to <code>S_A</code> as an independent Monte Carlo set”.</p>
+<section id="synthetic-data-and-thermodynamics" class="level2">
+<h2 class="anchored" data-anchor-id="synthetic-data-and-thermodynamics">5. Synthetic data and thermodynamics</h2>
+<p>The table below collects all numbers of the lab. Every test is run on the second real held-out set <code>S_B</code>, which gives the noise level, and on the synthetic data at the same conditions; for the noise ratios <span class="math inline">\(R\)</span>, a value of 1 means “as close to <code>S_A</code> as an independent Monte Carlo set”.</p>
 <div class="cell" data-execution_count="21">
 <details open="">
 <summary>Code</summary>
@@ -1672,16 +1676,16 @@ J1-J2, L = 32: fraction of grid points with the majority phase of S_A   (all / s
 J1-J2 noise ratios R (seen / unseen):  m: 4.4 / 4.8,  m_str: 6.4 / 5.9,  e: 64.0 / 63.9,  c: 2279.2 / 1517.2</code></pre>
 </div>
 </div>
-<p><strong>Conclusions.</strong></p>
-<ul>
-<li>A cVAE trained on Monte Carlo data reproduces what the networks trained on real data look at: the phase, the order parameter and its distribution, the position of the transition; for <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> also at conditions it has never seen.</li>
-<li>Two ingredients were needed, both physics: the <span class="math inline">\(\mathbb Z_2\)</span> symmetry of <span class="math inline">\(H\)</span> imposed by construction, and a prior that depends on the condition, so that <span class="math inline">\(\mathbf z\)</span> is drawn from the region of latent space that belongs to the requested temperature.</li>
-<li>It does not reproduce what the Hamiltonian measures locally: the energy, its fluctuations (the specific heat) and <span class="math inline">\(P(e)\)</span>. Given <span class="math inline">\(\mathbf z\)</span> the decoder is a product over sites, a mean-field-like distribution, and nearest-neighbour correlations beyond what the 16 latent variables carry are lost. A classifier two-sample test detects this at every temperature.</li>
-<li>Synthetic configurations can be useful for questions about the phase; they are not samples of <span class="math inline">\(e^{-\beta H}/Z\)</span> and cannot replace Monte Carlo for thermodynamics.</li>
-</ul>
-<blockquote class="blockquote">
-<p><strong>Try it.</strong> 1. Increase the latent dimension from 16 to 64. Which tests improve? Does the energy? 2. Replace the dense decoder by a convolutional one. The spins are still independent given <span class="math inline">\(\mathbf z\)</span>: what changes, and what cannot? 3. Train the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> cVAE without the <span class="math inline">\(\mathbb Z_2\)</span> symmetry and without the conditional prior and repeat the phase and stripe-orientation tests.</p>
-</blockquote>
+<p>The numbers support a clear conclusion. A cVAE trained on Monte Carlo data reproduces what the networks trained on real data look at: the phase, the order parameter and its distribution, and the position of the transition; for the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model it does so also at conditions it has never seen. Two ingredients were needed for this, and both come from physics: the <span class="math inline">\(\mathbb Z_2\)</span> symmetry of <span class="math inline">\(H\)</span> imposed by construction, and a prior that depends on the condition, so that <span class="math inline">\(\mathbf z\)</span> is drawn from the region of latent space that belongs to the requested temperature.</p>
+<p>The cVAE does not reproduce what the Hamiltonian measures locally: the energy, its fluctuations (the specific heat) and <span class="math inline">\(P(e)\)</span>. Given <span class="math inline">\(\mathbf z\)</span> the decoder is a product over sites, a mean-field-like distribution, and nearest-neighbour correlations beyond what the 16 latent variables carry are lost. A classifier two-sample test detects this at every temperature. Synthetic configurations can therefore be useful for questions about the phase, but they are not samples of <span class="math inline">\(e^{-\beta H}/Z\)</span> and cannot replace Monte Carlo for thermodynamics.</p>
+<section id="exercises" class="level3">
+<h3 class="anchored" data-anchor-id="exercises">Exercises</h3>
+<ol type="1">
+<li>Increase the latent dimension from 16 to 64. Which tests improve? Does the energy?</li>
+<li>Replace the dense decoder by a convolutional one. The spins are still independent given <span class="math inline">\(\mathbf z\)</span>: what changes, and what cannot?</li>
+<li>Train the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> cVAE without the <span class="math inline">\(\mathbb Z_2\)</span> symmetry and without the conditional prior and repeat the phase and stripe-orientation tests.</li>
+</ol>
+</section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <ul>
@@ -1691,18 +1695,6 @@ J1-J2 noise ratios R (seen / unseen):  m: 4.4 / 4.8,  m_str: 6.4 / 5.9,  e: 64.0
 <li>L. Onsager, <em>Crystal Statistics. I.</em>, Phys. Rev.&nbsp;<strong>65</strong>, 117 (1944), <a href="https://doi.org/10.1103/PhysRev.65.117">doi:10.1103/PhysRev.65.117</a></li>
 <li>C. N. Yang, <em>The Spontaneous Magnetization of a Two-Dimensional Ising Model</em>, Phys. Rev.&nbsp;<strong>85</strong>, 808 (1952), <a href="https://doi.org/10.1103/PhysRev.85.808">doi:10.1103/PhysRev.85.808</a></li>
 </ul>
-<div class="cell" data-execution_count="22">
-<details open="">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"total_seconds"</span>] <span class="op">=</span> <span class="bu">round</span>(time.time() <span class="op">-</span> T_START)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/numbers_lab025.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    json.dump(NUMBERS, f, indent<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"total run time </span><span class="sc">{</span>NUMBERS[<span class="st">'total_seconds'</span>]<span class="sc">}</span><span class="ss"> s;  numbers written to </span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/numbers_lab025.json"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>total run time 624 s;  numbers written to ../beamer/figures/numbers_lab025.json</code></pre>
-</div>
-</div>
 
 
 </section>

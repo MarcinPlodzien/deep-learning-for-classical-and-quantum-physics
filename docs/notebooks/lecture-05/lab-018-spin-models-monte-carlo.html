@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,25 +466,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-018-classical-spin-models-in-jax-the-2d-ising-and-the-frustrated-j_1j_2-model" id="toc-lab-018-classical-spin-models-in-jax-the-2d-ising-and-the-frustrated-j_1j_2-model" class="nav-link" data-scroll-target="#lab-018-classical-spin-models-in-jax-the-2d-ising-and-the-frustrated-j_1j_2-model">Lab 018 — Classical spin models in JAX: the 2D Ising and the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model</a>
+  <li><a href="#lab-018-monte-carlo-for-classical-spin-models" id="toc-lab-018-monte-carlo-for-classical-spin-models" class="nav-link" data-scroll-target="#lab-018-monte-carlo-for-classical-spin-models">Lab 018 — Monte Carlo for classical spin models</a>
   <ul class="collapse">
   <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">1. The model</a>
   <ul class="collapse">
-  <li><a href="#ground-states-who-wins-at-t0" id="toc-ground-states-who-wins-at-t0" class="nav-link" data-scroll-target="#ground-states-who-wins-at-t0">1.1 Ground states: who wins at <span class="math inline">\(T=0\)</span></a></li>
-  <li><a href="#exhaustive-check-on-a-4times4-lattice-a-first-look-at-vmap-and-jit" id="toc-exhaustive-check-on-a-4times4-lattice-a-first-look-at-vmap-and-jit" class="nav-link" data-scroll-target="#exhaustive-check-on-a-4times4-lattice-a-first-look-at-vmap-and-jit">1.2 Exhaustive check on a <span class="math inline">\(4\times4\)</span> lattice (a first look at <code>vmap</code> and <code>jit</code>)</a></li>
-  <li><a href="#order-parameters-what-distinguishes-the-phases" id="toc-order-parameters-what-distinguishes-the-phases" class="nav-link" data-scroll-target="#order-parameters-what-distinguishes-the-phases">1.3 Order parameters: what distinguishes the phases</a></li>
-  <li><a href="#finite-temperature-mean-field-theory-and-its-failure-at-g12" id="toc-finite-temperature-mean-field-theory-and-its-failure-at-g12" class="nav-link" data-scroll-target="#finite-temperature-mean-field-theory-and-its-failure-at-g12">1.4 Finite temperature: mean-field theory and its failure at <span class="math inline">\(g=1/2\)</span></a></li>
+  <li><a href="#ground-states" id="toc-ground-states" class="nav-link" data-scroll-target="#ground-states">1.1 Ground states</a></li>
+  <li><a href="#exhaustive-enumeration-on-a-4times4-lattice" id="toc-exhaustive-enumeration-on-a-4times4-lattice" class="nav-link" data-scroll-target="#exhaustive-enumeration-on-a-4times4-lattice">1.2 Exhaustive enumeration on a <span class="math inline">\(4\times4\)</span> lattice</a></li>
+  <li><a href="#order-parameters" id="toc-order-parameters" class="nav-link" data-scroll-target="#order-parameters">1.3 Order parameters</a></li>
+  <li><a href="#mean-field-theory-at-finite-temperature" id="toc-mean-field-theory-at-finite-temperature" class="nav-link" data-scroll-target="#mean-field-theory-at-finite-temperature">1.4 Mean-field theory at finite temperature</a></li>
+  <li><a href="#thermal-averages-and-their-estimators" id="toc-thermal-averages-and-their-estimators" class="nav-link" data-scroll-target="#thermal-averages-and-their-estimators">1.5 Thermal averages and their estimators</a></li>
   </ul></li>
   <li><a href="#metropolis-monte-carlo-in-jax" id="toc-metropolis-monte-carlo-in-jax" class="nav-link" data-scroll-target="#metropolis-monte-carlo-in-jax">2. Metropolis Monte Carlo in JAX</a>
   <ul class="collapse">
-  <li><a href="#checks-before-production" id="toc-checks-before-production" class="nav-link" data-scroll-target="#checks-before-production">2.1 Checks before production</a></li>
-  <li><a href="#critical-slowing-down-and-the-swendsenwang-cluster-algorithm" id="toc-critical-slowing-down-and-the-swendsenwang-cluster-algorithm" class="nav-link" data-scroll-target="#critical-slowing-down-and-the-swendsenwang-cluster-algorithm">2.2 Critical slowing down, and the Swendsen–Wang cluster algorithm</a></li>
+  <li><a href="#exact-benchmarks" id="toc-exact-benchmarks" class="nav-link" data-scroll-target="#exact-benchmarks">2.1 Exact benchmarks</a></li>
+  <li><a href="#critical-slowing-down-and-the-swendsenwang-algorithm" id="toc-critical-slowing-down-and-the-swendsenwang-algorithm" class="nav-link" data-scroll-target="#critical-slowing-down-and-the-swendsenwang-algorithm">2.2 Critical slowing down and the Swendsen–Wang algorithm</a></li>
   </ul></li>
-  <li><a href="#dataset-1-the-2d-ising-model-for-several-lattice-sizes" id="toc-dataset-1-the-2d-ising-model-for-several-lattice-sizes" class="nav-link" data-scroll-target="#dataset-1-the-2d-ising-model-for-several-lattice-sizes">3. Dataset 1: the 2D Ising model for several lattice sizes</a></li>
-  <li><a href="#dataset-2-the-j_1j_2-model-in-the-gt-plane" id="toc-dataset-2-the-j_1j_2-model-in-the-gt-plane" class="nav-link" data-scroll-target="#dataset-2-the-j_1j_2-model-in-the-gt-plane">4. Dataset 2: the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model in the <span class="math inline">\((g,T)\)</span> plane</a></li>
-  <li><a href="#the-physicists-scan-the-choice-of-observable" id="toc-the-physicists-scan-the-choice-of-observable" class="nav-link" data-scroll-target="#the-physicists-scan-the-choice-of-observable">5. The physicist’s scan: the choice of observable</a>
+  <li><a href="#ising-data-set-for-several-lattice-sizes" id="toc-ising-data-set-for-several-lattice-sizes" class="nav-link" data-scroll-target="#ising-data-set-for-several-lattice-sizes">3. Ising data set for several lattice sizes</a></li>
+  <li><a href="#j_1j_2-data-set-in-the-gt-plane" id="toc-j_1j_2-data-set-in-the-gt-plane" class="nav-link" data-scroll-target="#j_1j_2-data-set-in-the-gt-plane">4. <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> data set in the <span class="math inline">\((g,T)\)</span> plane</a></li>
+  <li><a href="#choice-of-observable" id="toc-choice-of-observable" class="nav-link" data-scroll-target="#choice-of-observable">5. Choice of observable</a>
   <ul class="collapse">
-  <li><a href="#the-cost-of-a-dense-scan" id="toc-the-cost-of-a-dense-scan" class="nav-link" data-scroll-target="#the-cost-of-a-dense-scan">5.1 The cost of a dense scan</a></li>
+  <li><a href="#cost-of-a-dense-scan" id="toc-cost-of-a-dense-scan" class="nav-link" data-scroll-target="#cost-of-a-dense-scan">5.1 Cost of a dense scan</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
@@ -519,13 +520,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 018 <br>
 <hr>
 </section>
-<section id="lab-018-classical-spin-models-in-jax-the-2d-ising-and-the-frustrated-j_1j_2-model" class="level1">
-<h1>Lab 018 — Classical spin models in JAX: the 2D Ising and the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model</h1>
+<section id="lab-018-monte-carlo-for-classical-spin-models" class="level1">
+<h1>Lab 018 — Monte Carlo for classical spin models</h1>
 <p>In Lecture 4 a network trained <strong>with labels</strong> found the critical temperature of the 2D Ising model. In Lecture 5 we drop the labels. Before any learning, we need data, and we need to know the physics well enough to judge what the learning algorithms tell us.</p>
 <p>This notebook is about <strong>classical</strong> spin models. Every spin is a number <span class="math inline">\(s_i=\pm1\)</span>; a configuration <span class="math inline">\(\boldsymbol s\)</span> is a definite “photograph” of the system, and thermal equilibrium is the Boltzmann distribution over such photographs. Monte Carlo samples this distribution exactly (up to statistical errors). Quantum spin models, with non-commuting operators, superpositions, and snapshots produced by projective measurements, come later in the course.</p>
-<p>Plan: 1. <strong>Physics of the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model</strong>: competing couplings, ground states, frustration at <span class="math inline">\(g=J_2/J_1=1/2\)</span>, order parameters, and what mean-field theory and the literature say about the finite-temperature phase diagram. 2. <strong>Monte Carlo in JAX</strong>: a Metropolis sampler written with <code>jit</code>, <code>vmap</code> and <code>lax.scan</code> that runs hundreds of independent chains in parallel. 3. <strong>Two datasets</strong> used in Labs 019 and 020: the 2D Ising model for several lattice sizes (finite-size scaling), and the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model on a grid in the <span class="math inline">\((g,T)\)</span> plane. 4. <strong>The physicist’s scan of the <span class="math inline">\((g,T)\)</span> plane</strong>: which quantity should we plot, and how expensive is a dense scan?</p>
+<p>We begin with the physics of the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model: its competing couplings and ground states, the frustration at <span class="math inline">\(g=J_2/J_1=1/2\)</span>, its order parameters, and what mean-field theory and the literature say about the finite-temperature phase diagram. To sample it we build a Metropolis sampler in JAX with <code>jit</code>, <code>vmap</code> and <code>lax.scan</code>, which runs hundreds of independent chains in parallel, and for the Ising model near <span class="math inline">\(T_c\)</span> the Swendsen–Wang cluster algorithm. With these samplers we produce the two data sets used in Labs 019 and 020: the 2D Ising model for several lattice sizes, for finite-size scaling, and the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model on a grid in the <span class="math inline">\((g,T)\)</span> plane. The last section scans the <span class="math inline">\((g,T)\)</span> plane as a physicist would and asks which quantity should be plotted and how expensive a dense scan is.</p>
 <blockquote class="blockquote">
-<p><strong>Running in Google Colab.</strong> Run the cells in order; JAX is pre-installed in Colab and the notebook runs on the CPU. All datasets are written to <code>data/</code> and figures to <code>../beamer/figures/</code> (created if missing). The two dataset cells take a few minutes each.</p>
+<p>In Google Colab, run the cells in order; JAX is pre-installed in Colab and the notebook runs on the CPU (central processing unit). All data sets are written to <code>data/</code> and figures to <code>../beamer/figures/</code> (created if missing). The two data-set cells take a few minutes each.</p>
 </blockquote>
 <div class="cell" data-execution_count="1">
 <details open="">
@@ -577,11 +578,11 @@ H(\boldsymbol s) = -J_1\sum_{\langle i,j\rangle} s_i s_j \;+\; J_2\sum_{\langle\
 <p>We set <span class="math inline">\(J_1=1\)</span> and use the single control parameter <span class="math display">\[
 g = J_2/J_1 .
 \]</span> Together with the temperature <span class="math inline">\(T\)</span> (with <span class="math inline">\(k_B=1\)</span>) this gives a <strong>two-dimensional phase diagram</strong> in the <span class="math inline">\((g,T)\)</span> plane.</p>
-<p><strong>Two limits we already understand.</strong> * <span class="math inline">\(g=0\)</span>: the 2D Ising model, solved exactly by Onsager, with <span class="math inline">\(T_c=2/\ln(1+\sqrt2)\approx 2.269\)</span>. * <span class="math inline">\(g\to\infty\)</span> (<span class="math inline">\(J_1\to0\)</span>): only diagonal bonds remain. The diagonal bonds connect sites of the same chessboard colour, so the lattice splits into <strong>two independent square lattices</strong> (rotated by <span class="math inline">\(45^\circ\)</span>), each an antiferromagnetic Ising model with coupling <span class="math inline">\(J_2\)</span>. Flipping every second spin of such a lattice maps the antiferromagnet onto a ferromagnet with the same partition function, so each sub-lattice orders at <span class="math inline">\(T = J_2\,T_c^{\rm Ising}\)</span>, i.e.&nbsp;<span class="math inline">\(T_c/J_1 \to g\,T_c^{\rm Ising}\)</span> for large <span class="math inline">\(g\)</span>.</p>
+<p>Two limits are already understood. At <span class="math inline">\(g=0\)</span> the model is the 2D Ising model, solved exactly by Onsager, with <span class="math inline">\(T_c=2/\ln(1+\sqrt2)\approx 2.269\)</span>. For <span class="math inline">\(g\to\infty\)</span> (<span class="math inline">\(J_1\to0\)</span>) only diagonal bonds remain. The diagonal bonds connect sites of the same chessboard colour, so the lattice splits into <strong>two independent square lattices</strong> (rotated by <span class="math inline">\(45^\circ\)</span>), each an antiferromagnetic Ising model with coupling <span class="math inline">\(J_2\)</span>. Flipping every second spin of such a lattice maps the antiferromagnet onto a ferromagnet with the same partition function, so each sub-lattice orders at <span class="math inline">\(T = J_2\,T_c^{\rm Ising}\)</span>, i.e.&nbsp;<span class="math inline">\(T_c/J_1 \to g\,T_c^{\rm Ising}\)</span> for large <span class="math inline">\(g\)</span>.</p>
 <p>Between these limits the two couplings <strong>compete</strong>, and that is where the interesting physics is.</p>
-<section id="ground-states-who-wins-at-t0" class="level3">
-<h3 class="anchored" data-anchor-id="ground-states-who-wins-at-t0">1.1 Ground states: who wins at <span class="math inline">\(T=0\)</span></h3>
-<p>Consider three candidate patterns and count the bonds per spin (2 nearest-neighbour bonds and 2 diagonal bonds per spin):</p>
+<section id="ground-states" class="level3">
+<h3 class="anchored" data-anchor-id="ground-states">1.1 Ground states</h3>
+<p>At <span class="math inline">\(T=0\)</span> the system sits in the configuration of lowest energy. Consider three candidate patterns and count the bonds per spin (2 nearest-neighbour bonds and 2 diagonal bonds per spin):</p>
 <table class="table">
 <colgroup>
 <col style="width: 25%">
@@ -624,10 +625,10 @@ g = \tfrac12 .
 <p>At exactly <span class="math inline">\(g=1/2\)</span> a single ferromagnetic row can be inserted into a stripe pattern at no energy cost, and many mixed patterns become degenerate: the system is <strong>frustrated</strong>, it cannot satisfy both couplings, and the number of ground states grows exponentially with the system size.</p>
 <p>The table only compared three guesses. On a small lattice we can check <strong>all</strong> <span class="math inline">\(2^{N}\)</span> configurations, which is a good first exercise in JAX.</p>
 </section>
-<section id="exhaustive-check-on-a-4times4-lattice-a-first-look-at-vmap-and-jit" class="level3">
-<h3 class="anchored" data-anchor-id="exhaustive-check-on-a-4times4-lattice-a-first-look-at-vmap-and-jit">1.2 Exhaustive check on a <span class="math inline">\(4\times4\)</span> lattice (a first look at <code>vmap</code> and <code>jit</code>)</h3>
-<p>A <span class="math inline">\(4\times4\)</span> lattice has <span class="math inline">\(2^{16}=65\,536\)</span> configurations. We write the energy of <strong>one</strong> configuration, then let <code>jax.vmap</code> turn it into a function of a whole batch, and <code>jax.jit</code> compile it.</p>
-<p>Two building blocks are used throughout the notebook: * <code>jnp.roll(s, 1, axis)</code> shifts the lattice by one site with periodic wrap-around, so <code>s * jnp.roll(s, 1, 0)</code> lists the products over all vertical bonds at once; * the energy splits into two integers, <span class="math inline">\(H = -J_1\,B_1(\boldsymbol s) + J_2\,B_2(\boldsymbol s)\)</span>, with <span class="math inline">\(B_1=\sum_{\langle ij\rangle}s_is_j\)</span> and <span class="math inline">\(B_2=\sum_{\langle\langle ij\rangle\rangle}s_is_j\)</span>. We compute <span class="math inline">\(B_1\)</span>, <span class="math inline">\(B_2\)</span> once and then get <span class="math inline">\(H\)</span> for <strong>every</strong> <span class="math inline">\(g\)</span> for free.</p>
+<section id="exhaustive-enumeration-on-a-4times4-lattice" class="level3">
+<h3 class="anchored" data-anchor-id="exhaustive-enumeration-on-a-4times4-lattice">1.2 Exhaustive enumeration on a <span class="math inline">\(4\times4\)</span> lattice</h3>
+<p>A <span class="math inline">\(4\times4\)</span> lattice has <span class="math inline">\(2^{16}=65\,536\)</span> configurations, few enough to compute the energy of every one of them; this is also a first look at <code>vmap</code> and <code>jit</code>. We write the energy of <strong>one</strong> configuration, then let <code>jax.vmap</code> turn it into a function of a whole batch, and <code>jax.jit</code> compile it.</p>
+<p>Two building blocks are used throughout the notebook. The function <code>jnp.roll(s, 1, axis)</code> shifts the lattice by one site with periodic wrap-around, so <code>s * jnp.roll(s, 1, 0)</code> lists the products over all vertical bonds at once. And the energy splits into two integers, <span class="math inline">\(H = -J_1\,B_1(\boldsymbol s) + J_2\,B_2(\boldsymbol s)\)</span>, with <span class="math inline">\(B_1=\sum_{\langle ij\rangle}s_is_j\)</span> and <span class="math inline">\(B_2=\sum_{\langle\langle ij\rangle\rangle}s_is_j\)</span>; we compute <span class="math inline">\(B_1\)</span>, <span class="math inline">\(B_2\)</span> once and then get <span class="math inline">\(H\)</span> for <strong>every</strong> <span class="math inline">\(g\)</span> for free.</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -707,8 +708,8 @@ g = 1.00:  E0/N = -2.0000   ground-state degeneracy = 4</code></pre>
 </div>
 </div>
 </section>
-<section id="order-parameters-what-distinguishes-the-phases" class="level3">
-<h3 class="anchored" data-anchor-id="order-parameters-what-distinguishes-the-phases">1.3 Order parameters: what distinguishes the phases</h3>
+<section id="order-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="order-parameters">1.3 Order parameters</h3>
 <p>Each ordered phase is characterised by a quantity that is non-zero in that phase and zero elsewhere, an <strong>order parameter</strong>. For ordering patterns that repeat with a wave vector <span class="math inline">\(\boldsymbol k\)</span> the natural choice is the Fourier component of the spins, <span class="math display">\[
 m_{\boldsymbol k}(\boldsymbol s) = \frac1N\sum_{\boldsymbol r} s_{\boldsymbol r}\, e^{i\boldsymbol k\cdot\boldsymbol r},
 \]</span> and its square summed over many <span class="math inline">\(\boldsymbol k\)</span> is the <strong>static structure factor</strong> <span class="math inline">\(S(\boldsymbol k)=N\langle|m_{\boldsymbol k}|^2\rangle\)</span>, measured in neutron scattering.</p>
@@ -744,7 +745,7 @@ m_{\boldsymbol k}(\boldsymbol s) = \frac1N\sum_{\boldsymbol r} s_{\boldsymbol r}
 </tbody>
 </table>
 <p>The stripe order parameter combines the two wave vectors because vertical and horizontal stripes have the same energy.</p>
-<p><strong>The key point for this lecture.</strong> The magnetisation <span class="math inline">\(m\)</span> is <strong>zero</strong> in the stripe phase: half of the spins are up and half are down. A scan of <span class="math inline">\(\langle|m|\rangle\)</span> over the <span class="math inline">\((g,T)\)</span> plane therefore sees the stripe phase as “disordered”. To see it, one has to <em>know</em> that stripes exist and measure <span class="math inline">\(m_{\rm str}\)</span>. For the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model we know this from the ground-state analysis. For a new material or a new model we often do not know which quantity to plot.</p>
+<p>The table contains the key point for this lecture: the magnetisation <span class="math inline">\(m\)</span> is <strong>zero</strong> in the stripe phase: half of the spins are up and half are down. A scan of <span class="math inline">\(\langle|m|\rangle\)</span> over the <span class="math inline">\((g,T)\)</span> plane therefore sees the stripe phase as “disordered”. To see it, one has to <em>know</em> that stripes exist and measure <span class="math inline">\(m_{\rm str}\)</span>. For the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model we know this from the ground-state analysis. For a new material or a new model we often do not know which quantity to plot.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
@@ -769,25 +770,80 @@ stripes       |m| = 0.00   m_str = 1.00   m_Neel = 0.00</code></pre>
 </div>
 </div>
 </section>
-<section id="finite-temperature-mean-field-theory-and-its-failure-at-g12" class="level3">
-<h3 class="anchored" data-anchor-id="finite-temperature-mean-field-theory-and-its-failure-at-g12">1.4 Finite temperature: mean-field theory and its failure at <span class="math inline">\(g=1/2\)</span></h3>
-<p><strong>Mean field.</strong> Replace the neighbours of spin <span class="math inline">\(i\)</span> by their thermal averages <span class="math inline">\(\langle s_j\rangle\)</span>. The spin then feels the field <span class="math display">\[
+<section id="mean-field-theory-at-finite-temperature" class="level3">
+<h3 class="anchored" data-anchor-id="mean-field-theory-at-finite-temperature">1.4 Mean-field theory at finite temperature</h3>
+<p>The simplest approximation at <span class="math inline">\(T&gt;0\)</span> is mean-field theory: replace the neighbours of spin <span class="math inline">\(i\)</span> by their thermal averages <span class="math inline">\(\langle s_j\rangle\)</span>. The spin then feels the field <span class="math display">\[
 h_i = J_1\sum_{j\in{\rm nn}(i)}\langle s_j\rangle - J_2\sum_{j\in{\rm nnn}(i)}\langle s_j\rangle, \qquad \langle s_i\rangle = \tanh(\beta h_i).
-\]</span> * Ferromagnetic ansatz <span class="math inline">\(\langle s_j\rangle = m\)</span>: <span class="math inline">\(h = (4J_1-4J_2)m\)</span>, so <span class="math inline">\(m=\tanh(\beta(4J_1-4J_2)m)\)</span>, which has a non-zero solution below <span class="math inline">\(T^{\rm MF}_{\rm FM} = 4J_1-4J_2 = 4(1-g)\)</span>. * Stripe ansatz (columns alternate, <span class="math inline">\(\langle s_j\rangle=\pm m\)</span>): the nearest-neighbour contributions cancel (two parallel, two antiparallel), and all four diagonal neighbours are antiparallel, so <span class="math inline">\(h = 4J_2 m\)</span> and <span class="math inline">\(T^{\rm MF}_{\rm str}=4J_2 = 4g\)</span>.</p>
+\]</span> For the ferromagnetic ansatz <span class="math inline">\(\langle s_j\rangle = m\)</span> this gives <span class="math inline">\(h = (4J_1-4J_2)m\)</span>, so <span class="math inline">\(m=\tanh(\beta(4J_1-4J_2)m)\)</span>, which has a non-zero solution below <span class="math inline">\(T^{\rm MF}_{\rm FM} = 4J_1-4J_2 = 4(1-g)\)</span>. For the stripe ansatz (columns alternate, <span class="math inline">\(\langle s_j\rangle=\pm m\)</span>) the nearest-neighbour contributions cancel (two parallel, two antiparallel), and all four diagonal neighbours are antiparallel, so <span class="math inline">\(h = 4J_2 m\)</span> and <span class="math inline">\(T^{\rm MF}_{\rm str}=4J_2 = 4g\)</span>.</p>
 <p>Mean-field theory predicts the two lines meet at <span class="math inline">\(g=1/2\)</span> at <span class="math inline">\(T=2\)</span>. This is <strong>wrong</strong>: fluctuations between the many degenerate ground states destroy the order, and the true transition temperature goes to <strong>zero</strong> at <span class="math inline">\(g=1/2\)</span>. Mean field also overestimates <span class="math inline">\(T_c\)</span> at <span class="math inline">\(g=0\)</span> (<span class="math inline">\(4\)</span> instead of <span class="math inline">\(2.269\)</span>), because it neglects fluctuations, which are strong in two dimensions.</p>
-<p><strong>What is known from large-scale numerics</strong> (the questions are subtle and partly still debated): * <span class="math inline">\(g&lt;1/2\)</span>: a continuous transition from the paramagnet to the ferromagnet, in the 2D Ising universality class, with <span class="math inline">\(T_c(g)\)</span> decreasing to <span class="math inline">\(0\)</span> at <span class="math inline">\(g=1/2\)</span>. * <span class="math inline">\(g&gt;1/2\)</span>: a transition to the stripe phase. For <span class="math inline">\(g\)</span> slightly above <span class="math inline">\(1/2\)</span> it is <strong>weakly first order</strong>; above a multicritical point it is continuous, with exponents that vary along the line (Ashkin–Teller criticality) and approach the Ising ones as <span class="math inline">\(g\to\infty\)</span>. Kalz, Honecker, Fuchs and Pruschke (Eur. Phys. J. B <strong>65</strong>, 533 (2008)) found weakly first-order transitions for moderate <span class="math inline">\(J_2&gt;J_1/2\)</span>; Jin, Sen and Sandvik (Phys. Rev.&nbsp;Lett. <strong>108</strong>, 045702 (2012)) and Jin, Sen, Guo and Sandvik (Phys. Rev.&nbsp;B <strong>87</strong>, 144406 (2013)) placed the multicritical point at <span class="math inline">\(g^*\approx0.67\)</span> and showed that continuous transitions above <span class="math inline">\(g^*\)</span> can look first order on finite lattices; tensor-network calculations by Li and Yang (Phys. Rev.&nbsp;E <strong>104</strong>, 024118 (2021)) suggest that the first-order window is narrower.</p>
+<p>Large-scale numerics give the following picture, although the questions are subtle and partly still debated. For <span class="math inline">\(g&lt;1/2\)</span> there is a continuous transition from the paramagnet to the ferromagnet, in the 2D Ising universality class, with <span class="math inline">\(T_c(g)\)</span> decreasing to <span class="math inline">\(0\)</span> at <span class="math inline">\(g=1/2\)</span>. For <span class="math inline">\(g&gt;1/2\)</span> there is a transition to the stripe phase. For <span class="math inline">\(g\)</span> slightly above <span class="math inline">\(1/2\)</span> it is <strong>weakly first order</strong>; above a multicritical point it is continuous, with exponents that vary along the line (Ashkin–Teller criticality) and approach the Ising ones as <span class="math inline">\(g\to\infty\)</span>. Kalz, Honecker, Fuchs and Pruschke (Eur. Phys. J. B <strong>65</strong>, 533 (2008)) found weakly first-order transitions for moderate <span class="math inline">\(J_2&gt;J_1/2\)</span>; Jin, Sen and Sandvik (Phys. Rev.&nbsp;Lett. <strong>108</strong>, 045702 (2012)) and Jin, Sen, Guo and Sandvik (Phys. Rev.&nbsp;B <strong>87</strong>, 144406 (2013)) placed the multicritical point at <span class="math inline">\(g^*\approx0.67\)</span> and showed that continuous transitions above <span class="math inline">\(g^*\)</span> can look first order on finite lattices; tensor-network calculations by Li and Yang (Phys. Rev.&nbsp;E <strong>104</strong>, 024118 (2021)) suggest that the first-order window is narrower.</p>
 <p>The lesson: even for a model this simple, the phase diagram required decades of work, careful finite-size analysis, and knowledge of the right order parameters. In Lab 020 we ask how much of it an algorithm can find <strong>without</strong> being told what to look for.</p>
+</section>
+<section id="thermal-averages-and-their-estimators" class="level3">
+<h3 class="anchored" data-anchor-id="thermal-averages-and-their-estimators">1.5 Thermal averages and their estimators</h3>
+<p>Before we sample, we fix what every number in this notebook means. In thermal equilibrium at temperature <span class="math inline">\(T\)</span> (inverse temperature <span class="math inline">\(\beta=1/T\)</span>, <span class="math inline">\(k_B=1\)</span>) a configuration <span class="math inline">\(\boldsymbol s\)</span> occurs with the Boltzmann probability <span class="math display">\[
+p(\boldsymbol s)=\frac{e^{-\beta H(\boldsymbol s)}}{Z},\qquad Z=\sum_{\boldsymbol s}e^{-\beta H(\boldsymbol s)},
+\]</span> and an observable <span class="math inline">\(O(\boldsymbol s)\)</span> of a single configuration has the thermal average <span class="math inline">\(\langle O\rangle=\frac1Z\sum_{\boldsymbol s}O(\boldsymbol s)\,e^{-\beta H(\boldsymbol s)}\)</span>. The partition function also generates the thermodynamics: the energy per spin is the first derivative of <span class="math inline">\(\ln Z\)</span> with respect to <span class="math inline">\(\beta\)</span>, and the specific heat per spin is the second derivative, which equals the variance of the energy, <span class="math display">\[
+\langle e\rangle=\frac{\langle H\rangle}{N}=-\frac1N\,\frac{\partial\ln Z}{\partial\beta},\qquad
+c=\frac{\beta^2}{N}\,\frac{\partial^2\ln Z}{\partial\beta^2}=\frac{\beta^2}{N}\big(\langle H^2\rangle-\langle H\rangle^2\big)=N\beta^2\big(\langle e^2\rangle-\langle e\rangle^2\big).
+\]</span> On the <span class="math inline">\(4\times4\)</span> lattice the sums over all <span class="math inline">\(2^{16}\)</span> configurations can be done, and the function <code>exact_4x4</code> below computes <span class="math inline">\(\langle e\rangle\)</span>, <span class="math inline">\(\langle|m|\rangle\)</span> and <span class="math inline">\(\langle m_{\rm str}\rangle\)</span> literally as these weighted sums. On larger lattices Monte Carlo draws <span class="math inline">\(n\)</span> configurations <span class="math inline">\(\boldsymbol s^{(1)},\dots,\boldsymbol s^{(n)}\)</span> with probability <span class="math inline">\(p(\boldsymbol s)\)</span> at each <span class="math inline">\((g,T)\)</span>, and every average is estimated by the sample mean <span class="math inline">\(\overline{O}=\frac1n\sum_{k=1}^nO(\boldsymbol s^{(k)})\)</span>. The table lists each observable in both forms; the estimators are those of the functions <code>energy_per_spin</code>, <code>order_parameters</code> and <code>observables</code> below. Here <span class="math inline">\(e_k=H(\boldsymbol s^{(k)})/N\)</span> (computed as <span class="math inline">\(-\frac1{2N}\sum_i s_ih_i\)</span>, since every bond appears twice in <span class="math inline">\(\sum_is_ih_i\)</span>), <span class="math inline">\(m_k=\frac1N\sum_is^{(k)}_i\)</span>, and <span class="math inline">\(\overline{x}\)</span> is the mean over the <span class="math inline">\(n\)</span> samples. On a finite lattice without a field <span class="math inline">\(\langle m\rangle=0\)</span> by the symmetry <span class="math inline">\(\boldsymbol s\to-\boldsymbol s\)</span>, which is why <span class="math inline">\(|m|\)</span> is used.</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>observable</th>
+<th>definition through <span class="math inline">\(Z\)</span></th>
+<th>estimator from <span class="math inline">\(n\)</span> samples (as in the code)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>energy per spin</td>
+<td><span class="math inline">\(\langle e\rangle=-\frac1N\partial_\beta\ln Z\)</span></td>
+<td><span class="math inline">\(\overline{e}=\frac1n\sum_ke_k\)</span></td>
+</tr>
+<tr class="even">
+<td>magnetisation</td>
+<td><span class="math inline">\(\langle\lvert m\rvert\rangle=\frac1Z\sum_{\boldsymbol s}\lvert m(\boldsymbol s)\rvert e^{-\beta H}\)</span></td>
+<td><span class="math inline">\(\overline{\lvert m\rvert}=\frac1n\sum_k\lvert m_k\rvert\)</span></td>
+</tr>
+<tr class="odd">
+<td>stripe order</td>
+<td><span class="math inline">\(\langle m_{\rm str}\rangle\)</span>, <span class="math inline">\(m_{\rm str}=\sqrt{m_{(\pi,0)}^2+m_{(0,\pi)}^2}\)</span>, <span class="math inline">\(m_{(\pi,0)}=\frac1N\sum_{\boldsymbol r}(-1)^{x}s_{\boldsymbol r}\)</span>, <span class="math inline">\(m_{(0,\pi)}=\frac1N\sum_{\boldsymbol r}(-1)^{y}s_{\boldsymbol r}\)</span></td>
+<td><span class="math inline">\(\overline{m_{\rm str}}=\frac1n\sum_km_{{\rm str},k}\)</span></td>
+</tr>
+<tr class="even">
+<td>Néel order</td>
+<td><span class="math inline">\(\langle\lvert m_{(\pi,\pi)}\rvert\rangle\)</span>, <span class="math inline">\(m_{(\pi,\pi)}=\frac1N\sum_{\boldsymbol r}(-1)^{x+y}s_{\boldsymbol r}\)</span></td>
+<td><span class="math inline">\(\frac1n\sum_k\lvert m_{(\pi,\pi),k}\rvert\)</span></td>
+</tr>
+<tr class="odd">
+<td>specific heat</td>
+<td><span class="math inline">\(c=\frac{\beta^2}{N}\partial^2_\beta\ln Z=N\beta^2\big(\langle e^2\rangle-\langle e\rangle^2\big)\)</span></td>
+<td><span class="math inline">\(N\beta^2\big(\overline{e^2}-\overline{e}^{\,2}\big)\)</span> (Section 5 maps); <span class="math inline">\(N\beta^2\,\frac{1}{n-1}\sum_k(e_k-\overline e)^2\)</span> (Section 5.1)</td>
+</tr>
+</tbody>
+</table>
+<p>All variances in the maps of Section 5 are population variances (division by <span class="math inline">\(n\)</span>, <code>jnp.var</code>); the subsampling study of Section 5.1 uses the unbiased variance (division by <span class="math inline">\(n-1\)</span>, <code>var(ddof=1)</code>), which matters for its small subsets of 10 samples.</p>
+<p>Section 2.2 also uses a dynamical quantity, the autocorrelation of <span class="math inline">\(|m|\)</span> along a chain. With <span class="math inline">\(x_t=|m|\)</span> after step <span class="math inline">\(t\)</span> of one chain, <span class="math inline">\(\delta x_t=x_t-\overline{x}\)</span> (mean over the chain) and <span class="math inline">\(v=\overline{\delta x^2}\)</span>, its definition and estimator are <span class="math display">\[
+A(t)=\frac{\langle x_sx_{s+t}\rangle-\langle x\rangle^2}{\langle x^2\rangle-\langle x\rangle^2},\qquad
+\widehat A(t)=\frac{1}{n_{\rm ch}}\sum_{\rm chains}\frac{1}{v}\,\frac{1}{n-t}\sum_{s=1}^{n-t}\delta x_s\,\delta x_{s+t},
+\]</span> averaged over the <span class="math inline">\(n_{\rm ch}\)</span> chains, and the integrated autocorrelation time is estimated as <span class="math inline">\(\tau=\tfrac12+\sum_{t=1}^{t^*-1}\widehat A(t)\)</span>, with <span class="math inline">\(t^*\)</span> the first lag at which <span class="math inline">\(\widehat A(t)&lt;0.05\)</span>.</p>
 <hr>
 </section>
 </section>
 <section id="metropolis-monte-carlo-in-jax" class="level2">
 <h2 class="anchored" data-anchor-id="metropolis-monte-carlo-in-jax">2. Metropolis Monte Carlo in JAX</h2>
-<p><strong>Algorithm</strong> (derived in Lab 010): propose to flip spin <span class="math inline">\(i\)</span>, accept with probability <span class="math inline">\(\min(1, e^{-\beta\Delta E})\)</span>. With the local field <span class="math display">\[
+<p>The algorithm, derived in Lab 010, proposes to flip spin <span class="math inline">\(i\)</span> and accepts with probability <span class="math inline">\(\min(1, e^{-\beta\Delta E})\)</span>. With the local field <span class="math display">\[
 h_i = J_1\sum_{j\in{\rm nn}(i)} s_j - J_2\sum_{j\in{\rm nnn}(i)} s_j ,\qquad \Delta E_i = 2\,s_i\,h_i .
 \]</span></p>
-<p><strong>Parallel updates.</strong> Spins can be flipped <em>simultaneously</em> only if they do not interact. For the Ising model the chessboard colouring works, but here diagonal neighbours have the <em>same</em> chessboard colour. We use <strong>four sub-lattices</strong> labelled by <span class="math inline">\((x \bmod 2,\, y \bmod 2)\)</span>: nearest neighbours differ in one parity, diagonal neighbours in both, so no two spins of one sub-lattice are coupled. In code a sub-lattice is the strided slice <code>s[a::2, b::2]</code>, and we only draw random numbers for the spins we update. One <strong>sweep</strong> = four sub-lattice updates = one attempted flip per spin.</p>
-<p><strong>The JAX idioms.</strong> * A pure function <code>sweep(s, key, g, beta)</code> updates one lattice. Randomness is explicit: a PRNG <code>key</code> goes in, a new key comes out. * <code>lax.scan</code> repeats a step many times inside one compiled program, with no Python loop overhead. * <code>jax.vmap</code> maps the whole simulation over <strong>chains</strong>: every chain has its own <span class="math inline">\(g\)</span> and its own random key. All values of <span class="math inline">\(g\)</span> run at once. * <code>jax.jit</code> compiles the result into a single program (XLA fuses the array operations; on a GPU the same code runs unchanged).</p>
-<p><strong>Annealing.</strong> Each chain starts at the highest temperature and is cooled step by step; at each temperature it first equilibrates for <code>n_equil</code> sweeps and then stores <code>n_samples</code> configurations separated by <code>n_between</code> sweeps (to reduce correlations between stored samples). Cooling slowly, rather than starting each temperature from a random state, helps the chain find the ordered state at low <span class="math inline">\(T\)</span>.</p>
+<p>Spins can be flipped <em>simultaneously</em> only if they do not interact. For the Ising model the chessboard colouring works, but here diagonal neighbours have the <em>same</em> chessboard colour. We use <strong>four sub-lattices</strong> labelled by <span class="math inline">\((x \bmod 2,\, y \bmod 2)\)</span>: nearest neighbours differ in one parity, diagonal neighbours in both, so no two spins of one sub-lattice are coupled. In code a sub-lattice is the strided slice <code>s[a::2, b::2]</code>, and we only draw random numbers for the spins we update. One <strong>sweep</strong> = four sub-lattice updates = one attempted flip per spin.</p>
+<p>The JAX structure follows from this. A pure function <code>sweep(s, key, g, beta)</code> updates one lattice; randomness is explicit, a pseudo-random number generator (PRNG) <code>key</code> goes in and a new key comes out. <code>lax.scan</code> repeats a step many times inside one compiled program, with no Python loop overhead. <code>jax.vmap</code> maps the whole simulation over <strong>chains</strong>, every chain with its own <span class="math inline">\(g\)</span> and its own random key, so all values of <span class="math inline">\(g\)</span> run at once. <code>jax.jit</code> compiles the result into a single program (XLA, Accelerated Linear Algebra, the compiler behind JAX, fuses the array operations; on a graphics processing unit, GPU, the same code runs unchanged).</p>
+<p>Each chain is annealed: it starts at the highest temperature and is cooled step by step; at each temperature it first equilibrates for <code>n_equil</code> sweeps and then stores <code>n_samples</code> configurations separated by <code>n_between</code> sweeps (to reduce correlations between stored samples). Cooling slowly, rather than starting each temperature from a random state, helps the chain find the ordered state at low <span class="math inline">\(T\)</span>.</p>
 <div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
@@ -837,12 +893,9 @@ h_i = J_1\sum_{j\in{\rm nn}(i)} s_j - J_2\sum_{j\in{\rm nnn}(i)} s_j ,\qquad \De
 <span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out.transpose(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>).reshape(<span class="bu">len</span>(gs), <span class="bu">len</span>(Ts), n_chains <span class="op">*</span> n_samples, L, L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="checks-before-production" class="level3">
-<h3 class="anchored" data-anchor-id="checks-before-production">2.1 Checks before production</h3>
-<ol type="1">
-<li><strong>Exact enumeration.</strong> On the <span class="math inline">\(4\times4\)</span> lattice we know the exact thermal averages (from the <span class="math inline">\(2^{16}\)</span> states above), for any <span class="math inline">\(g\)</span>.</li>
-<li><strong>Onsager.</strong> At <span class="math inline">\(g=0\)</span> and large <span class="math inline">\(L\)</span> the magnetisation must follow Yang’s exact result <span class="math inline">\(M(T)=\left(1-\sinh^{-4}(2/T)\right)^{1/8}\)</span> below <span class="math inline">\(T_c\)</span>, and the energy must follow Onsager’s <span class="math inline">\(u(T)\)</span>.</li>
-</ol>
+<section id="exact-benchmarks" class="level3">
+<h3 class="anchored" data-anchor-id="exact-benchmarks">2.1 Exact benchmarks</h3>
+<p>Before producing data we test the sampler against two exact results. On the <span class="math inline">\(4\times4\)</span> lattice we know the exact thermal averages for any <span class="math inline">\(g\)</span> from the <span class="math inline">\(2^{16}\)</span> states enumerated above. At <span class="math inline">\(g=0\)</span> and large <span class="math inline">\(L\)</span> the magnetisation must follow Yang’s exact result <span class="math inline">\(M(T)=\left(1-\sinh^{-4}(2/T)\right)^{1/8}\)</span> below <span class="math inline">\(T_c\)</span>, and the energy must follow Onsager’s <span class="math inline">\(u(T)\)</span>.</p>
 <div class="cell" data-execution_count="6">
 <details open="">
 <summary>Code</summary>
@@ -916,22 +969,23 @@ h_i = J_1\sum_{j\in{\rm nn}(i)} s_j - J_2\sum_{j\in{\rm nnn}(i)} s_j ,\qquad \De
 </div>
 </div>
 <p>Away from <span class="math inline">\(T_c\)</span> the Monte Carlo points lie on the exact curves. Near <span class="math inline">\(T_c\)</span> the finite lattice rounds the transition: <span class="math inline">\(\langle|m|\rangle\)</span> stays non-zero above <span class="math inline">\(T_c\)</span> because a finite system always has a finite magnetisation fluctuation. This <strong>finite-size rounding</strong> is the subject of Lab 019.</p>
-<blockquote class="blockquote">
-<p><strong>Try it.</strong> Set <code>n_equil=50</code> in the cell above and look at the points just below <span class="math inline">\(T_c\)</span>. Why does the agreement get worse there first?</p>
-</blockquote>
+<section id="exercise" class="level4">
+<h4 class="anchored" data-anchor-id="exercise">Exercise</h4>
+<p>Set <code>n_equil=50</code> in the cell above and look at the points just below <span class="math inline">\(T_c\)</span>. Why does the agreement get worse there first?</p>
 </section>
-<section id="critical-slowing-down-and-the-swendsenwang-cluster-algorithm" class="level3">
-<h3 class="anchored" data-anchor-id="critical-slowing-down-and-the-swendsenwang-cluster-algorithm">2.2 Critical slowing down, and the Swendsen–Wang cluster algorithm</h3>
-<p><strong>The problem.</strong> Near <span class="math inline">\(T_c\)</span> the lattice is made of correlated domains of all sizes up to <span class="math inline">\(L\)</span>. Metropolis flips one spin at a time, and a single flip inside a large domain is almost always rejected (it costs energy at every bond). To turn a whole domain around the chain must move its boundary step by step, which takes very many sweeps: consecutive samples are nearly copies of each other. This is <strong>critical slowing down</strong>; the autocorrelation time grows as a power of <span class="math inline">\(L\)</span> (measured below).</p>
-<p><strong>The idea.</strong> Flip whole domains at once, but choose them randomly in a way that keeps the Boltzmann distribution exact. The tool is a one-line identity for the weight of a single bond, with <span class="math inline">\(p = 1-e^{-2\beta J}\)</span>: <span class="math display">\[
+</section>
+<section id="critical-slowing-down-and-the-swendsenwang-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="critical-slowing-down-and-the-swendsenwang-algorithm">2.2 Critical slowing down and the Swendsen–Wang algorithm</h3>
+<p>Near <span class="math inline">\(T_c\)</span> the lattice is made of correlated domains of all sizes up to <span class="math inline">\(L\)</span>. Metropolis flips one spin at a time, and a single flip inside a large domain is almost always rejected (it costs energy at every bond). To turn a whole domain around the chain must move its boundary step by step, which takes very many sweeps: consecutive samples are nearly copies of each other. This is <strong>critical slowing down</strong>; the autocorrelation time grows as a power of <span class="math inline">\(L\)</span> (measured below).</p>
+<p>The remedy is to flip whole domains at once, but to choose them randomly in a way that keeps the Boltzmann distribution exact. The tool is a one-line identity for the weight of a single bond, with <span class="math inline">\(p = 1-e^{-2\beta J}\)</span>: <span class="math display">\[
 e^{\beta J s_is_j} \;=\; e^{\beta J}\Big[\,(1-p) \;+\; p\,\delta_{s_i s_j}\Big].
-\]</span> (Check: for <span class="math inline">\(s_i=s_j\)</span> the bracket is <span class="math inline">\(1\)</span>; for <span class="math inline">\(s_i\neq s_j\)</span> it is <span class="math inline">\(1-p=e^{-2\beta J}\)</span>.) Read the two terms as a bond variable <span class="math inline">\(b_{ij}\in\{0,1\}\)</span>: “no bond” with weight <span class="math inline">\(1-p\)</span>, or “bond” with weight <span class="math inline">\(p\)</span>, allowed only between <strong>parallel</strong> spins. Multiplying over all bonds gives a joint distribution of spins and bonds whose sum over bonds is exactly <span class="math inline">\(e^{-\beta H}\)</span> (Fortuin and Kasteleyn’s random-cluster representation). Sampling the two variables alternately is the algorithm:</p>
+\]</span> (For <span class="math inline">\(s_i=s_j\)</span> the bracket is <span class="math inline">\(1\)</span>; for <span class="math inline">\(s_i\neq s_j\)</span> it is <span class="math inline">\(1-p=e^{-2\beta J}\)</span>.) Read the two terms as a bond variable <span class="math inline">\(b_{ij}\in\{0,1\}\)</span>: “no bond” with weight <span class="math inline">\(1-p\)</span>, or “bond” with weight <span class="math inline">\(p\)</span>, allowed only between <strong>parallel</strong> spins. Multiplying over all bonds gives a joint distribution of spins and bonds whose sum over bonds is exactly <span class="math inline">\(e^{-\beta H}\)</span> (Fortuin and Kasteleyn’s random-cluster representation). Sampling the two variables alternately is the algorithm:</p>
 <ol type="1">
-<li><strong>bonds given spins:</strong> between every pair of parallel neighbours, place a bond with probability <span class="math inline">\(p\)</span>, independently;</li>
-<li><strong>spins given bonds:</strong> the only constraint is that bonded spins are equal, so every connected cluster of bonds carries one common sign, chosen independently with probability <span class="math inline">\(1/2\)</span> for each cluster.</li>
+<li><em>bonds given spins:</em> between every pair of parallel neighbours, place a bond with probability <span class="math inline">\(p\)</span>, independently;</li>
+<li><em>spins given bonds:</em> the only constraint is that bonded spins are equal, so every connected cluster of bonds carries one common sign, chosen independently with probability <span class="math inline">\(1/2\)</span> for each cluster.</li>
 </ol>
 <p>Each step samples exactly from a conditional distribution of the joint distribution, so the pair of steps leaves <span class="math inline">\(e^{-\beta H}\)</span> invariant. Near <span class="math inline">\(T_c\)</span> the clusters have all sizes, and one update can turn around a domain as large as the lattice. The method works for ferromagnetic couplings (a bond requires parallel spins to lower the energy); for the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model we keep Metropolis.</p>
-<p><strong>The cluster search in JAX.</strong> Finding connected clusters is usually a sequential graph search. In array form every site starts with a label (its own index) and we repeat two operations until nothing changes: each site takes the smallest label among itself and its bonded neighbours, and then the label of its label (<em>pointer jumping</em>). Each iteration is a few <code>jnp.roll</code> and <code>jnp.minimum</code> operations on the whole lattice, inside a <code>lax.while_loop</code>.</p>
+<p>Finding connected clusters is usually a sequential graph search. In array form, as JAX needs it, every site starts with a label (its own index) and we repeat two operations until nothing changes: each site takes the smallest label among itself and its bonded neighbours, and then the label of its label (<em>pointer jumping</em>). Each iteration is a few <code>jnp.roll</code> and <code>jnp.minimum</code> operations on the whole lattice, inside a <code>lax.while_loop</code>.</p>
 <p>References: R. H. Swendsen, J.-S. Wang, Phys. Rev.&nbsp;Lett. <strong>58</strong>, 86 (1987), <a href="https://doi.org/10.1103/PhysRevLett.58.86">doi:10.1103/PhysRevLett.58.86</a>; C. M. Fortuin, P. W. Kasteleyn, Physica <strong>57</strong>, 536 (1972); the single-cluster variant: U. Wolff, Phys. Rev.&nbsp;Lett. <strong>62</strong>, 361 (1989), <a href="https://doi.org/10.1103/PhysRevLett.62.361">doi:10.1103/PhysRevLett.62.361</a>; textbook: Newman and Barkema (references at the end).</p>
 <div class="cell" data-execution_count="8">
 <details open="">
@@ -1004,7 +1058,7 @@ e^{\beta J s_is_j} \;=\; e^{\beta J}\Big[\,(1-p) \;+\; p\,\delta_{s_i s_j}\Big].
 <pre><code>T = 3.0:  &lt;e&gt; -1.0166 +- 0.0011 (exact -1.0171, +0.4 sigma)   &lt;|m|&gt; 0.6010 +- 0.0006 (exact 0.6013, -0.5 sigma)</code></pre>
 </div>
 </div>
-<p><strong>What the clusters look like.</strong> One configuration of <span class="math inline">\(L=50\)</span> at <span class="math inline">\(T_c\)</span>, its Swendsen–Wang clusters (each cluster in its own colour), and the configuration after one update.</p>
+<p>To see what the clusters look like, we take one configuration of <span class="math inline">\(L=50\)</span> at <span class="math inline">\(T_c\)</span>, draw its Swendsen–Wang clusters (each cluster in its own colour), and show the configuration after one update.</p>
 <div class="cell" data-execution_count="9">
 <details open="">
 <summary>Code</summary>
@@ -1031,9 +1085,9 @@ e^{\beta J s_is_j} \;=\; e^{\beta J}\Big[\,(1-p) \;+\; p\,\delta_{s_i s_j}\Big].
 <p><img src="lab-018-spin-models-monte-carlo_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p><strong>How much faster?</strong> We compare the autocorrelation of <span class="math inline">\(|m|\)</span> along one chain at <span class="math inline">\(T_c\)</span> for <span class="math inline">\(L=50\)</span>: Metropolis with one sweep per step, Swendsen–Wang with one cluster update per step, <span class="math display">\[
+<p>To measure the gain, we compare the autocorrelation of <span class="math inline">\(|m|\)</span> along one chain at <span class="math inline">\(T_c\)</span> for <span class="math inline">\(L=50\)</span>, for Metropolis with one sweep per step and for Swendsen–Wang with one cluster update per step, <span class="math display">\[
 A(t) = \frac{\langle |m|_{s}\,|m|_{s+t}\rangle - \langle|m|\rangle^2}{\langle |m|^2\rangle - \langle|m|\rangle^2}.
-\]</span></p>
+\]</span> The faster <span class="math inline">\(A(t)\)</span> decays, the more independent the stored samples are.</p>
 <div class="cell" data-execution_count="10">
 <details open="">
 <summary>Code</summary>
@@ -1073,8 +1127,8 @@ wall time for 400 steps of 16 chains:  Metropolis 9.5 s,  Swendsen-Wang 151.9 s<
 <hr>
 </section>
 </section>
-<section id="dataset-1-the-2d-ising-model-for-several-lattice-sizes" class="level2">
-<h2 class="anchored" data-anchor-id="dataset-1-the-2d-ising-model-for-several-lattice-sizes">3. Dataset 1: the 2D Ising model for several lattice sizes</h2>
+<section id="ising-data-set-for-several-lattice-sizes" class="level2">
+<h2 class="anchored" data-anchor-id="ising-data-set-for-several-lattice-sizes">3. Ising data set for several lattice sizes</h2>
 <p>For finite-size scaling (Lab 019) we need the same temperature grid for several <span class="math inline">\(L\)</span>, and nearly <strong>independent</strong> samples close to <span class="math inline">\(T_c\)</span>. We use the Swendsen–Wang sampler: 32 chains per size, each cooled through the temperature grid, 8 samples per temperature separated by 4 cluster updates. We store configurations as bits (<code>np.packbits</code>), eight spins per byte.</p>
 <div class="cell" data-execution_count="11">
 <details open="">
@@ -1110,8 +1164,8 @@ total 1216 s</code></pre>
 </div>
 <hr>
 </section>
-<section id="dataset-2-the-j_1j_2-model-in-the-gt-plane" class="level2">
-<h2 class="anchored" data-anchor-id="dataset-2-the-j_1j_2-model-in-the-gt-plane">4. Dataset 2: the <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model in the <span class="math inline">\((g,T)\)</span> plane</h2>
+<section id="j_1j_2-data-set-in-the-gt-plane" class="level2">
+<h2 class="anchored" data-anchor-id="j_1j_2-data-set-in-the-gt-plane">4. <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> data set in the <span class="math inline">\((g,T)\)</span> plane</h2>
 <p>One call simulates <strong>all</strong> values of <span class="math inline">\(g\)</span> at once (<code>vmap</code> over chains), each chain cooled from <span class="math inline">\(T=4\)</span> to <span class="math inline">\(T=0.1\)</span>.</p>
 <div class="cell" data-execution_count="12">
 <details open="">
@@ -1149,11 +1203,11 @@ total 1216 s</code></pre>
 <p><img src="lab-018-spin-models-monte-carlo_files/figure-html/cell-14-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Reading the snapshots: at high <span class="math inline">\(T\)</span> every column is noise. At low <span class="math inline">\(T\)</span> and small <span class="math inline">\(g\)</span> the lattice is uniformly up or down; at large <span class="math inline">\(g\)</span> we see stripes. Near <span class="math inline">\(g=1/2\)</span> even the lowest temperature shows a mixture of ferromagnetic and stripe patches: the frustrated region.</p>
+<p>At high <span class="math inline">\(T\)</span> every column is noise. At low <span class="math inline">\(T\)</span> and small <span class="math inline">\(g\)</span> the lattice is uniformly up or down; at large <span class="math inline">\(g\)</span> we see stripes. Near <span class="math inline">\(g=1/2\)</span> even the lowest temperature shows a mixture of ferromagnetic and stripe patches: the frustrated region.</p>
 <hr>
 </section>
-<section id="the-physicists-scan-the-choice-of-observable" class="level2">
-<h2 class="anchored" data-anchor-id="the-physicists-scan-the-choice-of-observable">5. The physicist’s scan: the choice of observable</h2>
+<section id="choice-of-observable" class="level2">
+<h2 class="anchored" data-anchor-id="choice-of-observable">5. Choice of observable</h2>
 <p>Suppose we know nothing about stripes and we do what is natural for a magnet: we measure <span class="math inline">\(\langle|m|\rangle\)</span> at every point of the grid. Then we measure <span class="math inline">\(\langle m_{\rm str}\rangle\)</span>, which requires knowing the stripe pattern. Finally we measure the <strong>specific heat</strong> <span class="math display">\[
 c = \frac{N}{T^2}\left(\langle e^2\rangle-\langle e\rangle^2\right),
 \]</span> which does not need any order parameter: it peaks at a transition whatever the order is.</p>
@@ -1194,13 +1248,9 @@ c = \frac{N}{T^2}\left(\langle e^2\rangle-\langle e\rangle^2\right),
 </div>
 </div>
 <p>The dashed white lines are the mean-field predictions <span class="math inline">\(T^{\rm MF}=4(1-g)\)</span> and <span class="math inline">\(4g\)</span>; they overshoot everywhere and miss the dip to <span class="math inline">\(T_c=0\)</span> at <span class="math inline">\(g=1/2\)</span>.</p>
-<ul>
-<li>The <strong>magnetisation map</strong> shows one ordered region, <span class="math inline">\(g&lt;1/2\)</span>. The whole stripe phase looks like a paramagnet.</li>
-<li>The <strong>stripe map</strong> shows the other ordered region, but only because we told it what pattern to look for.</li>
-<li>The <strong>specific-heat map</strong> shows both boundaries without any order parameter. Its price is noise: <span class="math inline">\(c\)</span> is a <em>variance</em>, and variances need many more samples than means.</li>
-</ul>
-<section id="the-cost-of-a-dense-scan" class="level3">
-<h3 class="anchored" data-anchor-id="the-cost-of-a-dense-scan">5.1 The cost of a dense scan</h3>
+<p>The magnetisation map shows one ordered region, <span class="math inline">\(g&lt;1/2\)</span>; the whole stripe phase looks like a paramagnet. The stripe map shows the other ordered region, but only because we told it what pattern to look for. The specific-heat map shows both boundaries without any order parameter. Its price is noise: <span class="math inline">\(c\)</span> is a <em>variance</em>, and variances need many more samples than means.</p>
+<section id="cost-of-a-dense-scan" class="level3">
+<h3 class="anchored" data-anchor-id="cost-of-a-dense-scan">5.1 Cost of a dense scan</h3>
 <p>A boundary from the specific heat needs a peak position, so it needs <span class="math inline">\(c\)</span> on a fine grid with small error bars. How many samples per grid point does that take? We estimate <span class="math inline">\(c\)</span> from subsets of <span class="math inline">\(n\)</span> samples and look at the scatter of the estimates.</p>
 <div class="cell" data-execution_count="15">
 <details open="">
@@ -1230,7 +1280,7 @@ c = \frac{N}{T^2}\left(\langle e^2\rangle-\langle e\rangle^2\right),
 </div>
 </div>
 <p>With 10 samples per point the peak position of <span class="math inline">\(c\)</span> jumps around from one repetition to the next. A reliable peak needs of order a hundred decorrelated samples per point, and the decorrelation time itself grows near the transition (critical slowing down). In a laboratory, every grid point is a separate preparation of the sample at a given pressure, field or temperature.</p>
-<p><strong>This is the motivation for Labs 019 and 020.</strong> Two questions: 1. Can an algorithm that has never been told about magnetisation or stripes find the ordered phases from raw snapshots? 2. Can it do this from a <strong>coarse</strong> scan, and tell us where a dense scan is worth paying for?</p>
+<p>This is the motivation for Labs 019 and 020, which ask two questions. Can an algorithm that has never been told about magnetisation or stripes find the ordered phases from raw snapshots? And can it do this from a <strong>coarse</strong> scan, and tell us where a dense scan is worth paying for?</p>
 <hr>
 </section>
 </section>
@@ -1249,55 +1299,22 @@ c = \frac{N}{T^2}\left(\langle e^2\rangle-\langle e\rangle^2\right),
 <li>M. F. Faulkner, S. Livingstone, <em>Sampling algorithms in statistical physics: a guide for statistics and machine learning</em>, Statist. Sci. <strong>39</strong>, 137 (2024), <a href="https://arxiv.org/abs/2208.04751">arXiv:2208.04751</a></li>
 <li>Textbook: M. E. J. Newman, G. T. Barkema, <em>Monte Carlo Methods in Statistical Physics</em>, Oxford University Press (1999): Metropolis algorithm, equilibration, critical slowing down, cluster algorithms.</li>
 </ul>
-<div class="cell" data-execution_count="16">
-<details open="">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>FIG<span class="sc">}</span><span class="ss">/numbers_lab018.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    json.dump(NUMBERS, f, indent<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(NUMBERS, indent<span class="op">=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>{
- "degeneracy_4x4_g05": 30,
- "degeneracy_4x4_g025": 2,
- "degeneracy_4x4_g075": 4,
- "sw_pic_n_clusters": 361,
- "sw_pic_largest": 1304,
- "tau_metropolis": 26.4,
- "tau_sw": 3.4,
- "ising_L": [
-  20,
-  30,
-  50
- ],
- "ising_nT": 37,
- "ising_samples_per_T": 256,
- "j1j2_L": 32,
- "j1j2_nG": 81,
- "j1j2_nT": 79,
- "j1j2_samples": 100,
- "j1j2_seconds": 3566.8,
- "j1j2_grid_points": 6399,
- "j1j2_total_configs": 639900
-}</code></pre>
-</div>
-</div>
 <hr>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<ul>
-<li>The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> Ising model has a ferromagnetic phase (<span class="math inline">\(g&lt;1/2\)</span>) and a stripe phase (<span class="math inline">\(g&gt;1/2\)</span>); at <span class="math inline">\(g=1/2\)</span> the competition makes the ground state massively degenerate and the transition temperature vanishes. Mean-field theory gets this point qualitatively wrong.</li>
-<li>The natural “magnet” observable, <span class="math inline">\(\langle|m|\rangle\)</span>, is blind to the stripe phase. Choosing the right observable requires prior knowledge.</li>
-<li>Fluctuation observables such as <span class="math inline">\(c\)</span> see every transition but are expensive: they need many samples per grid point.</li>
-<li>JAX: one pure <code>sweep</code> function, <code>lax.scan</code> for time loops, <code>vmap</code> over chains and couplings, <code>jit</code> for the whole simulation.</li>
-<li>Near <span class="math inline">\(T_c\)</span> local updates slow down; the Swendsen–Wang cluster algorithm (ferromagnetic couplings only) gives nearly independent samples, and its cluster search is a <code>lax.while_loop</code> of array operations.</li>
-</ul>
-<blockquote class="blockquote">
-<p><strong>Try it.</strong> 1. Add a <span class="math inline">\(J_3\)</span> coupling (third neighbours, two sites apart along the axes) to <code>local_field</code>. Which sub-lattice decomposition is now needed? 2. Replace annealing by independent random starts at every temperature. What happens to the stripe phase at low <span class="math inline">\(T\)</span> near <span class="math inline">\(g=0.55\)</span>? 3. Compute the full structure factor <span class="math inline">\(S(\boldsymbol k)\)</span> with <code>jnp.fft.fft2</code> for snapshots at <span class="math inline">\(g=0.25\)</span> and <span class="math inline">\(g=0.75\)</span>, <span class="math inline">\(T=0.5\)</span>. Where are the peaks?</p>
-</blockquote>
+<p>The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> Ising model has a ferromagnetic phase (<span class="math inline">\(g&lt;1/2\)</span>) and a stripe phase (<span class="math inline">\(g&gt;1/2\)</span>); at <span class="math inline">\(g=1/2\)</span> the competition makes the ground state massively degenerate and the transition temperature vanishes, a point that mean-field theory gets qualitatively wrong. The natural “magnet” observable, <span class="math inline">\(\langle|m|\rangle\)</span>, is blind to the stripe phase, so choosing the right observable requires prior knowledge, and fluctuation observables such as <span class="math inline">\(c\)</span>, which see every transition, are expensive because they need many samples per grid point.</p>
+<p>On the computational side, the whole simulation is one pure <code>sweep</code> function, <code>lax.scan</code> for time loops, <code>vmap</code> over chains and couplings, and <code>jit</code> for the whole program. Near <span class="math inline">\(T_c\)</span> local updates slow down; the Swendsen–Wang cluster algorithm (ferromagnetic couplings only) gives nearly independent samples, and its cluster search is a <code>lax.while_loop</code> of array operations.</p>
+<section id="exercises" class="level4">
+<h4 class="anchored" data-anchor-id="exercises">Exercises</h4>
+<ol type="1">
+<li>Add a <span class="math inline">\(J_3\)</span> coupling (third neighbours, two sites apart along the axes) to <code>local_field</code>. Which sub-lattice decomposition is now needed?</li>
+<li>Replace annealing by independent random starts at every temperature. What happens to the stripe phase at low <span class="math inline">\(T\)</span> near <span class="math inline">\(g=0.55\)</span>?</li>
+<li>Compute the full structure factor <span class="math inline">\(S(\boldsymbol k)\)</span> with <code>jnp.fft.fft2</code> for snapshots at <span class="math inline">\(g=0.25\)</span> and <span class="math inline">\(g=0.75\)</span>, <span class="math inline">\(T=0.5\)</span>. Where are the peaks?</li>
+</ol>
 
 
+</section>
 </section>
 </section>
 

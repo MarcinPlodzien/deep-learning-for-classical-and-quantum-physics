@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,13 +466,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-020-the-j_1j_2-phase-diagram-without-labels" id="toc-lab-020-the-j_1j_2-phase-diagram-without-labels" class="nav-link" data-scroll-target="#lab-020-the-j_1j_2-phase-diagram-without-labels">Lab 020 — The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> phase diagram without labels</a>
+  <li><a href="#lab-020-the-j_1j_2-model-without-labels" id="toc-lab-020-the-j_1j_2-model-without-labels" class="nav-link" data-scroll-target="#lab-020-the-j_1j_2-model-without-labels">Lab 020 — The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model without labels</a>
   <ul class="collapse">
-  <li><a href="#the-reference-what-the-known-observables-show" id="toc-the-reference-what-the-known-observables-show" class="nav-link" data-scroll-target="#the-reference-what-the-known-observables-show">1. The reference: what the known observables show</a></li>
-  <li><a href="#pca-on-all-snapshots" id="toc-pca-on-all-snapshots" class="nav-link" data-scroll-target="#pca-on-all-snapshots">2. PCA on all snapshots</a></li>
-  <li><a href="#autoencoder-anomaly-maps-for-three-training-regimes" id="toc-autoencoder-anomaly-maps-for-three-training-regimes" class="nav-link" data-scroll-target="#autoencoder-anomaly-maps-for-three-training-regimes">3. Autoencoder anomaly maps for three training regimes</a></li>
-  <li><a href="#combining-the-regimes" id="toc-combining-the-regimes" class="nav-link" data-scroll-target="#combining-the-regimes">4. Combining the regimes</a></li>
-  <li><a href="#a-coarse-scan-and-where-to-measure-more" id="toc-a-coarse-scan-and-where-to-measure-more" class="nav-link" data-scroll-target="#a-coarse-scan-and-where-to-measure-more">5. A coarse scan, and where to measure more</a></li>
+  <li><a href="#reference-maps-from-known-observables" id="toc-reference-maps-from-known-observables" class="nav-link" data-scroll-target="#reference-maps-from-known-observables">1. Reference maps from known observables</a></li>
+  <li><a href="#pca-on-all-snapshots" id="toc-pca-on-all-snapshots" class="nav-link" data-scroll-target="#pca-on-all-snapshots">2. PCA on all snapshots</a>
+  <ul class="collapse">
+  <li><a href="#pca-implementation-in-jax" id="toc-pca-implementation-in-jax" class="nav-link" data-scroll-target="#pca-implementation-in-jax">2.1 PCA implementation in JAX</a></li>
+  <li><a href="#pca-with-scikit-learn" id="toc-pca-with-scikit-learn" class="nav-link" data-scroll-target="#pca-with-scikit-learn">2.2 PCA with scikit-learn</a></li>
+  </ul></li>
+  <li><a href="#autoencoder-anomaly-maps" id="toc-autoencoder-anomaly-maps" class="nav-link" data-scroll-target="#autoencoder-anomaly-maps">3. Autoencoder anomaly maps</a></li>
+  <li><a href="#combined-map" id="toc-combined-map" class="nav-link" data-scroll-target="#combined-map">4. Combined map</a></li>
+  <li><a href="#coarse-scan-and-refinement" id="toc-coarse-scan-and-refinement" class="nav-link" data-scroll-target="#coarse-scan-and-refinement">5. Coarse scan and refinement</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -506,22 +510,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 020 <br>
 <hr>
 </section>
-<section id="lab-020-the-j_1j_2-phase-diagram-without-labels" class="level1">
-<h1>Lab 020 — The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> phase diagram without labels</h1>
-<p>Lab 018 introduced the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> Ising model and produced snapshots on a grid in the <span class="math inline">\((g,T)\)</span> plane, <span class="math inline">\(g=J_2/J_1\)</span>. We know its physics: a ferromagnet for <span class="math inline">\(g&lt;1/2\)</span>, a stripe phase for <span class="math inline">\(g&gt;1/2\)</span>, a paramagnet at high <span class="math inline">\(T\)</span>, and a transition temperature that drops to zero at the frustrated point <span class="math inline">\(g=1/2\)</span>. We also saw the two practical problems of a physicist who maps a phase diagram:</p>
-<ul>
-<li><strong>which quantity to plot</strong> is not obvious: the magnetisation is blind to the stripe phase;</li>
-<li><strong>a dense scan is expensive</strong>: fluctuation observables such as the specific heat need many samples at every grid point.</li>
-</ul>
-<p>Here we treat the model as if we did not know its phases, run two unsupervised methods on the raw snapshots, and compare every output with the known physics:</p>
-<ol type="1">
-<li><strong>PCA</strong> on all snapshots: which patterns does it find?</li>
-<li><strong>Autoencoder anomaly detection</strong> (Kottmann, Huembeli, Lewenstein, Acín, Phys. Rev.&nbsp;Lett. <strong>125</strong>, 170603 (2020)): train on a small, well-understood corner of the phase diagram, map the reconstruction error over the whole plane, and read off boundaries. We do this for <strong>three different training regimes</strong> and compare the boundaries each of them detects.</li>
-<li><strong>A combined map</strong> from the three regimes.</li>
-<li><strong>A coarse scan</strong> with few samples, and where it tells us to measure more.</li>
-</ol>
+<section id="lab-020-the-j_1j_2-model-without-labels" class="level1">
+<h1>Lab 020 — The <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> model without labels</h1>
+<p>Lab 018 introduced the frustrated <span class="math inline">\(J_1\)</span>–<span class="math inline">\(J_2\)</span> Ising model and produced snapshots on a grid in the <span class="math inline">\((g,T)\)</span> plane, <span class="math inline">\(g=J_2/J_1\)</span>. We know its physics: a ferromagnet for <span class="math inline">\(g&lt;1/2\)</span>, a stripe phase for <span class="math inline">\(g&gt;1/2\)</span>, a paramagnet at high <span class="math inline">\(T\)</span>, and a transition temperature that drops to zero at the frustrated point <span class="math inline">\(g=1/2\)</span>. We also met the two practical problems of a physicist who maps a phase diagram. Which quantity to plot is not obvious, since the magnetisation is blind to the stripe phase. And a dense scan is expensive, since fluctuation observables such as the specific heat need many samples at every grid point.</p>
+<p>Here we treat the model as if we did not know its phases, run two unsupervised methods on the raw snapshots, and compare every output with the known physics. The first is principal component analysis (PCA) of all snapshots, implemented in JAX and cross-checked with scikit-learn: which patterns does it find? The second is autoencoder anomaly detection (Kottmann, Huembeli, Lewenstein, Acín, Phys. Rev.&nbsp;Lett. <strong>125</strong>, 170603 (2020)): we train on a small, well-understood corner of the phase diagram, map the reconstruction error over the whole plane, and read off boundaries, for three different training regimes. The three regimes are then combined into one map. Finally we ask how much of this survives a coarse scan with few samples, and where such a scan tells us to measure more.</p>
 <blockquote class="blockquote">
-<p><strong>Running in Google Colab.</strong> Run Lab 018 first (it writes <code>data/j1j2_L32.npz</code>), or upload that file to <code>data/</code>. The notebook runs on the CPU; training the three autoencoders takes a few minutes.</p>
+<p>In Google Colab, run Lab 018 first (it writes <code>data/j1j2_L32.npz</code>), or upload that file to <code>data/</code>. The notebook runs on the CPU (central processing unit), and training the three autoencoders takes a few minutes. <code>jax</code>, <code>flax</code>, <code>optax</code> and <code>scikit-learn</code> are pre-installed in Colab; the stored outputs were produced with scikit-learn 1.6.1.</p>
 </blockquote>
 <div class="cell" data-execution_count="1">
 <details open="">
@@ -539,33 +533,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> optax</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax <span class="im">import</span> nnx</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"JAX"</span>, jax.__version__, <span class="st">"| devices:"</span>, jax.devices())</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>UJBlue, UJNavy, DSOrange, UJGray <span class="op">=</span> <span class="st">"#005CA7"</span>, <span class="st">"#002B5C"</span>, <span class="st">"#D35A05"</span>, <span class="st">"#5A6270"</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>SPIN_CMAP <span class="op">=</span> ListedColormap([<span class="st">"#FFFFFF"</span>, UJNavy])</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"axes.spines.top"</span>: <span class="va">False</span>, <span class="st">"axes.spines.right"</span>: <span class="va">False</span>, <span class="st">"font.size"</span>: <span class="dv">10</span>})</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>FIG, DATA <span class="op">=</span> <span class="st">"../beamer/figures"</span>, <span class="st">"data"</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>os.makedirs(FIG, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>NUMBERS <span class="op">=</span> {}</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>savefig <span class="op">=</span> <span class="kw">lambda</span> fig, name: fig.savefig(<span class="ss">f"</span><span class="sc">{</span>FIG<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>, dpi<span class="op">=</span><span class="dv">200</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> np.load(<span class="ss">f"</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">/j1j2_L32.npz"</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="bu">int</span>(d[<span class="st">"L"</span>])<span class="op">;</span> G <span class="op">=</span> d[<span class="st">"g"</span>]</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> np.argsort(d[<span class="st">"T"</span>])<span class="op">;</span> T <span class="op">=</span> d[<span class="st">"T"</span>][order]</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> (np.unpackbits(d[<span class="st">"configs"</span>], axis<span class="op">=-</span><span class="dv">1</span>, count<span class="op">=</span>L).astype(np.int8) <span class="op">*</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span>)[:, order]     <span class="co"># (nG, nT, n, L, L)</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>nG, nT, nS <span class="op">=</span> S.shape[:<span class="dv">3</span>]</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nG<span class="sc">}</span><span class="ss"> couplings g in [</span><span class="sc">{</span>G<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>G<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">], </span><span class="sc">{</span>nT<span class="sc">}</span><span class="ss"> temperatures T in [</span><span class="sc">{</span>T<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>T<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">], </span><span class="sc">{</span>nS<span class="sc">}</span><span class="ss"> snapshots per point, L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn                                  <span class="co"># scikit-learn: the outputs below were produced with version 1.6.1</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"JAX"</span>, jax.__version__, <span class="st">"| devices:"</span>, jax.devices(), <span class="st">"| scikit-learn"</span>, sklearn.__version__)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>UJBlue, UJNavy, DSOrange, UJGray <span class="op">=</span> <span class="st">"#005CA7"</span>, <span class="st">"#002B5C"</span>, <span class="st">"#D35A05"</span>, <span class="st">"#5A6270"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>SPIN_CMAP <span class="op">=</span> ListedColormap([<span class="st">"#FFFFFF"</span>, UJNavy])</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>mpl.rcParams.update({<span class="st">"axes.spines.top"</span>: <span class="va">False</span>, <span class="st">"axes.spines.right"</span>: <span class="va">False</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"font.size"</span>: <span class="dv">14</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">15</span>, <span class="st">"axes.titlesize"</span>: <span class="dv">15</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"xtick.labelsize"</span>: <span class="dv">13</span>, <span class="st">"ytick.labelsize"</span>: <span class="dv">13</span>, <span class="st">"legend.fontsize"</span>: <span class="dv">12</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"figure.titlesize"</span>: <span class="dv">16</span>, <span class="st">"lines.linewidth"</span>: <span class="fl">2.0</span>})          <span class="co"># figures shown in the notebook</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># figures for the slides are drawn at their size on the slide (text width 5.5 in) with 10-12 pt text</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>SLIDE <span class="op">=</span> {<span class="st">"font.size"</span>: <span class="dv">11</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">11</span>, <span class="st">"axes.titlesize"</span>: <span class="dv">12</span>, <span class="st">"xtick.labelsize"</span>: <span class="dv">10</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>         <span class="st">"ytick.labelsize"</span>: <span class="dv">10</span>, <span class="st">"legend.fontsize"</span>: <span class="dv">10</span>, <span class="st">"figure.titlesize"</span>: <span class="dv">12</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>         <span class="st">"lines.linewidth"</span>: <span class="fl">1.5</span>, <span class="st">"lines.markersize"</span>: <span class="dv">4</span>}</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>FIG, DATA <span class="op">=</span> <span class="st">"../beamer/figures"</span>, <span class="st">"data"</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>os.makedirs(FIG, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>NUMBERS <span class="op">=</span> {}</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>savefig <span class="op">=</span> <span class="kw">lambda</span> fig, name: fig.savefig(<span class="ss">f"</span><span class="sc">{</span>FIG<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>, dpi<span class="op">=</span><span class="dv">200</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> np.load(<span class="ss">f"</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">/j1j2_L32.npz"</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="bu">int</span>(d[<span class="st">"L"</span>])<span class="op">;</span> G <span class="op">=</span> d[<span class="st">"g"</span>]</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> np.argsort(d[<span class="st">"T"</span>])<span class="op">;</span> T <span class="op">=</span> d[<span class="st">"T"</span>][order]</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> (np.unpackbits(d[<span class="st">"configs"</span>], axis<span class="op">=-</span><span class="dv">1</span>, count<span class="op">=</span>L).astype(np.int8) <span class="op">*</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span>)[:, order]     <span class="co"># (nG, nT, n, L, L)</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>nG, nT, nS <span class="op">=</span> S.shape[:<span class="dv">3</span>]</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nG<span class="sc">}</span><span class="ss"> couplings g in [</span><span class="sc">{</span>G<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>G<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">], </span><span class="sc">{</span>nT<span class="sc">}</span><span class="ss"> temperatures T in [</span><span class="sc">{</span>T<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>T<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">], </span><span class="sc">{</span>nS<span class="sc">}</span><span class="ss"> snapshots per point, L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>JAX 0.11.0 | devices: [CpuDevice(id=0)]</code></pre>
+<pre><code>JAX 0.11.0 | devices: [CpuDevice(id=0)] | scikit-learn 1.6.1</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>81 couplings g in [0.0, 1.0], 79 temperatures T in [0.1, 4.0], 100 snapshots per point, L = 32</code></pre>
 </div>
 </div>
 <hr>
-<section id="the-reference-what-the-known-observables-show" class="level2">
-<h2 class="anchored" data-anchor-id="the-reference-what-the-known-observables-show">1. The reference: what the known observables show</h2>
-<p>We recompute the three maps of Lab 018 from the same snapshots: magnetisation <span class="math inline">\(\langle|m|\rangle\)</span>, stripe order parameter <span class="math inline">\(\langle m_{\rm str}\rangle\)</span>, and specific heat <span class="math inline">\(c=N\,\mathrm{Var}(e)/T^2\)</span>. From the specific heat we extract the <strong>reference boundary</strong>: for every <span class="math inline">\(g\)</span> the temperature of the maximum of <span class="math inline">\(c\)</span>. These are the “known properties” against which every unsupervised result is judged.</p>
+<section id="reference-maps-from-known-observables" class="level2">
+<h2 class="anchored" data-anchor-id="reference-maps-from-known-observables">1. Reference maps from known observables</h2>
+<p>Every unsupervised result needs something to be judged against. We recompute the three maps of Lab 018 from the same snapshots: magnetisation <span class="math inline">\(\langle|m|\rangle\)</span>, stripe order parameter <span class="math inline">\(\langle m_{\rm str}\rangle\)</span>, and specific heat <span class="math inline">\(c\)</span>. Each is a thermal average over the Boltzmann distribution, <span class="math inline">\(\langle O\rangle=\frac1Z\sum_{\mathbf s}O(\mathbf s)\,e^{-\beta H(\mathbf s)}\)</span> with <span class="math inline">\(Z=\sum_{\mathbf s}e^{-\beta H(\mathbf s)}\)</span> and <span class="math inline">\(\beta=1/T\)</span>, and is estimated from the <span class="math inline">\(n=100\)</span> snapshots <span class="math inline">\(\mathbf s^{(k)}\)</span> of each grid point by sample means. With <span class="math inline">\(e_k=H(\mathbf s^{(k)})/N\)</span> (computed as <span class="math inline">\(-\frac1{2N}\sum_is_ih_i\)</span> with the local field <span class="math inline">\(h_i\)</span> of Lab 018), <span class="math inline">\(m_k=\frac1N\sum_is^{(k)}_i\)</span> and <span class="math inline">\(\overline{x}=\frac1n\sum_kx_k\)</span>, the function <code>observables</code> computes:</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>observable</th>
+<th>definition through <span class="math inline">\(Z\)</span></th>
+<th>estimator from <span class="math inline">\(n\)</span> samples (as in the code)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>magnetisation</td>
+<td><span class="math inline">\(\langle\lvert m\rvert\rangle=\frac1Z\sum_{\mathbf s}\lvert m(\mathbf s)\rvert e^{-\beta H}\)</span></td>
+<td><span class="math inline">\(\overline{\lvert m\rvert}=\frac1n\sum_k\lvert m_k\rvert\)</span></td>
+</tr>
+<tr class="even">
+<td>stripe order</td>
+<td><span class="math inline">\(\langle m_{\rm str}\rangle\)</span>, <span class="math inline">\(m_{\rm str}=\sqrt{m_{(\pi,0)}^2+m_{(0,\pi)}^2}\)</span>, <span class="math inline">\(m_{(\pi,0)}=\frac1N\sum_{\mathbf r}(-1)^{x}s_{\mathbf r}\)</span>, <span class="math inline">\(m_{(0,\pi)}=\frac1N\sum_{\mathbf r}(-1)^{y}s_{\mathbf r}\)</span></td>
+<td><span class="math inline">\(\overline{m_{\rm str}}=\frac1n\sum_km_{{\rm str},k}\)</span></td>
+</tr>
+<tr class="odd">
+<td>specific heat</td>
+<td><span class="math inline">\(c=\frac{\beta^2}{N}\partial^2_\beta\ln Z=N\beta^2\big(\langle e^2\rangle-\langle e\rangle^2\big)\)</span></td>
+<td><span class="math inline">\(N\beta^2\big(\overline{e^2}-\overline{e}^{\,2}\big)\)</span> (population variance, division by <span class="math inline">\(n\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<p>From the specific heat we extract the <strong>reference boundary</strong>: for every <span class="math inline">\(g\)</span> the temperature of the maximum of <span class="math inline">\(c\)</span>. These are the known properties against which every unsupervised result is judged.</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -593,7 +629,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show_map(ax, Z, title, cmap<span class="op">=</span><span class="st">"viridis"</span>, vmin<span class="op">=</span><span class="va">None</span>, vmax<span class="op">=</span><span class="va">None</span>, cbar_label<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.pcolormesh(G, T, Z.T, shading<span class="op">=</span><span class="st">"nearest"</span>, cmap<span class="op">=</span>cmap, vmin<span class="op">=</span>vmin, vmax<span class="op">=</span>vmax)</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.set_title(title, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.set_title(title)</span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    plt.colorbar(im, ax<span class="op">=</span>ax, fraction<span class="op">=</span><span class="fl">0.046</span>, label<span class="op">=</span>cbar_label)</span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="fl">3.6</span>))</span>
@@ -612,7 +648,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="pca-on-all-snapshots" class="level2">
 <h2 class="anchored" data-anchor-id="pca-on-all-snapshots">2. PCA on all snapshots</h2>
-<p>All snapshots from the whole grid (a subset of 20 per grid point) go into one PCA, with no information about <span class="math inline">\(g\)</span> or <span class="math inline">\(T\)</span>. We look at the leading principal components as images on the lattice, and we measure their overlap with the three candidate ordering patterns of Lab 018: uniform <span class="math inline">\((0,0)\)</span>, stripes <span class="math inline">\((\pi,0)\)</span> and <span class="math inline">\((0,\pi)\)</span>.</p>
+<section id="pca-implementation-in-jax" class="level3">
+<h3 class="anchored" data-anchor-id="pca-implementation-in-jax">2.1 PCA implementation in JAX</h3>
+<p>All snapshots from the whole grid (a subset of 20 per grid point) go into one PCA, with no information about <span class="math inline">\(g\)</span> or <span class="math inline">\(T\)</span>. We look at the leading principal components (PC 1, PC 2, … in the figures) as images on the lattice, and we measure their overlap with the three candidate ordering patterns of Lab 018: uniform <span class="math inline">\((0,0)\)</span>, stripes <span class="math inline">\((\pi,0)\)</span> and <span class="math inline">\((0,\pi)\)</span>. An overlap of 1 means that a component <em>is</em> that pattern.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
@@ -647,6 +685,7 @@ PC5: uniform (0,0) 0.002  stripes (pi,0) 0.000  stripes (0,pi) 0.000
 PC6: uniform (0,0) 0.001  stripes (pi,0) 0.000  stripes (0,pi) 0.000</code></pre>
 </div>
 </div>
+<p>Projecting every snapshot on the first three components gives order-parameter candidates: <span class="math inline">\(|z_1|\)</span> from the uniform component and <span class="math inline">\(\sqrt{z_2^2+z_3^2}\)</span> from the two stripe components. We map their averages over the <span class="math inline">\((g,T)\)</span> plane and correlate them with the known order parameters of Section 1.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
@@ -654,21 +693,22 @@ PC6: uniform (0,0) 0.001  stripes (pi,0) 0.000  stripes (0,pi) 0.000</code></pre
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pc_uniform <span class="op">=</span> np.<span class="bu">abs</span>(z[..., <span class="dv">0</span>]).mean(<span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>pc_stripe <span class="op">=</span> np.sqrt(z[..., <span class="dv">1</span>] <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> z[..., <span class="dv">2</span>] <span class="op">**</span> <span class="dv">2</span>).mean(<span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="fl">6.2</span>))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> fig.add_gridspec(<span class="dv">2</span>, <span class="dv">4</span>, height_ratios<span class="op">=</span>[<span class="dv">1</span>, <span class="fl">1.15</span>])</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, k])</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    a.imshow(Vt[k].reshape(L, L)[:<span class="dv">12</span>, :<span class="dv">12</span>] <span class="op">*</span> L, cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="fl">1.5</span>, vmax<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    a.set_title(<span class="ss">f"PC </span><span class="sc">{</span>k <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> var_ratio[k]<span class="sc">:.1f}</span><span class="ss">% of variance"</span>, fontsize<span class="op">=</span><span class="dv">9</span>)<span class="op">;</span> a.set_xticks([])<span class="op">;</span> a.set_yticks([])</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">3</span>])</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>a.bar(np.arange(<span class="dv">1</span>, <span class="dv">11</span>), <span class="dv">100</span> <span class="op">*</span> var_ratio[:<span class="dv">10</span>], color<span class="op">=</span>UJBlue)<span class="op">;</span> a.set_xlabel(<span class="st">"component"</span>)<span class="op">;</span> a.set_ylabel(<span class="st">"% variance"</span>)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>a2 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, <span class="dv">0</span>:<span class="dv">2</span>])<span class="op">;</span> show_map(a2, pc_uniform, <span class="vs">r"$\langle|z_1|\rangle/\sqrt</span><span class="sc">{N}</span><span class="vs">$ (PC 1)"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>a3 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, <span class="dv">2</span>:<span class="dv">4</span>])<span class="op">;</span> show_map(a3, pc_stripe, <span class="vs">r"$\langle\sqrt{z_2^2+z_3^2}\rangle/\sqrt</span><span class="sc">{N}</span><span class="vs">$ (PC 2, 3)"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a <span class="kw">in</span> (a2, a3): draw_reference(a, label<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_pca.png"</span>)<span class="op">;</span> plt.show()</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>corr_u <span class="op">=</span> np.corrcoef(pc_uniform.ravel(), M_map.ravel())[<span class="dv">0</span>, <span class="dv">1</span>]<span class="op">;</span> corr_s <span class="op">=</span> np.corrcoef(pc_stripe.ravel(), Ms_map.ravel())[<span class="dv">0</span>, <span class="dv">1</span>]</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"correlation of the PC maps with the known order parameters:  PC1 vs &lt;|m|&gt; </span><span class="sc">{</span>corr_u<span class="sc">:.4f}</span><span class="ss">,  PC2,3 vs &lt;m_str&gt; </span><span class="sc">{</span>corr_s<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(pca_corr_m<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(corr_u), <span class="dv">4</span>), pca_corr_mstr<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(corr_s), <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> mpl.rc_context(SLIDE):</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="fl">5.5</span>, <span class="fl">3.7</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    gs <span class="op">=</span> fig.add_gridspec(<span class="dv">2</span>, <span class="dv">4</span>, height_ratios<span class="op">=</span>[<span class="dv">1</span>, <span class="fl">1.15</span>])</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        a <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, k])</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        a.imshow(Vt[k].reshape(L, L)[:<span class="dv">12</span>, :<span class="dv">12</span>] <span class="op">*</span> L, cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="fl">1.5</span>, vmax<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        a.set_title(<span class="ss">f"PC </span><span class="sc">{</span>k <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> var_ratio[k]<span class="sc">:.1f}</span><span class="ss">%"</span>)<span class="op">;</span> a.set_xticks([])<span class="op">;</span> a.set_yticks([])</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">3</span>])</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    a.bar(np.arange(<span class="dv">1</span>, <span class="dv">11</span>), <span class="dv">100</span> <span class="op">*</span> var_ratio[:<span class="dv">10</span>], color<span class="op">=</span>UJBlue)<span class="op">;</span> a.set_xlabel(<span class="st">"component"</span>)<span class="op">;</span> a.set_ylabel(<span class="st">"variance (%)"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    a2 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, <span class="dv">0</span>:<span class="dv">2</span>])<span class="op">;</span> show_map(a2, pc_uniform, <span class="vs">r"$\langle|z_1|\rangle/\sqrt</span><span class="sc">{N}</span><span class="vs">$ (PC 1)"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    a3 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, <span class="dv">2</span>:<span class="dv">4</span>])<span class="op">;</span> show_map(a3, pc_stripe, <span class="vs">r"$\langle\sqrt{z_2^2+z_3^2}\rangle/\sqrt</span><span class="sc">{N}</span><span class="vs">$ (PC 2, 3)"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> a <span class="kw">in</span> (a2, a3): draw_reference(a, label<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_pca.png"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>corr_u <span class="op">=</span> np.corrcoef(pc_uniform.ravel(), M_map.ravel())[<span class="dv">0</span>, <span class="dv">1</span>]<span class="op">;</span> corr_s <span class="op">=</span> np.corrcoef(pc_stripe.ravel(), Ms_map.ravel())[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"correlation of the PC maps with the known order parameters:  PC1 vs &lt;|m|&gt; </span><span class="sc">{</span>corr_u<span class="sc">:.4f}</span><span class="ss">,  PC2,3 vs &lt;m_str&gt; </span><span class="sc">{</span>corr_s<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(pca_corr_m<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(corr_u), <span class="dv">4</span>), pca_corr_mstr<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(corr_s), <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
@@ -677,14 +717,47 @@ PC6: uniform (0,0) 0.001  stripes (pi,0) 0.000  stripes (0,pi) 0.000</code></pre
 <pre><code>correlation of the PC maps with the known order parameters:  PC1 vs &lt;|m|&gt; 1.0000,  PC2,3 vs &lt;m_str&gt; 0.9999</code></pre>
 </div>
 </div>
-<p><strong>Result.</strong> The first three principal components are the uniform pattern and the two stripe patterns (overlaps close to 1); the rest of the spectrum is flat. Projecting on them reproduces both order-parameter maps. PCA has found the stripe order parameter, the very quantity the magnetisation scan missed, without being told it exists.</p>
-<p><strong>Why it works here, and when it would not.</strong> Both order parameters are <em>linear</em> functions of the spins, <span class="math inline">\(m=\frac1N\sum_r s_r\)</span> and <span class="math inline">\(m_{(\pi,0)}=\frac1N\sum_r(-1)^{x}s_r\)</span>. Patterns that are linear in the data are what PCA is built to find. Order that is not linear in the spins (vortices in the XY model, Wilson loops in gauge theories, the overlap of a spin glass) is outside its reach; Labs 021–023 test this.</p>
-<p><strong>A sampling detail.</strong> PC 2 and PC 3 carry different variance, although vertical and horizontal stripes are equivalent by symmetry. Each annealed chain picks one orientation when it orders and keeps it; with a finite number of chains the two orientations are not sampled equally. The difference is a property of our data set, not of the model.</p>
+<p>The first three principal components are the uniform pattern and the two stripe patterns (overlaps close to 1), and the rest of the spectrum is flat. Projecting on them reproduces both order-parameter maps. PCA has found the stripe order parameter, the very quantity the magnetisation scan missed, without being told it exists.</p>
+<p>It works here because both order parameters are <em>linear</em> functions of the spins, <span class="math inline">\(m=\frac1N\sum_r s_r\)</span> and <span class="math inline">\(m_{(\pi,0)}=\frac1N\sum_r(-1)^{x}s_r\)</span>, and patterns that are linear in the data are what PCA is built to find. Order that is not linear in the spins (vortices in the XY model of planar spins, Wilson loops in gauge theories, the overlap of a spin glass) is outside its reach; Labs 021–023 test this.</p>
+<p>One detail of the spectrum is a property of our data rather than of the model. PC 2 and PC 3 carry different variance, although vertical and horizontal stripes are equivalent by symmetry. Each annealed chain picks one orientation when it orders and keeps it; with a finite number of chains the two orientations are not sampled equally.</p>
+</section>
+<section id="pca-with-scikit-learn" class="level3">
+<h3 class="anchored" data-anchor-id="pca-with-scikit-learn">2.2 PCA with scikit-learn</h3>
+<p>The same analysis with scikit-learn uses the estimator <code>PCA(n_components=6, svd_solver="full")</code>. Its <code>fit(X)</code> centres the snapshots, performs a complete singular value decomposition and stores the components as the rows of <code>components_</code> and their fractions of the variance in <code>explained_variance_ratio_</code>; <code>transform(X)</code> would return the projections <span class="math inline">\(z_a\)</span>. The computation is the one our <code>pca</code> performs, so the fractions of variance must agree to float32 precision. Single components are defined only up to sign, and PC 2 and PC 3 carry similar variances, so a small rounding difference could rotate them into each other; we therefore compare the three-dimensional subspace spanned by PC 1–3. Its principal angles with our subspace are the arccosines of the singular values of <span class="math inline">\(V_{\rm sk}V^{\top}\)</span>, where the rows of <span class="math inline">\(V_{\rm sk}\)</span> and <span class="math inline">\(V\)</span> are the two sets of components; all three singular values must be 1. The cell asserts both statements.</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.time()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sk_pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">6</span>, svd_solver<span class="op">=</span><span class="st">"full"</span>).fit(np.asarray(Xp))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"scikit-learn PCA of </span><span class="sc">{</span>Xp<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>Xp<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> snapshots: </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"fraction of variance: JAX         "</span>, np.<span class="bu">round</span>(var_ratio[:<span class="dv">6</span>], <span class="dv">5</span>))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"                      scikit-learn"</span>, np.<span class="bu">round</span>(sk_pca.explained_variance_ratio_, <span class="dv">5</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>cos_sub <span class="op">=</span> np.linalg.svd(sk_pca.components_[:<span class="dv">3</span>] <span class="op">@</span> Vt[:<span class="dv">3</span>].T, compute_uv<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"cosines of the principal angles between the two PC 1-3 subspaces:"</span>, np.<span class="bu">round</span>(cos_sub, <span class="dv">7</span>))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"overlaps of the scikit-learn components with the patterns:"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  PC</span><span class="sc">{</span>k <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">: "</span> <span class="op">+</span> <span class="st">"  "</span>.join(<span class="ss">f"</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">abs</span>((sk_pca.components_[k].reshape(L, L) <span class="op">*</span> q).<span class="bu">sum</span>()) <span class="op">/</span> L<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">for</span> n, q <span class="kw">in</span> patterns.items()))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(sk_pca.explained_variance_ratio_, var_ratio[:<span class="dv">6</span>], rtol<span class="op">=</span><span class="fl">1e-3</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> cos_sub.<span class="bu">min</span>() <span class="op">&gt;</span> <span class="fl">0.9999</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>scikit-learn PCA of 127980 x 1024 snapshots: 9.4 s
+fraction of variance: JAX          [0.1659  0.0839  0.08216 0.00306 0.003   0.00281]
+                      scikit-learn [0.1659  0.0839  0.08216 0.00306 0.003   0.00281]
+cosines of the principal angles between the two PC 1-3 subspaces: [1.0000007 1.0000006 1.0000002]
+overlaps of the scikit-learn components with the patterns:
+  PC1: uniform (0,0) 1.000  stripes (pi,0) 0.001  stripes (0,pi) 0.001
+  PC2: uniform (0,0) 0.001  stripes (pi,0) 1.000  stripes (0,pi) 0.024
+  PC3: uniform (0,0) 0.001  stripes (pi,0) 0.024  stripes (0,pi) 1.000</code></pre>
+</div>
+</div>
+<p>Both programs find the same three patterns with the same fractions of the variance.</p>
 <hr>
 </section>
-<section id="autoencoder-anomaly-maps-for-three-training-regimes" class="level2">
-<h2 class="anchored" data-anchor-id="autoencoder-anomaly-maps-for-three-training-regimes">3. Autoencoder anomaly maps for three training regimes</h2>
-<p><strong>Protocol.</strong> 1. Choose a training region: a small rectangle in the <span class="math inline">\((g,T)\)</span> plane where we trust our understanding. 2. Train an autoencoder on snapshots from that rectangle only. 3. Evaluate the reconstruction error <span class="math inline">\(\varepsilon(\boldsymbol s)=\frac1N\lVert\boldsymbol s-\hat{\boldsymbol s}\rVert^2\)</span> on snapshots from every grid point, and plot its mean as a map. 4. Read off a boundary: for every <span class="math inline">\(g\)</span>, the temperature where <span class="math inline">\(\log\bar\varepsilon\)</span> changes fastest.</p>
+</section>
+<section id="autoencoder-anomaly-maps" class="level2">
+<h2 class="anchored" data-anchor-id="autoencoder-anomaly-maps">3. Autoencoder anomaly maps</h2>
+<p>PCA needed the order to be linear in the spins. Anomaly detection with an autoencoder makes no such assumption, and it lets us ask a different question: where do the snapshots stop looking like those of a region we understand? The procedure has four steps: 1. choose a training region, a small rectangle in the <span class="math inline">\((g,T)\)</span> plane where we trust our understanding; 2. train an autoencoder on snapshots from that rectangle only; 3. evaluate the reconstruction error <span class="math inline">\(\varepsilon(\boldsymbol s)=\frac1N\lVert\boldsymbol s-\hat{\boldsymbol s}\rVert^2\)</span> on snapshots from every grid point, and plot its mean as a map; 4. read off a boundary: for every <span class="math inline">\(g\)</span>, the temperature where <span class="math inline">\(\log\bar\varepsilon\)</span> changes fastest.</p>
 <p>We repeat this for three training regions, all in corners of the plane:</p>
 <table class="table">
 <colgroup>
@@ -717,151 +790,150 @@ PC6: uniform (0,0) 0.001  stripes (pi,0) 0.000  stripes (0,pi) 0.000</code></pre
 </tr>
 </tbody>
 </table>
-<p><strong>Architecture.</strong> A small convolutional autoencoder: two stride-2 convolutions (with periodic boundaries, like the lattice) (<span class="math inline">\(32\to16\to8\)</span>), a dense bottleneck of 4 numbers, and the mirror image back, ending with <span class="math inline">\(\tanh\)</span>.</p>
-<p><strong>Symmetry.</strong> The energy is unchanged when all spins flip, <span class="math inline">\(H(\boldsymbol s)=H(-\boldsymbol s)\)</span>, so <span class="math inline">\(\boldsymbol s\)</span> and <span class="math inline">\(-\boldsymbol s\)</span> are equally likely. A finite training set need not contain both signs equally often (an annealed chain orders into one of them and stays there). We add every training snapshot also with all spins flipped: the simplest way to build a known symmetry into a network.</p>
-<div class="cell" data-execution_count="5">
-<details open="">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConvAE(nnx.Module):</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, latent<span class="op">=</span><span class="dv">4</span>, <span class="op">*</span>, rngs):</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c1 <span class="op">=</span> nnx.Conv(<span class="dv">1</span>, <span class="dv">16</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span><span class="dv">2</span>, padding<span class="op">=</span><span class="st">"CIRCULAR"</span>, rngs<span class="op">=</span>rngs)      <span class="co"># 32 -&gt; 16</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c2 <span class="op">=</span> nnx.Conv(<span class="dv">16</span>, <span class="dv">32</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span><span class="dv">2</span>, padding<span class="op">=</span><span class="st">"CIRCULAR"</span>, rngs<span class="op">=</span>rngs)     <span class="co"># 16 -&gt; 8</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fe <span class="op">=</span> nnx.Linear(<span class="dv">8</span> <span class="op">*</span> <span class="dv">8</span> <span class="op">*</span> <span class="dv">32</span>, latent, rngs<span class="op">=</span>rngs)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fd <span class="op">=</span> nnx.Linear(latent, <span class="dv">8</span> <span class="op">*</span> <span class="dv">8</span> <span class="op">*</span> <span class="dv">32</span>, rngs<span class="op">=</span>rngs)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d1 <span class="op">=</span> nnx.ConvTranspose(<span class="dv">32</span>, <span class="dv">16</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>), padding<span class="op">=</span><span class="st">"SAME"</span>, rngs<span class="op">=</span>rngs)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d2 <span class="op">=</span> nnx.ConvTranspose(<span class="dv">16</span>, <span class="dv">1</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>), padding<span class="op">=</span><span class="st">"SAME"</span>, rngs<span class="op">=</span>rngs)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> encode(<span class="va">self</span>, x):</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> nnx.relu(<span class="va">self</span>.c1(x[..., <span class="va">None</span>]))<span class="op">;</span> h <span class="op">=</span> nnx.relu(<span class="va">self</span>.c2(h))</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fe(h.reshape(h.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>))</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> nnx.relu(<span class="va">self</span>.fd(<span class="va">self</span>.encode(x))).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">32</span>)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> jnp.tanh(<span class="va">self</span>.d2(nnx.relu(<span class="va">self</span>.d1(h)))[..., <span class="dv">0</span>])</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step(model, opt, x):</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    loss, grads <span class="op">=</span> nnx.value_and_grad(<span class="kw">lambda</span> m: jnp.mean((m(x) <span class="op">-</span> x) <span class="op">**</span> <span class="dv">2</span>))(model)</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    opt.update(model, grads)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> recon_error(model, x):</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.mean((model(x) <span class="op">-</span> x) <span class="op">**</span> <span class="dv">2</span>, axis<span class="op">=</span>(<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>))</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_ae(X, epochs<span class="op">=</span><span class="dv">15</span>, batch<span class="op">=</span><span class="dv">64</span>, seed<span class="op">=</span><span class="dv">0</span>):</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> ConvAE(rngs<span class="op">=</span>nnx.Rngs(seed))</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    opt <span class="op">=</span> nnx.Optimizer(model, optax.adam(<span class="fl">1e-3</span>), wrt<span class="op">=</span>nnx.Param)</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> jnp.asarray(np.concatenate([X, <span class="op">-</span>X]), jnp.float32)  <span class="co"># H(s) = H(-s): every snapshot also with all spins flipped</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> jax.random.PRNGKey(seed)</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        key, k <span class="op">=</span> jax.random.split(key)<span class="op">;</span> perm <span class="op">=</span> jax.random.permutation(k, X.shape[<span class="dv">0</span>])</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, X.shape[<span class="dv">0</span>] <span class="op">-</span> batch <span class="op">+</span> <span class="dv">1</span>, batch):</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> train_step(model, opt, X[perm[i:i <span class="op">+</span> batch]])</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, <span class="bu">float</span>(loss)</span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>N_EVAL <span class="op">=</span> <span class="dv">20</span>                                                <span class="co"># snapshots per grid point used for the maps</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> spread(n_total, n):                                    <span class="co"># n snapshot indices spread over all chains</span></span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.linspace(<span class="dv">0</span>, n_total <span class="op">-</span> <span class="dv">1</span>, n).<span class="bu">round</span>().astype(<span class="bu">int</span>)</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> error_map(model, data<span class="op">=</span>S, n<span class="op">=</span>N_EVAL):</span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> spread(data.shape[<span class="dv">2</span>], n)</span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> np.zeros(data.shape[:<span class="dv">2</span>])</span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(data.shape[<span class="dv">0</span>]):</span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> recon_error(model, jnp.asarray(data[i][:, idx].reshape(<span class="op">-</span><span class="dv">1</span>, L, L), jnp.float32))</span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        out[i] <span class="op">=</span> np.asarray(e).reshape(data.shape[<span class="dv">1</span>], n).mean(<span class="dv">1</span>)</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> boundary_from_map(err, T_axis<span class="op">=</span>T):</span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for every g: temperature of the fastest change of the error along T (midpoint between grid temperatures),</span></span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and the size of that change relative to the full range of the map</span></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> np.<span class="bu">abs</span>(np.diff(err, axis<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> np.argmax(d, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (T_axis[i] <span class="op">+</span> T_axis[i <span class="op">+</span> <span class="dv">1</span>]), d[np.arange(<span class="bu">len</span>(i)), i] <span class="op">/</span> (err.<span class="bu">max</span>() <span class="op">-</span> err.<span class="bu">min</span>())</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>REGIMES <span class="op">=</span> {<span class="st">"A: ferromagnet"</span>: <span class="bu">dict</span>(g<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">0.2</span>), T<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>), color<span class="op">=</span>UJBlue),</span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>           <span class="st">"B: paramagnet"</span>: <span class="bu">dict</span>(g<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">0.2</span>), T<span class="op">=</span>(<span class="fl">3.5</span>, <span class="fl">9.9</span>), color<span class="op">=</span>DSOrange),</span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>           <span class="st">"C: stripes"</span>: <span class="bu">dict</span>(g<span class="op">=</span>(<span class="fl">0.8</span>, <span class="fl">1.0</span>), T<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>), color<span class="op">=</span><span class="st">"#2E8B57"</span>)}</span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>N_TRAIN <span class="op">=</span> <span class="dv">40</span>                                               <span class="co"># snapshots per grid point used for training</span></span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>JUMP_MIN <span class="op">=</span> <span class="fl">0.15</span>                                            <span class="co"># a boundary point needs a jump of &gt;= 15% of the map's range</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
+<p>The autoencoder is a small convolutional network: two stride-2 convolutions with periodic boundaries, like the lattice (<span class="math inline">\(32\to16\to8\)</span>), a dense bottleneck of 4 numbers, and the mirror image back, ending with <span class="math inline">\(\tanh\)</span>.</p>
+<p>One known symmetry is built into the training data rather than into the network. The energy is unchanged when all spins flip, <span class="math inline">\(H(\boldsymbol s)=H(-\boldsymbol s)\)</span>, so <span class="math inline">\(\boldsymbol s\)</span> and <span class="math inline">\(-\boldsymbol s\)</span> are equally likely. A finite training set need not contain both signs equally often (an annealed chain orders into one of them and stays there), so we add every training snapshot also with all spins flipped: the simplest way to build a known symmetry into a network.</p>
 <div class="cell" data-execution_count="6">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> {}</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, r <span class="kw">in</span> REGIMES.items():</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    gi <span class="op">=</span> (G <span class="op">&gt;=</span> r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (G <span class="op">&lt;=</span> r[<span class="st">"g"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)<span class="op">;</span> ti <span class="op">=</span> (T <span class="op">&gt;=</span> r[<span class="st">"T"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (T <span class="op">&lt;=</span> r[<span class="st">"T"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    X_tr <span class="op">=</span> S[gi][:, ti][:, :, spread(nS, N_TRAIN)].reshape(<span class="op">-</span><span class="dv">1</span>, L, L)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    t0 <span class="op">=</span> time.time()</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    model, loss <span class="op">=</span> train_ae(X_tr)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    err <span class="op">=</span> error_map(model)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    Tb, jump <span class="op">=</span> boundary_from_map(err)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    results[name] <span class="op">=</span> <span class="bu">dict</span>(model<span class="op">=</span>model, err<span class="op">=</span>err, Tb<span class="op">=</span>Tb, jump<span class="op">=</span>jump, gi<span class="op">=</span>gi, ti<span class="op">=</span>ti, n_train<span class="op">=</span>X_tr.shape[<span class="dv">0</span>])</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    in_err <span class="op">=</span> err[np.ix_(gi, ti)].mean()</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:16s}</span><span class="ss">: </span><span class="sc">{</span>X_tr<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:5d}</span><span class="ss"> training snapshots, final loss </span><span class="sc">{</span>loss<span class="sc">:.4f}</span><span class="ss">, mean error inside region </span><span class="sc">{</span>in_err<span class="sc">:.4f}</span><span class="ss">, "</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"min/max over map </span><span class="sc">{</span>err<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.4f}</span><span class="ss">/</span><span class="sc">{</span>err<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.4f}</span><span class="ss">   (</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConvAE(nnx.Module):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, latent<span class="op">=</span><span class="dv">4</span>, <span class="op">*</span>, rngs):</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c1 <span class="op">=</span> nnx.Conv(<span class="dv">1</span>, <span class="dv">16</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span><span class="dv">2</span>, padding<span class="op">=</span><span class="st">"CIRCULAR"</span>, rngs<span class="op">=</span>rngs)      <span class="co"># 32 -&gt; 16</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.c2 <span class="op">=</span> nnx.Conv(<span class="dv">16</span>, <span class="dv">32</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span><span class="dv">2</span>, padding<span class="op">=</span><span class="st">"CIRCULAR"</span>, rngs<span class="op">=</span>rngs)     <span class="co"># 16 -&gt; 8</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fe <span class="op">=</span> nnx.Linear(<span class="dv">8</span> <span class="op">*</span> <span class="dv">8</span> <span class="op">*</span> <span class="dv">32</span>, latent, rngs<span class="op">=</span>rngs)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fd <span class="op">=</span> nnx.Linear(latent, <span class="dv">8</span> <span class="op">*</span> <span class="dv">8</span> <span class="op">*</span> <span class="dv">32</span>, rngs<span class="op">=</span>rngs)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d1 <span class="op">=</span> nnx.ConvTranspose(<span class="dv">32</span>, <span class="dv">16</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>), padding<span class="op">=</span><span class="st">"SAME"</span>, rngs<span class="op">=</span>rngs)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.d2 <span class="op">=</span> nnx.ConvTranspose(<span class="dv">16</span>, <span class="dv">1</span>, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>), padding<span class="op">=</span><span class="st">"SAME"</span>, rngs<span class="op">=</span>rngs)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> encode(<span class="va">self</span>, x):</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> nnx.relu(<span class="va">self</span>.c1(x[..., <span class="va">None</span>]))<span class="op">;</span> h <span class="op">=</span> nnx.relu(<span class="va">self</span>.c2(h))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fe(h.reshape(h.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> nnx.relu(<span class="va">self</span>.fd(<span class="va">self</span>.encode(x))).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">8</span>, <span class="dv">32</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> jnp.tanh(<span class="va">self</span>.d2(nnx.relu(<span class="va">self</span>.d1(h)))[..., <span class="dv">0</span>])</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step(model, opt, x):</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    loss, grads <span class="op">=</span> nnx.value_and_grad(<span class="kw">lambda</span> m: jnp.mean((m(x) <span class="op">-</span> x) <span class="op">**</span> <span class="dv">2</span>))(model)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    opt.update(model, grads)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> recon_error(model, x):</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.mean((model(x) <span class="op">-</span> x) <span class="op">**</span> <span class="dv">2</span>, axis<span class="op">=</span>(<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_ae(X, epochs<span class="op">=</span><span class="dv">15</span>, batch<span class="op">=</span><span class="dv">64</span>, seed<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> ConvAE(rngs<span class="op">=</span>nnx.Rngs(seed))</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    opt <span class="op">=</span> nnx.Optimizer(model, optax.adam(<span class="fl">1e-3</span>), wrt<span class="op">=</span>nnx.Param)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> jnp.asarray(np.concatenate([X, <span class="op">-</span>X]), jnp.float32)  <span class="co"># H(s) = H(-s): every snapshot also with all spins flipped</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> jax.random.PRNGKey(seed)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>        key, k <span class="op">=</span> jax.random.split(key)<span class="op">;</span> perm <span class="op">=</span> jax.random.permutation(k, X.shape[<span class="dv">0</span>])</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, X.shape[<span class="dv">0</span>] <span class="op">-</span> batch <span class="op">+</span> <span class="dv">1</span>, batch):</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> train_step(model, opt, X[perm[i:i <span class="op">+</span> batch]])</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, <span class="bu">float</span>(loss)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>N_EVAL <span class="op">=</span> <span class="dv">20</span>                                                <span class="co"># snapshots per grid point used for the maps</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> spread(n_total, n):                                    <span class="co"># n snapshot indices spread over all chains</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.linspace(<span class="dv">0</span>, n_total <span class="op">-</span> <span class="dv">1</span>, n).<span class="bu">round</span>().astype(<span class="bu">int</span>)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> error_map(model, data<span class="op">=</span>S, n<span class="op">=</span>N_EVAL):</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> spread(data.shape[<span class="dv">2</span>], n)</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> np.zeros(data.shape[:<span class="dv">2</span>])</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(data.shape[<span class="dv">0</span>]):</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> recon_error(model, jnp.asarray(data[i][:, idx].reshape(<span class="op">-</span><span class="dv">1</span>, L, L), jnp.float32))</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>        out[i] <span class="op">=</span> np.asarray(e).reshape(data.shape[<span class="dv">1</span>], n).mean(<span class="dv">1</span>)</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> boundary_from_map(err, T_axis<span class="op">=</span>T):</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for every g: temperature of the fastest change of the error along T (midpoint between grid temperatures),</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and the size of that change relative to the full range of the map</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> np.<span class="bu">abs</span>(np.diff(err, axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> np.argmax(d, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> (T_axis[i] <span class="op">+</span> T_axis[i <span class="op">+</span> <span class="dv">1</span>]), d[np.arange(<span class="bu">len</span>(i)), i] <span class="op">/</span> (err.<span class="bu">max</span>() <span class="op">-</span> err.<span class="bu">min</span>())</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>REGIMES <span class="op">=</span> {<span class="st">"A: ferromagnet"</span>: <span class="bu">dict</span>(g<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">0.2</span>), T<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>), color<span class="op">=</span>UJBlue),</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>           <span class="st">"B: paramagnet"</span>: <span class="bu">dict</span>(g<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">0.2</span>), T<span class="op">=</span>(<span class="fl">3.5</span>, <span class="fl">9.9</span>), color<span class="op">=</span>DSOrange),</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>           <span class="st">"C: stripes"</span>: <span class="bu">dict</span>(g<span class="op">=</span>(<span class="fl">0.8</span>, <span class="fl">1.0</span>), T<span class="op">=</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>), color<span class="op">=</span><span class="st">"#2E8B57"</span>)}</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>N_TRAIN <span class="op">=</span> <span class="dv">40</span>                                               <span class="co"># snapshots per grid point used for training</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>JUMP_MIN <span class="op">=</span> <span class="fl">0.15</span>                                            <span class="co"># a boundary point needs a jump of &gt;= 15% of the map's range</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> {}</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, r <span class="kw">in</span> REGIMES.items():</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    gi <span class="op">=</span> (G <span class="op">&gt;=</span> r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (G <span class="op">&lt;=</span> r[<span class="st">"g"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)<span class="op">;</span> ti <span class="op">=</span> (T <span class="op">&gt;=</span> r[<span class="st">"T"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (T <span class="op">&lt;=</span> r[<span class="st">"T"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    X_tr <span class="op">=</span> S[gi][:, ti][:, :, spread(nS, N_TRAIN)].reshape(<span class="op">-</span><span class="dv">1</span>, L, L)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    t0 <span class="op">=</span> time.time()</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    model, loss <span class="op">=</span> train_ae(X_tr)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    err <span class="op">=</span> error_map(model)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    Tb, jump <span class="op">=</span> boundary_from_map(err)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    results[name] <span class="op">=</span> <span class="bu">dict</span>(model<span class="op">=</span>model, err<span class="op">=</span>err, Tb<span class="op">=</span>Tb, jump<span class="op">=</span>jump, gi<span class="op">=</span>gi, ti<span class="op">=</span>ti, n_train<span class="op">=</span>X_tr.shape[<span class="dv">0</span>])</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    in_err <span class="op">=</span> err[np.ix_(gi, ti)].mean()</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:16s}</span><span class="ss">: </span><span class="sc">{</span>X_tr<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:5d}</span><span class="ss"> training snapshots, final loss </span><span class="sc">{</span>loss<span class="sc">:.4f}</span><span class="ss">, mean error inside region </span><span class="sc">{</span>in_err<span class="sc">:.4f}</span><span class="ss">, "</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"min/max over map </span><span class="sc">{</span>err<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.4f}</span><span class="ss">/</span><span class="sc">{</span>err<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.4f}</span><span class="ss">   (</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>A: ferromagnet  : 12920 training snapshots, final loss 0.0009, mean error inside region 0.0006, min/max over map 0.0000/1.9888   (169 s)</code></pre>
+<pre><code>A: ferromagnet  : 12920 training snapshots, final loss 0.0009, mean error inside region 0.0006, min/max over map 0.0000/1.9888   (198 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>B: paramagnet   :  7480 training snapshots, final loss 0.9863, mean error inside region 0.9859, min/max over map 0.1785/1.0018   (107 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>C: stripes      : 12920 training snapshots, final loss 0.0005, mean error inside region 0.0006, min/max over map 0.0000/2.0057   (173 s)</code></pre>
+<pre><code>C: stripes      : 12920 training snapshots, final loss 0.0005, mean error inside region 0.0006, min/max over map 0.0000/2.0057   (126 s)</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="7">
-<details open="">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="fl">3.9</span>))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, (name, r) <span class="kw">in</span> <span class="bu">zip</span>(axes, REGIMES.items()):</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> results[name]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    show_map(a, res[<span class="st">"err"</span>], <span class="ss">f"trained on </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>, cmap<span class="op">=</span><span class="st">"cividis"</span>, cbar_label<span class="op">=</span><span class="vs">r"mean error $\bar\varepsilon$"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    a.add_patch(Rectangle((r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.0125</span>, <span class="bu">max</span>(r[<span class="st">"T"</span>][<span class="dv">0</span>], T.<span class="bu">min</span>()) <span class="op">-</span> <span class="fl">0.05</span>), r[<span class="st">"g"</span>][<span class="dv">1</span>] <span class="op">-</span> r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">+</span> <span class="fl">0.025</span>,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                          <span class="bu">min</span>(r[<span class="st">"T"</span>][<span class="dv">1</span>], T.<span class="bu">max</span>()) <span class="op">-</span> <span class="bu">max</span>(r[<span class="st">"T"</span>][<span class="dv">0</span>], T.<span class="bu">min</span>()) <span class="op">+</span> <span class="fl">0.1</span>, fill<span class="op">=</span><span class="va">False</span>, ec<span class="op">=</span>r[<span class="st">"color"</span>], lw<span class="op">=</span><span class="fl">2.5</span>))</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    strong <span class="op">=</span> res[<span class="st">"jump"</span>] <span class="op">&gt;</span> JUMP_MIN</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    a.plot(G[strong], res[<span class="st">"Tb"</span>][strong], <span class="st">"o"</span>, ms<span class="op">=</span><span class="fl">3.5</span>, color<span class="op">=</span>r[<span class="st">"color"</span>], mec<span class="op">=</span><span class="st">"w"</span>, mew<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"detected boundary"</span>)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    a.set_ylim(T.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.05</span>, T.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.05</span>)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>, loc<span class="op">=</span><span class="st">"upper right"</span>, labelcolor<span class="op">=</span><span class="st">"w"</span>)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_ae_maps.png"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<p><strong>Reading the three maps.</strong> For every <span class="math inline">\(g\)</span> the boundary point is the temperature where the mean error changes fastest; it is drawn only if that change is at least 15% of the full range of the map.</p>
-<ul>
-<li><strong>A (trained on the ferromagnet):</strong> the ferromagnetic region is reconstructed almost perfectly; its boundary <span class="math inline">\(T_c(g)\)</span> for <span class="math inline">\(g&lt;1/2\)</span> is a sharp edge that falls towards <span class="math inline">\(g=1/2\)</span>. Everything else, paramagnet <em>and</em> stripes, is “not ferromagnet” with similar large errors. This regime cannot separate the stripe phase from the paramagnet.</li>
-<li><strong>B (trained on the paramagnet):</strong> an autoencoder trained on nearly uncorrelated spins learns little more than the average, and its error is large everywhere. Ferromagnetic snapshots are reconstructed <em>better</em> than the training data, so the ferromagnetic boundary is visible as a drop of the error. The stripe phase is <strong>invisible</strong>: its error is the same as in the paramagnet.</li>
-<li><strong>C (trained on the stripes):</strong> the stripe region is reconstructed well, and its boundary <span class="math inline">\(T_c(g)\)</span> for <span class="math inline">\(g&gt;1/2\)</span> appears. The ferromagnet and the paramagnet are both anomalous.</li>
-</ul>
-<p>One training region answers one question: <em>is this snapshot like my training data?</em> It cannot tell two different anomalies apart.</p>
 <div class="cell" data-execution_count="8">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.6</span>, <span class="fl">4.4</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>ax.pcolormesh(G, T, C_map.T, shading<span class="op">=</span><span class="st">"nearest"</span>, cmap<span class="op">=</span><span class="st">"Greys"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span>np.percentile(C_map, <span class="dv">99</span>), alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ax.plot(G, T_c_ref, <span class="st">"k."</span>, ms<span class="op">=</span><span class="dv">6</span>, label<span class="op">=</span><span class="st">"specific-heat peak (reference)"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, r <span class="kw">in</span> REGIMES.items():</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> results[name]<span class="op">;</span> strong <span class="op">=</span> res[<span class="st">"jump"</span>] <span class="op">&gt;</span> JUMP_MIN</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    ax.plot(G[strong], res[<span class="st">"Tb"</span>][strong], <span class="st">"o"</span>, ms<span class="op">=</span><span class="dv">5</span>, mfc<span class="op">=</span><span class="st">"none"</span>, mec<span class="op">=</span>r[<span class="st">"color"</span>], mew<span class="op">=</span><span class="fl">1.6</span>, label<span class="op">=</span><span class="ss">f"AE trained on </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>gg <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">101</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>ax.plot(gg[gg <span class="op">&lt;=</span> <span class="fl">0.5</span>], <span class="dv">4</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> gg[gg <span class="op">&lt;=</span> <span class="fl">0.5</span>]), <span class="st">":"</span>, color<span class="op">=</span>UJGray, lw<span class="op">=</span><span class="dv">1</span>)<span class="op">;</span> ax.plot(gg[gg <span class="op">&gt;=</span> <span class="fl">0.5</span>], <span class="dv">4</span> <span class="op">*</span> gg[gg <span class="op">&gt;=</span> <span class="fl">0.5</span>], <span class="st">":"</span>, color<span class="op">=</span>UJGray, lw<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">"mean field"</span>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.set_ylim(T.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.05</span>, T.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.05</span>)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">True</span>, fontsize<span class="op">=</span><span class="dv">7</span>, loc<span class="op">=</span><span class="st">"upper center"</span>)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_ae_boundaries.png"</span>)<span class="op">;</span> plt.show()</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>agree <span class="op">=</span> {}</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> REGIMES:</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> results[name]<span class="op">;</span> strong <span class="op">=</span> res[<span class="st">"jump"</span>] <span class="op">&gt;</span> JUMP_MIN</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    dev <span class="op">=</span> np.<span class="bu">abs</span>(res[<span class="st">"Tb"</span>][strong] <span class="op">-</span> T_c_ref[strong])</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    agree[name] <span class="op">=</span> <span class="bu">dict</span>(n_points<span class="op">=</span><span class="bu">int</span>(strong.<span class="bu">sum</span>()), median_abs_dev<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(np.median(dev)), <span class="dv">3</span>) <span class="cf">if</span> strong.<span class="bu">any</span>() <span class="cf">else</span> <span class="va">None</span>,</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                       g_range<span class="op">=</span>[<span class="bu">float</span>(G[strong].<span class="bu">min</span>()), <span class="bu">float</span>(G[strong].<span class="bu">max</span>())] <span class="cf">if</span> strong.<span class="bu">any</span>() <span class="cf">else</span> <span class="va">None</span>)</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:16s}</span><span class="ss">: </span><span class="sc">{</span>agree[name]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"ae_boundary_vs_C"</span>] <span class="op">=</span> agree</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> mpl.rc_context(SLIDE):</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="fl">5.5</span>, <span class="fl">2.2</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> a, (name, r) <span class="kw">in</span> <span class="bu">zip</span>(axes, REGIMES.items()):</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        res <span class="op">=</span> results[name]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        show_map(a, res[<span class="st">"err"</span>], name, cmap<span class="op">=</span><span class="st">"cividis"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        a.add_patch(Rectangle((r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.0125</span>, <span class="bu">max</span>(r[<span class="st">"T"</span>][<span class="dv">0</span>], T.<span class="bu">min</span>()) <span class="op">-</span> <span class="fl">0.05</span>), r[<span class="st">"g"</span>][<span class="dv">1</span>] <span class="op">-</span> r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">+</span> <span class="fl">0.025</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                              <span class="bu">min</span>(r[<span class="st">"T"</span>][<span class="dv">1</span>], T.<span class="bu">max</span>()) <span class="op">-</span> <span class="bu">max</span>(r[<span class="st">"T"</span>][<span class="dv">0</span>], T.<span class="bu">min</span>()) <span class="op">+</span> <span class="fl">0.1</span>, fill<span class="op">=</span><span class="va">False</span>, ec<span class="op">=</span>r[<span class="st">"color"</span>], lw<span class="op">=</span><span class="fl">1.5</span>))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        strong <span class="op">=</span> res[<span class="st">"jump"</span>] <span class="op">&gt;</span> JUMP_MIN</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        a.plot(G[strong], res[<span class="st">"Tb"</span>][strong], <span class="st">"o"</span>, ms<span class="op">=</span><span class="fl">2.5</span>, color<span class="op">=</span>r[<span class="st">"color"</span>], mec<span class="op">=</span><span class="st">"w"</span>, mew<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"detected boundary"</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        a.set_ylim(T.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.05</span>, T.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.05</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_ae_maps.png"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>For every <span class="math inline">\(g\)</span> the boundary point is the temperature where the mean error changes fastest; it is drawn only if that change is at least 15% of the full range of the map. In each map the colour is the mean reconstruction error <span class="math inline">\(\bar\varepsilon\)</span> of that regime’s autoencoder, the rectangle marks its training region, and the dots are the detected boundary points.</p>
+<p>The autoencoder of regime A, trained on the ferromagnet, reconstructs the ferromagnetic region almost perfectly; its boundary <span class="math inline">\(T_c(g)\)</span> for <span class="math inline">\(g&lt;1/2\)</span> is a sharp edge that falls towards <span class="math inline">\(g=1/2\)</span>. Everything else, paramagnet <em>and</em> stripes, is “not ferromagnet” with similar large errors, so this regime cannot separate the stripe phase from the paramagnet.</p>
+<p>Regime B, trained on nearly uncorrelated spins, learns little more than the average, and its error is large everywhere. Ferromagnetic snapshots are reconstructed <em>better</em> than the training data, so the ferromagnetic boundary is visible as a drop of the error. The stripe phase is invisible: its error is the same as in the paramagnet.</p>
+<p>Regime C, trained on the stripes, reconstructs the stripe region well, and its boundary <span class="math inline">\(T_c(g)\)</span> for <span class="math inline">\(g&gt;1/2\)</span> appears. The ferromagnet and the paramagnet are both anomalous.</p>
+<p>One training region answers one question, <em>is this snapshot like my training data?</em>, and cannot tell two different anomalies apart. The next figure puts the detected boundaries of all three regimes on the specific-heat map.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> mpl.rc_context(SLIDE):</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">3.0</span>, <span class="fl">3.0</span>))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    ax.pcolormesh(G, T, C_map.T, shading<span class="op">=</span><span class="st">"nearest"</span>, cmap<span class="op">=</span><span class="st">"Greys"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span>np.percentile(C_map, <span class="dv">99</span>), alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    ax.plot(G, T_c_ref, <span class="st">"k."</span>, ms<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"$c$ peak (reference)"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, r <span class="kw">in</span> REGIMES.items():</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        res <span class="op">=</span> results[name]<span class="op">;</span> strong <span class="op">=</span> res[<span class="st">"jump"</span>] <span class="op">&gt;</span> JUMP_MIN</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        ax.plot(G[strong], res[<span class="st">"Tb"</span>][strong], <span class="st">"o"</span>, ms<span class="op">=</span><span class="dv">4</span>, mfc<span class="op">=</span><span class="st">"none"</span>, mec<span class="op">=</span>r[<span class="st">"color"</span>], mew<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="ss">f"AE, regime </span><span class="sc">{</span>name[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    gg <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">101</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    ax.plot(gg[gg <span class="op">&lt;=</span> <span class="fl">0.5</span>], <span class="dv">4</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> gg[gg <span class="op">&lt;=</span> <span class="fl">0.5</span>]), <span class="st">":"</span>, color<span class="op">=</span>UJGray, lw<span class="op">=</span><span class="dv">1</span>)<span class="op">;</span> ax.plot(gg[gg <span class="op">&gt;=</span> <span class="fl">0.5</span>], <span class="dv">4</span> <span class="op">*</span> gg[gg <span class="op">&gt;=</span> <span class="fl">0.5</span>], <span class="st">":"</span>, color<span class="op">=</span>UJGray, lw<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">"mean field"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.set_ylim(T.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.05</span>, T.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.05</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    fig.legend(frameon<span class="op">=</span><span class="va">False</span>, loc<span class="op">=</span><span class="st">"lower center"</span>, ncol<span class="op">=</span><span class="dv">2</span>, columnspacing<span class="op">=</span><span class="fl">0.8</span>, handletextpad<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    fig.tight_layout(rect<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="dv">1</span>, <span class="dv">1</span>))<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_ae_boundaries.png"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>agree <span class="op">=</span> {}</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> REGIMES:</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> results[name]<span class="op">;</span> strong <span class="op">=</span> res[<span class="st">"jump"</span>] <span class="op">&gt;</span> JUMP_MIN</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    dev <span class="op">=</span> np.<span class="bu">abs</span>(res[<span class="st">"Tb"</span>][strong] <span class="op">-</span> T_c_ref[strong])</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    agree[name] <span class="op">=</span> <span class="bu">dict</span>(n_points<span class="op">=</span><span class="bu">int</span>(strong.<span class="bu">sum</span>()), median_abs_dev<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(np.median(dev)), <span class="dv">3</span>) <span class="cf">if</span> strong.<span class="bu">any</span>() <span class="cf">else</span> <span class="va">None</span>,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>                       g_range<span class="op">=</span>[<span class="bu">float</span>(G[strong].<span class="bu">min</span>()), <span class="bu">float</span>(G[strong].<span class="bu">max</span>())] <span class="cf">if</span> strong.<span class="bu">any</span>() <span class="cf">else</span> <span class="va">None</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:16s}</span><span class="ss">: </span><span class="sc">{</span>agree[name]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"ae_boundary_vs_C"</span>] <span class="op">=</span> agree</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A: ferromagnet  : {'n_points': 39, 'median_abs_dev': 0.025, 'g_range': [0.0, 0.475]}
@@ -869,42 +941,43 @@ B: paramagnet   : {'n_points': 39, 'median_abs_dev': 0.025, 'g_range': [0.0, 0.4
 C: stripes      : {'n_points': 40, 'median_abs_dev': 0.025, 'g_range': [0.5125, 1.0]}</code></pre>
 </div>
 </div>
-<p><strong>Comparison with the known physics.</strong> Where an autoencoder detects a boundary, it lies on the specific-heat ridge, to within the grid spacing in temperature (<span class="math inline">\(\Delta T=0.05\)</span>); the median deviations are printed above. Each regime sees only the boundaries of its own phase: A and B find the ferromagnetic line, C finds the stripe line. None of them is reliable close to <span class="math inline">\(g=1/2\)</span>, where the transition temperature goes to zero and no phase is fully developed within our temperature range. Mean-field theory (dotted) is far off for every <span class="math inline">\(g\)</span>.</p>
+<p>Where an autoencoder detects a boundary, it lies on the specific-heat ridge, to within the grid spacing in temperature (<span class="math inline">\(\Delta T=0.05\)</span>); the median deviations are printed above. Each regime sees only the boundaries of its own phase: A and B find the ferromagnetic line, C finds the stripe line. None of them is reliable close to <span class="math inline">\(g=1/2\)</span>, where the transition temperature goes to zero and no phase is fully developed within our temperature range. Mean-field theory (dotted) is far off for every <span class="math inline">\(g\)</span>.</p>
 <hr>
 </section>
-<section id="combining-the-regimes" class="level2">
-<h2 class="anchored" data-anchor-id="combining-the-regimes">4. Combining the regimes</h2>
-<p>Each trained autoencoder defines a “normal” level of its reconstruction error, measured on its own training region. For grid point <span class="math inline">\((g,T)\)</span> and regime <span class="math inline">\(k\)</span> we compute an <strong>anomaly score</strong>: how far the mean error lies from that level, in units of its spread, <span class="math display">\[
+<section id="combined-map" class="level2">
+<h2 class="anchored" data-anchor-id="combined-map">4. Combined map</h2>
+<p>Since each regime recognises only its own phase, the natural next step is to combine them. Each trained autoencoder defines a “normal” level of its reconstruction error, measured on its own training region. For grid point <span class="math inline">\((g,T)\)</span> and regime <span class="math inline">\(k\)</span> we compute an <strong>anomaly score</strong>: how far the mean error lies from that level, in units of its spread, <span class="math display">\[
 a_k(g,T) = \frac{\left|\,\bar\varepsilon_k(g,T) - \mu_k\right|}{\sigma_k},
 \]</span> where <span class="math inline">\(\mu_k\)</span> and <span class="math inline">\(\sigma_k\)</span> are the mean and standard deviation of <span class="math inline">\(\bar\varepsilon_k\)</span> over the grid points of the training region. The absolute value matters: regime B reconstructs ferromagnetic snapshots <em>better</em> than its training data, which is also an anomaly. A grid point is assigned to the regime with the smallest score if that score is below 3; otherwise it is <strong>unassigned</strong>: it looks like none of the three references.</p>
-<div class="cell" data-execution_count="9">
+<div class="cell" data-execution_count="10">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>names <span class="op">=</span> <span class="bu">list</span>(REGIMES)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> []</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> names:</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> results[name]</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    inside <span class="op">=</span> res[<span class="st">"err"</span>][np.ix_(res[<span class="st">"gi"</span>], res[<span class="st">"ti"</span>])]</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    scores.append(np.<span class="bu">abs</span>(res[<span class="st">"err"</span>] <span class="op">-</span> inside.mean()) <span class="op">/</span> (inside.std() <span class="op">+</span> <span class="fl">1e-3</span>))   <span class="co"># small floor: the ordered regions are almost exact</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> np.stack(scores)                                    <span class="co"># (3, nG, nT)</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>assign <span class="op">=</span> np.argmin(scores, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>assign <span class="op">=</span> np.where(scores.<span class="bu">min</span>(<span class="dv">0</span>) <span class="op">&lt;</span> <span class="fl">3.0</span>, assign, <span class="bu">len</span>(names))</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [REGIMES[n][<span class="st">"color"</span>] <span class="cf">for</span> n <span class="kw">in</span> names] <span class="op">+</span> [<span class="st">"#D9D9D9"</span>]</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.6</span>, <span class="fl">4.4</span>))</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>ax.pcolormesh(G, T, assign.T, shading<span class="op">=</span><span class="st">"nearest"</span>, cmap<span class="op">=</span>ListedColormap(colors), vmin<span class="op">=-</span><span class="fl">0.5</span>, vmax<span class="op">=</span><span class="bu">len</span>(names) <span class="op">+</span> <span class="fl">0.5</span>)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>ax.plot(G, T_c_ref, <span class="st">"k."</span>, ms<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"specific-heat peak"</span>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, n <span class="kw">in</span> <span class="bu">enumerate</span>(names <span class="op">+</span> [<span class="st">"unassigned"</span>]):</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    ax.plot([], [], <span class="st">"s"</span>, color<span class="op">=</span>colors[k], ms<span class="op">=</span><span class="dv">9</span>, label<span class="op">=</span>n)</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.legend(frameon<span class="op">=</span><span class="va">True</span>, fontsize<span class="op">=</span><span class="dv">7</span>, loc<span class="op">=</span><span class="st">"upper center"</span>, ncol<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_ae_combined.png"</span>)<span class="op">;</span> plt.show()</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>frac <span class="op">=</span> {n: <span class="bu">round</span>(<span class="bu">float</span>((assign <span class="op">==</span> k).mean()), <span class="dv">3</span>) <span class="cf">for</span> k, n <span class="kw">in</span> <span class="bu">enumerate</span>(names <span class="op">+</span> [<span class="st">"unassigned"</span>])}</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"fraction of grid points:"</span>, frac)</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>un <span class="op">=</span> assign <span class="op">==</span> <span class="bu">len</span>(names)</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"unassigned points: g in"</span>, np.unique(G[np.where(un)[<span class="dv">0</span>]]).<span class="bu">round</span>(<span class="dv">3</span>), <span class="st">"</span><span class="ch">\n</span><span class="st">                   T in"</span>, np.unique(T[np.where(un)[<span class="dv">1</span>]]).<span class="bu">round</span>(<span class="dv">2</span>))</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"combined_fractions"</span>] <span class="op">=</span> frac</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>names <span class="op">=</span> <span class="bu">list</span>(REGIMES)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> []</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> names:</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> results[name]</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    inside <span class="op">=</span> res[<span class="st">"err"</span>][np.ix_(res[<span class="st">"gi"</span>], res[<span class="st">"ti"</span>])]</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    scores.append(np.<span class="bu">abs</span>(res[<span class="st">"err"</span>] <span class="op">-</span> inside.mean()) <span class="op">/</span> (inside.std() <span class="op">+</span> <span class="fl">1e-3</span>))   <span class="co"># small floor: the ordered regions are almost exact</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> np.stack(scores)                                    <span class="co"># (3, nG, nT)</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>assign <span class="op">=</span> np.argmin(scores, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>assign <span class="op">=</span> np.where(scores.<span class="bu">min</span>(<span class="dv">0</span>) <span class="op">&lt;</span> <span class="fl">3.0</span>, assign, <span class="bu">len</span>(names))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [REGIMES[n][<span class="st">"color"</span>] <span class="cf">for</span> n <span class="kw">in</span> names] <span class="op">+</span> [<span class="st">"#D9D9D9"</span>]</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> mpl.rc_context(SLIDE):</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">3.0</span>, <span class="fl">3.0</span>))</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    ax.pcolormesh(G, T, assign.T, shading<span class="op">=</span><span class="st">"nearest"</span>, cmap<span class="op">=</span>ListedColormap(colors), vmin<span class="op">=-</span><span class="fl">0.5</span>, vmax<span class="op">=</span><span class="bu">len</span>(names) <span class="op">+</span> <span class="fl">0.5</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    ax.plot(G, T_c_ref, <span class="st">"k."</span>, ms<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="st">"$c$ peak"</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, n <span class="kw">in</span> <span class="bu">enumerate</span>(names <span class="op">+</span> [<span class="st">"unassigned"</span>]):</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        ax.plot([], [], <span class="st">"s"</span>, color<span class="op">=</span>colors[k], ms<span class="op">=</span><span class="dv">7</span>, label<span class="op">=</span>n)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> fig.legend(frameon<span class="op">=</span><span class="va">False</span>, loc<span class="op">=</span><span class="st">"lower center"</span>, ncol<span class="op">=</span><span class="dv">2</span>, columnspacing<span class="op">=</span><span class="fl">0.8</span>, handletextpad<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    fig.tight_layout(rect<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="dv">1</span>, <span class="dv">1</span>))<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_ae_combined.png"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>frac <span class="op">=</span> {n: <span class="bu">round</span>(<span class="bu">float</span>((assign <span class="op">==</span> k).mean()), <span class="dv">3</span>) <span class="cf">for</span> k, n <span class="kw">in</span> <span class="bu">enumerate</span>(names <span class="op">+</span> [<span class="st">"unassigned"</span>])}</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"fraction of grid points:"</span>, frac)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>un <span class="op">=</span> assign <span class="op">==</span> <span class="bu">len</span>(names)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"unassigned points: g in"</span>, np.unique(G[np.where(un)[<span class="dv">0</span>]]).<span class="bu">round</span>(<span class="dv">3</span>), <span class="st">"</span><span class="ch">\n</span><span class="st">                   T in"</span>, np.unique(T[np.where(un)[<span class="dv">1</span>]]).<span class="bu">round</span>(<span class="dv">2</span>))</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"combined_fractions"</span>] <span class="op">=</span> frac</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+<p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>fraction of grid points: {'A: ferromagnet': 0.099, 'B: paramagnet': 0.592, 'C: stripes': 0.101, 'unassigned': 0.207}
@@ -922,69 +995,66 @@ unassigned points: g in [0.    0.012 0.025 0.038 0.05  0.062 0.075 0.088 0.1   0
  2.9  2.95 3.   3.05 3.1  3.15 3.2  3.3 ]</code></pre>
 </div>
 </div>
-<p><strong>Reading the combined map.</strong> The three colours reproduce the three known phases. Two features need the physics to be understood:</p>
-<ul>
-<li>The <strong>unassigned</strong> band lies mainly on the ordered side of each transition line. There the system is ordered, but thermal fluctuations (flipped islands, domain walls) make the snapshots atypical for a model trained deep in the phase at <span class="math inline">\(T\le1\)</span>. The band marks where the references stop being representative, which is the critical region and its surroundings.</li>
-<li>Around <span class="math inline">\(g=1/2\)</span> at the lowest temperatures the points are assigned to the <strong>paramagnet</strong>. That is correct physics: at the frustrated point the transition temperature goes to zero and the system does not order within our temperature range.</li>
-</ul>
+<p>The three colours reproduce the three known phases, and two further features need the physics to be understood. The unassigned band lies mainly on the ordered side of each transition line. There the system is ordered, but thermal fluctuations (flipped islands, domain walls) make the snapshots atypical for a model trained deep in the phase at <span class="math inline">\(T\le1\)</span>; the band marks where the references stop being representative, which is the critical region and its surroundings. Around <span class="math inline">\(g=1/2\)</span> at the lowest temperatures the points are assigned to the paramagnet. That is correct physics: at the frustrated point the transition temperature goes to zero and the system does not order within our temperature range.</p>
 <p>None of this used an order parameter. What it did use is a choice of reference regions, and the result depends on that choice (regime B alone would have missed the stripe phase entirely). The physicist’s job has moved, not disappeared.</p>
 <hr>
 </section>
-<section id="a-coarse-scan-and-where-to-measure-more" class="level2">
-<h2 class="anchored" data-anchor-id="a-coarse-scan-and-where-to-measure-more">5. A coarse scan, and where to measure more</h2>
-<p>The maps above used the full grid. Suppose instead we can afford only a <strong>coarse scan</strong>: every eighth value of <span class="math inline">\(g\)</span> (<span class="math inline">\(\Delta g = 0.1\)</span>), every eighth temperature (<span class="math inline">\(\Delta T = 0.4\)</span>), and 10 snapshots per point. We train regimes A and C on the coarse data only, and look for intervals where the error jumps. Those intervals are where a dense measurement is worth paying for.</p>
-<div class="cell" data-execution_count="10">
+<section id="coarse-scan-and-refinement" class="level2">
+<h2 class="anchored" data-anchor-id="coarse-scan-and-refinement">5. Coarse scan and refinement</h2>
+<p>The maps above used the full grid. Suppose instead we can afford only a <strong>coarse scan</strong>: every eighth value of <span class="math inline">\(g\)</span> (<span class="math inline">\(\Delta g = 0.1\)</span>), every eighth temperature (<span class="math inline">\(\Delta T = 0.4\)</span>), and 10 snapshots per point. We train regimes A and C on the coarse data only, and look for intervals where the error jumps. Those intervals are where a dense measurement is worth paying for, and the cell compares the total number of snapshots of this strategy with that of the dense scan.</p>
+<div class="cell" data-execution_count="11">
 <details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>gi_c <span class="op">=</span> np.arange(<span class="dv">0</span>, nG, <span class="dv">8</span>)<span class="op">;</span> ti_c <span class="op">=</span> np.arange(<span class="dv">0</span>, nT, <span class="dv">8</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Gc, Tc_ax <span class="op">=</span> G[gi_c], T[ti_c]</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>S_coarse <span class="op">=</span> S[np.ix_(gi_c, ti_c)][:, :, spread(nS, <span class="dv">10</span>)]</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"coarse grid: </span><span class="sc">{</span><span class="bu">len</span>(Gc)<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span><span class="bu">len</span>(Tc_ax)<span class="sc">}</span><span class="ss"> points x 10 snapshots = </span><span class="sc">{</span>S_coarse<span class="sc">.</span>shape[<span class="dv">0</span>] <span class="op">*</span> S_coarse<span class="sc">.</span>shape[<span class="dv">1</span>] <span class="op">*</span> <span class="dv">10</span><span class="sc">}</span><span class="ss"> snapshots"</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>coarse <span class="op">=</span> {}</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> [<span class="st">"A: ferromagnet"</span>, <span class="st">"C: stripes"</span>]:</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> REGIMES[name]</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    gsel <span class="op">=</span> (Gc <span class="op">&gt;=</span> r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (Gc <span class="op">&lt;=</span> r[<span class="st">"g"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)<span class="op">;</span> tsel <span class="op">=</span> (Tc_ax <span class="op">&gt;=</span> r[<span class="st">"T"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (Tc_ax <span class="op">&lt;=</span> r[<span class="st">"T"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    X_tr <span class="op">=</span> S_coarse[gsel][:, tsel].reshape(<span class="op">-</span><span class="dv">1</span>, L, L)</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    model, _ <span class="op">=</span> train_ae(X_tr, epochs<span class="op">=</span><span class="dv">40</span>)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    err_c <span class="op">=</span> error_map(model, S_coarse, n<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    Tb_c, jump_c <span class="op">=</span> boundary_from_map(err_c, Tc_ax)</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> np.argmax(np.<span class="bu">abs</span>(np.diff(err_c, axis<span class="op">=</span><span class="dv">1</span>)), axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    coarse[name] <span class="op">=</span> <span class="bu">dict</span>(model<span class="op">=</span>model, err<span class="op">=</span>err_c, lo<span class="op">=</span>Tc_ax[i], hi<span class="op">=</span>Tc_ax[i <span class="op">+</span> <span class="dv">1</span>], jump<span class="op">=</span>jump_c, n_train<span class="op">=</span>X_tr.shape[<span class="dv">0</span>])</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: trained on </span><span class="sc">{</span>X_tr<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> snapshots"</span>)</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co"># refinement: for every coarse g with a clear jump, measure densely (all grid temperatures in the bracket, all snapshots)</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>refine_cost, refined <span class="op">=</span> <span class="dv">0</span>, {}</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, c <span class="kw">in</span> coarse.items():</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    model_c <span class="op">=</span> c[<span class="st">"model"</span>]                                   <span class="co"># the model trained on the coarse data only</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    pts <span class="op">=</span> []</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, gval <span class="kw">in</span> <span class="bu">enumerate</span>(Gc):</span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> c[<span class="st">"jump"</span>][k] <span class="op">&lt;</span> JUMP_MIN: <span class="cf">continue</span></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>        g_idx <span class="op">=</span> gi_c[k]<span class="op">;</span> t_idx <span class="op">=</span> np.where((T <span class="op">&gt;=</span> c[<span class="st">"lo"</span>][k] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (T <span class="op">&lt;=</span> c[<span class="st">"hi"</span>][k] <span class="op">+</span> <span class="fl">1e-9</span>))[<span class="dv">0</span>]</span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>        refine_cost <span class="op">+=</span> <span class="bu">len</span>(t_idx) <span class="op">*</span> N_EVAL</span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> np.array([np.asarray(recon_error(model_c, jnp.asarray(S[g_idx, j, spread(nS, N_EVAL)], jnp.float32))).mean() <span class="cf">for</span> j <span class="kw">in</span> t_idx])</span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>        j <span class="op">=</span> np.argmax(np.<span class="bu">abs</span>(np.diff(e)))</span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>        pts.append((gval, <span class="fl">0.5</span> <span class="op">*</span> (T[t_idx[j]] <span class="op">+</span> T[t_idx[j <span class="op">+</span> <span class="dv">1</span>]])))</span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    refined[name] <span class="op">=</span> np.array(pts)</span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.6</span>, <span class="fl">4.4</span>))</span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>ax.plot(G, T_c_ref, <span class="st">"k."</span>, ms<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"specific-heat peak (dense scan)"</span>)</span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>gg_, tt_ <span class="op">=</span> np.meshgrid(Gc, Tc_ax, indexing<span class="op">=</span><span class="st">"ij"</span>)<span class="op">;</span> ax.plot(gg_.ravel(), tt_.ravel(), <span class="st">"+"</span>, color<span class="op">=</span>UJGray, ms<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"coarse grid"</span>)</span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, c <span class="kw">in</span> coarse.items():</span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>    col <span class="op">=</span> REGIMES[name][<span class="st">"color"</span>]<span class="op">;</span> ok <span class="op">=</span> c[<span class="st">"jump"</span>] <span class="op">&gt;=</span> JUMP_MIN</span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> np.where(ok)[<span class="dv">0</span>]:</span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>        ax.plot([Gc[k], Gc[k]], [c[<span class="st">"lo"</span>][k], c[<span class="st">"hi"</span>][k]], <span class="st">"-"</span>, color<span class="op">=</span>col, lw<span class="op">=</span><span class="dv">5</span>, alpha<span class="op">=</span><span class="fl">0.35</span>)</span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(refined[name]): ax.plot(refined[name][:, <span class="dv">0</span>], refined[name][:, <span class="dv">1</span>], <span class="st">"o"</span>, color<span class="op">=</span>col, ms<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="ss">f"refined, </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.legend(frameon<span class="op">=</span><span class="va">True</span>, fontsize<span class="op">=</span><span class="dv">7</span>, loc<span class="op">=</span><span class="st">"upper center"</span>)</span>
-<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_coarse.png"</span>)<span class="op">;</span> plt.show()</span>
-<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>dense_cost <span class="op">=</span> nG <span class="op">*</span> nT <span class="op">*</span> nS</span>
-<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>coarse_cost <span class="op">=</span> S_coarse.shape[<span class="dv">0</span>] <span class="op">*</span> S_coarse.shape[<span class="dv">1</span>] <span class="op">*</span> <span class="dv">10</span></span>
-<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"dense scan (specific heat): </span><span class="sc">{</span>dense_cost<span class="sc">}</span><span class="ss"> snapshots"</span>)</span>
-<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"coarse scan </span><span class="sc">{</span>coarse_cost<span class="sc">}</span><span class="ss"> + refinement </span><span class="sc">{</span>refine_cost<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>coarse_cost <span class="op">+</span> refine_cost<span class="sc">}</span><span class="ss"> snapshots "</span></span>
-<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"(</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (coarse_cost <span class="op">+</span> refine_cost) <span class="op">/</span> dense_cost<span class="sc">:.1f}</span><span class="ss">% of the dense scan)"</span>)</span>
-<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(cost_dense<span class="op">=</span><span class="bu">int</span>(dense_cost), cost_coarse<span class="op">=</span><span class="bu">int</span>(coarse_cost), cost_refine<span class="op">=</span><span class="bu">int</span>(refine_cost),</span>
-<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>               cost_fraction<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>((coarse_cost <span class="op">+</span> refine_cost) <span class="op">/</span> dense_cost), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gi_c <span class="op">=</span> np.arange(<span class="dv">0</span>, nG, <span class="dv">8</span>)<span class="op">;</span> ti_c <span class="op">=</span> np.arange(<span class="dv">0</span>, nT, <span class="dv">8</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Gc, Tc_ax <span class="op">=</span> G[gi_c], T[ti_c]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>S_coarse <span class="op">=</span> S[np.ix_(gi_c, ti_c)][:, :, spread(nS, <span class="dv">10</span>)]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"coarse grid: </span><span class="sc">{</span><span class="bu">len</span>(Gc)<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span><span class="bu">len</span>(Tc_ax)<span class="sc">}</span><span class="ss"> points x 10 snapshots = </span><span class="sc">{</span>S_coarse<span class="sc">.</span>shape[<span class="dv">0</span>] <span class="op">*</span> S_coarse<span class="sc">.</span>shape[<span class="dv">1</span>] <span class="op">*</span> <span class="dv">10</span><span class="sc">}</span><span class="ss"> snapshots"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>coarse <span class="op">=</span> {}</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> [<span class="st">"A: ferromagnet"</span>, <span class="st">"C: stripes"</span>]:</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> REGIMES[name]</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    gsel <span class="op">=</span> (Gc <span class="op">&gt;=</span> r[<span class="st">"g"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (Gc <span class="op">&lt;=</span> r[<span class="st">"g"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)<span class="op">;</span> tsel <span class="op">=</span> (Tc_ax <span class="op">&gt;=</span> r[<span class="st">"T"</span>][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (Tc_ax <span class="op">&lt;=</span> r[<span class="st">"T"</span>][<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-9</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    X_tr <span class="op">=</span> S_coarse[gsel][:, tsel].reshape(<span class="op">-</span><span class="dv">1</span>, L, L)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    model, _ <span class="op">=</span> train_ae(X_tr, epochs<span class="op">=</span><span class="dv">40</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    err_c <span class="op">=</span> error_map(model, S_coarse, n<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    Tb_c, jump_c <span class="op">=</span> boundary_from_map(err_c, Tc_ax)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> np.argmax(np.<span class="bu">abs</span>(np.diff(err_c, axis<span class="op">=</span><span class="dv">1</span>)), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    coarse[name] <span class="op">=</span> <span class="bu">dict</span>(model<span class="op">=</span>model, err<span class="op">=</span>err_c, lo<span class="op">=</span>Tc_ax[i], hi<span class="op">=</span>Tc_ax[i <span class="op">+</span> <span class="dv">1</span>], jump<span class="op">=</span>jump_c, n_train<span class="op">=</span>X_tr.shape[<span class="dv">0</span>])</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: trained on </span><span class="sc">{</span>X_tr<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> snapshots"</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># refinement: for every coarse g with a clear jump, measure densely (all grid temperatures in the bracket, all snapshots)</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>refine_cost, refined <span class="op">=</span> <span class="dv">0</span>, {}</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, c <span class="kw">in</span> coarse.items():</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    model_c <span class="op">=</span> c[<span class="st">"model"</span>]                                   <span class="co"># the model trained on the coarse data only</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    pts <span class="op">=</span> []</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, gval <span class="kw">in</span> <span class="bu">enumerate</span>(Gc):</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> c[<span class="st">"jump"</span>][k] <span class="op">&lt;</span> JUMP_MIN: <span class="cf">continue</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>        g_idx <span class="op">=</span> gi_c[k]<span class="op">;</span> t_idx <span class="op">=</span> np.where((T <span class="op">&gt;=</span> c[<span class="st">"lo"</span>][k] <span class="op">-</span> <span class="fl">1e-9</span>) <span class="op">&amp;</span> (T <span class="op">&lt;=</span> c[<span class="st">"hi"</span>][k] <span class="op">+</span> <span class="fl">1e-9</span>))[<span class="dv">0</span>]</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>        refine_cost <span class="op">+=</span> <span class="bu">len</span>(t_idx) <span class="op">*</span> N_EVAL</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> np.array([np.asarray(recon_error(model_c, jnp.asarray(S[g_idx, j, spread(nS, N_EVAL)], jnp.float32))).mean() <span class="cf">for</span> j <span class="kw">in</span> t_idx])</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>        j <span class="op">=</span> np.argmax(np.<span class="bu">abs</span>(np.diff(e)))</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>        pts.append((gval, <span class="fl">0.5</span> <span class="op">*</span> (T[t_idx[j]] <span class="op">+</span> T[t_idx[j <span class="op">+</span> <span class="dv">1</span>]])))</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    refined[name] <span class="op">=</span> np.array(pts)</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> mpl.rc_context(SLIDE):</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">3.0</span>, <span class="fl">3.0</span>))</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>    ax.plot(G, T_c_ref, <span class="st">"k."</span>, ms<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="st">"$c$ peak (dense scan)"</span>)</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>    gg_, tt_ <span class="op">=</span> np.meshgrid(Gc, Tc_ax, indexing<span class="op">=</span><span class="st">"ij"</span>)<span class="op">;</span> ax.plot(gg_.ravel(), tt_.ravel(), <span class="st">"+"</span>, color<span class="op">=</span>UJGray, ms<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="st">"coarse grid"</span>)</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, c <span class="kw">in</span> coarse.items():</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>        col <span class="op">=</span> REGIMES[name][<span class="st">"color"</span>]<span class="op">;</span> ok <span class="op">=</span> c[<span class="st">"jump"</span>] <span class="op">&gt;=</span> JUMP_MIN</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> np.where(ok)[<span class="dv">0</span>]:</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>            ax.plot([Gc[k], Gc[k]], [c[<span class="st">"lo"</span>][k], c[<span class="st">"hi"</span>][k]], <span class="st">"-"</span>, color<span class="op">=</span>col, lw<span class="op">=</span><span class="dv">3</span>, alpha<span class="op">=</span><span class="fl">0.35</span>)</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(refined[name]): ax.plot(refined[name][:, <span class="dv">0</span>], refined[name][:, <span class="dv">1</span>], <span class="st">"o"</span>, color<span class="op">=</span>col, ms<span class="op">=</span><span class="fl">3.5</span>, label<span class="op">=</span><span class="ss">f"refined, regime </span><span class="sc">{</span>name[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$g=J_2/J_1$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"$T$"</span>)<span class="op">;</span> fig.legend(frameon<span class="op">=</span><span class="va">False</span>, loc<span class="op">=</span><span class="st">"lower center"</span>, ncol<span class="op">=</span><span class="dv">2</span>, columnspacing<span class="op">=</span><span class="fl">0.8</span>, handletextpad<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>    fig.tight_layout(rect<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="dv">1</span>, <span class="dv">1</span>))<span class="op">;</span> savefig(fig, <span class="st">"gen_j1j2_coarse.png"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>dense_cost <span class="op">=</span> nG <span class="op">*</span> nT <span class="op">*</span> nS</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>coarse_cost <span class="op">=</span> S_coarse.shape[<span class="dv">0</span>] <span class="op">*</span> S_coarse.shape[<span class="dv">1</span>] <span class="op">*</span> <span class="dv">10</span></span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"dense scan (specific heat): </span><span class="sc">{</span>dense_cost<span class="sc">}</span><span class="ss"> snapshots"</span>)</span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"coarse scan </span><span class="sc">{</span>coarse_cost<span class="sc">}</span><span class="ss"> + refinement </span><span class="sc">{</span>refine_cost<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>coarse_cost <span class="op">+</span> refine_cost<span class="sc">}</span><span class="ss"> snapshots "</span></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"(</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (coarse_cost <span class="op">+</span> refine_cost) <span class="op">/</span> dense_cost<span class="sc">:.1f}</span><span class="ss">% of the dense scan)"</span>)</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(cost_dense<span class="op">=</span><span class="bu">int</span>(dense_cost), cost_coarse<span class="op">=</span><span class="bu">int</span>(coarse_cost), cost_refine<span class="op">=</span><span class="bu">int</span>(refine_cost),</span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>               cost_fraction<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>((coarse_cost <span class="op">+</span> refine_cost) <span class="op">/</span> dense_cost), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>coarse grid: 11 x 10 points x 10 snapshots = 1100 snapshots</code></pre>
@@ -996,7 +1066,7 @@ unassigned points: g in [0.    0.012 0.025 0.038 0.05  0.062 0.075 0.088 0.1   0
 <pre><code>C: stripes: trained on 90 snapshots</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-11-output-4.png" class="img-fluid"></p>
+<p><img src="lab-020-j1j2-without-labels_files/figure-html/cell-12-output-4.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>dense scan (specific heat): 639900 snapshots
@@ -1009,6 +1079,7 @@ coarse scan 1100 + refinement 2160 = 3260 snapshots (0.5% of the dense scan)</co
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>The table collects what each method was given, what it found, and how that compares with the known physics (AE: autoencoder).</p>
 <table class="table">
 <colgroup>
 <col style="width: 25%">
@@ -1057,10 +1128,15 @@ coarse scan 1100 + refinement 2160 = 3260 snapshots (0.5% of the dense scan)</co
 </tr>
 </tbody>
 </table>
-<blockquote class="blockquote">
-<p><strong>Try it.</strong> 1. Train regime B with a larger latent space (16 numbers). Does the stripe phase become visible? 2. Choose a training region in the <em>middle</em> of the stripe phase (<span class="math inline">\(0.7\le g\le0.9\)</span>, <span class="math inline">\(0.5\le T\le1.0\)</span>) instead of a corner. 3. Replace the reconstruction error by the distance in latent space to the training data (mean distance to the 10 nearest training latent vectors). Compare the boundaries.</p>
-</blockquote>
+<section id="exercises" class="level4">
+<h4 class="anchored" data-anchor-id="exercises">Exercises</h4>
+<ol type="1">
+<li>Train regime B with a larger latent space (16 numbers). Does the stripe phase become visible?</li>
+<li>Choose a training region in the <em>middle</em> of the stripe phase (<span class="math inline">\(0.7\le g\le0.9\)</span>, <span class="math inline">\(0.5\le T\le1.0\)</span>) instead of a corner.</li>
+<li>Replace the reconstruction error by the distance in latent space to the training data (mean distance to the 10 nearest training latent vectors). Compare the boundaries.</li>
+</ol>
 <hr>
+</section>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
@@ -1070,86 +1146,6 @@ coarse scan 1100 + refinement 2160 = 3260 snapshots (0.5% of the dense scan)</co
 <li>W. Hu, R. R. P. Singh, R. T. Scalettar, <em>Discovering phases, phase transitions, and crossovers through unsupervised machine learning: A critical examination</em>, Phys. Rev.&nbsp;E <strong>95</strong>, 062122 (2017), <a href="https://arxiv.org/abs/1704.00080">arXiv:1704.00080</a></li>
 <li>Physics of the model: A. Kalz et al., Eur. Phys. J. B <strong>65</strong>, 533 (2008), <a href="https://arxiv.org/abs/0805.0983">arXiv:0805.0983</a>; S. Jin, A. Sen, A. W. Sandvik, Phys. Rev.&nbsp;Lett. <strong>108</strong>, 045702 (2012), <a href="https://arxiv.org/abs/1110.5874">arXiv:1110.5874</a></li>
 </ul>
-<div class="cell" data-execution_count="11">
-<details open="">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>FIG<span class="sc">}</span><span class="ss">/numbers_lab020.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    json.dump(NUMBERS, f, indent<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(NUMBERS, indent<span class="op">=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>{
- "pca_var": [
-  0.1659,
-  0.0839,
-  0.0822,
-  0.0031,
-  0.003,
-  0.0028
- ],
- "pca_overlaps": [
-  [
-   1.0,
-   0.001,
-   0.001
-  ],
-  [
-   0.001,
-   1.0,
-   0.024
-  ],
-  [
-   0.001,
-   0.024,
-   1.0
-  ],
-  [
-   0.001,
-   0.0,
-   0.0
-  ]
- ],
- "pca_corr_m": 1.0,
- "pca_corr_mstr": 0.9999,
- "ae_boundary_vs_C": {
-  "A: ferromagnet": {
-   "n_points": 39,
-   "median_abs_dev": 0.025,
-   "g_range": [
-    0.0,
-    0.475
-   ]
-  },
-  "B: paramagnet": {
-   "n_points": 39,
-   "median_abs_dev": 0.025,
-   "g_range": [
-    0.0,
-    0.4875
-   ]
-  },
-  "C: stripes": {
-   "n_points": 40,
-   "median_abs_dev": 0.025,
-   "g_range": [
-    0.5125,
-    1.0
-   ]
-  }
- },
- "combined_fractions": {
-  "A: ferromagnet": 0.099,
-  "B: paramagnet": 0.592,
-  "C: stripes": 0.101,
-  "unassigned": 0.207
- },
- "cost_dense": 639900,
- "cost_coarse": 1100,
- "cost_refine": 2160,
- "cost_fraction": 0.005
-}</code></pre>
-</div>
-</div>
 
 
 </section>

@@ -88,7 +88,7 @@ LECTURES = {
             ("Lecture_4/Notebooks/Lab_010_Ising_Monte_Carlo_samples.ipynb", "lab-010-ising-monte-carlo", "Lab 010: Monte Carlo samples of the 2D Ising model", "The Metropolis algorithm, equilibration and decorrelation, and the data set of spin configurations, checked against Onsager's exact results."),
             ("Lecture_4/Notebooks/Lab_011_CNN_Tc_from_confidence.ipynb", "lab-011-cnn-tc", "Lab 011: T_c of the 2D Ising model from the confidence of a CNN", "A CNN trained only far from the transition, its confidence at all temperatures, and finite-size effects."),
             ("Lecture_4/Notebooks/Lab_012_Onsager_exact_solution.ipynb", "lab-012-onsager", "Lab 012: Onsager's exact solution of the 2D Ising model", "The transfer matrix, the high- and low-temperature expansions, Kramers–Wannier duality and an outline of the free-fermion solution, each checked by a computation."),
-            ("Lecture_4/Notebooks/Ising_2D_from_scratch.ipynb", "ising-2d-monte-carlo-and-cnn", "The 2D Ising model in JAX: Monte Carlo data, exact results and T_c from a CNN", "The figures of the lecture: data sets for L = 10 to 50 and the CNN estimate of T_c for each size."),
+            ("Lecture_4/Notebooks/Ising_2D_Monte_Carlo_and_CNN.ipynb", "ising-2d-monte-carlo-and-cnn", "The 2D Ising model and a CNN", "The figures of the lecture: data sets for L = 10 to 50 and the CNN estimate of T_c for each size."),
         ],
     ),
     5: dict(
@@ -268,6 +268,29 @@ def notebooks_of(lec):
     return found
 
 
+def is_slide_export(cell):
+    """A code cell that only exports numbers for the lecture slides (JSON / LaTeX macros)."""
+    if cell.cell_type != "code":
+        return False
+    src = cell.source
+    if re.search(r"plt\.|savefig|\.plot\(|train", src):          # a cell that also computes or plots is kept
+        return False
+    return (re.search(r"numbers_\w*\.json|setnbnum|nb_numbers", src) is not None) and ("json.dump" in src or ".write(" in src)
+
+
+def drop_slide_export(cells):
+    """Remove slide-export cells and the short markdown cell that only introduces one of them."""
+    keep = []
+    for i, c in enumerate(cells):
+        if is_slide_export(c):
+            if keep and keep[-1].cell_type == "markdown" and len(keep[-1].source) < 400 \
+                    and re.search(r"slide|lecture|numbers", keep[-1].source, re.I) and not keep[-1].source.lstrip().startswith("#"):
+                keep.pop()
+            continue
+        keep.append(c)
+    return keep
+
+
 def build_notebooks():
     dst = os.path.join(HERE, "notebooks")
     if os.path.isdir(dst):
@@ -276,6 +299,7 @@ def build_notebooks():
         for src, web_name, title, _ in notebooks_of(lec):
             nb = nbformat.read(src, as_version=4)
             rel = f"notebooks/lecture-{lec:02d}/{web_name}.ipynb"
+            nb.cells = drop_slide_export(nb.cells)
             for c in nb.cells:
                 c.metadata.pop("execution", None)   # run timestamps
                 if c.cell_type == "markdown":

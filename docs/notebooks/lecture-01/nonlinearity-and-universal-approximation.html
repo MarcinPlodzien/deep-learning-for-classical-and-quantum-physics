@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,12 +466,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#nonlinear-activations-in-neural-networks" id="toc-nonlinear-activations-in-neural-networks" class="nav-link" data-scroll-target="#nonlinear-activations-in-neural-networks">Nonlinear activations in neural networks</a>
+  <li><a href="#non-linear-activations-and-universal-approximation" id="toc-non-linear-activations-and-universal-approximation" class="nav-link" data-scroll-target="#non-linear-activations-and-universal-approximation">Non-linear activations and universal approximation</a>
   <ul class="collapse">
-  <li><a href="#without-a-nonlinearity-depth-does-nothing" id="toc-without-a-nonlinearity-depth-does-nothing" class="nav-link" data-scroll-target="#without-a-nonlinearity-depth-does-nothing">1. Without a nonlinearity, depth does nothing</a></li>
-  <li><a href="#a-function-from-relu-pieces" id="toc-a-function-from-relu-pieces" class="nav-link" data-scroll-target="#a-function-from-relu-pieces">2. A function from ReLU pieces</a></li>
-  <li><a href="#a-sigmoid-becomes-a-step" id="toc-a-sigmoid-becomes-a-step" class="nav-link" data-scroll-target="#a-sigmoid-becomes-a-step">3. A sigmoid becomes a step</a></li>
-  <li><a href="#content-and-limits-of-the-theorem" id="toc-content-and-limits-of-the-theorem" class="nav-link" data-scroll-target="#content-and-limits-of-the-theorem">Content and limits of the theorem</a>
+  <li><a href="#linear-layers-without-activation" id="toc-linear-layers-without-activation" class="nav-link" data-scroll-target="#linear-layers-without-activation">1. Linear layers without activation</a></li>
+  <li><a href="#approximation-with-relu-hats" id="toc-approximation-with-relu-hats" class="nav-link" data-scroll-target="#approximation-with-relu-hats">2. Approximation with ReLU hats</a></li>
+  <li><a href="#sigmoid-steps" id="toc-sigmoid-steps" class="nav-link" data-scroll-target="#sigmoid-steps">3. Sigmoid steps</a></li>
+  <li><a href="#content-and-limits-of-the-theorem" id="toc-content-and-limits-of-the-theorem" class="nav-link" data-scroll-target="#content-and-limits-of-the-theorem">4. Content and limits of the theorem</a>
   <ul class="collapse">
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -503,18 +503,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <section id="deep-learning-in-classical-and-quantum-physics" class="level1">
 <h1>Deep Learning in Classical and Quantum Physics</h1>
-<strong>Author:</strong> Marcin Płodzień
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br>
 <hr>
 </section>
-<section id="nonlinear-activations-in-neural-networks" class="level1">
-<h1>Nonlinear activations in neural networks</h1>
-<p>A neural network is a composition of layers <span class="math inline">\(\mathbf h \mapsto \sigma(W\mathbf h+\mathbf b)\)</span>. This notebook shows, with three small experiments, why the activation <span class="math inline">\(\sigma\)</span> must be <strong>nonlinear</strong>, and gives the intuition behind the <strong>universal approximation theorem</strong>:</p>
-<ol type="1">
-<li>without <span class="math inline">\(\sigma\)</span>, any number of layers collapses into a single linear map;</li>
-<li>with ReLU, three neurons build a “hat”, and sums of hats approximate any continuous function;</li>
-<li>a sigmoid with a large weight becomes a step, and differences of steps build any function bar by bar.</li>
-</ol>
-<p>It produces the figures of the corresponding slides. Everything runs on the CPU.</p>
+<section id="non-linear-activations-and-universal-approximation" class="level1">
+<h1>Non-linear activations and universal approximation</h1>
+<p>A neural network is a composition of layers <span class="math inline">\(\mathbf h \mapsto \sigma(W\mathbf h+\mathbf b)\)</span>. This notebook uses three small experiments to show why the activation <span class="math inline">\(\sigma\)</span> must be <strong>nonlinear</strong>, and to give the intuition behind the <strong>universal approximation theorem</strong>. First we see that without <span class="math inline">\(\sigma\)</span> any number of layers collapses into a single linear map. Next we build, from three ReLU neurons, a “hat” function, and observe that sums of hats approximate any continuous function. Finally we turn a sigmoid with a large weight into a step, so that differences of steps build any function bar by bar.</p>
+<p>The notebook produces the figures of the corresponding slides. Everything runs on the CPU.</p>
 <div class="cell" data-execution_count="1">
 <details open="">
 <summary>Code</summary>
@@ -531,11 +526,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>NUMBERS <span class="op">=</span> {}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="without-a-nonlinearity-depth-does-nothing" class="level2">
-<h2 class="anchored" data-anchor-id="without-a-nonlinearity-depth-does-nothing">1. Without a nonlinearity, depth does nothing</h2>
+<section id="linear-layers-without-activation" class="level2">
+<h2 class="anchored" data-anchor-id="linear-layers-without-activation">1. Linear layers without activation</h2>
 <p>Two linear layers are one linear layer: <span class="math display">\[
 W_2\,(W_1\mathbf x+\mathbf b_1)+\mathbf b_2 \;=\; \underbrace{W_2W_1}_{W}\,\mathbf x+\underbrace{W_2\mathbf b_1+\mathbf b_2}_{\mathbf b}.
-\]</span> By induction, any stack of linear layers is a single affine map, so a deep “network” without activations can only draw a <strong>straight</strong> decision boundary. We train the same architecture (3 hidden layers of 16 neurons) on the two-moons data twice: once with the identity as activation, once with ReLU.</p>
+\]</span> By induction, any stack of linear layers is a single affine map, so a deep “network” without activations can only draw a <strong>straight</strong> decision boundary. To see this, we train the same architecture (3 hidden layers of 16 neurons) on the two-moons data twice: once with the identity as activation, once with ReLU. Without activation the boundary in the figure is a straight line and the training accuracy stays well below one (0.870 in the stored run); with ReLU the boundary bends around the two moons and every training point is classified correctly.</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -597,11 +592,11 @@ W_2\,(W_1\mathbf x+\mathbf b_1)+\mathbf b_2 \;=\; \underbrace{W_2W_1}_{W}\,\math
 </div>
 </div>
 </section>
-<section id="a-function-from-relu-pieces" class="level2">
-<h2 class="anchored" data-anchor-id="a-function-from-relu-pieces">2. A function from ReLU pieces</h2>
+<section id="approximation-with-relu-hats" class="level2">
+<h2 class="anchored" data-anchor-id="approximation-with-relu-hats">2. Approximation with ReLU hats</h2>
 <p>Three ReLU neurons make a <strong>hat</strong> of width <span class="math inline">\(2h\)</span> centred at <span class="math inline">\(c\)</span>: <span class="math display">\[
 \Lambda_c(x) = \frac{1}{h}\Big[\mathrm{ReLU}(x-c+h) - 2\,\mathrm{ReLU}(x-c) + \mathrm{ReLU}(x-c-h)\Big].
-\]</span> Place hats on a grid <span class="math inline">\(c_k = kh\)</span> and give each the height <span class="math inline">\(g(c_k)\)</span>: the sum <span class="math inline">\(\sum_k g(c_k)\Lambda_{c_k}(x)\)</span> is the piecewise-linear interpolation of <span class="math inline">\(g\)</span>. This is a one-hidden-layer network whose weights we wrote down by hand, no training. For a smooth <span class="math inline">\(g\)</span> the interpolation error is at most <span class="math inline">\(\tfrac{h^2}{8}\max|g''|\)</span>, so it decreases as <span class="math inline">\(1/N^2\)</span> with the number <span class="math inline">\(N\)</span> of hats.</p>
+\]</span> Placing hats on a grid <span class="math inline">\(c_k = kh\)</span> and giving each the height <span class="math inline">\(g(c_k)\)</span>, the sum <span class="math inline">\(\sum_k g(c_k)\Lambda_{c_k}(x)\)</span> is the piecewise-linear interpolation of <span class="math inline">\(g\)</span>. This is a one-hidden-layer network whose weights are set explicitly, without any training. For a smooth <span class="math inline">\(g\)</span> the interpolation error is at most <span class="math inline">\(\tfrac{h^2}{8}\max|g''|\)</span>, so it decreases as <span class="math inline">\(1/N^2\)</span> with the number <span class="math inline">\(N\)</span> of hats. The cell measures the maximal error for <span class="math inline">\(N\)</span> from 5 to 129 hats; on a log-log plot it falls on a line whose fitted slope, <span class="math inline">\(-1.95\)</span>, is close to the predicted <span class="math inline">\(-2\)</span>.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
@@ -646,8 +641,8 @@ W_2\,(W_1\mathbf x+\mathbf b_1)+\mathbf b_2 \;=\; \underbrace{W_2W_1}_{W}\,\math
 </div>
 </div>
 </section>
-<section id="a-sigmoid-becomes-a-step" class="level2">
-<h2 class="anchored" data-anchor-id="a-sigmoid-becomes-a-step">3. A sigmoid becomes a step</h2>
+<section id="sigmoid-steps" class="level2">
+<h2 class="anchored" data-anchor-id="sigmoid-steps">3. Sigmoid steps</h2>
 <p>For a large weight <span class="math inline">\(w\)</span>, <span class="math inline">\(\sigma(w(x-b))\)</span> with the logistic <span class="math inline">\(\sigma\)</span> is almost a step at <span class="math inline">\(x=b\)</span>. The difference of two such steps is a <strong>bar</strong> on <span class="math inline">\([b_1,b_2]\)</span>, and a sum of bars with heights <span class="math inline">\(g\)</span> at the bar centres approximates <span class="math inline">\(g\)</span> like a histogram. This is the picture behind Cybenko’s proof for sigmoidal activations (and the visual argument in Nielsen’s book).</p>
 <div class="cell" data-execution_count="4">
 <details open="">
@@ -676,13 +671,10 @@ W_2\,(W_1\mathbf x+\mathbf b_1)+\mathbf b_2 \;=\; \underbrace{W_2W_1}_{W}\,\math
 </div>
 </section>
 <section id="content-and-limits-of-the-theorem" class="level2">
-<h2 class="anchored" data-anchor-id="content-and-limits-of-the-theorem">Content and limits of the theorem</h2>
-<ul>
-<li><strong>Says:</strong> for any continuous <span class="math inline">\(g\)</span> on a compact set and any <span class="math inline">\(\epsilon&gt;0\)</span> there is a one-hidden-layer network with <span class="math inline">\(\sup_K|f-g|&lt;\epsilon\)</span>, for every activation that is not a polynomial.</li>
-<li><strong>Does not say:</strong> how many neurons are needed (our constructions need more and more as <span class="math inline">\(\epsilon\to0\)</span>, and in <span class="math inline">\(d\)</span> input dimensions a grid of hats needs a number of neurons growing exponentially with <span class="math inline">\(d\)</span>), nor how to find the weights: in practice we train by gradient descent, and a good fit on the training points is not a guarantee between them.</li>
-</ul>
+<h2 class="anchored" data-anchor-id="content-and-limits-of-the-theorem">4. Content and limits of the theorem</h2>
+<p>The theorem states that for any continuous <span class="math inline">\(g\)</span> on a compact set <span class="math inline">\(K\)</span> and any <span class="math inline">\(\epsilon&gt;0\)</span> there is a one-hidden-layer network <span class="math inline">\(f\)</span> with <span class="math inline">\(\sup_K|f-g|&lt;\epsilon\)</span>, for every activation that is not a polynomial. It does not say how many neurons are needed: our constructions need more and more of them as <span class="math inline">\(\epsilon\to0\)</span>, and in <span class="math inline">\(d\)</span> input dimensions a grid of hats needs a number of neurons growing exponentially with <span class="math inline">\(d\)</span>. Nor does it say how to find the weights. In practice we train by gradient descent, and a good fit on the training points is not a guarantee between them.</p>
 <blockquote class="blockquote">
-<p><strong>Try it.</strong> Replace ReLU by <span class="math inline">\(\sigma(z)=z^2\)</span> in Section 1. The network is now nonlinear but polynomial; what does the boundary look like, and why does the theorem exclude polynomial activations?</p>
+<p>As an exercise, replace ReLU by <span class="math inline">\(\sigma(z)=z^2\)</span> in Section 1. The network is now nonlinear but polynomial. Describe the decision boundary you obtain, and explain why the theorem excludes polynomial activations.</p>
 </blockquote>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
@@ -692,18 +684,6 @@ W_2\,(W_1\mathbf x+\mathbf b_1)+\mathbf b_2 \;=\; \underbrace{W_2W_1}_{W}\,\math
 <li>M. Leshno, V. Ya. Lin, A. Pinkus, S. Schocken, <em>Multilayer feedforward networks with a nonpolynomial activation function can approximate any function</em>, Neural Networks <strong>6</strong>, 861 (1993), <a href="https://doi.org/10.1016/S0893-6080(05)80131-5">doi:10.1016/S0893-6080(05)80131-5</a></li>
 <li>M. Nielsen, <em>Neural Networks and Deep Learning</em>, chapter 4, <a href="https://neuralnetworksanddeeplearning.com/chap4.html">A visual proof that neural nets can compute any function</a></li>
 </ul>
-<div class="cell" data-execution_count="5">
-<details open="">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>FIG<span class="sc">}</span><span class="ss">/numbers_uat.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    json.dump(NUMBERS, f, indent<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(NUMBERS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'acc_linear': 0.87, 'acc_relu': 1.0, 'hat_errors': {5: 0.6284, 9: 0.1291, 17: 0.0508, 33: 0.0143, 65: 0.0037, 129: 0.0009}, 'hat_slope': -1.95}</code></pre>
-</div>
-</div>
 
 
 </section>

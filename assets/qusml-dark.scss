@@ -24,3 +24,6 @@ main.content .hero p { text-align: left; }
 .res-card { background: #2b2f33; border-color: #444; }
 .res-card .res-title { color: #7fb2e5; }
 .res-card .res-line { color: #bbb; }
+
+// long display equations (MathJax) scroll inside their own box instead of overflowing the page
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }

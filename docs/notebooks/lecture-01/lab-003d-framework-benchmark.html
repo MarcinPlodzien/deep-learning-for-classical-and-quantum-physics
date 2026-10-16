@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,7 +466,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-003d-numpy-jax-pytorch-and-keras-on-the-same-tasks-speed-compilation-and-code" id="toc-lab-003d-numpy-jax-pytorch-and-keras-on-the-same-tasks-speed-compilation-and-code" class="nav-link" data-scroll-target="#lab-003d-numpy-jax-pytorch-and-keras-on-the-same-tasks-speed-compilation-and-code">Lab 003d — NumPy, JAX, PyTorch and Keras on the same tasks: speed, compilation and code</a>
+  <li><a href="#lab-003d-numpy-jax-pytorch-and-keras-compared" id="toc-lab-003d-numpy-jax-pytorch-and-keras-compared" class="nav-link" data-scroll-target="#lab-003d-numpy-jax-pytorch-and-keras-compared">Lab 003d — NumPy, JAX, PyTorch and Keras compared</a>
   <ul class="collapse">
   <li><a href="#four-tools-one-machine" id="toc-four-tools-one-machine" class="nav-link" data-scroll-target="#four-tools-one-machine">Four tools, one machine</a></li>
   <li><a href="#measurement-protocol" id="toc-measurement-protocol" class="nav-link" data-scroll-target="#measurement-protocol">1. Measurement protocol</a>
@@ -475,12 +475,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#array-operations-matrix-multiplication-and-a-chain-of-elementwise-operations" id="toc-array-operations-matrix-multiplication-and-a-chain-of-elementwise-operations" class="nav-link" data-scroll-target="#array-operations-matrix-multiplication-and-a-chain-of-elementwise-operations">2. Array operations: matrix multiplication and a chain of elementwise operations</a>
   <ul class="collapse">
-  <li><a href="#thread-scaling-as-a-check-of-the-measurement" id="toc-thread-scaling-as-a-check-of-the-measurement" class="nav-link" data-scroll-target="#thread-scaling-as-a-check-of-the-measurement">Thread scaling as a check of the measurement</a></li>
+  <li><a href="#thread-scaling" id="toc-thread-scaling" class="nav-link" data-scroll-target="#thread-scaling">Thread scaling</a></li>
   </ul></li>
   <li><a href="#automatic-differentiation-gradient-and-hessianvector-product" id="toc-automatic-differentiation-gradient-and-hessianvector-product" class="nav-link" data-scroll-target="#automatic-differentiation-gradient-and-hessianvector-product">3. Automatic differentiation: gradient and Hessian–vector product</a></li>
   <li><a href="#physics-metropolis-sampling-of-the-2d-ising-model" id="toc-physics-metropolis-sampling-of-the-2d-ising-model" class="nav-link" data-scroll-target="#physics-metropolis-sampling-of-the-2d-ising-model">4. Physics: Metropolis sampling of the 2D Ising model</a>
   <ul class="collapse">
-  <li><a href="#the-cost-of-random-numbers" id="toc-the-cost-of-random-numbers" class="nav-link" data-scroll-target="#the-cost-of-random-numbers">The cost of random numbers</a></li>
+  <li><a href="#cost-of-random-number-generation" id="toc-cost-of-random-number-generation" class="nav-link" data-scroll-target="#cost-of-random-number-generation">Cost of random-number generation</a></li>
   </ul></li>
   <li><a href="#training-one-epoch-of-an-mlp-and-a-cnn-on-mnist" id="toc-training-one-epoch-of-an-mlp-and-a-cnn-on-mnist" class="nav-link" data-scroll-target="#training-one-epoch-of-an-mlp-and-a-cnn-on-mnist">5. Training: one epoch of an MLP and a CNN on MNIST</a>
   <ul class="collapse">
@@ -488,10 +488,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#pytorch" id="toc-pytorch" class="nav-link" data-scroll-target="#pytorch">PyTorch</a></li>
   <li><a href="#keras-3-with-three-backends-each-in-its-own-process" id="toc-keras-3-with-three-backends-each-in-its-own-process" class="nav-link" data-scroll-target="#keras-3-with-three-backends-each-in-its-own-process">Keras 3 with three backends, each in its own process</a></li>
   </ul></li>
-  <li><a href="#the-same-training-step-in-flax-nnx-pytorch-and-keras" id="toc-the-same-training-step-in-flax-nnx-pytorch-and-keras" class="nav-link" data-scroll-target="#the-same-training-step-in-flax-nnx-pytorch-and-keras">6. The same training step in Flax NNX, PyTorch and Keras</a></li>
-  <li><a href="#all-results-one-table-and-one-figure" id="toc-all-results-one-table-and-one-figure" class="nav-link" data-scroll-target="#all-results-one-table-and-one-figure">7. All results: one table and one figure</a></li>
+  <li><a href="#training-step-in-flax-nnx-pytorch-and-keras" id="toc-training-step-in-flax-nnx-pytorch-and-keras" class="nav-link" data-scroll-target="#training-step-in-flax-nnx-pytorch-and-keras">6. Training step in Flax NNX, PyTorch and Keras</a></li>
+  <li><a href="#table-and-figure-of-all-measurements" id="toc-table-and-figure-of-all-measurements" class="nav-link" data-scroll-target="#table-and-figure-of-all-measurements">7. Table and figure of all measurements</a></li>
   <li><a href="#key-ratios" id="toc-key-ratios" class="nav-link" data-scroll-target="#key-ratios">8. Key ratios</a></li>
-  <li><a href="#trade-offs" id="toc-trade-offs" class="nav-link" data-scroll-target="#trade-offs">9. Trade-offs</a></li>
+  <li><a href="#trade-offs" id="toc-trade-offs" class="nav-link" data-scroll-target="#trade-offs">9. Trade-offs</a>
+  <ul class="collapse">
+  <li><a href="#one-large-kernel" id="toc-one-large-kernel" class="nav-link" data-scroll-target="#one-large-kernel">9.1 One large kernel</a></li>
+  <li><a href="#many-small-operations" id="toc-many-small-operations" class="nav-link" data-scroll-target="#many-small-operations">9.2 Many small operations</a></li>
+  <li><a href="#cost-of-compilation" id="toc-cost-of-compilation" class="nav-link" data-scroll-target="#cost-of-compilation">9.3 Cost of compilation</a></li>
+  <li><a href="#automatic-differentiation" id="toc-automatic-differentiation" class="nav-link" data-scroll-target="#automatic-differentiation">9.4 Automatic differentiation</a></li>
+  <li><a href="#the-ising-sampler" id="toc-the-ising-sampler" class="nav-link" data-scroll-target="#the-ising-sampler">9.5 The Ising sampler</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">9.6 Training</a></li>
+  <li><a href="#criteria-beyond-speed" id="toc-criteria-beyond-speed" class="nav-link" data-scroll-target="#criteria-beyond-speed">9.7 Criteria beyond speed</a></li>
+  </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">10. Exercises</a></li>
   </ul></li>
   </ul>
@@ -521,23 +530,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <section id="deep-learning-in-classical-and-quantum-physics" class="level1">
 <h1>Deep Learning in Classical and Quantum Physics</h1>
-2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 003d
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 003d <br>
 <hr>
 </section>
-<section id="lab-003d-numpy-jax-pytorch-and-keras-on-the-same-tasks-speed-compilation-and-code" class="level1">
-<h1>Lab 003d — NumPy, JAX, PyTorch and Keras on the same tasks: speed, compilation and code</h1>
+<section id="lab-003d-numpy-jax-pytorch-and-keras-compared" class="level1">
+<h1>Lab 003d — NumPy, JAX, PyTorch and Keras compared</h1>
 <section id="four-tools-one-machine" class="level2">
 <h2 class="anchored" data-anchor-id="four-tools-one-machine">Four tools, one machine</h2>
-<p>In Lab 002 we used NumPy, in Lab 003 PyTorch, in Lab 003c JAX. All three manipulate arrays, and two of them differentiate through the computation. Here we put them — together with <strong>TensorFlow</strong> and <strong>Keras 3</strong> — on the same tasks and measure:</p>
-<ul>
-<li><strong>speed</strong> — the wall-clock time of the same computation,</li>
-<li><strong>compilation</strong> — the one-off cost of a just-in-time (JIT) compiler before the first result,</li>
-<li><strong>code</strong> — how the same training step looks in each library.</li>
-</ul>
-<p>Timing a program is an experiment like any other: it has systematic errors (other programs running, different numbers of threads, a compiler working in the background) and statistical errors (the time fluctuates from run to run). Section 1 fixes the protocol; Sections 2–5 apply it to four tasks of increasing size.</p>
-<p><strong>Plan</strong> 1. Measurement protocol 2. Array operations: matrix multiplication and a chain of elementwise operations 3. Automatic differentiation: gradient and Hessian–vector product 4. Physics: Metropolis sampling of the 2D Ising model 5. Training: one epoch of a multilayer perceptron (MLP) and a convolutional neural network (CNN) on MNIST 6. The same training step in Flax NNX, PyTorch and Keras 7. All results: one table and one figure 8. Key ratios 9. Trade-offs 10. Exercises</p>
+<p>In Lab 002 we used NumPy, in Lab 003 PyTorch, in Lab 003c JAX. All three manipulate arrays, and two of them differentiate through the computation. Here we put them — together with <strong>TensorFlow</strong> and <strong>Keras 3</strong> — on the same tasks and measure three things: the <strong>speed</strong>, i.e.&nbsp;the wall-clock time of the same computation; the cost of <strong>compilation</strong>, the one-off cost of a just-in-time (JIT) compiler before the first result; and the <strong>code</strong>, i.e.&nbsp;how the same training step looks in each library.</p>
+<p>Timing a program is an experiment like any other: it has systematic errors (other programs running, different numbers of threads, a compiler working in the background) and statistical errors (the time fluctuates from run to run). Section 1 therefore fixes the measurement protocol. Sections 2–5 apply it to four tasks of increasing size: array operations (a matrix multiplication and a chain of elementwise operations), automatic differentiation (a gradient and a Hessian–vector product), a physics application (Metropolis sampling of the 2D Ising model), and training for one epoch of a multilayer perceptron (MLP) and a convolutional neural network (CNN) on MNIST. Section 6 shows the same training step in Flax NNX, PyTorch and Keras side by side. Section 7 collects all measurements in one table and one figure, Section 8 computes the key ratios, and Section 9 discusses the trade-offs between the libraries. Exercises close the notebook (Section 10).</p>
 <blockquote class="blockquote">
-<p><strong>Running this notebook</strong> 1. The timings are meaningful only if nothing else heavy runs on the machine. On a shared computer, pin the notebook to fixed cores, e.g.&nbsp;<code>taskset -c 0-7 jupyter nbconvert --to notebook --execute Lab_003d_Framework_benchmark.ipynb</code>. 2. The notebook uses the central processing unit (CPU) only (<code>JAX_PLATFORMS=cpu</code>, <code>CUDA_VISIBLE_DEVICES=""</code>), so that all libraries run on the same hardware. 3. Required packages: <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>, <code>jax</code>, <code>flax</code>, <code>optax</code>, <code>torch</code>, <code>tensorflow</code>, <code>keras</code> (version 3). In Google Colab all of them are pre-installed; the MNIST files are read from <code>../../Lecture_5/Notebooks/data/MNIST_raw/</code> — adjust <code>MNIST_DIR</code> below if you keep them elsewhere. 4. Total run time on an 8-core laptop CPU: several minutes.</p>
+<p>The timings of this notebook are meaningful only under controlled conditions, so a few remarks on running it: 1. The timings are meaningful only if nothing else heavy runs on the machine. On a shared computer, pin the notebook to fixed cores, e.g.&nbsp;<code>taskset -c 0-7 jupyter nbconvert --to notebook --execute Lab_003d_Framework_benchmark.ipynb</code>. 2. The notebook uses the central processing unit (CPU) only (<code>JAX_PLATFORMS=cpu</code>, <code>CUDA_VISIBLE_DEVICES=""</code>), so that all libraries run on the same hardware. 3. Required packages: <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>, <code>jax</code>, <code>flax</code>, <code>optax</code>, <code>torch</code>, <code>tensorflow</code>, <code>keras</code> (version 3). In Google Colab all of them are pre-installed; the MNIST files are read from <code>../../Lecture_5/Notebooks/data/MNIST_raw/</code> — adjust <code>MNIST_DIR</code> below if you keep them elsewhere. 4. Total run time on an 8-core laptop CPU: several minutes.</p>
 </blockquote>
 </section>
 <section id="measurement-protocol" class="level2">
@@ -717,9 +720,9 @@ BLAS thread pools: [('openblas', 8), ('openmp', 8), ('mkl', 8), ('openmp', 8)]</
 </section>
 <section id="array-operations-matrix-multiplication-and-a-chain-of-elementwise-operations" class="level2">
 <h2 class="anchored" data-anchor-id="array-operations-matrix-multiplication-and-a-chain-of-elementwise-operations">2. Array operations: matrix multiplication and a chain of elementwise operations</h2>
-<p><strong>(a) Matrix multiplication</strong> <span class="math inline">\(C = AB\)</span> of two <span class="math inline">\(2048\times 2048\)</span> <code>float32</code> matrices: <span class="math inline">\(2n^3 \approx 1.7\times 10^{10}\)</span> floating-point operations (FLOP). All libraries hand this to an optimised BLAS-like kernel (Basic Linear Algebra Subprograms), so we expect similar times; the useful figure of merit is GFLOP/s <span class="math inline">\(= 2n^3/t/10^9\)</span>.</p>
-<p><strong>(b) A chain of elementwise operations</strong> on <span class="math inline">\(10^7\)</span> numbers, <span class="math display">\[y = \tanh(x)\,e^{-x^2/2} + 0.1\,x^3 - \sin x .\]</span> Each operation is cheap; the cost is moving 40 MB of data through memory. NumPy and the eager (<em>op-by-op</em>) modes evaluate the formula one operation at a time and store every intermediate array. A compiler (<code>jax.jit</code>, <code>tf.function(jit_compile=True)</code>, <code>torch.compile</code>) can <strong>fuse</strong> the chain into a single loop that reads <span class="math inline">\(x\)</span> once and writes <span class="math inline">\(y\)</span> once.</p>
-<p>Variants: * <strong>JAX op-by-op</strong> — <code>jnp</code> functions called directly; each primitive is dispatched separately; * <strong>JAX jit</strong> — the whole function compiled by XLA (Accelerated Linear Algebra); * <strong>TensorFlow tf.function + XLA</strong> — <code>tf.function(..., jit_compile=True)</code>, the TensorFlow route to the same XLA compiler; * <strong>PyTorch torch.compile</strong> — PyTorch’s compiler (TorchInductor), which generates and compiles C++ code. The cache directory is empty, so the first call is a cold compilation.</p>
+<p>The first task is the matrix multiplication <span class="math inline">\(C = AB\)</span> of two <span class="math inline">\(2048\times 2048\)</span> <code>float32</code> matrices: <span class="math inline">\(2n^3 \approx 1.7\times 10^{10}\)</span> floating-point operations (FLOP). All libraries hand this to an optimised BLAS-like kernel (Basic Linear Algebra Subprograms), so we expect similar times; the useful figure of merit is GFLOP/s <span class="math inline">\(= 2n^3/t/10^9\)</span>.</p>
+<p>The second task is a chain of elementwise operations on <span class="math inline">\(10^7\)</span> numbers, <span class="math display">\[y = \tanh(x)\,e^{-x^2/2} + 0.1\,x^3 - \sin x .\]</span> Each operation is cheap; the cost is moving 40 MB of data through memory. NumPy and the eager (<em>op-by-op</em>) modes evaluate the formula one operation at a time and store every intermediate array. A compiler (<code>jax.jit</code>, <code>tf.function(jit_compile=True)</code>, <code>torch.compile</code>) can <strong>fuse</strong> the chain into a single loop that reads <span class="math inline">\(x\)</span> once and writes <span class="math inline">\(y\)</span> once.</p>
+<p>Besides NumPy and the eager modes, we therefore time four variants. In <em>JAX op-by-op</em> the <code>jnp</code> functions are called directly, and each primitive is dispatched separately. In <em>JAX jit</em> the whole function is compiled by XLA (Accelerated Linear Algebra). <em>TensorFlow tf.function + XLA</em> uses <code>tf.function(..., jit_compile=True)</code>, the TensorFlow route to the same XLA compiler. <em>PyTorch torch.compile</em> uses PyTorch’s compiler (TorchInductor), which generates and compiles C++ code; the cache directory is empty, so the first call is a cold compilation.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
@@ -849,9 +852,9 @@ largest absolute deviation from NumPy:
 </div>
 </div>
 <p>All versions agree with NumPy to a few units in the last place of <code>float32</code> (for <span class="math inline">\(|y|\)</span> between 8 and 16 one unit is <span class="math inline">\(2^{-20}\approx 9.5\times10^{-7}\)</span>): libraries may use different approximations of <code>tanh</code>, <code>exp</code> and <code>sin</code>. The relative speed of op-by-op and compiled code is read off in Section 8.</p>
-<section id="thread-scaling-as-a-check-of-the-measurement" class="level3">
-<h3 class="anchored" data-anchor-id="thread-scaling-as-a-check-of-the-measurement">Thread scaling as a check of the measurement</h3>
-<p>If the cores were really available, more threads should never make an operation slower. We time the PyTorch elementwise chain with 1, 2, 4 and 8 threads. A time that <em>grows</em> with the number of threads signals that the cores are shared with other programs: an operation split over <span class="math inline">\(n\)</span> threads finishes only when the slowest thread does.</p>
+<section id="thread-scaling" class="level3">
+<h3 class="anchored" data-anchor-id="thread-scaling">Thread scaling</h3>
+<p>Before trusting the timings, we test whether the cores were really available. If they were, more threads should never make an operation slower. We time the PyTorch elementwise chain with 1, 2, 4 and 8 threads. A time that <em>grows</em> with the number of threads signals that the cores are shared with other programs: an operation split over <span class="math inline">\(n\)</span> threads finishes only when the slowest thread does.</p>
 <div class="cell" data-execution_count="6">
 <details open="">
 <summary>Code</summary>
@@ -883,7 +886,7 @@ largest absolute deviation from NumPy:
 <section id="automatic-differentiation-gradient-and-hessianvector-product" class="level2">
 <h2 class="anchored" data-anchor-id="automatic-differentiation-gradient-and-hessianvector-product">3. Automatic differentiation: gradient and Hessian–vector product</h2>
 <p>We take a function of a <span class="math inline">\(1000\times 1000\)</span> matrix <span class="math inline">\(W\)</span> (<span class="math inline">\(10^6\)</span> parameters) with fixed data <span class="math inline">\(X\in\mathbb{R}^{256\times1000}\)</span>: <span class="math display">\[L(W) = \frac{1}{256}\sum_{b,j}\log\cosh\big((XW)_{bj}\big) + \frac{\lambda}{2}\lVert W\rVert^2,\qquad \lambda = 10^{-3}.\]</span> Both derivatives are known in closed form, so we can check every library: <span class="math display">\[\nabla L = \tfrac{1}{256}X^{\mathsf T}\tanh(XW) + \lambda W,\qquad
-H V = \tfrac{1}{256}X^{\mathsf T}\big[(1-\tanh^2(XW))\odot (XV)\big] + \lambda V .\]</span> The <strong>Hessian–vector product</strong> (HVP) <span class="math inline">\(HV\)</span> costs about as much as a few gradients, although the Hessian itself has <span class="math inline">\(10^{12}\)</span> entries. Each library builds it differently: * <strong>JAX</strong> — forward-over-reverse: <code>jax.jvp(jax.grad(L), (W,), (V,))</code>; * <strong>PyTorch</strong> — double backward: <code>torch.autograd.grad(..., create_graph=True)</code> and a second <code>grad</code>; * <strong>TensorFlow</strong> — two nested <code>tf.GradientTape</code>s.</p>
+H V = \tfrac{1}{256}X^{\mathsf T}\big[(1-\tanh^2(XW))\odot (XV)\big] + \lambda V .\]</span> The <strong>Hessian–vector product</strong> (HVP) <span class="math inline">\(HV\)</span> costs about as much as a few gradients, although the Hessian itself has <span class="math inline">\(10^{12}\)</span> entries. Each library builds it differently. JAX uses forward-over-reverse differentiation, <code>jax.jvp(jax.grad(L), (W,), (V,))</code>. PyTorch uses a double backward pass, <code>torch.autograd.grad(..., create_graph=True)</code> followed by a second <code>grad</code>. TensorFlow uses two nested <code>tf.GradientTape</code>s.</p>
 <div class="cell" data-execution_count="7">
 <details open="">
 <summary>Code</summary>
@@ -1005,9 +1008,9 @@ relative error with respect to the closed form:   gradient     HVP
 </section>
 <section id="physics-metropolis-sampling-of-the-2d-ising-model" class="level2">
 <h2 class="anchored" data-anchor-id="physics-metropolis-sampling-of-the-2d-ising-model">4. Physics: Metropolis sampling of the 2D Ising model</h2>
-<p>The Ising model on an <span class="math inline">\(L\times L\)</span> periodic lattice, <span class="math inline">\(E = -\sum_{\langle ij\rangle} s_i s_j\)</span>, <span class="math inline">\(s_i=\pm1\)</span>, has a phase transition at <span class="math inline">\(T_c = 2/\ln(1+\sqrt2) \approx 2.269\)</span> (units <span class="math inline">\(J = k_B = 1\)</span>). A <strong>checkerboard Metropolis sweep</strong> colours the lattice like a chessboard; sites of one colour do not interact with each other, so all of them can be updated at once: 1. compute the neighbour sum <span class="math inline">\(h_i\)</span> with four <code>roll</code>s; the energy change of flipping <span class="math inline">\(s_i\)</span> is <span class="math inline">\(\Delta E_i = 2 s_i h_i\)</span>; 2. flip every site of the current colour with probability <span class="math inline">\(\min(1, e^{-\Delta E_i/T})\)</span>; 3. repeat for the other colour.</p>
+<p>The Ising model on an <span class="math inline">\(L\times L\)</span> periodic lattice, <span class="math inline">\(E = -\sum_{\langle ij\rangle} s_i s_j\)</span>, <span class="math inline">\(s_i=\pm1\)</span>, has a phase transition at <span class="math inline">\(T_c = 2/\ln(1+\sqrt2) \approx 2.269\)</span> (units <span class="math inline">\(J = k_B = 1\)</span>). A <strong>checkerboard Metropolis sweep</strong> colours the lattice like a chessboard; sites of one colour do not interact with each other, so all of them can be updated at once. For the sites of one colour we compute the neighbour sum <span class="math inline">\(h_i\)</span> with four <code>roll</code>s, so that the energy change of flipping <span class="math inline">\(s_i\)</span> is <span class="math inline">\(\Delta E_i = 2 s_i h_i\)</span>, and flip every site with probability <span class="math inline">\(\min(1, e^{-\Delta E_i/T})\)</span>; then we repeat this for the other colour.</p>
 <p>We run <strong>64 independent chains</strong> of <span class="math inline">\(64\times64\)</span> spins for 200 sweeps from the ordered state <span class="math inline">\(s_i=+1\)</span>, discard the first 50 sweeps and average <span class="math inline">\(|m| = |\frac{1}{L^2}\sum_i s_i|\)</span> over the remaining 150. The error bar is the standard deviation of the 64 chain averages divided by <span class="math inline">\(\sqrt{64}\)</span> (chains are independent). Temperatures: <span class="math inline">\(T = 2.0 &lt; T_c\)</span> and <span class="math inline">\(T = 3.0 &gt; T_c\)</span>. For <span class="math inline">\(T&lt;T_c\)</span> the infinite-lattice result of Onsager and Yang, <span class="math inline">\(m = [1-\sinh^{-4}(2/T)]^{1/8}\)</span>, is a reference.</p>
-<p>The three implementations: * <strong>NumPy</strong> — vectorised over chains and sites, Python loop over sweeps; * <strong>JAX</strong> — the code for <em>one chain</em>; <code>jax.lax.scan</code> replaces the loop over sweeps, <code>jax.vmap</code> adds the chain dimension, <code>jax.jit</code> compiles everything into one program; * <strong>PyTorch</strong> — the NumPy code with <code>torch</code> functions (eager).</p>
+<p>The three implementations follow the style of each library. The NumPy version is vectorised over chains and sites, with a Python loop over sweeps. The JAX version is the code for <em>one chain</em>: <code>jax.lax.scan</code> replaces the loop over sweeps, <code>jax.vmap</code> adds the chain dimension, and <code>jax.jit</code> compiles everything into one program. The PyTorch version is the NumPy code with <code>torch</code> functions, executed eagerly.</p>
 <p>Each library has its own random-number generator, so the chains differ; the averages must agree within errors.</p>
 <div class="cell" data-execution_count="9">
 <details open="">
@@ -1130,9 +1133,9 @@ largest pairwise deviation in units of the combined error:
 </div>
 </div>
 <p>The three implementations sample the same distribution: at both temperatures the averages agree within the statistical error. With three pairs compared per temperature, a largest deviation of up to about 2σ occurs by chance; a deviation above 3σ would point to a bug. Below <span class="math inline">\(T_c\)</span> the finite lattice gives a value close to the infinite-lattice <span class="math inline">\(m\)</span>; above <span class="math inline">\(T_c\)</span>, <span class="math inline">\(\langle|m|\rangle\)</span> is small and nonzero only because <span class="math inline">\(L\)</span> is finite (it scales as <span class="math inline">\(L^{-1}\)</span> in the disordered phase).</p>
-<section id="the-cost-of-random-numbers" class="level3">
-<h3 class="anchored" data-anchor-id="the-cost-of-random-numbers">The cost of random numbers</h3>
-<p>Each sweep draws one uniform random number per site, <span class="math inline">\(2\times 200\times 64\times 64^2 \approx 1.0\times10^8\)</span> numbers per run. NumPy uses the PCG64 generator (permuted congruential generator, 64-bit output); JAX by default uses Threefry, a <em>counter-based</em> generator designed so that independent streams can be split off a key deterministically and in parallel (<code>jax.random.split</code>). We time the generation of the same amount of random numbers alone.</p>
+<section id="cost-of-random-number-generation" class="level3">
+<h3 class="anchored" data-anchor-id="cost-of-random-number-generation">Cost of random-number generation</h3>
+<p>Each sweep draws one uniform random number per site, <span class="math inline">\(2\times 200\times 64\times 64^2 \approx 1.0\times10^8\)</span> numbers per run. NumPy uses the PCG64 generator (permuted congruential generator, 64-bit output); JAX by default uses Threefry, a <em>counter-based</em> generator designed so that independent streams can be split off a key deterministically and in parallel (<code>jax.random.split</code>). To see how much of the sampling time goes into random numbers, we time the generation of the same amount of random numbers alone.</p>
 <div class="cell" data-execution_count="11">
 <details open="">
 <summary>Code</summary>
@@ -1163,10 +1166,9 @@ largest pairwise deviation in units of the combined error:
 </section>
 <section id="training-one-epoch-of-an-mlp-and-a-cnn-on-mnist" class="level2">
 <h2 class="anchored" data-anchor-id="training-one-epoch-of-an-mlp-and-a-cnn-on-mnist">5. Training: one epoch of an MLP and a CNN on MNIST</h2>
-<p>MNIST (Modified National Institute of Standards and Technology database) contains 70 000 grey-scale images of handwritten digits, <span class="math inline">\(28\times28\)</span> pixels: 60 000 for training, 10 000 for testing. Two models, identical in every library: * <strong>MLP</strong> (multilayer perceptron): <span class="math inline">\(784 \to 256 \to 256 \to 10\)</span>, rectified linear unit (ReLU) activations; * <strong>CNN</strong> (convolutional neural network): Conv <span class="math inline">\(3\times3\)</span>, 16 channels → ReLU → max-pool 2 → Conv <span class="math inline">\(3\times3\)</span>, 32 channels → ReLU → max-pool 2 → Dense 128 → ReLU → Dense 10, no padding.</p>
+<p>MNIST (Modified National Institute of Standards and Technology database) contains 70 000 grey-scale images of handwritten digits, <span class="math inline">\(28\times28\)</span> pixels: 60 000 for training, 10 000 for testing. We train two models, identical in every library. The <strong>MLP</strong> (multilayer perceptron) has layers <span class="math inline">\(784 \to 256 \to 256 \to 10\)</span> with rectified linear unit (ReLU) activations. The <strong>CNN</strong> (convolutional neural network) is Conv <span class="math inline">\(3\times3\)</span>, 16 channels → ReLU → max-pool 2 → Conv <span class="math inline">\(3\times3\)</span>, 32 channels → ReLU → max-pool 2 → Dense 128 → ReLU → Dense 10, without padding.</p>
 <p>Common settings: Glorot-uniform initialisation of all weights, zero biases; Adam with learning rate <span class="math inline">\(10^{-3}\)</span> and <span class="math inline">\(\varepsilon = 10^{-8}\)</span>; cross-entropy loss on logits; batch size 128; the same random order of the training images for every library; 468 full batches = one epoch (the last 96 images are dropped so that all batches have the same shape and the compiled step is reused).</p>
-<p>Protocol for each run: 1. <strong>warm-up</strong>: 10 batches (from a different permutation) — includes compilation of the training step; reported as the first-call time; 2. <strong>one timed epoch</strong>, split into 6 chunks of 78 batches; the epoch time is the sum, the spread is the IQR of the 6 chunk times (scaled to an epoch); 3. test accuracy on the 10 000 test images.</p>
-<p>Accuracy after one epoch tells us whether the libraries did the same job — a fast but badly trained model would not be a fair comparison.</p>
+<p>Each run starts with a warm-up of 10 batches (from a different permutation), which includes the compilation of the training step and is reported as the first-call time. Then one epoch is timed, split into 6 chunks of 78 batches; the epoch time is the sum, and the spread is the IQR of the 6 chunk times (scaled to an epoch). Finally, the test accuracy on the 10 000 test images is measured. Accuracy after one epoch tells us whether the libraries did the same job — a fast but badly trained model would not be a fair comparison.</p>
 <div class="cell" data-execution_count="12">
 <details open="">
 <summary>Code</summary>
@@ -1434,8 +1436,9 @@ Keras [tensorflow] CNN: epoch  10.68 s   ( 22.8 ms/step)   warm-up  1.88 s   tes
 </div>
 </section>
 </section>
-<section id="the-same-training-step-in-flax-nnx-pytorch-and-keras" class="level2">
-<h2 class="anchored" data-anchor-id="the-same-training-step-in-flax-nnx-pytorch-and-keras">6. The same training step in Flax NNX, PyTorch and Keras</h2>
+<section id="training-step-in-flax-nnx-pytorch-and-keras" class="level2">
+<h2 class="anchored" data-anchor-id="training-step-in-flax-nnx-pytorch-and-keras">6. Training step in Flax NNX, PyTorch and Keras</h2>
+<p>The three listings show the same training step, expressed in the style of each library; the table below them names the differences.</p>
 
 <table>
 <tbody><tr>
@@ -1538,8 +1541,8 @@ Keras 3
 </tr>
 <tr class="even">
 <td>Training loop</td>
-<td>written by the user</td>
-<td>written by the user</td>
+<td>coded by the user</td>
+<td>coded by the user</td>
 <td><code>fit</code> (a custom loop is possible, but backend-specific)</td>
 </tr>
 <tr class="odd">
@@ -1551,9 +1554,9 @@ Keras 3
 </tbody>
 </table>
 </section>
-<section id="all-results-one-table-and-one-figure" class="level2">
-<h2 class="anchored" data-anchor-id="all-results-one-table-and-one-figure">7. All results: one table and one figure</h2>
-<p>Columns: <code>median_s</code> — typical time of one call (for training: one epoch); <code>IQR_s</code> — interquartile range of the repeats; <code>first_call_s</code> — the first call (for training: the 10 warm-up batches); <code>compile_overhead_s</code> — first call minus the typical call (for training: warm-up minus 10 typical steps). A negative overhead within the IQR means no measurable compilation cost. JAX op-by-op also has a first-call cost: every primitive (<code>jnp.tanh</code>, <code>jnp.matmul</code>, …) is compiled once for each new input shape and then cached.</p>
+<section id="table-and-figure-of-all-measurements" class="level2">
+<h2 class="anchored" data-anchor-id="table-and-figure-of-all-measurements">7. Table and figure of all measurements</h2>
+<p>The table has the following columns: <code>median_s</code> — typical time of one call (for training: one epoch); <code>IQR_s</code> — interquartile range of the repeats; <code>first_call_s</code> — the first call (for training: the 10 warm-up batches); <code>compile_overhead_s</code> — first call minus the typical call (for training: warm-up minus 10 typical steps). A negative overhead within the IQR means no measurable compilation cost. JAX op-by-op also has a first-call cost: every primitive (<code>jnp.tanh</code>, <code>jnp.matmul</code>, …) is compiled once for each new input shape and then cached.</p>
 <div class="cell" data-execution_count="16">
 <details open="">
 <summary>Code</summary>
@@ -1747,13 +1750,35 @@ total run time of the notebook: 340 s
 <section id="trade-offs" class="level2">
 <h2 class="anchored" data-anchor-id="trade-offs">9. Trade-offs</h2>
 <p>The numbers below are from the run stored in this notebook: CPU only, 8 threads per library, 1-minute load average 16.7 at the start and 13.4 at the end on 16 logical cores. Other programs were running. The thread-scaling check in Section 2 shows it: the PyTorch elementwise chain took 241 ms with 8 threads and 227 ms with 4. A re-run will give somewhat different times. On a GPU, or with much larger models, the ranking can change.</p>
-<p><strong>1. One large kernel: the library hardly matters.</strong> The <span class="math inline">\(2048\times2048\)</span> matrix multiplication took 66–98 ms in every library (175–260 GFLOP/s). The slowest-to-fastest ratio is 1.48, comparable with the spread between repeats (PyTorch IQR 35 ms). Each library passes the work to an optimised linear-algebra kernel.</p>
-<p><strong>2. Many small operations: compilation pays off.</strong> The elementwise chain on <span class="math inline">\(10^7\)</span> numbers took 1.05 s in NumPy (NumPy runs elementwise operations on one thread) and 0.15–0.29 s in the eager modes of TensorFlow, PyTorch and JAX. Compiling the formula into one fused loop cut this to 79 ms (JAX jit), 57 ms (TensorFlow + XLA) and 39 ms (<code>torch.compile</code>). Compared with NumPy, JAX jit is 13× faster; compared with eager PyTorch, <code>torch.compile</code> is 5.8× faster.</p>
-<p><strong>3. Compilation is not free, and its cost differs by two orders of magnitude.</strong> XLA compilation (JAX jit, <code>tf.function + XLA</code>) added 0.04–0.3 s to the first call. A cold <code>torch.compile</code> of the same formula took 16.2 s, because it generates and compiles C++ code. It saves <span class="math inline">\(226 - 39 = 187\)</span> ms per call, so it pays off only after about 87 calls. JAX also has a cost in op-by-op mode: the first gradient call took 1.5 s, because each primitive is compiled once per shape.</p>
-<p><strong>4. Automatic differentiation: the same derivatives, at different speeds.</strong> Every library reproduced the closed-form gradient and Hessian–vector product to a relative error below <span class="math inline">\(10^{-6}\)</span>. The compiled gradient took 12.8 ms in JAX and 15.3 ms in TensorFlow + XLA, against 34 ms for eager PyTorch and eager TensorFlow. The Hessian–vector product cost 1.3 gradients in JAX jit, 1.8 in PyTorch and 2.1 in eager TensorFlow.</p>
-<p><strong>5. Compilation does not guarantee speed: the Ising model.</strong> All three samplers give the same physics: the largest pairwise deviation is 2.1σ at <span class="math inline">\(T=2.0\)</span> and 0.9σ at <span class="math inline">\(T=3.0\)</span>, and <span class="math inline">\(\langle|m|\rangle = 0.911\)</span> matches Onsager–Yang (0.9113). Here vectorised NumPy was the fastest (1.78 s), ahead of PyTorch (2.91 s) and the compiled JAX version (4.55 s, plus 3.0 s of compilation). Random numbers explain part of the gap. Generating the same <span class="math inline">\(1.05\times10^8\)</span> uniform numbers alone took 0.54 s in NumPy (PCG64), 1.17 s in PyTorch and 1.91 s in JAX (Threefry), i.e.&nbsp;42 % of the JAX run time. In exchange, Threefry gives reproducible, independent streams through <code>jax.random.split</code>, and the JAX code is written for one chain and turned into 64 chains with <code>vmap</code>.</p>
-<p><strong>6. Training: compare time at equal accuracy.</strong> After one epoch the test accuracies agree within 0.33 percentage points for the MLP (96.2–96.5 %) and within 0.47 points for the CNN (97.5–98.0 %), so the timings compare the same job. * <em>Small MLP: per-step overhead dominates.</em> The JAX-based runs, which compile the whole step (Flax NNX 1.52 s, Keras [jax] 1.42 s per epoch, 3 ms/step), were 3.8–8× faster than eager PyTorch (6.16 s), Keras [tensorflow] (5.73 s) and Keras [torch] (11.33 s). * <em>CNN: kernel quality dominates.</em> Keras [tensorflow] was fastest (10.7 s per epoch) although its step was not XLA-compiled (<code>model.jit_compile = False</code>). The XLA-compiled JAX step (26.6 s) was no faster than eager PyTorch (26.6 s). When convolutions dominate, the speed of the convolution kernels matters more than fusing operations. * <em>The Keras front end has a cost on some backends.</em> Keras [jax] matched Flax NNX within the IQR (1.42 vs 1.52 s, MLP), while Keras [torch] was 1.8× slower than plain PyTorch (11.33 vs 6.16 s, MLP). * <em>Warm-up:</em> 0.7–1.9 s for the compiled steps (JAX, Keras [jax], Keras [tensorflow]), at most 0.06 s for eager PyTorch and Keras [torch].</p>
-<p><strong>7. Speed is one criterion among several.</strong></p>
+<section id="one-large-kernel" class="level3">
+<h3 class="anchored" data-anchor-id="one-large-kernel">9.1 One large kernel</h3>
+<p>For a single large kernel the library hardly matters. The <span class="math inline">\(2048\times2048\)</span> matrix multiplication took 66–98 ms in every library (175–260 GFLOP/s). The slowest-to-fastest ratio is 1.48, comparable with the spread between repeats (PyTorch IQR 35 ms). Each library passes the work to an optimised linear-algebra kernel.</p>
+</section>
+<section id="many-small-operations" class="level3">
+<h3 class="anchored" data-anchor-id="many-small-operations">9.2 Many small operations</h3>
+<p>For many small operations compilation pays off. The elementwise chain on <span class="math inline">\(10^7\)</span> numbers took 1.05 s in NumPy (NumPy runs elementwise operations on one thread) and 0.15–0.29 s in the eager modes of TensorFlow, PyTorch and JAX. Compiling the formula into one fused loop cut this to 79 ms (JAX jit), 57 ms (TensorFlow + XLA) and 39 ms (<code>torch.compile</code>). Compared with NumPy, JAX jit is 13× faster; compared with eager PyTorch, <code>torch.compile</code> is 5.8× faster.</p>
+</section>
+<section id="cost-of-compilation" class="level3">
+<h3 class="anchored" data-anchor-id="cost-of-compilation">9.3 Cost of compilation</h3>
+<p>Compilation is not free, and its cost differs by two orders of magnitude between compilers. XLA compilation (JAX jit, <code>tf.function + XLA</code>) added 0.04–0.3 s to the first call. A cold <code>torch.compile</code> of the same formula took 16.2 s, because it generates and compiles C++ code. It saves <span class="math inline">\(226 - 39 = 187\)</span> ms per call, so it pays off only after about 87 calls. JAX also has a cost in op-by-op mode: the first gradient call took 1.5 s, because each primitive is compiled once per shape.</p>
+</section>
+<section id="automatic-differentiation" class="level3">
+<h3 class="anchored" data-anchor-id="automatic-differentiation">9.4 Automatic differentiation</h3>
+<p>All libraries compute the same derivatives, at different speeds. Every library reproduced the closed-form gradient and Hessian–vector product to a relative error below <span class="math inline">\(10^{-6}\)</span>. The compiled gradient took 12.8 ms in JAX and 15.3 ms in TensorFlow + XLA, against 34 ms for eager PyTorch and eager TensorFlow. The Hessian–vector product cost 1.3 gradients in JAX jit, 1.8 in PyTorch and 2.1 in eager TensorFlow.</p>
+</section>
+<section id="the-ising-sampler" class="level3">
+<h3 class="anchored" data-anchor-id="the-ising-sampler">9.5 The Ising sampler</h3>
+<p>The Ising model shows that compilation does not guarantee speed. All three samplers give the same physics: the largest pairwise deviation is 2.1σ at <span class="math inline">\(T=2.0\)</span> and 0.9σ at <span class="math inline">\(T=3.0\)</span>, and <span class="math inline">\(\langle|m|\rangle = 0.911\)</span> matches Onsager–Yang (0.9113). Here vectorised NumPy was the fastest (1.78 s), ahead of PyTorch (2.91 s) and the compiled JAX version (4.55 s, plus 3.0 s of compilation). Random numbers explain part of the gap. Generating the same <span class="math inline">\(1.05\times10^8\)</span> uniform numbers alone took 0.54 s in NumPy (PCG64), 1.17 s in PyTorch and 1.91 s in JAX (Threefry), i.e.&nbsp;42 % of the JAX run time. In exchange, Threefry gives reproducible, independent streams through <code>jax.random.split</code>, and the JAX code is written for one chain and turned into 64 chains with <code>vmap</code>.</p>
+</section>
+<section id="training" class="level3">
+<h3 class="anchored" data-anchor-id="training">9.6 Training</h3>
+<p>Training times are compared at equal accuracy. After one epoch the test accuracies agree within 0.33 percentage points for the MLP (96.2–96.5 %) and within 0.47 points for the CNN (97.5–98.0 %), so the timings compare the same job.</p>
+<p>For the small MLP the per-step overhead dominates. The JAX-based runs, which compile the whole step (Flax NNX 1.52 s, Keras [jax] 1.42 s per epoch, 3 ms/step), were 3.8–8× faster than eager PyTorch (6.16 s), Keras [tensorflow] (5.73 s) and Keras [torch] (11.33 s). For the CNN the quality of the kernels dominates. Keras [tensorflow] was fastest (10.7 s per epoch) although its step was not XLA-compiled (<code>model.jit_compile = False</code>). The XLA-compiled JAX step (26.6 s) was no faster than eager PyTorch (26.6 s). When convolutions dominate, the speed of the convolution kernels matters more than fusing operations.</p>
+<p>The Keras front end has a cost on some backends: Keras [jax] matched Flax NNX within the IQR (1.42 vs 1.52 s, MLP), while Keras [torch] was 1.8× slower than plain PyTorch (11.33 vs 6.16 s, MLP). The warm-up took 0.7–1.9 s for the compiled steps (JAX, Keras [jax], Keras [tensorflow]), and at most 0.06 s for eager PyTorch and Keras [torch].</p>
+</section>
+<section id="criteria-beyond-speed" class="level3">
+<h3 class="anchored" data-anchor-id="criteria-beyond-speed">9.7 Criteria beyond speed</h3>
+<p>Speed is one criterion among several, as the table summarises.</p>
 <table class="table">
 <colgroup>
 <col style="width: 20%">
@@ -1811,14 +1836,15 @@ total run time of the notebook: 340 s
 </table>
 <p>No single library wins. Use NumPy for small array code without derivatives. JAX suits code that is transformed — differentiated, vectorised over chains or parameters, compiled once and run many times. PyTorch suits models whose structure changes from step to step and code that you debug line by line. Keras suits standard models trained with <code>fit</code>, when the backend should stay a free choice. Measure on your own problem and hardware, with the protocol of Section 1, before you decide.</p>
 </section>
+</section>
 <section id="exercises" class="level2">
 <h2 class="anchored" data-anchor-id="exercises">10. Exercises</h2>
 <ol type="1">
-<li><strong>Thread scaling.</strong> Repeat Section 2 with <code>N_THREADS = 1, 2, 4, 8</code> (restart the kernel each time — thread pools are fixed at import). Plot GFLOP/s of the matrix multiplication against the number of threads. Is the elementwise chain limited by arithmetic or by memory bandwidth?</li>
-<li><strong>Size dependence of compilation.</strong> Time <code>jax.jit</code> on the elementwise chain for <span class="math inline">\(N = 10^2, 10^4, 10^6, 10^7\)</span>. For which <span class="math inline">\(N\)</span> is the compiled version faster than NumPy <em>including</em> its first call?</li>
-<li><strong>Recompilation.</strong> Call <code>chain_jit</code> on arrays of 10 different lengths and time each call. Explain the result with the rule “JAX compiles once per input shape and dtype”. Why does the training loop drop the last incomplete batch?</li>
-<li><strong>Ising physics.</strong> Use <code>ising_jax</code> to compute <span class="math inline">\(\langle|m|\rangle\)</span> for 20 temperatures in <span class="math inline">\([1.5, 3.5]\)</span> and <span class="math inline">\(L = 16, 32, 64\)</span>. Where do the curves cross, and how does that compare with <span class="math inline">\(T_c\)</span>?</li>
-<li><strong>A larger network.</strong> Double the channel numbers of the CNN and repeat Section 5. Does the ranking of the libraries change? Relate your answer to the time per step spent in arithmetic versus the per-step overhead of Python.</li>
+<li>Repeat Section 2 with <code>N_THREADS = 1, 2, 4, 8</code> (restart the kernel each time — thread pools are fixed at import). Plot GFLOP/s of the matrix multiplication against the number of threads. Is the elementwise chain limited by arithmetic or by memory bandwidth?</li>
+<li>Time <code>jax.jit</code> on the elementwise chain for <span class="math inline">\(N = 10^2, 10^4, 10^6, 10^7\)</span> to see how the benefit of compilation depends on size. For which <span class="math inline">\(N\)</span> is the compiled version faster than NumPy <em>including</em> its first call?</li>
+<li>Call <code>chain_jit</code> on arrays of 10 different lengths and time each call. Explain the result with the rule “JAX compiles once per input shape and dtype”. Why does the training loop drop the last incomplete batch?</li>
+<li>Use <code>ising_jax</code> to compute <span class="math inline">\(\langle|m|\rangle\)</span> for 20 temperatures in <span class="math inline">\([1.5, 3.5]\)</span> and <span class="math inline">\(L = 16, 32, 64\)</span>. Where do the curves cross, and how does that compare with <span class="math inline">\(T_c\)</span>?</li>
+<li>Double the channel numbers of the CNN and repeat Section 5. Does the ranking of the libraries change? Relate your answer to the time per step spent in arithmetic versus the per-step overhead of Python.</li>
 </ol>
 
 

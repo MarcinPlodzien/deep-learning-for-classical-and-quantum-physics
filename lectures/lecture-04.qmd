@@ -33,7 +33,7 @@ The transfer matrix, the high- and low-temperature expansions, Kramers–Wannier
 :::
 
 ::: {.nb-item}
-[The 2D Ising model in JAX: Monte Carlo data, exact results and $T_c$ from a CNN](../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.ipynb)
+[The 2D Ising model and a CNN](../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.ipynb)
 
 The figures of the lecture: data sets for L = 10 to 50 and the CNN estimate of T_c for each size.
 :::

@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,9 +466,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-024-generative-models-variational-and-conditional-autoencoders" id="toc-lab-024-generative-models-variational-and-conditional-autoencoders" class="nav-link" data-scroll-target="#lab-024-generative-models-variational-and-conditional-autoencoders">Lab 024 — Generative models: variational and conditional autoencoders</a>
+  <li><a href="#lab-024-variational-and-conditional-autoencoders" id="toc-lab-024-variational-and-conditional-autoencoders" class="nav-link" data-scroll-target="#lab-024-variational-and-conditional-autoencoders">Lab 024 — Variational and conditional autoencoders</a>
   <ul class="collapse">
-  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">0. The data</a>
+  <li><a href="#the-mnist-data" id="toc-the-mnist-data" class="nav-link" data-scroll-target="#the-mnist-data">0. The MNIST data</a>
   <ul class="collapse">
   <li><a href="#one-training-function-for-every-model" id="toc-one-training-function-for-every-model" class="nav-link" data-scroll-target="#one-training-function-for-every-model">One training function for every model</a></li>
   </ul></li>
@@ -483,19 +483,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#the-variational-autoencoder" id="toc-the-variational-autoencoder" class="nav-link" data-scroll-target="#the-variational-autoencoder">3. The variational autoencoder</a>
   <ul class="collapse">
-  <li><a href="#a-latent-variable-model-and-the-integral-we-cannot-compute" id="toc-a-latent-variable-model-and-the-integral-we-cannot-compute" class="nav-link" data-scroll-target="#a-latent-variable-model-and-the-integral-we-cannot-compute">3.1 A latent-variable model, and the integral we cannot compute</a></li>
+  <li><a href="#latent-variable-models-and-the-marginal-likelihood" id="toc-latent-variable-models-and-the-marginal-likelihood" class="nav-link" data-scroll-target="#latent-variable-models-and-the-marginal-likelihood">3.1 Latent-variable models and the marginal likelihood</a></li>
   <li><a href="#the-evidence-lower-bound-elbo" id="toc-the-evidence-lower-bound-elbo" class="nav-link" data-scroll-target="#the-evidence-lower-bound-elbo">3.2 The evidence lower bound (ELBO)</a></li>
   <li><a href="#the-vae-loss" id="toc-the-vae-loss" class="nav-link" data-scroll-target="#the-vae-loss">3.3 The VAE loss</a></li>
-  <li><a href="#the-kl-divergence-between-two-gaussians-in-closed-form" id="toc-the-kl-divergence-between-two-gaussians-in-closed-form" class="nav-link" data-scroll-target="#the-kl-divergence-between-two-gaussians-in-closed-form">3.4 The KL divergence between two Gaussians, in closed form</a></li>
+  <li><a href="#kl-divergence-between-two-gaussians" id="toc-kl-divergence-between-two-gaussians" class="nav-link" data-scroll-target="#kl-divergence-between-two-gaussians">3.4 KL divergence between two Gaussians</a></li>
   <li><a href="#the-reparametrisation-trick" id="toc-the-reparametrisation-trick" class="nav-link" data-scroll-target="#the-reparametrisation-trick">3.5 The reparametrisation trick</a></li>
-  <li><a href="#the-network-and-the-loss-in-code" id="toc-the-network-and-the-loss-in-code" class="nav-link" data-scroll-target="#the-network-and-the-loss-in-code">3.6 The network and the loss in code</a></li>
+  <li><a href="#the-network-and-the-loss" id="toc-the-network-and-the-loss" class="nav-link" data-scroll-target="#the-network-and-the-loss">3.6 The network and the loss</a></li>
   <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">3.7 Training</a></li>
   <li><a href="#tightness-of-the-bound" id="toc-tightness-of-the-bound" class="nav-link" data-scroll-target="#tightness-of-the-bound">3.8 Tightness of the bound</a></li>
   </ul></li>
   <li><a href="#the-latent-space-of-a-vae" id="toc-the-latent-space-of-a-vae" class="nav-link" data-scroll-target="#the-latent-space-of-a-vae">4. The latent space of a VAE</a>
   <ul class="collapse">
-  <li><a href="#the-latent-plane-autoencoder-versus-vae" id="toc-the-latent-plane-autoencoder-versus-vae" class="nav-link" data-scroll-target="#the-latent-plane-autoencoder-versus-vae">The latent plane, autoencoder versus VAE</a></li>
+  <li><a href="#the-latent-plane-of-an-autoencoder-and-of-a-vae" id="toc-the-latent-plane-of-an-autoencoder-and-of-a-vae" class="nav-link" data-scroll-target="#the-latent-plane-of-an-autoencoder-and-of-a-vae">The latent plane of an autoencoder and of a VAE</a></li>
   <li><a href="#new-digits" id="toc-new-digits" class="nav-link" data-scroll-target="#new-digits">New digits</a></li>
+  <li><a href="#distance-to-the-training-set" id="toc-distance-to-the-training-set" class="nav-link" data-scroll-target="#distance-to-the-training-set">Distance to the training set</a></li>
   <li><a href="#interpolation-between-two-digits" id="toc-interpolation-between-two-digits" class="nav-link" data-scroll-target="#interpolation-between-two-digits">Interpolation between two digits</a></li>
   <li><a href="#meaning-of-the-latent-coordinates" id="toc-meaning-of-the-latent-coordinates" class="nav-link" data-scroll-target="#meaning-of-the-latent-coordinates">Meaning of the latent coordinates</a></li>
   </ul></li>
@@ -509,9 +510,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#digits-on-demand" id="toc-digits-on-demand" class="nav-link" data-scroll-target="#digits-on-demand">Digits on demand</a></li>
   <li><a href="#style-transfer" id="toc-style-transfer" class="nav-link" data-scroll-target="#style-transfer">Style transfer</a></li>
   <li><a href="#the-latent-plane-of-a-cvae" id="toc-the-latent-plane-of-a-cvae" class="nav-link" data-scroll-target="#the-latent-plane-of-a-cvae">The latent plane of a cVAE</a></li>
-  <li><a href="#requested-versus-generated-digits" id="toc-requested-versus-generated-digits" class="nav-link" data-scroll-target="#requested-versus-generated-digits">Requested versus generated digits</a></li>
+  <li><a href="#confusion-matrix-of-requested-digits" id="toc-confusion-matrix-of-requested-digits" class="nav-link" data-scroll-target="#confusion-matrix-of-requested-digits">Confusion matrix of requested digits</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#from-autoencoders-to-conditional-generation" id="toc-from-autoencoders-to-conditional-generation" class="nav-link" data-scroll-target="#from-autoencoders-to-conditional-generation">From autoencoders to conditional generation</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-06/lab-024-vae-cvae.ipynb" class="toc-action">View source</a></p></div></div></nav>
@@ -540,21 +541,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <section id="deep-learning-in-classical-and-quantum-physics" class="level1">
 <h1>Deep Learning in Classical and Quantum Physics</h1>
-2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 024
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 024 <br>
 <hr>
 </section>
-<section id="lab-024-generative-models-variational-and-conditional-autoencoders" class="level1">
-<h1>Lab 024 — Generative models: variational and conditional autoencoders</h1>
-<p>The images <span class="math inline">\(\mathbf x_1,\dots,\mathbf x_n\)</span> of a data set are <strong>samples</strong> from an unknown probability distribution <span class="math inline">\(p(\mathbf x)\)</span>. A <strong>generative model</strong> learns an approximation <span class="math inline">\(p_\theta(\mathbf x)\)</span> from the samples and draws <strong>new</strong> samples from it: images that are not in the data set but could have been. In physics the same question reads: can a network learn the Boltzmann distribution of a spin model from Monte Carlo snapshots, and produce new configurations at a chosen temperature? This notebook builds the method on MNIST; the physics follows in Lab 025.</p>
-<ol type="1">
-<li><strong>Random latent vectors of an autoencoder.</strong> Decoding random latent vectors gives no digits.</li>
-<li><strong>Probability, likelihood and maximum likelihood.</strong> A coin, and a Gaussian mixture fitted by gradient ascent.</li>
-<li><strong>The variational autoencoder (VAE).</strong> Encoder <span class="math inline">\(q_\phi(\mathbf z|\mathbf x)\)</span>, reparametrisation trick, the evidence lower bound (ELBO).</li>
-<li><strong>The latent space of a VAE.</strong> Sampling from <span class="math inline">\(\mathcal N(0,I)\)</span>, interpolation, latent traversals, active dimensions.</li>
-<li><strong>Judging generated digits with a classifier.</strong> A CNN trained on real MNIST; confusion matrices and class distributions of synthetic data.</li>
-<li><strong>The conditional VAE (cVAE).</strong> Digits on demand, and a test of the requested digit against the classifier.</li>
-</ol>
-<p>Everything is written in <strong>JAX</strong>: the networks in <code>flax.nnx</code>, the optimiser in <code>optax</code>, one jit-compiled <code>lax.scan</code> per training epoch, explicit random keys. The figures of the Lecture 6 slides are written to <code>../beamer/figures/gen_*.png</code>, the numbers quoted there to <code>../beamer/figures/numbers_lab024.json</code>.</p>
+<section id="lab-024-variational-and-conditional-autoencoders" class="level1">
+<h1>Lab 024 — Variational and conditional autoencoders</h1>
+<p>The images <span class="math inline">\(\mathbf x_1,\dots,\mathbf x_n\)</span> of a data set are <strong>samples</strong> from an unknown probability distribution <span class="math inline">\(p(\mathbf x)\)</span>. A <strong>generative model</strong> learns an approximation <span class="math inline">\(p_\theta(\mathbf x)\)</span> from the samples and draws <strong>new</strong> samples from it: images that are not in the data set but could have been. In physics the same task appears as learning the Boltzmann distribution of a spin model from Monte Carlo snapshots and producing new configurations at a chosen temperature. This notebook develops the method on MNIST handwritten digits; the physics follows in Lab 025.</p>
+<p>We start from the autoencoder of Lab 017 and see that decoding random latent vectors does not give digits (Section 1): an autoencoder learns a latent space but no probability distribution on it. To put a distribution there we need the language of probability, likelihood and maximum likelihood, which Section 2 introduces with a coin and with a Gaussian mixture fitted by gradient ascent. Section 3 builds the variational autoencoder (VAE): an encoder <span class="math inline">\(q_\phi(\mathbf z|\mathbf x)\)</span>, the reparametrisation trick, and the evidence lower bound (ELBO) that serves as its loss. Section 4 explores the latent space of the trained VAE through sampling from <span class="math inline">\(\mathcal N(0,I)\)</span>, interpolation, latent traversals and the count of active dimensions. Since pictures alone do not measure the quality of generated images, Section 5 trains a convolutional neural network (CNN) classifier on real MNIST and uses it as a referee, with confusion matrices and class distributions of the synthetic data. Section 6 adds a label to both networks, which gives the conditional VAE (cVAE): it draws the digit we ask for, and the classifier tests whether it does.</p>
+<p>The implementation uses <strong>JAX</strong>: the networks are defined in <code>flax.nnx</code>, the optimiser comes from <code>optax</code>, each training epoch is one jit-compiled <code>lax.scan</code>, and all random numbers come from explicit keys. The figures of the Lecture 6 slides are saved to <code>../beamer/figures/gen_*.png</code> and the numbers quoted there to <code>../beamer/figures/numbers_lab024.json</code>.</p>
 <blockquote class="blockquote">
 <p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em>. The first code cell sets <code>JAX_PLATFORMS=cpu</code>; the networks and numbers of epochs are chosen so that the notebook finishes in about a quarter of an hour on a multi-core CPU. With a GPU runtime you can delete that line and train longer. 2. <code>jax</code>, <code>flax</code>, <code>optax</code> and <code>matplotlib</code> are pre-installed in Colab. 3. MNIST is read from <code>data/MNIST_raw/</code> (the four <code>*-ubyte.gz</code> files); if they are missing, the notebook downloads them. 4. Run the cells <em>in order</em>: later cells use variables defined earlier.</p>
 </blockquote>
@@ -614,9 +608,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <hr>
-<section id="the-data" class="level2">
-<h2 class="anchored" data-anchor-id="the-data">0. The data</h2>
-<p>MNIST: <span class="math inline">\(28\times28\)</span> grayscale digits, <span class="math inline">\(60\,000\)</span> for training and <span class="math inline">\(10\,000\)</span> for testing [LeCun <em>et al.</em>, Proc. IEEE <strong>86</strong>, 2278 (1998), <a href="https://doi.org/10.1109/5.726791">doi:10.1109/5.726791</a>]. Each image is a vector <span class="math inline">\(\mathbf x\in[0,1]^{784}\)</span>. The raw IDX files are read with <code>gzip</code> and <code>numpy</code>.</p>
+<section id="the-mnist-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-mnist-data">0. The MNIST data</h2>
+<p>MNIST (Modified National Institute of Standards and Technology database) contains <span class="math inline">\(28\times28\)</span> grayscale digits, <span class="math inline">\(60\,000\)</span> for training and <span class="math inline">\(10\,000\)</span> for testing [LeCun <em>et al.</em>, Proc. IEEE <strong>86</strong>, 2278 (1998), <a href="https://doi.org/10.1109/5.726791">doi:10.1109/5.726791</a>]. Each image becomes a vector <span class="math inline">\(\mathbf x\in[0,1]^{784}\)</span>. The raw IDX files are read with <code>gzip</code> and <code>numpy</code>.</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -649,8 +643,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <section id="one-training-function-for-every-model" class="level3">
 <h3 class="anchored" data-anchor-id="one-training-function-for-every-model">One training function for every model</h3>
-<p>All models below are trained by the same function. A model is split by <code>nnx.split</code> into its static structure (<code>graphdef</code>) and its parameters; the loss is a pure function of the parameters, a minibatch and a random <strong>key</strong>; <code>jax.value_and_grad</code> gives the loss and the gradient; <code>optax.adam</code> updates the parameters; <code>jax.lax.scan</code> runs over all minibatches of one epoch, and <code>jax.jit</code> compiles the whole epoch into one XLA program.</p>
-<p><code>loss_fn(model, batch, key)</code> returns the loss and a dictionary of numbers to monitor. The key is split once per minibatch, so that every minibatch gets fresh random numbers (the VAE needs them) and the whole run is fixed by one seed.</p>
+<p>All models of this notebook are trained by the same function, so we write it once. A model is split by <code>nnx.split</code> into its static structure (<code>graphdef</code>) and its parameters, which makes the loss a pure function of the parameters, a minibatch and a random <strong>key</strong>. <code>jax.value_and_grad</code> then returns the loss together with its gradient, <code>optax.adam</code> updates the parameters, <code>jax.lax.scan</code> runs over all minibatches of one epoch, and <code>jax.jit</code> compiles the whole epoch into one XLA (Accelerated Linear Algebra) program.</p>
+<p>Each model provides <code>loss_fn(model, batch, key)</code>, which returns the loss and a dictionary of numbers to monitor. The key is split once per minibatch: every minibatch gets fresh random numbers, which the VAE needs, while the whole run is still fixed by one seed.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
@@ -702,8 +696,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="random-latent-vectors-of-an-autoencoder" class="level2">
 <h2 class="anchored" data-anchor-id="random-latent-vectors-of-an-autoencoder">1. Random latent vectors of an autoencoder</h2>
-<p>Recall Lab 017: an encoder <span class="math inline">\(E\)</span> maps an image to a latent vector <span class="math inline">\(\mathbf z=E(\mathbf x)\in\mathbb R^d\)</span>, a decoder <span class="math inline">\(G\)</span> maps it back, <span class="math inline">\(\hat{\mathbf x}=G(\mathbf z)\)</span>, and both are trained to minimise the reconstruction error <span class="math inline">\(\frac1D\lVert\mathbf x-\hat{\mathbf x}\rVert^2\)</span>. The decoder turns <em>any</em> <span class="math inline">\(\mathbf z\)</span> into an image. Can it produce <strong>new</strong> digits if we feed it latent vectors that no training image was mapped to?</p>
-<p>We train the dense autoencoder of Lab 017 (<span class="math inline">\(784\to256\to64\to d\)</span> and back, ReLU, sigmoid output; 12 epochs) with <span class="math inline">\(d=2\)</span>, so that the latent plane can be drawn, and with <span class="math inline">\(d=16\)</span>. Shapes for a minibatch of <span class="math inline">\(B\)</span> images: <span class="math inline">\(\mathbf x\)</span>: <span class="math inline">\((B,784)\)</span> <span class="math inline">\(\to\)</span> <span class="math inline">\((B,256)\to(B,64)\to\mathbf z\)</span>: <span class="math inline">\((B,d)\)</span> <span class="math inline">\(\to(B,64)\to(B,256)\to\hat{\mathbf x}\)</span>: <span class="math inline">\((B,784)\)</span>. The loss is the mean squared error over pixels and images.</p>
+<p>Recall Lab 017: an encoder <span class="math inline">\(E\)</span> maps an image to a latent vector <span class="math inline">\(\mathbf z=E(\mathbf x)\in\mathbb R^d\)</span>, a decoder <span class="math inline">\(G\)</span> maps it back, <span class="math inline">\(\hat{\mathbf x}=G(\mathbf z)\)</span>, and both are trained to minimise the reconstruction error <span class="math inline">\(\frac1D\lVert\mathbf x-\hat{\mathbf x}\rVert^2\)</span>. The decoder turns <em>any</em> <span class="math inline">\(\mathbf z\)</span> into an image, so it is tempting to use it as a generator: feed it latent vectors that no training image was mapped to and hope for <strong>new</strong> digits. This section tests that idea.</p>
+<p>We train the dense autoencoder of Lab 017 (<span class="math inline">\(784\to256\to64\to d\)</span> and back, ReLU, sigmoid output; 12 epochs) twice: with <span class="math inline">\(d=2\)</span>, so that the latent plane can be drawn, and with <span class="math inline">\(d=16\)</span>. For a minibatch of <span class="math inline">\(B\)</span> images the shapes are <span class="math inline">\(\mathbf x\)</span>: <span class="math inline">\((B,784)\)</span> <span class="math inline">\(\to\)</span> <span class="math inline">\((B,256)\to(B,64)\to\mathbf z\)</span>: <span class="math inline">\((B,d)\)</span> <span class="math inline">\(\to(B,64)\to(B,256)\to\hat{\mathbf x}\)</span>: <span class="math inline">\((B,784)\)</span>, and the loss is the mean squared error over pixels and images.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
@@ -769,7 +763,7 @@ autoencoder, d = 16</code></pre>
 </div>
 <section id="decoding-a-regular-grid-of-the-latent-plane" class="level3">
 <h3 class="anchored" data-anchor-id="decoding-a-regular-grid-of-the-latent-plane">Decoding a regular grid of the latent plane</h3>
-<p>The latent codes <span class="math inline">\(\mathbf z=E(\mathbf x)\)</span> of the test digits, coloured by the true digit (used only for plotting), and the images <span class="math inline">\(G(\mathbf z)\)</span> decoded from a regular <span class="math inline">\(12\times12\)</span> grid of points that covers the codes (from the 1st to the 99th percentile of each coordinate).</p>
+<p>With <span class="math inline">\(d=2\)</span> we can look at the whole latent space. The left panel shows the latent codes <span class="math inline">\(\mathbf z=E(\mathbf x)\)</span> of the test digits, coloured by the true digit (the labels are used only for plotting). The right panel shows the images <span class="math inline">\(G(\mathbf z)\)</span> decoded from a regular <span class="math inline">\(12\times12\)</span> grid of points covering the codes, from the 1st to the 99th percentile of each coordinate. Look for grid points whose images are not digits.</p>
 <div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
@@ -804,7 +798,7 @@ autoencoder, d = 16</code></pre>
 </section>
 <section id="random-latent-vectors-in-16-dimensions" class="level3">
 <h3 class="anchored" data-anchor-id="random-latent-vectors-in-16-dimensions">Random latent vectors in 16 dimensions</h3>
-<p>With <span class="math inline">\(d=16\)</span> we cannot look at the latent space. We draw random latent vectors in two ways: from <span class="math inline">\(\mathcal N(0,I)\)</span>, and from a Gaussian fitted to the training codes, coordinate by coordinate: <span class="math inline">\(z_k\sim\mathcal N(m_k,s_k^2)\)</span> with <span class="math inline">\(m_k\)</span>, <span class="math inline">\(s_k\)</span> the mean and standard deviation of <span class="math inline">\(E(\mathbf x)_k\)</span> over the training set.</p>
+<p>With <span class="math inline">\(d=16\)</span> we can no longer look at the latent space, so we sample it instead. We draw random latent vectors in two ways: from <span class="math inline">\(\mathcal N(0,I)\)</span>, and from a Gaussian fitted to the training codes coordinate by coordinate, <span class="math inline">\(z_k\sim\mathcal N(m_k,s_k^2)\)</span>, where <span class="math inline">\(m_k\)</span> and <span class="math inline">\(s_k\)</span> are the mean and standard deviation of <span class="math inline">\(E(\mathbf x)_k\)</span> over the training set. The printed standard deviations, between about 1.8 and 3.6, already show that the codes do not follow <span class="math inline">\(\mathcal N(0,I)\)</span>.</p>
 <div class="cell" data-execution_count="6">
 <details open="">
 <summary>Code</summary>
@@ -827,19 +821,15 @@ autoencoder, d = 16</code></pre>
 <p><img src="lab-024-vae-cvae_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Neither works. The codes of an autoencoder do not fill a simple region: they lie on a thin, curved set, and a random point of <span class="math inline">\(\mathbb R^{16}\)</span>, even one with the right mean and spread in every coordinate, almost never falls on it. Section 5 measures this with a classifier. <strong>To generate we need a latent space whose distribution we know and can sample.</strong> This is what the variational autoencoder adds.</p>
-<p><strong>Try it.</strong> Decode the midpoint <span class="math inline">\(\frac12\big(E(\mathbf x_a)+E(\mathbf x_b)\big)\)</span> of the codes of two different test digits with the <span class="math inline">\(d=16\)</span> autoencoder. Is it a digit?</p>
+<p>Neither choice works. The codes of an autoencoder do not fill a simple region: they lie on a thin, curved set, and a random point of <span class="math inline">\(\mathbb R^{16}\)</span>, even one with the right mean and spread in every coordinate, almost never falls on it; Section 5 measures this with a classifier. <strong>To generate we need a latent space whose distribution we know and can sample.</strong> This is what the variational autoencoder adds.</p>
+<p>As an exercise, decode the midpoint <span class="math inline">\(\frac12\big(E(\mathbf x_a)+E(\mathbf x_b)\big)\)</span> of the codes of two different test digits with the <span class="math inline">\(d=16\)</span> autoencoder and check whether it is a digit.</p>
 <hr>
 </section>
 </section>
 <section id="probability-likelihood-maximum-likelihood" class="level2">
 <h2 class="anchored" data-anchor-id="probability-likelihood-maximum-likelihood">2. Probability, likelihood, maximum likelihood</h2>
-<p>A model <span class="math inline">\(p(x\,|\,\theta)\)</span> gives the probability of data <span class="math inline">\(x\)</span> when the parameters are <span class="math inline">\(\theta\)</span>. The same formula is read in two ways:</p>
-<ul>
-<li><strong>probability:</strong> <span class="math inline">\(\theta\)</span> fixed, <span class="math inline">\(x\)</span> varies. Summed over all outcomes <span class="math inline">\(x\)</span> it gives 1.</li>
-<li><strong>likelihood:</strong> the observed data fixed, <span class="math inline">\(\theta\)</span> varies, <span class="math inline">\(L(\theta)=p(x_{\rm obs}\,|\,\theta)\)</span>. It is a function of <span class="math inline">\(\theta\)</span>, not a probability distribution over <span class="math inline">\(\theta\)</span>.</li>
-</ul>
-<p>A coin with probability <span class="math inline">\(\theta\)</span> of heads, tossed 10 times: <span class="math inline">\(p(k\,|\,\theta)=\binom{10}{k}\theta^k(1-\theta)^{10-k}\)</span>. We observed <span class="math inline">\(k=7\)</span>.</p>
+<p>A model <span class="math inline">\(p(x\,|\,\theta)\)</span> gives the probability of data <span class="math inline">\(x\)</span> when the parameters are <span class="math inline">\(\theta\)</span>. The same formula can be read in two ways. Read as a <strong>probability</strong>, <span class="math inline">\(\theta\)</span> is fixed and <span class="math inline">\(x\)</span> varies; summed over all outcomes <span class="math inline">\(x\)</span> it gives 1. Read as a <strong>likelihood</strong>, the observed data are fixed and <span class="math inline">\(\theta\)</span> varies, <span class="math inline">\(L(\theta)=p(x_{\rm obs}\,|\,\theta)\)</span>; this is a function of <span class="math inline">\(\theta\)</span>, not a probability distribution over <span class="math inline">\(\theta\)</span>, and nothing forces it to integrate to 1.</p>
+<p>A coin with probability <span class="math inline">\(\theta\)</span> of heads, tossed 10 times, shows the difference: <span class="math inline">\(p(k\,|\,\theta)=\binom{10}{k}\theta^k(1-\theta)^{10-k}\)</span>. We observed <span class="math inline">\(k=7\)</span>. The left panel below plots <span class="math inline">\(p(k\,|\,0.5)\)</span> as a distribution over <span class="math inline">\(k\)</span>, the right panel <span class="math inline">\(L(\theta)=p(7\,|\,\theta)\)</span> as a function of <span class="math inline">\(\theta\)</span>. The printout gives <span class="math inline">\(p(7\,|\,0.5)=0.117\)</span>, the maximum of the likelihood at <span class="math inline">\(\theta=0.7\)</span>, and <span class="math inline">\(\int_0^1L\,d\theta=1/11\)</span>, which confirms that the likelihood is not normalised.</p>
 <div class="cell" data-execution_count="7">
 <details open="">
 <summary>Code</summary>
@@ -867,8 +857,8 @@ autoencoder, d = 16</code></pre>
 </div>
 <section id="maximum-likelihood" class="level3">
 <h3 class="anchored" data-anchor-id="maximum-likelihood">Maximum likelihood</h3>
-<p>Data <span class="math inline">\(\mathbf x_1,\dots,\mathbf x_n\)</span>, independent samples of an unknown <span class="math inline">\(p(\mathbf x)\)</span>; a model <span class="math inline">\(p_\theta(\mathbf x)\)</span>. The likelihood of all the data and its logarithm: <span class="math display">\[L(\theta)=\prod_{i=1}^n p_\theta(\mathbf x_i),\qquad \ell(\theta)=\sum_{i=1}^n\log p_\theta(\mathbf x_i),\qquad \theta^*=\arg\max_\theta\ell(\theta).\]</span> For <span class="math inline">\(n\to\infty\)</span>, <span class="math inline">\(\frac1n\ell(\theta)\to\mathbb E_{p}[\log p_\theta]=-H(p)-\mathrm{KL}(p\,\|\,p_\theta)\)</span>: maximum likelihood minimises the Kullback–Leibler divergence between the data distribution and the model. The cross-entropy loss of classification is minus a log-likelihood.</p>
-<p>Example: 1500 points in 2D from three groups. Two models: one Gaussian, for which <span class="math inline">\(\theta^*\)</span> is the sample mean and the sample covariance (with <span class="math inline">\(1/n\)</span>), and a mixture of three Gaussians, <span class="math display">\[p_\theta(\mathbf x)=\sum_{k=1}^{3}\pi_k\,\mathcal N(\mathbf x;\boldsymbol\mu_k,\Sigma_k),\]</span> which has no closed-form maximum. We maximise <span class="math inline">\(\ell\)</span> by <strong>gradient ascent</strong>, exactly as we train a network. Constraints are built into the parametrisation: <span class="math inline">\(\pi=\mathrm{softmax}(\mathbf a)\)</span>, and <span class="math inline">\(\Sigma_k=L_kL_k^\top\)</span> with <span class="math inline">\(L_k\)</span> lower-triangular and a positive diagonal <span class="math inline">\(e^{(\cdot)}\)</span>. Then we <strong>draw new points</strong> from each fitted model.</p>
+<p>Given data <span class="math inline">\(\mathbf x_1,\dots,\mathbf x_n\)</span>, independent samples of an unknown <span class="math inline">\(p(\mathbf x)\)</span>, and a model <span class="math inline">\(p_\theta(\mathbf x)\)</span>, the likelihood of all the data and its logarithm are <span class="math display">\[L(\theta)=\prod_{i=1}^n p_\theta(\mathbf x_i),\qquad \ell(\theta)=\sum_{i=1}^n\log p_\theta(\mathbf x_i),\qquad \theta^*=\arg\max_\theta\ell(\theta).\]</span> For <span class="math inline">\(n\to\infty\)</span>, <span class="math inline">\(\frac1n\ell(\theta)\to\mathbb E_{p}[\log p_\theta]=-H(p)-\mathrm{KL}(p\,\|\,p_\theta)\)</span>, where <span class="math inline">\(H\)</span> is the entropy and KL the Kullback–Leibler divergence. Since <span class="math inline">\(H(p)\)</span> does not depend on <span class="math inline">\(\theta\)</span>, maximum likelihood minimises the KL divergence between the data distribution and the model. The cross-entropy loss of classification is minus a log-likelihood of exactly this kind.</p>
+<p>As an example we take 1500 points in 2D drawn from three groups and fit two models. The first is one Gaussian, for which <span class="math inline">\(\theta^*\)</span> is known in closed form: the sample mean and the sample covariance (with <span class="math inline">\(1/n\)</span>). The second is a mixture of three Gaussians, <span class="math display">\[p_\theta(\mathbf x)=\sum_{k=1}^{3}\pi_k\,\mathcal N(\mathbf x;\boldsymbol\mu_k,\Sigma_k),\]</span> which has no closed-form maximum. We therefore maximise <span class="math inline">\(\ell\)</span> by <strong>gradient ascent</strong>, exactly as we train a network. The constraints on the parameters are built into the parametrisation: <span class="math inline">\(\pi=\mathrm{softmax}(\mathbf a)\)</span> is automatically a probability vector, and <span class="math inline">\(\Sigma_k=L_kL_k^\top\)</span> with <span class="math inline">\(L_k\)</span> lower-triangular and a positive diagonal <span class="math inline">\(e^{(\cdot)}\)</span> is automatically positive definite. Fitting the single Gaussian by the same gradient ascent tests the procedure against the closed form. Finally we <strong>draw new points</strong> from each fitted model and compare them with the data.</p>
 <div class="cell" data-execution_count="8">
 <details open="">
 <summary>Code</summary>
@@ -941,51 +931,37 @@ mean log-likelihood per point: one Gaussian -4.635, mixture of three -3.679</cod
 <p><img src="lab-024-vae-cvae_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Gradient ascent reproduces the closed-form answer for one Gaussian. The mixture assigns the data a higher likelihood, and its samples (orange) look like the data; the single Gaussian puts probability where there are no data. For images no formula like this can be written by hand: a neural network must represent <span class="math inline">\(p_\theta(\mathbf x)\)</span>.</p>
-<p><strong>Try it.</strong> Fit mixtures with <span class="math inline">\(K=2,3,6,12\)</span> and evaluate <span class="math inline">\(\ell/n\)</span> on the training points and on 1500 fresh points from the same three groups. When does a larger model stop helping?</p>
+<p>Gradient ascent reproduces the closed-form mean and covariance of the single Gaussian. The mixture assigns the data a higher likelihood, <span class="math inline">\(-3.679\)</span> against <span class="math inline">\(-4.635\)</span> per point, and its samples (orange) look like the data, while the single Gaussian puts probability where there are no data. For images no closed formula of this kind exists: a neural network must represent <span class="math inline">\(p_\theta(\mathbf x)\)</span>.</p>
+<p>As an exercise, fit mixtures with <span class="math inline">\(K=2,3,6,12\)</span> components and evaluate <span class="math inline">\(\ell/n\)</span> on the training points and on 1500 fresh points from the same three groups. Find the <span class="math inline">\(K\)</span> at which a larger model stops helping.</p>
 <hr>
 </section>
 </section>
 <section id="the-variational-autoencoder" class="level2">
 <h2 class="anchored" data-anchor-id="the-variational-autoencoder">3. The variational autoencoder</h2>
-<section id="a-latent-variable-model-and-the-integral-we-cannot-compute" class="level3">
-<h3 class="anchored" data-anchor-id="a-latent-variable-model-and-the-integral-we-cannot-compute">3.1 A latent-variable model, and the integral we cannot compute</h3>
-<p>We want a model <span class="math inline">\(p_\theta(\mathbf x)\)</span> that we can <strong>sample</strong>. Build it in two stages:</p>
-<ol type="1">
-<li>draw a latent vector from a fixed, simple <strong>prior</strong>, <span class="math inline">\(\mathbf z\sim p(\mathbf z)=\mathcal N(0,I_d)\)</span>;</li>
-<li>let a neural network, the <strong>decoder</strong> <span class="math inline">\(G_\theta:\mathbb R^d\to\mathbb R^{784}\)</span>, turn it into a distribution over images. For pixels in <span class="math inline">\([0,1]\)</span> we use independent Bernoulli pixels with probabilities <span class="math inline">\(\hat{\mathbf x}=\sigma(G_\theta(\mathbf z))\)</span> (<span class="math inline">\(\sigma\)</span>: the logistic sigmoid, applied to each of the 784 outputs): <span class="math display">\[p_\theta(\mathbf x|\mathbf z)=\prod_{j=1}^{784}\hat x_j^{\,x_j}(1-\hat x_j)^{1-x_j},\qquad -\log p_\theta(\mathbf x|\mathbf z)=\underbrace{-\sum_{j=1}^{784}\big[x_j\log\hat x_j+(1-x_j)\log(1-\hat x_j)\big]}_{\mathrm{BCE}(\mathbf x,\hat{\mathbf x})}.\]</span> (MNIST pixels are grey values, not 0/1; the binary cross-entropy is still a valid loss and is the standard choice.)</li>
-</ol>
-<p>Sampling is easy: draw <span class="math inline">\(\mathbf z\)</span>, decode. The likelihood of an image is the <strong>marginal</strong> <span class="math display">\[\log p_\theta(\mathbf x)=\log\int p_\theta(\mathbf x|\mathbf z)\,p(\mathbf z)\,d\mathbf z .\]</span> This integral over <span class="math inline">\(\mathbb R^d\)</span> has no closed form, and estimating it by sampling <span class="math inline">\(\mathbf z\)</span> from the prior fails in practice: for a given image only a tiny region of latent space produces it, and almost all prior samples contribute nothing. (We measure this in Section 3.8.) So we cannot maximise <span class="math inline">\(\log p_\theta(\mathbf x)\)</span> directly.</p>
+<section id="latent-variable-models-and-the-marginal-likelihood" class="level3">
+<h3 class="anchored" data-anchor-id="latent-variable-models-and-the-marginal-likelihood">3.1 Latent-variable models and the marginal likelihood</h3>
+<p>We want a model <span class="math inline">\(p_\theta(\mathbf x)\)</span> that we can <strong>sample</strong>, and the simplest way to guarantee this is to build it in two stages. First a latent vector is drawn from a fixed, simple <strong>prior</strong>, <span class="math inline">\(\mathbf z\sim p(\mathbf z)=\mathcal N(0,I_d)\)</span>. Then a neural network, the <strong>decoder</strong> <span class="math inline">\(G_\theta:\mathbb R^d\to\mathbb R^{784}\)</span>, turns it into a distribution over images. For pixels in <span class="math inline">\([0,1]\)</span> we use independent Bernoulli pixels with probabilities <span class="math inline">\(\hat{\mathbf x}=\sigma(G_\theta(\mathbf z))\)</span>, where <span class="math inline">\(\sigma\)</span> is the logistic sigmoid applied to each of the 784 outputs: <span class="math display">\[p_\theta(\mathbf x|\mathbf z)=\prod_{j=1}^{784}\hat x_j^{\,x_j}(1-\hat x_j)^{1-x_j},\qquad -\log p_\theta(\mathbf x|\mathbf z)=\underbrace{-\sum_{j=1}^{784}\big[x_j\log\hat x_j+(1-x_j)\log(1-\hat x_j)\big]}_{\mathrm{BCE}(\mathbf x,\hat{\mathbf x})}.\]</span> The negative log-probability is the binary cross-entropy (BCE). MNIST pixels are grey values, not 0/1, but the BCE is still a valid loss and is the standard choice.</p>
+<p>Sampling from this model is easy: draw <span class="math inline">\(\mathbf z\)</span>, decode. Training it by maximum likelihood is not, because the likelihood of an image is the <strong>marginal</strong> <span class="math display">\[\log p_\theta(\mathbf x)=\log\int p_\theta(\mathbf x|\mathbf z)\,p(\mathbf z)\,d\mathbf z .\]</span> This integral over <span class="math inline">\(\mathbb R^d\)</span> has no closed form, and estimating it by sampling <span class="math inline">\(\mathbf z\)</span> from the prior fails in practice: for a given image only a tiny region of latent space produces it, so almost all prior samples contribute nothing (Section 3.8 measures this). We cannot maximise <span class="math inline">\(\log p_\theta(\mathbf x)\)</span> directly, and the next subsection replaces it by a quantity we can compute.</p>
 </section>
 <section id="the-evidence-lower-bound-elbo" class="level3">
 <h3 class="anchored" data-anchor-id="the-evidence-lower-bound-elbo">3.2 The evidence lower bound (ELBO)</h3>
-<p><strong>Tools used below.</strong></p>
-<ul>
-<li><em>Expectation</em> over a distribution <span class="math inline">\(q\)</span>: <span class="math inline">\(\mathbb E_{q}[f]=\int q(\mathbf z)\,f(\mathbf z)\,d\mathbf z\)</span>; estimated by sampling, <span class="math inline">\(\mathbb E_q[f]\approx\frac1M\sum_m f(\mathbf z_m)\)</span> with <span class="math inline">\(\mathbf z_m\sim q\)</span>.</li>
-<li><em>Gaussian density</em> in one dimension: <span class="math inline">\(\mathcal N(z;\mu,\sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-(z-\mu)^2/2\sigma^2}\)</span>; a diagonal Gaussian in <span class="math inline">\(d\)</span> dimensions is the product of <span class="math inline">\(d\)</span> of them.</li>
-<li><em>Bayes’ rule</em>: <span class="math inline">\(p(\mathbf x,\mathbf z)=p(\mathbf x|\mathbf z)p(\mathbf z)=p(\mathbf z|\mathbf x)p(\mathbf x)\)</span>.</li>
-<li><em>Kullback–Leibler divergence</em>: <span class="math inline">\(\mathrm{KL}(q\,\|\,p)=\mathbb E_q\big[\log\frac{q}{p}\big]\)</span>. It is <span class="math inline">\(\ge0\)</span>, with equality only for <span class="math inline">\(q=p\)</span>. Proof with <em>Jensen’s inequality</em> for the concave logarithm, <span class="math inline">\(\mathbb E[\log Y]\le\log\mathbb E[Y]\)</span>: <span class="math inline">\(-\mathrm{KL}(q\|p)=\mathbb E_q\big[\log\frac pq\big]\le\log\mathbb E_q\big[\frac pq\big]=\log\int p\,d\mathbf z=\log1=0\)</span>.</li>
-</ul>
-<p><strong>Introduce an encoder.</strong> A second network proposes, for each image, the latent vectors that could have produced it: <span class="math display">\[q_\phi(\mathbf z|\mathbf x)=\mathcal N\big(\boldsymbol\mu_\phi(\mathbf x),\,\mathrm{diag}\,\boldsymbol\sigma_\phi^2(\mathbf x)\big),\]</span> a Gaussian with <span class="math inline">\(d\)</span> means and <span class="math inline">\(d\)</span> variances, all outputs of the network.</p>
-<p><strong>Step 1: Bayes’ rule.</strong> For every <span class="math inline">\(\mathbf z\)</span>, <span class="math inline">\(p_\theta(\mathbf x)=p_\theta(\mathbf x|\mathbf z)\,p(\mathbf z)/p_\theta(\mathbf z|\mathbf x)\)</span>, where <span class="math inline">\(p_\theta(\mathbf z|\mathbf x)\)</span> is the true posterior. Take the logarithm and multiply and divide by <span class="math inline">\(q_\phi(\mathbf z|\mathbf x)\)</span> inside: <span class="math display">\[\log p_\theta(\mathbf x)=\log p_\theta(\mathbf x|\mathbf z)-\log\frac{q_\phi(\mathbf z|\mathbf x)}{p(\mathbf z)}+\log\frac{q_\phi(\mathbf z|\mathbf x)}{p_\theta(\mathbf z|\mathbf x)} .\]</span></p>
-<p><strong>Step 2: average over <span class="math inline">\(q_\phi(\mathbf z|\mathbf x)\)</span>.</strong> The left-hand side does not depend on <span class="math inline">\(\mathbf z\)</span>, so it is unchanged; on the right, the averages of the last two terms are Kullback–Leibler divergences, <span class="math inline">\(\mathrm{KL}(q\|p)=\mathbb E_q[\log q/p]\)</span>: <span class="math display">\[\log p_\theta(\mathbf x)=\underbrace{\mathbb E_{q_\phi(\mathbf z|\mathbf x)}\big[\log p_\theta(\mathbf x|\mathbf z)\big]-\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x)\,\|\,p(\mathbf z)\big)}_{\mathrm{ELBO}(\theta,\phi;\,\mathbf x)}\;+\;\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x)\,\|\,p_\theta(\mathbf z|\mathbf x)\big).\]</span></p>
-<p><strong>Step 3: the bound.</strong> A KL divergence is never negative (Gibbs’ inequality), so <span class="math display">\[\log p_\theta(\mathbf x)\ \ge\ \mathrm{ELBO}(\theta,\phi;\mathbf x),\]</span> the <strong>E</strong>vidence <strong>L</strong>ower <strong>BO</strong>und (“evidence” = <span class="math inline">\(p_\theta(\mathbf x)\)</span>). The gap is <span class="math inline">\(\mathrm{KL}(q_\phi\,\|\,p_\theta(\mathbf z|\mathbf x))\)</span>: the bound is tight when the encoder equals the true posterior. Maximising the ELBO over <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\phi\)</span> therefore does two things at once: it pushes <span class="math inline">\(\log p_\theta(\mathbf x)\)</span> up (approximate maximum likelihood) and it pushes <span class="math inline">\(q_\phi\)</span> towards the true posterior. Everything in the ELBO is computable: an average over a Gaussian we can sample, and a KL between two Gaussians.</p>
-<p><strong>The two terms.</strong></p>
-<ul>
-<li><span class="math inline">\(\mathbb E_q[\log p_\theta(\mathbf x|\mathbf z)]=-\mathbb E_q\,\mathrm{BCE}(\mathbf x,\hat{\mathbf x})\)</span>: <strong>reconstruction</strong>. Latent vectors drawn from the encoder’s cloud must decode back to <span class="math inline">\(\mathbf x\)</span>. Alone, it would shrink each cloud to a point and move the clouds apart: an ordinary autoencoder.</li>
-<li><span class="math inline">\(-\mathrm{KL}(q_\phi(\mathbf z|\mathbf x)\,\|\,p(\mathbf z))\)</span>: <strong>stay close to the prior</strong>. Every cloud is pulled towards <span class="math inline">\(\mathcal N(0,I)\)</span>. The clouds of all images then overlap and fill the prior without holes, and this is what makes a fresh <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span> decode to a valid image.</li>
-</ul>
-<p><strong>Physicist’s reading: the variational free energy.</strong> In statistical mechanics, a system with states <span class="math inline">\(\mathbf z\)</span> of energy <span class="math inline">\(E(\mathbf z)\)</span> at temperature <span class="math inline">\(T\)</span> is in the Boltzmann distribution <span class="math inline">\(e^{-E(\mathbf z)/T}/Z\)</span>, with partition function <span class="math inline">\(Z=\int e^{-E/T}d\mathbf z\)</span> and free energy <span class="math inline">\(F=-T\log Z\)</span>. For any trial distribution <span class="math inline">\(q\)</span> one defines <span class="math inline">\(F[q]=\langle E\rangle_q-T\,S[q]\)</span>, with the entropy <span class="math inline">\(S[q]=-\mathbb E_q\log q\)</span>; it is smallest, and equal to <span class="math inline">\(F\)</span>, for the Boltzmann distribution. Now define an “energy” of the latent configuration <span class="math inline">\(\mathbf z\)</span> for a fixed image, <span class="math inline">\(E(\mathbf z)=-\log\big[p_\theta(\mathbf x|\mathbf z)p(\mathbf z)\big]\)</span>, at temperature <span class="math inline">\(T=1\)</span>. Its Boltzmann distribution is the posterior, <span class="math inline">\(e^{-E(\mathbf z)}/Z=p_\theta(\mathbf z|\mathbf x)\)</span>, with partition function <span class="math inline">\(Z=\int e^{-E}d\mathbf z=p_\theta(\mathbf x)\)</span> and free energy <span class="math inline">\(F=-\log Z=-\log p_\theta(\mathbf x)\)</span>. For a trial distribution <span class="math inline">\(q\)</span>, the variational free energy is <span class="math display">\[F[q]=\langle E\rangle_q-S[q],\qquad S[q]=-\mathbb E_q\log q ,\]</span> and inserting <span class="math inline">\(E=-\log Z-\log(e^{-E}/Z)\)</span> into <span class="math inline">\(\langle E\rangle_q\)</span> gives <span class="math inline">\(F[q]=F+\mathrm{KL}(q\,\|\,e^{-E}/Z)\ge F\)</span>: the <strong>Gibbs–Bogoliubov</strong> inequality behind mean-field theory. Comparing: <span class="math inline">\(F[q]=-\mathrm{ELBO}\)</span>. Training a VAE is minimising a variational free energy, with a Gaussian trial distribution produced by a network for each image.</p>
+<p>The derivation uses four standard facts, which we recall first. The <em>expectation</em> of <span class="math inline">\(f\)</span> over a distribution <span class="math inline">\(q\)</span> is <span class="math inline">\(\mathbb E_{q}[f]=\int q(\mathbf z)\,f(\mathbf z)\,d\mathbf z\)</span>, and it can be estimated by sampling, <span class="math inline">\(\mathbb E_q[f]\approx\frac1M\sum_m f(\mathbf z_m)\)</span> with <span class="math inline">\(\mathbf z_m\sim q\)</span>. The <em>Gaussian density</em> in one dimension is <span class="math inline">\(\mathcal N(z;\mu,\sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-(z-\mu)^2/2\sigma^2}\)</span>, and a diagonal Gaussian in <span class="math inline">\(d\)</span> dimensions is the product of <span class="math inline">\(d\)</span> of them. <em>Bayes’ rule</em> states <span class="math inline">\(p(\mathbf x,\mathbf z)=p(\mathbf x|\mathbf z)p(\mathbf z)=p(\mathbf z|\mathbf x)p(\mathbf x)\)</span>. Finally, the <em>Kullback–Leibler divergence</em> <span class="math inline">\(\mathrm{KL}(q\,\|\,p)=\mathbb E_q\big[\log\frac{q}{p}\big]\)</span> is <span class="math inline">\(\ge0\)</span>, with equality only for <span class="math inline">\(q=p\)</span>. The proof uses <em>Jensen’s inequality</em> for the concave logarithm, <span class="math inline">\(\mathbb E[\log Y]\le\log\mathbb E[Y]\)</span>: <span class="math display">\[-\mathrm{KL}(q\|p)=\mathbb E_q\Big[\log\frac pq\Big]\le\log\mathbb E_q\Big[\frac pq\Big]=\log\int p\,d\mathbf z=\log1=0 .\]</span></p>
+<p>The new ingredient is an <strong>encoder</strong>: a second network that proposes, for each image, the latent vectors that could have produced it, <span class="math display">\[q_\phi(\mathbf z|\mathbf x)=\mathcal N\big(\boldsymbol\mu_\phi(\mathbf x),\,\mathrm{diag}\,\boldsymbol\sigma_\phi^2(\mathbf x)\big),\]</span> a Gaussian whose <span class="math inline">\(d\)</span> means and <span class="math inline">\(d\)</span> variances are all outputs of the network.</p>
+<p>We start from Bayes’ rule. For every <span class="math inline">\(\mathbf z\)</span> it gives <span class="math inline">\(p_\theta(\mathbf x)=p_\theta(\mathbf x|\mathbf z)\,p(\mathbf z)/p_\theta(\mathbf z|\mathbf x)\)</span>, where <span class="math inline">\(p_\theta(\mathbf z|\mathbf x)\)</span> is the true posterior. Taking the logarithm, and multiplying and dividing by <span class="math inline">\(q_\phi(\mathbf z|\mathbf x)\)</span> inside it, we obtain <span class="math display">\[\log p_\theta(\mathbf x)=\log p_\theta(\mathbf x|\mathbf z)-\log\frac{q_\phi(\mathbf z|\mathbf x)}{p(\mathbf z)}+\log\frac{q_\phi(\mathbf z|\mathbf x)}{p_\theta(\mathbf z|\mathbf x)} .\]</span></p>
+<p>This identity holds for every <span class="math inline">\(\mathbf z\)</span>, so it also holds on average over <span class="math inline">\(\mathbf z\sim q_\phi(\mathbf z|\mathbf x)\)</span>. The left-hand side does not depend on <span class="math inline">\(\mathbf z\)</span> and is unchanged by the average. On the right, the averages of the last two terms are Kullback–Leibler divergences, <span class="math inline">\(\mathrm{KL}(q\|p)=\mathbb E_q[\log q/p]\)</span>, which gives <span class="math display">\[\log p_\theta(\mathbf x)=\underbrace{\mathbb E_{q_\phi(\mathbf z|\mathbf x)}\big[\log p_\theta(\mathbf x|\mathbf z)\big]-\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x)\,\|\,p(\mathbf z)\big)}_{\mathrm{ELBO}(\theta,\phi;\,\mathbf x)}\;+\;\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x)\,\|\,p_\theta(\mathbf z|\mathbf x)\big).\]</span></p>
+<p>The last term is a KL divergence and therefore never negative (Gibbs’ inequality, proved above), so dropping it gives the bound <span class="math display">\[\log p_\theta(\mathbf x)\ \ge\ \mathrm{ELBO}(\theta,\phi;\mathbf x),\]</span> the <strong>E</strong>vidence <strong>L</strong>ower <strong>BO</strong>und, where “evidence” is the name for <span class="math inline">\(p_\theta(\mathbf x)\)</span>. The gap is <span class="math inline">\(\mathrm{KL}(q_\phi\,\|\,p_\theta(\mathbf z|\mathbf x))\)</span>, so the bound is tight when the encoder equals the true posterior. Maximising the ELBO over <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\phi\)</span> therefore does two things at once: it pushes <span class="math inline">\(\log p_\theta(\mathbf x)\)</span> up (approximate maximum likelihood) and it pushes <span class="math inline">\(q_\phi\)</span> towards the true posterior. Unlike <span class="math inline">\(\log p_\theta(\mathbf x)\)</span>, everything in the ELBO is computable: an average over a Gaussian we can sample, and a KL divergence between two Gaussians.</p>
+<p>Each of the two terms has a clear role. The first, <span class="math inline">\(\mathbb E_q[\log p_\theta(\mathbf x|\mathbf z)]=-\mathbb E_q\,\mathrm{BCE}(\mathbf x,\hat{\mathbf x})\)</span>, is the <strong>reconstruction</strong> term: latent vectors drawn from the encoder’s cloud must decode back to <span class="math inline">\(\mathbf x\)</span>. On its own it would shrink each cloud to a point and move the clouds apart, which is an ordinary autoencoder. The second, <span class="math inline">\(-\mathrm{KL}(q_\phi(\mathbf z|\mathbf x)\,\|\,p(\mathbf z))\)</span>, keeps the encoder <strong>close to the prior</strong>: every cloud is pulled towards <span class="math inline">\(\mathcal N(0,I)\)</span>. The clouds of all images then overlap and fill the prior without holes, and this is what makes a fresh <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span> decode to a valid image.</p>
+<p>Physicists know the ELBO under another name, the variational free energy. In statistical mechanics, a system with states <span class="math inline">\(\mathbf z\)</span> of energy <span class="math inline">\(E(\mathbf z)\)</span> at temperature <span class="math inline">\(T\)</span> is in the Boltzmann distribution <span class="math inline">\(e^{-E(\mathbf z)/T}/Z\)</span>, with partition function <span class="math inline">\(Z=\int e^{-E/T}d\mathbf z\)</span> and free energy <span class="math inline">\(F=-T\log Z\)</span>. For any trial distribution <span class="math inline">\(q\)</span> one defines <span class="math inline">\(F[q]=\langle E\rangle_q-T\,S[q]\)</span>, with the entropy <span class="math inline">\(S[q]=-\mathbb E_q\log q\)</span>; it is smallest, and equal to <span class="math inline">\(F\)</span>, for the Boltzmann distribution. Now define an “energy” of the latent configuration <span class="math inline">\(\mathbf z\)</span> for a fixed image, <span class="math inline">\(E(\mathbf z)=-\log\big[p_\theta(\mathbf x|\mathbf z)p(\mathbf z)\big]\)</span>, at temperature <span class="math inline">\(T=1\)</span>. Its Boltzmann distribution is the posterior, <span class="math inline">\(e^{-E(\mathbf z)}/Z=p_\theta(\mathbf z|\mathbf x)\)</span>, with partition function <span class="math inline">\(Z=\int e^{-E}d\mathbf z=p_\theta(\mathbf x)\)</span> and free energy <span class="math inline">\(F=-\log Z=-\log p_\theta(\mathbf x)\)</span>. For a trial distribution <span class="math inline">\(q\)</span>, the variational free energy is <span class="math display">\[F[q]=\langle E\rangle_q-S[q],\qquad S[q]=-\mathbb E_q\log q ,\]</span> and inserting <span class="math inline">\(E=-\log Z-\log(e^{-E}/Z)\)</span> into <span class="math inline">\(\langle E\rangle_q\)</span> gives <span class="math inline">\(F[q]=F+\mathrm{KL}(q\,\|\,e^{-E}/Z)\ge F\)</span>, the <strong>Gibbs–Bogoliubov</strong> inequality behind mean-field theory. Comparing with the ELBO, <span class="math inline">\(F[q]=-\mathrm{ELBO}\)</span>. Training a VAE is minimising a variational free energy, with a Gaussian trial distribution produced by a network for each image.</p>
 </section>
 <section id="the-vae-loss" class="level3">
 <h3 class="anchored" data-anchor-id="the-vae-loss">3.3 The VAE loss</h3>
-<p>Per image we minimise <span class="math inline">\(-\mathrm{ELBO}\)</span>; with one sample of <span class="math inline">\(\mathbf z\)</span> per image (Section 3.5) and the closed-form KL (Section 3.4): <span class="math display">\[\mathcal L(\mathbf x)=\mathrm{BCE}\big(\mathbf x,\sigma(G_\theta(\mathbf z))\big)+\tfrac12\sum_{k=1}^{d}\big(\mu_k^2+\sigma_k^2-\ln\sigma_k^2-1\big),\qquad\mathbf z\sim q_\phi(\mathbf z|\mathbf x),\]</span> averaged over a minibatch. Units: nats per image.</p>
+<p>Per image we minimise <span class="math inline">\(-\mathrm{ELBO}\)</span>. Using one sample of <span class="math inline">\(\mathbf z\)</span> per image (Section 3.5) and the closed-form KL divergence (Section 3.4), the loss is <span class="math display">\[\mathcal L(\mathbf x)=\mathrm{BCE}\big(\mathbf x,\sigma(G_\theta(\mathbf z))\big)+\tfrac12\sum_{k=1}^{d}\big(\mu_k^2+\sigma_k^2-\ln\sigma_k^2-1\big),\qquad\mathbf z\sim q_\phi(\mathbf z|\mathbf x),\]</span> averaged over a minibatch and measured in nats per image.</p>
 <p>References: D. P. Kingma, M. Welling, <em>Auto-Encoding Variational Bayes</em>, ICLR 2014, <a href="https://arxiv.org/abs/1312.6114">arXiv:1312.6114</a>; D. J. Rezende, S. Mohamed, D. Wierstra, <em>Stochastic Backpropagation and Approximate Inference in Deep Generative Models</em>, ICML 2014, <a href="https://proceedings.mlr.press/v32/rezende14.html">PMLR 32, 1278</a>; review: D. P. Kingma, M. Welling, <em>An Introduction to Variational Autoencoders</em>, Found. Trends Mach. Learn. <strong>12</strong>, 307 (2019), <a href="https://doi.org/10.1561/2200000056">doi:10.1561/2200000056</a>.</p>
 </section>
-<section id="the-kl-divergence-between-two-gaussians-in-closed-form" class="level3">
-<h3 class="anchored" data-anchor-id="the-kl-divergence-between-two-gaussians-in-closed-form">3.4 The KL divergence between two Gaussians, in closed form</h3>
-<p>For one latent coordinate, <span class="math inline">\(q=\mathcal N(\mu,\sigma^2)\)</span> and <span class="math inline">\(p=\mathcal N(0,1)\)</span>: <span class="math display">\[\log q(z)=-\tfrac12\log(2\pi\sigma^2)-\frac{(z-\mu)^2}{2\sigma^2},\qquad \log p(z)=-\tfrac12\log(2\pi)-\frac{z^2}{2}.\]</span> Average the difference over <span class="math inline">\(z\sim q\)</span>, using <span class="math inline">\(\mathbb E_q[(z-\mu)^2]=\sigma^2\)</span> and <span class="math inline">\(\mathbb E_q[z^2]=\mu^2+\sigma^2\)</span>: <span class="math display">\[\mathrm{KL}(q\,\|\,p)=\mathbb E_q[\log q-\log p]=-\tfrac12\log\sigma^2-\tfrac12+\tfrac12(\mu^2+\sigma^2)=\tfrac12\big(\mu^2+\sigma^2-\ln\sigma^2-1\big).\]</span> For a diagonal Gaussian in <span class="math inline">\(d\)</span> dimensions, <span class="math inline">\(\log q\)</span> and <span class="math inline">\(\log p\)</span> are sums over coordinates, so the KL is the sum of <span class="math inline">\(d\)</span> such terms. It is zero only for <span class="math inline">\(\mu=0\)</span>, <span class="math inline">\(\sigma=1\)</span>. The encoder outputs <span class="math inline">\(\log\sigma^2\)</span> rather than <span class="math inline">\(\sigma\)</span>: any real number is allowed, and <span class="math inline">\(\sigma^2=e^{\log\sigma^2}&gt;0\)</span> automatically.</p>
-<p><strong>Check.</strong> The closed form against a Monte Carlo estimate <span class="math inline">\(\frac1M\sum_m[\log q(z_m)-\log p(z_m)]\)</span> with <span class="math inline">\(M=10^6\)</span> samples <span class="math inline">\(z_m\sim q\)</span>.</p>
+<section id="kl-divergence-between-two-gaussians" class="level3">
+<h3 class="anchored" data-anchor-id="kl-divergence-between-two-gaussians">3.4 KL divergence between two Gaussians</h3>
+<p>The KL term of the loss can be computed exactly. For one latent coordinate, with <span class="math inline">\(q=\mathcal N(\mu,\sigma^2)\)</span> and <span class="math inline">\(p=\mathcal N(0,1)\)</span>, <span class="math display">\[\log q(z)=-\tfrac12\log(2\pi\sigma^2)-\frac{(z-\mu)^2}{2\sigma^2},\qquad \log p(z)=-\tfrac12\log(2\pi)-\frac{z^2}{2}.\]</span> Averaging the difference over <span class="math inline">\(z\sim q\)</span> and using <span class="math inline">\(\mathbb E_q[(z-\mu)^2]=\sigma^2\)</span> and <span class="math inline">\(\mathbb E_q[z^2]=\mu^2+\sigma^2\)</span> gives <span class="math display">\[\mathrm{KL}(q\,\|\,p)=\mathbb E_q[\log q-\log p]=-\tfrac12\log\sigma^2-\tfrac12+\tfrac12(\mu^2+\sigma^2)=\tfrac12\big(\mu^2+\sigma^2-\ln\sigma^2-1\big).\]</span> For a diagonal Gaussian in <span class="math inline">\(d\)</span> dimensions, <span class="math inline">\(\log q\)</span> and <span class="math inline">\(\log p\)</span> are sums over coordinates, so the KL divergence is the sum of <span class="math inline">\(d\)</span> such terms. It is zero only for <span class="math inline">\(\mu=0\)</span>, <span class="math inline">\(\sigma=1\)</span>. The encoder outputs <span class="math inline">\(\log\sigma^2\)</span> rather than <span class="math inline">\(\sigma\)</span>, because any real number is then allowed and <span class="math inline">\(\sigma^2=e^{\log\sigma^2}&gt;0\)</span> holds automatically.</p>
+<p>To make sure the formula and its implementation are right, the next cell compares the closed form with a Monte Carlo estimate <span class="math inline">\(\frac1M\sum_m[\log q(z_m)-\log p(z_m)]\)</span> using <span class="math inline">\(M=10^6\)</span> samples <span class="math inline">\(z_m\sim q\)</span>, for three choices of <span class="math inline">\((\mu,\sigma)\)</span>. The two agree to within the Monte Carlo error, a few thousandths of a nat.</p>
 <div class="cell" data-execution_count="9">
 <details open="">
 <summary>Code</summary>
@@ -1014,9 +990,9 @@ mu = -0.30, sigma = 2.00:   KL closed form = 0.8519   KL Monte Carlo = 0.8484</c
 </section>
 <section id="the-reparametrisation-trick" class="level3">
 <h3 class="anchored" data-anchor-id="the-reparametrisation-trick">3.5 The reparametrisation trick</h3>
-<p>The reconstruction term is an average over <span class="math inline">\(q_\phi\)</span>; we estimate it with <strong>one</strong> sample <span class="math inline">\(\mathbf z\sim q_\phi(\mathbf z|\mathbf x)\)</span> per image (the average over the minibatch and over training steps does the rest). The loss then depends on <span class="math inline">\(\phi\)</span> through a <em>random draw</em>. A sampling routine is not a differentiable function of <span class="math inline">\(\boldsymbol\mu,\boldsymbol\sigma\)</span>: if we draw <span class="math inline">\(\mathbf z\)</span> and then change <span class="math inline">\(\boldsymbol\mu\)</span> slightly, there is no rule that says how this particular <span class="math inline">\(\mathbf z\)</span> should move, so backpropagation cannot pass from the decoder into the encoder.</p>
-<p>The fix: write the same random variable as a <strong>deterministic function</strong> of the parameters and of a parameter-free noise, <span class="math display">\[\mathbf z=\boldsymbol\mu_\phi(\mathbf x)+\boldsymbol\sigma_\phi(\mathbf x)\odot\boldsymbol\varepsilon,\qquad\boldsymbol\varepsilon\sim\mathcal N(0,I),\qquad\boldsymbol\sigma=e^{\frac12\log\boldsymbol\sigma^2}.\]</span> <span class="math inline">\(\mathbf z\)</span> has exactly the distribution <span class="math inline">\(\mathcal N(\boldsymbol\mu,\mathrm{diag}\,\boldsymbol\sigma^2)\)</span>, but now <span class="math inline">\(\partial z_k/\partial\mu_k=1\)</span>, <span class="math inline">\(\partial z_k/\partial\sigma_k=\varepsilon_k\)</span>, and for any function <span class="math inline">\(f\)</span> <span class="math display">\[\nabla_{\mu,\sigma}\,\mathbb E_{\mathbf z\sim q}[f(\mathbf z)]=\mathbb E_{\boldsymbol\varepsilon}\big[\nabla_{\mu,\sigma}f(\boldsymbol\mu+\boldsymbol\sigma\odot\boldsymbol\varepsilon)\big],\]</span> an average of ordinary gradients that backpropagation computes. In JAX <span class="math inline">\(\boldsymbol\varepsilon\)</span> is drawn from an explicit key, <code>jax.random.normal(key, mu.shape)</code>, and <code>jax.grad</code> differentiates through <span class="math inline">\(\boldsymbol\mu+\boldsymbol\sigma\odot\boldsymbol\varepsilon\)</span>.</p>
-<p><strong>Check.</strong> For <span class="math inline">\(f(z)=z^2\)</span> we know the answer: <span class="math inline">\(\mathbb E_q[z^2]=\mu^2+\sigma^2\)</span>, so <span class="math inline">\(\partial/\partial\mu=2\mu\)</span> and <span class="math inline">\(\partial/\partial\sigma=2\sigma\)</span>. We compare with <code>jax.grad</code> of the reparametrised Monte Carlo average.</p>
+<p>The reconstruction term is an average over <span class="math inline">\(q_\phi\)</span>, and we estimate it with <strong>one</strong> sample <span class="math inline">\(\mathbf z\sim q_\phi(\mathbf z|\mathbf x)\)</span> per image; the average over the minibatch and over training steps does the rest. The loss then depends on <span class="math inline">\(\phi\)</span> through a <em>random draw</em>, and this creates a problem for training. A sampling routine is not a differentiable function of <span class="math inline">\(\boldsymbol\mu,\boldsymbol\sigma\)</span>: if we draw <span class="math inline">\(\mathbf z\)</span> and then change <span class="math inline">\(\boldsymbol\mu\)</span> slightly, there is no rule that says how this particular <span class="math inline">\(\mathbf z\)</span> should move, so backpropagation cannot pass from the decoder into the encoder.</p>
+<p>The solution is to write the same random variable as a <strong>deterministic function</strong> of the parameters and of a parameter-free noise, <span class="math display">\[\mathbf z=\boldsymbol\mu_\phi(\mathbf x)+\boldsymbol\sigma_\phi(\mathbf x)\odot\boldsymbol\varepsilon,\qquad\boldsymbol\varepsilon\sim\mathcal N(0,I),\qquad\boldsymbol\sigma=e^{\frac12\log\boldsymbol\sigma^2}.\]</span> This <span class="math inline">\(\mathbf z\)</span> has exactly the distribution <span class="math inline">\(\mathcal N(\boldsymbol\mu,\mathrm{diag}\,\boldsymbol\sigma^2)\)</span>, but now <span class="math inline">\(\partial z_k/\partial\mu_k=1\)</span> and <span class="math inline">\(\partial z_k/\partial\sigma_k=\varepsilon_k\)</span>, and for any function <span class="math inline">\(f\)</span> <span class="math display">\[\nabla_{\mu,\sigma}\,\mathbb E_{\mathbf z\sim q}[f(\mathbf z)]=\mathbb E_{\boldsymbol\varepsilon}\big[\nabla_{\mu,\sigma}f(\boldsymbol\mu+\boldsymbol\sigma\odot\boldsymbol\varepsilon)\big],\]</span> an average of ordinary gradients that backpropagation computes. In JAX, <span class="math inline">\(\boldsymbol\varepsilon\)</span> is drawn from an explicit key, <code>jax.random.normal(key, mu.shape)</code>, and <code>jax.grad</code> differentiates through <span class="math inline">\(\boldsymbol\mu+\boldsymbol\sigma\odot\boldsymbol\varepsilon\)</span>.</p>
+<p>We test the trick on a case with a known answer. For <span class="math inline">\(f(z)=z^2\)</span>, <span class="math inline">\(\mathbb E_q[z^2]=\mu^2+\sigma^2\)</span>, so <span class="math inline">\(\partial/\partial\mu=2\mu\)</span> and <span class="math inline">\(\partial/\partial\sigma=2\sigma\)</span>. The next cell applies <code>jax.grad</code> to the reparametrised Monte Carlo average and compares the result with these exact derivatives; with <span class="math inline">\(2\times10^5\)</span> samples they agree to better than one percent.</p>
 <div class="cell" data-execution_count="10">
 <details open="">
 <summary>Code</summary>
@@ -1039,9 +1015,9 @@ d/dsigma E[z^2]:  reparametrisation 2.5935   exact 2 sigma = 2.6000</code></pre>
 </div>
 </div>
 </section>
-<section id="the-network-and-the-loss-in-code" class="level3">
-<h3 class="anchored" data-anchor-id="the-network-and-the-loss-in-code">3.6 The network and the loss in code</h3>
-<p>Shapes, for a minibatch of <span class="math inline">\(B\)</span> images, latent dimension <span class="math inline">\(d\)</span> and an optional condition with <span class="math inline">\(C\)</span> numbers (used only in Section 6; <span class="math inline">\(C=0\)</span> here):</p>
+<section id="the-network-and-the-loss" class="level3">
+<h3 class="anchored" data-anchor-id="the-network-and-the-loss">3.6 The network and the loss</h3>
+<p>The table lists the shapes for a minibatch of <span class="math inline">\(B\)</span> images, latent dimension <span class="math inline">\(d\)</span> and an optional condition with <span class="math inline">\(C\)</span> numbers. The condition is used only in Section 6; here <span class="math inline">\(C=0\)</span>.</p>
 <table class="table">
 <colgroup>
 <col style="width: 33%">
@@ -1088,8 +1064,8 @@ d/dsigma E[z^2]:  reparametrisation 2.5935   exact 2 sigma = 2.6000</code></pre>
 </tr>
 </tbody>
 </table>
-<p>The decoder returns <strong>logits</strong>, not probabilities: <code>optax.sigmoid_binary_cross_entropy(logits, x)</code> computes the BCE from the logits in a numerically stable way (no <span class="math inline">\(\log 0\)</span> when a sigmoid saturates). The sigmoid is applied only when we want to look at the images.</p>
-<p>The <code>VAE</code> class takes an optional condition <code>cond</code> (the number <span class="math inline">\(C\)</span> of extra inputs), so that the conditional VAE of Section 6 is the same class.</p>
+<p>The decoder returns <strong>logits</strong>, not probabilities, because <code>optax.sigmoid_binary_cross_entropy(logits, x)</code> computes the BCE from the logits in a numerically stable way, with no <span class="math inline">\(\log 0\)</span> when a sigmoid saturates. The sigmoid is applied only when we want to look at the images.</p>
+<p>The <code>VAE</code> class takes an optional condition <code>cond</code> (the number <span class="math inline">\(C\)</span> of extra inputs), so that the conditional VAE of Section 6 is the same class. As a first sanity check, the loss of the untrained network is dominated by the reconstruction term, about 568 nats per image, while the KL term is close to zero.</p>
 <div class="cell" data-execution_count="11">
 <details open="">
 <summary>Code</summary>
@@ -1154,7 +1130,7 @@ d/dsigma E[z^2]:  reparametrisation 2.5935   exact 2 sigma = 2.6000</code></pre>
 </section>
 <section id="training" class="level3">
 <h3 class="anchored" data-anchor-id="training">3.7 Training</h3>
-<p>We train two VAEs on the 60 000 training digits, <strong>without labels</strong>: one with <span class="math inline">\(d=2\)</span>, whose latent plane we can draw, and one with <span class="math inline">\(d=16\)</span> (Adam, learning rate <span class="math inline">\(10^{-3}\)</span>, minibatches of 128; 15 and 20 epochs). The numbers printed are per image, in nats: the loss <span class="math inline">\(-\mathrm{ELBO}\)</span>, the reconstruction term and the KL term.</p>
+<p>We train two VAEs on the 60 000 training digits, <strong>without labels</strong>: one with <span class="math inline">\(d=2\)</span>, whose latent plane we can draw, and one with <span class="math inline">\(d=16\)</span> (Adam, learning rate <span class="math inline">\(10^{-3}\)</span>, minibatches of 128; 15 and 20 epochs). The printed numbers are per image, in nats: the loss <span class="math inline">\(-\mathrm{ELBO}\)</span>, the reconstruction term and the KL term. The KL term grows during training (from 4.8 to 6.6 nats for <span class="math inline">\(d=2\)</span>, from 13.3 to 22.8 nats for <span class="math inline">\(d=16\)</span>) while the reconstruction term falls: the encoder moves away from the prior to the extent that better reconstructions pay for it.</p>
 <div class="cell" data-execution_count="12">
 <details open="">
 <summary>Code</summary>
@@ -1229,12 +1205,8 @@ VAE, d = 16</code></pre>
 </section>
 <section id="tightness-of-the-bound" class="level3">
 <h3 class="anchored" data-anchor-id="tightness-of-the-bound">3.8 Tightness of the bound</h3>
-<p>After training we estimate <span class="math inline">\(\log p_\theta(\mathbf x)\)</span> itself for 200 test images, in two ways, each with <span class="math inline">\(K=1000\)</span> samples:</p>
-<ul>
-<li><strong>naive</strong>, sampling the prior: <span class="math inline">\(\log p_\theta(\mathbf x)\approx\log\frac1K\sum_{k}p_\theta(\mathbf x|\mathbf z_k)\)</span>, <span class="math inline">\(\mathbf z_k\sim\mathcal N(0,I)\)</span>;</li>
-<li><strong>importance sampling</strong> with the encoder: <span class="math inline">\(\log p_\theta(\mathbf x)\approx\log\frac1K\sum_k\frac{p_\theta(\mathbf x|\mathbf z_k)\,p(\mathbf z_k)}{q_\phi(\mathbf z_k|\mathbf x)}\)</span>, <span class="math inline">\(\mathbf z_k\sim q_\phi(\mathbf z|\mathbf x)\)</span>.</li>
-</ul>
-<p>Both are unbiased for <span class="math inline">\(p_\theta(\mathbf x)\)</span>; their logarithms are lower bounds that tighten as <span class="math inline">\(K\)</span> grows, and for <span class="math inline">\(K=1\)</span> the expectation of the second one is the ELBO [Y. Burda, R. Grosse, R. Salakhutdinov, <em>Importance Weighted Autoencoders</em>, <a href="https://arxiv.org/abs/1509.00519">arXiv:1509.00519</a>]. The sums are computed with <code>logsumexp</code>, because the individual <span class="math inline">\(p_\theta(\mathbf x|\mathbf z)\)</span> are as small as <span class="math inline">\(e^{-100}\)</span>.</p>
+<p>The ELBO is only a lower bound, so we ask how far it lies below <span class="math inline">\(\log p_\theta(\mathbf x)\)</span> itself. For 200 test images we estimate <span class="math inline">\(\log p_\theta(\mathbf x)\)</span> in two ways, each with <span class="math inline">\(K=1000\)</span> samples. The naive estimate samples the prior, <span class="math inline">\(\log p_\theta(\mathbf x)\approx\log\frac1K\sum_{k}p_\theta(\mathbf x|\mathbf z_k)\)</span> with <span class="math inline">\(\mathbf z_k\sim\mathcal N(0,I)\)</span>. The second estimate uses <strong>importance sampling</strong> with the encoder as proposal, <span class="math inline">\(\log p_\theta(\mathbf x)\approx\log\frac1K\sum_k\frac{p_\theta(\mathbf x|\mathbf z_k)\,p(\mathbf z_k)}{q_\phi(\mathbf z_k|\mathbf x)}\)</span> with <span class="math inline">\(\mathbf z_k\sim q_\phi(\mathbf z|\mathbf x)\)</span>.</p>
+<p>Both sums are unbiased estimates of <span class="math inline">\(p_\theta(\mathbf x)\)</span>; their logarithms are lower bounds that tighten as <span class="math inline">\(K\)</span> grows, and for <span class="math inline">\(K=1\)</span> the expectation of the second one is the ELBO [Y. Burda, R. Grosse, R. Salakhutdinov, <em>Importance Weighted Autoencoders</em>, <a href="https://arxiv.org/abs/1509.00519">arXiv:1509.00519</a>]. The sums are computed with <code>logsumexp</code>, because the individual <span class="math inline">\(p_\theta(\mathbf x|\mathbf z)\)</span> are as small as <span class="math inline">\(e^{-100}\)</span>.</p>
 <div class="cell" data-execution_count="13">
 <details open="">
 <summary>Code</summary>
@@ -1267,15 +1239,15 @@ VAE, d = 16</code></pre>
 gap log p(x) - ELBO, averaged: 4.8 nats</code></pre>
 </div>
 </div>
-<p>The importance-sampling estimate lies a few nats above the ELBO: the bound is close to tight. Naive prior sampling gives a far lower number, although it estimates the same quantity: with <span class="math inline">\(K=1000\)</span> prior samples, almost none lands where <span class="math inline">\(p_\theta(\mathbf x|\mathbf z)\)</span> is large. This is why the encoder is needed.</p>
+<p>The importance-sampling estimate, <span class="math inline">\(-93.3\)</span> nats, lies 4.8 nats above the ELBO of <span class="math inline">\(-98.1\)</span> nats: the bound is close to tight. Naive prior sampling gives <span class="math inline">\(-154.8\)</span> nats, a far lower number, although it estimates the same quantity: with <span class="math inline">\(K=1000\)</span> prior samples, almost none lands where <span class="math inline">\(p_\theta(\mathbf x|\mathbf z)\)</span> is large. This is the reason the encoder is needed.</p>
 <hr>
 </section>
 </section>
 <section id="the-latent-space-of-a-vae" class="level2">
 <h2 class="anchored" data-anchor-id="the-latent-space-of-a-vae">4. The latent space of a VAE</h2>
-<section id="the-latent-plane-autoencoder-versus-vae" class="level3">
-<h3 class="anchored" data-anchor-id="the-latent-plane-autoencoder-versus-vae">The latent plane, autoencoder versus VAE</h3>
-<p>Left: the codes <span class="math inline">\(E(\mathbf x)\)</span> of the autoencoder with <span class="math inline">\(d=2\)</span> (Section 1). Right: the means <span class="math inline">\(\boldsymbol\mu_\phi(\mathbf x)\)</span> of the VAE with <span class="math inline">\(d=2\)</span> for the same test digits, with the circles <span class="math inline">\(|\mathbf z|=1,2,3\)</span> of the prior <span class="math inline">\(\mathcal N(0,I)\)</span>. Colours: true digits, used only for plotting.</p>
+<section id="the-latent-plane-of-an-autoencoder-and-of-a-vae" class="level3">
+<h3 class="anchored" data-anchor-id="the-latent-plane-of-an-autoencoder-and-of-a-vae">The latent plane of an autoencoder and of a VAE</h3>
+<p>We first compare the two-dimensional latent spaces directly. The left panel shows the codes <span class="math inline">\(E(\mathbf x)\)</span> of the autoencoder with <span class="math inline">\(d=2\)</span> from Section 1. The right panel shows the means <span class="math inline">\(\boldsymbol\mu_\phi(\mathbf x)\)</span> of the VAE with <span class="math inline">\(d=2\)</span> for the same test digits, together with the circles <span class="math inline">\(|\mathbf z|=1,2,3\)</span> of the prior <span class="math inline">\(\mathcal N(0,I)\)</span>. Colours mark the true digits and are used only for plotting.</p>
 <div class="cell" data-execution_count="14">
 <details open="">
 <summary>Code</summary>
@@ -1303,11 +1275,11 @@ gap log p(x) - ELBO, averaged: 4.8 nats</code></pre>
 <pre><code>standard deviation of the latent coordinates: AE [3.81 7.46] | VAE means [1.03 1.09]</code></pre>
 </div>
 </div>
-<p>The autoencoder chooses its own scale and shape of the latent plane. The VAE codes fill a disc of radius about 2 to 3, the region where <span class="math inline">\(\mathcal N(0,I)\)</span> puts its probability, without large holes: <strong>we know where to sample.</strong></p>
+<p>The autoencoder chooses its own scale and shape of the latent plane: the standard deviations of its two coordinates are 3.8 and 7.5. The VAE means have standard deviations close to 1 and fill a disc of radius about 2 to 3, the region where <span class="math inline">\(\mathcal N(0,I)\)</span> puts its probability, without large holes. <strong>We know where to sample.</strong></p>
 </section>
 <section id="new-digits" class="level3">
 <h3 class="anchored" data-anchor-id="new-digits">New digits</h3>
-<p>Left: the decoder of the <span class="math inline">\(d=2\)</span> VAE on a regular <span class="math inline">\(15\times15\)</span> grid over <span class="math inline">\([-2.5,2.5]^2\)</span>. Right: 40 new digits from the <span class="math inline">\(d=16\)</span> VAE, each decoded from a random <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>; we show the pixel probabilities <span class="math inline">\(\hat{\mathbf x}=\sigma(G_\theta(\mathbf z))\)</span>.</p>
+<p>Since the latent distribution is now known, generation is straightforward. The left figure shows the decoder of the <span class="math inline">\(d=2\)</span> VAE on a regular <span class="math inline">\(15\times15\)</span> grid over <span class="math inline">\([-2.5,2.5]^2\)</span>. The right figure shows 40 new digits from the <span class="math inline">\(d=16\)</span> VAE, each decoded from a random <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>; we display the pixel probabilities <span class="math inline">\(\hat{\mathbf x}=\sigma(G_\theta(\mathbf z))\)</span>.</p>
 <div class="cell" data-execution_count="15">
 <details open="">
 <summary>Code</summary>
@@ -1325,7 +1297,10 @@ gap log p(x) - ELBO, averaged: 4.8 nats</code></pre>
 <p><img src="lab-024-vae-cvae_files/figure-html/cell-16-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p><strong>Are the new digits copies of training images?</strong> For each generated image we compute the Euclidean distance to the nearest of the 60 000 training images, <span class="math inline">\(\min_i\lVert\hat{\mathbf x}-\mathbf x_i\rVert\)</span>, and compare with the same distance for real test digits, which the network never saw.</p>
+</section>
+<section id="distance-to-the-training-set" class="level3">
+<h3 class="anchored" data-anchor-id="distance-to-the-training-set">Distance to the training set</h3>
+<p>A generator that merely reproduced training images would also produce convincing digits, so we check for copying. For each generated image we compute the Euclidean distance to the nearest of the 60 000 training images, <span class="math inline">\(\min_i\lVert\hat{\mathbf x}-\mathbf x_i\rVert\)</span>, and compare it with the same distance for real test digits, which the network never saw.</p>
 <div class="cell" data-execution_count="16">
 <details open="">
 <summary>Code</summary>
@@ -1342,11 +1317,11 @@ gap log p(x) - ELBO, averaged: 4.8 nats</code></pre>
 <pre><code>mean distance to the nearest training image: generated 4.48, real test digits 4.19</code></pre>
 </div>
 </div>
-<p>The generated digits are no closer to the training set than real unseen digits: the VAE does not copy. They are blurrier than real digits; we show the pixel probabilities, an average over the Bernoulli pixels, and the ELBO rewards placing probability on all plausible images.</p>
+<p>The generated digits lie on average at distance 4.48 from the nearest training image, real unseen test digits at 4.19: the generated digits are no closer to the training set than real new digits, so the VAE does not copy. They are blurrier than real digits, because we show the pixel probabilities, an average over the Bernoulli pixels, and the ELBO rewards placing probability on all plausible images.</p>
 </section>
 <section id="interpolation-between-two-digits" class="level3">
 <h3 class="anchored" data-anchor-id="interpolation-between-two-digits">Interpolation between two digits</h3>
-<p>Encode two test digits, <span class="math inline">\(\boldsymbol\mu_a=\boldsymbol\mu_\phi(\mathbf x_a)\)</span> and <span class="math inline">\(\boldsymbol\mu_b=\boldsymbol\mu_\phi(\mathbf x_b)\)</span>, and decode the straight line <span class="math inline">\(\mathbf z(t)=(1-t)\boldsymbol\mu_a+t\boldsymbol\mu_b\)</span>, <span class="math inline">\(t\in[0,1]\)</span>. For comparison, the last row cross-fades the pixels, <span class="math inline">\((1-t)\mathbf x_a+t\mathbf x_b\)</span>, for the first pair.</p>
+<p>A well-shaped latent space should also connect digits smoothly. We encode two test digits, <span class="math inline">\(\boldsymbol\mu_a=\boldsymbol\mu_\phi(\mathbf x_a)\)</span> and <span class="math inline">\(\boldsymbol\mu_b=\boldsymbol\mu_\phi(\mathbf x_b)\)</span>, and decode the straight line <span class="math inline">\(\mathbf z(t)=(1-t)\boldsymbol\mu_a+t\boldsymbol\mu_b\)</span>, <span class="math inline">\(t\in[0,1]\)</span>. For comparison, the last row cross-fades the pixels, <span class="math inline">\((1-t)\mathbf x_a+t\mathbf x_b\)</span>, for the first pair.</p>
 <div class="cell" data-execution_count="17">
 <details open="">
 <summary>Code</summary>
@@ -1370,11 +1345,7 @@ gap log p(x) - ELBO, averaged: 4.8 nats</code></pre>
 </section>
 <section id="meaning-of-the-latent-coordinates" class="level3">
 <h3 class="anchored" data-anchor-id="meaning-of-the-latent-coordinates">Meaning of the latent coordinates</h3>
-<p>Two questions: which of the <span class="math inline">\(d=16\)</span> coordinates are used at all, and what each one does.</p>
-<ul>
-<li><strong>Active dimensions.</strong> The KL term of coordinate <span class="math inline">\(k\)</span>, averaged over the test images, <span class="math inline">\(\overline{\mathrm{KL}}_k=\big\langle\tfrac12(\mu_k^2+\sigma_k^2-\ln\sigma_k^2-1)\big\rangle_{\mathbf x}\)</span>, measures (in nats) how much coordinate <span class="math inline">\(k\)</span> is used to describe the image. <span class="math inline">\(\overline{\mathrm{KL}}_k\approx0\)</span> would mean <span class="math inline">\(q(z_k|\mathbf x)=\mathcal N(0,1)\)</span> for every image: a coordinate ignored by the decoder.</li>
-<li><strong>Latent traversals.</strong> Start from the encoding <span class="math inline">\(\boldsymbol\mu_\phi(\mathbf x)\)</span> of one test digit, change one coordinate <span class="math inline">\(z_k\)</span> from <span class="math inline">\(-3\)</span> to <span class="math inline">\(3\)</span>, keep the others, and decode.</li>
-</ul>
+<p>Two properties of the <span class="math inline">\(d=16\)</span> coordinates are of interest: which of them are used at all, and what each one does to the image. The first is measured by the KL term of coordinate <span class="math inline">\(k\)</span> averaged over the test images, <span class="math display">\[\overline{\mathrm{KL}}_k=\big\langle\tfrac12(\mu_k^2+\sigma_k^2-\ln\sigma_k^2-1)\big\rangle_{\mathbf x},\]</span> which gives, in nats, how much coordinate <span class="math inline">\(k\)</span> is used to describe the image. A value <span class="math inline">\(\overline{\mathrm{KL}}_k\approx0\)</span> would mean <span class="math inline">\(q(z_k|\mathbf x)=\mathcal N(0,1)\)</span> for every image, a coordinate ignored by the decoder; coordinates with <span class="math inline">\(\overline{\mathrm{KL}}_k&gt;0.1\)</span> nats are called active. The second property is shown by latent traversals: we start from the encoding <span class="math inline">\(\boldsymbol\mu_\phi(\mathbf x)\)</span> of one test digit, change one coordinate <span class="math inline">\(z_k\)</span> from <span class="math inline">\(-3\)</span> to <span class="math inline">\(3\)</span> while keeping the others, and decode.</p>
 <div class="cell" data-execution_count="18">
 <details open="">
 <summary>Code</summary>
@@ -1416,23 +1387,22 @@ coordinates with KL &gt; 0.1 nats: 16 of 16</code></pre>
 <p><img src="lab-024-vae-cvae_files/figure-html/cell-19-output-3.png" class="img-fluid"></p>
 </div>
 </div>
-<p>What we <strong>can</strong> read from the latent space:</p>
-<ul>
-<li>how much each coordinate is used: here all 16 carry information, but unequally (the largest <span class="math inline">\(\overline{\mathrm{KL}}_k\)</span> is about three times the smallest);</li>
-<li>along a coordinate the digit changes continuously: slant, width, thickness, and often the identity of the digit too (top rows); the least used coordinate (last row) changes the image only slightly.</li>
-</ul>
-<p>What we <strong>cannot</strong> read: a single coordinate is in general <em>not</em> a single property of the digit. The prior <span class="math inline">\(\mathcal N(0,I)\)</span> and the KL term are unchanged by any rotation <span class="math inline">\(\mathbf z\to R\mathbf z\)</span>, and the decoder can absorb the rotation, <span class="math inline">\(G'(\mathbf z)=G(R^\top\mathbf z)\)</span>; the loss does not fix the meaning of an axis. Without labels or further assumptions, “disentangled” coordinates (one property per axis) cannot be guaranteed: F. Locatello <em>et al.</em>, <em>Challenging Common Assumptions in the Unsupervised Learning of Disentangled Representations</em>, ICML 2019, <a href="https://proceedings.mlr.press/v97/locatello19a.html">PMLR 97, 4114</a>. The conditional VAE (Section 6) is one way out: we tell the model <em>what</em> to draw.</p>
-<p><strong>Try it.</strong> Train VAEs with <span class="math inline">\(d=32\)</span> and <span class="math inline">\(d=64\)</span> and plot <span class="math inline">\(\overline{\mathrm{KL}}_k\)</span>. Do all coordinates stay in use?</p>
-<p><strong>Try it.</strong> Train the <span class="math inline">\(d=16\)</span> VAE without the KL term (loss = reconstruction only) and generate from <span class="math inline">\(\mathcal N(0,I)\)</span> again. What happens, and why? Then multiply the KL term by <span class="math inline">\(\beta=4\)</span>: what happens to the number of active dimensions and to the sharpness of the samples?</p>
+<p>The bar chart shows that all 16 coordinates carry information, but unequally: the largest <span class="math inline">\(\overline{\mathrm{KL}}_k\)</span>, 2.23 nats, is more than three times the smallest, 0.65 nats. The traversals show that along a coordinate the digit changes continuously, in slant, width, thickness, and often in the identity of the digit too (top rows), while the least used coordinate (last row) changes the image only slightly.</p>
+<p>A single coordinate is, however, in general <em>not</em> a single property of the digit. The prior <span class="math inline">\(\mathcal N(0,I)\)</span> and the KL term are unchanged by any rotation <span class="math inline">\(\mathbf z\to R\mathbf z\)</span>, and the decoder can absorb the rotation, <span class="math inline">\(G'(\mathbf z)=G(R^\top\mathbf z)\)</span>, so the loss does not fix the meaning of an axis. Without labels or further assumptions, “disentangled” coordinates (one property per axis) cannot be guaranteed: F. Locatello <em>et al.</em>, <em>Challenging Common Assumptions in the Unsupervised Learning of Disentangled Representations</em>, ICML 2019, <a href="https://proceedings.mlr.press/v97/locatello19a.html">PMLR 97, 4114</a>. The conditional VAE of Section 6 is one way out: we tell the model <em>what</em> to draw.</p>
+<p>Exercises:</p>
+<ol type="1">
+<li>Train VAEs with <span class="math inline">\(d=32\)</span> and <span class="math inline">\(d=64\)</span> and plot <span class="math inline">\(\overline{\mathrm{KL}}_k\)</span>. Do all coordinates stay in use?</li>
+<li>Train the <span class="math inline">\(d=16\)</span> VAE without the KL term (loss = reconstruction only) and generate from <span class="math inline">\(\mathcal N(0,I)\)</span> again. What happens, and why? Then multiply the KL term by <span class="math inline">\(\beta=4\)</span>: what happens to the number of active dimensions and to the sharpness of the samples?</li>
+</ol>
 <hr>
 </section>
 </section>
 <section id="judging-generated-digits-with-a-classifier" class="level2">
 <h2 class="anchored" data-anchor-id="judging-generated-digits-with-a-classifier">5. Judging generated digits with a classifier</h2>
-<p>Pictures are judged by eye. To <strong>measure</strong> what a generator produces we need a referee: a classifier trained on the <strong>real</strong> data, whose accuracy on real test data we know. We then apply it, unchanged, to synthetic images.</p>
-<p>The classifier is a small CNN: two convolutions (<span class="math inline">\(3\times3\)</span>, 16 and 32 channels, ReLU), each followed by <span class="math inline">\(2\times2\)</span> max-pooling (<span class="math inline">\(28\to14\to7\)</span>), a dense layer of 128 and 10 outputs <span class="math inline">\(f_c(\mathbf x)\)</span>. It is trained by minimising the cross-entropy <span class="math display">\[\mathcal L=-\frac1n\sum_{i}\log p(y_i|\mathbf x_i),\qquad p(c|\mathbf x)=\frac{e^{f_c(\mathbf x)}}{\sum_{c'}e^{f_{c'}(\mathbf x)}},\]</span> the negative log-likelihood of the labels (Section 2).</p>
-<p><strong>A convolution is a dense layer applied to every patch.</strong> A <span class="math inline">\(3\times3\)</span> convolution with <span class="math inline">\(C_{\rm in}\)</span> input and <span class="math inline">\(C_{\rm out}\)</span> output channels computes, at every pixel, the same linear map of the <span class="math inline">\(9C_{\rm in}\)</span> numbers in the <span class="math inline">\(3\times3\)</span> neighbourhood (plus a bias). We write it literally so: <code>patches3x3</code> collects the neighbourhoods, <span class="math inline">\((B,H,W,C_{\rm in})\to(B,H,W,9C_{\rm in})\)</span>, and an ordinary <code>nnx.Linear(9 C_in, C_out)</code> acts on the last axis. This “im2col” form turns the convolution into one large matrix product, which on a CPU runs several times faster than a direct convolution for these small filters. The weights are shared over all positions, exactly as in a convolution.</p>
-<p>Shapes for a minibatch of <span class="math inline">\(B\)</span> images: <span class="math inline">\((B,784)\to\)</span> reshape <span class="math inline">\((B,28,28,1)\to\)</span> patches <span class="math inline">\((B,28,28,9)\to\)</span> conv <span class="math inline">\((B,28,28,16)\to\)</span> pool <span class="math inline">\((B,14,14,16)\to\)</span> patches <span class="math inline">\((B,14,14,144)\to\)</span> conv <span class="math inline">\((B,14,14,32)\to\)</span> pool <span class="math inline">\((B,7,7,32)\to\)</span> flatten <span class="math inline">\((B,1568)\to(B,128)\to\)</span> logits <span class="math inline">\((B,10)\)</span>. Zero padding at the border (<code>"SAME"</code>) keeps the image size. Max-pooling over <span class="math inline">\(2\times2\)</span> blocks is a reshape: the axis of length 28 is split into <span class="math inline">\((14,2)\)</span>, and the maximum is taken over the axes of length 2.</p>
+<p>So far the generated images have been judged by eye. To <strong>measure</strong> what a generator produces we need a referee: a classifier trained on the <strong>real</strong> data, whose accuracy on real test data we know. We then apply it, unchanged, to synthetic images.</p>
+<p>The classifier is a small CNN: two convolutions (<span class="math inline">\(3\times3\)</span>, 16 and 32 channels, ReLU), each followed by <span class="math inline">\(2\times2\)</span> max-pooling (<span class="math inline">\(28\to14\to7\)</span>), a dense layer of 128 units and 10 outputs <span class="math inline">\(f_c(\mathbf x)\)</span>. It is trained by minimising the cross-entropy <span class="math display">\[\mathcal L=-\frac1n\sum_{i}\log p(y_i|\mathbf x_i),\qquad p(c|\mathbf x)=\frac{e^{f_c(\mathbf x)}}{\sum_{c'}e^{f_{c'}(\mathbf x)}},\]</span> which is the negative log-likelihood of the labels (Section 2).</p>
+<p>A convolution is a dense layer applied to every patch of the image. A <span class="math inline">\(3\times3\)</span> convolution with <span class="math inline">\(C_{\rm in}\)</span> input and <span class="math inline">\(C_{\rm out}\)</span> output channels computes, at every pixel, the same linear map of the <span class="math inline">\(9C_{\rm in}\)</span> numbers in the <span class="math inline">\(3\times3\)</span> neighbourhood, plus a bias. The implementation follows this description literally: <code>patches3x3</code> collects the neighbourhoods, <span class="math inline">\((B,H,W,C_{\rm in})\to(B,H,W,9C_{\rm in})\)</span>, and an ordinary <code>nnx.Linear(9 C_in, C_out)</code> acts on the last axis. This “im2col” form turns the convolution into one large matrix product, which on a CPU runs several times faster than a direct convolution for these small filters. The weights are shared over all positions, exactly as in a convolution.</p>
+<p>For a minibatch of <span class="math inline">\(B\)</span> images the shapes are <span class="math inline">\((B,784)\to\)</span> reshape <span class="math inline">\((B,28,28,1)\to\)</span> patches <span class="math inline">\((B,28,28,9)\to\)</span> conv <span class="math inline">\((B,28,28,16)\to\)</span> pool <span class="math inline">\((B,14,14,16)\to\)</span> patches <span class="math inline">\((B,14,14,144)\to\)</span> conv <span class="math inline">\((B,14,14,32)\to\)</span> pool <span class="math inline">\((B,7,7,32)\to\)</span> flatten <span class="math inline">\((B,1568)\to(B,128)\to\)</span> logits <span class="math inline">\((B,10)\)</span>. Zero padding at the border (<code>"SAME"</code>) keeps the image size. Max-pooling over <span class="math inline">\(2\times2\)</span> blocks is a reshape: the axis of length 28 is split into <span class="math inline">\((14,2)\)</span>, and the maximum is taken over the axes of length 2. After four epochs the classifier reaches an accuracy of 0.9854 on the 10 000 real test digits, which sets the baseline for everything that follows.</p>
 <div class="cell" data-execution_count="19">
 <details open="">
 <summary>Code</summary>
@@ -1498,7 +1468,7 @@ coordinates with KL &gt; 0.1 nats: 16 of 16</code></pre>
 </div>
 <section id="confusion-matrices-real-digits-and-their-vae-reconstructions" class="level3">
 <h3 class="anchored" data-anchor-id="confusion-matrices-real-digits-and-their-vae-reconstructions">Confusion matrices: real digits and their VAE reconstructions</h3>
-<p>A confusion matrix has one <strong>row per true digit <span class="math inline">\(a\)</span></strong> and one <strong>column per digit <span class="math inline">\(b\)</span> assigned by the classifier</strong>: <span class="math display">\[C_{ab}=\frac{\#\{\text{images of digit }a\text{ assigned to }b\}}{\#\{\text{images of digit }a\}},\qquad\sum_bC_{ab}=1 .\]</span> A perfect generator-plus-classifier gives the identity. An unconditional VAE is not told which digit to draw, so we take the digit from its input: each real test digit <span class="math inline">\(\mathbf x\)</span> of label <span class="math inline">\(a\)</span> is encoded, one <span class="math inline">\(\mathbf z\sim q_\phi(\mathbf z|\mathbf x)\)</span> is drawn, and the classifier labels the decoded image <span class="math inline">\(\hat{\mathbf x}=\sigma(G_\theta(\mathbf z))\)</span>. The real test images (left) are the baseline: the matrix of the classifier itself.</p>
+<p>A confusion matrix has one <strong>row per true digit <span class="math inline">\(a\)</span></strong> and one <strong>column per digit <span class="math inline">\(b\)</span> assigned by the classifier</strong>: <span class="math display">\[C_{ab}=\frac{\#\{\text{images of digit }a\text{ assigned to }b\}}{\#\{\text{images of digit }a\}},\qquad\sum_bC_{ab}=1 .\]</span> A perfect generator-plus-classifier gives the identity matrix. An unconditional VAE is not told which digit to draw, so we take the digit from its input: each real test digit <span class="math inline">\(\mathbf x\)</span> of label <span class="math inline">\(a\)</span> is encoded, one <span class="math inline">\(\mathbf z\sim q_\phi(\mathbf z|\mathbf x)\)</span> is drawn, and the classifier labels the decoded image <span class="math inline">\(\hat{\mathbf x}=\sigma(G_\theta(\mathbf z))\)</span>. The real test images (left panel) are the baseline: the matrix of the classifier itself.</p>
 <div class="cell" data-execution_count="20">
 <details open="">
 <summary>Code</summary>
@@ -1546,15 +1516,11 @@ coordinates with KL &gt; 0.1 nats: 16 of 16</code></pre>
 largest off-diagonal entry, d = 2: 4 -&gt; 9: 0.346</code></pre>
 </div>
 </div>
-<p>With <span class="math inline">\(d=16\)</span> the decoded digits keep their identity almost as often as the classifier recognises the real images. With <span class="math inline">\(d=2\)</span> the latent plane is too small: digits that look alike (4 and 9, 3, 5 and 8) share a region of the plane, and the decoder produces the wrong one.</p>
+<p>With <span class="math inline">\(d=16\)</span> the decoded digits keep their identity almost as often as the classifier recognises the real images (mean diagonal 0.953 against 0.985). With <span class="math inline">\(d=2\)</span> the latent plane is too small (mean diagonal 0.783): digits that look alike, such as 4 and 9 or 3, 5 and 8, share a region of the plane, and the decoder produces the wrong one; the worst case is a 4 classified as a 9 in 35% of the reconstructions.</p>
 </section>
 <section id="digit-distribution-of-the-generated-samples" class="level3">
 <h3 class="anchored" data-anchor-id="digit-distribution-of-the-generated-samples">Digit distribution of the generated samples</h3>
-<p>Now the images are decoded from the prior, <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>, with no input digit. Two measurements:</p>
-<ul>
-<li>the <strong>class distribution</strong> of 10 000 generated digits, <span class="math inline">\(f_b=\#\{\text{samples assigned to }b\}/N\)</span>, compared with the fraction of each digit in the training set;</li>
-<li>the <strong>confidence</strong> of the classifier, <span class="math inline">\(\max_c p(c|\hat{\mathbf x})\)</span>: the fraction of images with confidence above 0.9, compared between real test digits, VAE samples, and the random decodings of the autoencoder of Section 1 (<span class="math inline">\(d=2\)</span>: uniform on the grid box; <span class="math inline">\(d=16\)</span>: <span class="math inline">\(z_k\sim\mathcal N(m_k,s_k^2)\)</span>).</li>
-</ul>
+<p>Now the images are decoded from the prior, <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>, with no input digit, which is how the VAE is used as a generator. We measure two things. The first is the <strong>class distribution</strong> of 10 000 generated digits, <span class="math inline">\(f_b=\#\{\text{samples assigned to }b\}/N\)</span>, which we compare with the fraction of each digit in the training set; a missing class would show up here. The second is the <strong>confidence</strong> of the classifier, <span class="math inline">\(\max_c p(c|\hat{\mathbf x})\)</span>. We report the fraction of images with confidence above 0.9 and compare it between real test digits, VAE samples, and the random decodings of the autoencoder of Section 1 (for <span class="math inline">\(d=2\)</span> uniform on the grid box, for <span class="math inline">\(d=16\)</span> <span class="math inline">\(z_k\sim\mathcal N(m_k,s_k^2)\)</span>).</p>
 <div class="cell" data-execution_count="21">
 <details open="">
 <summary>Code</summary>
@@ -1614,24 +1580,18 @@ class fractions, VAE d = 2:              [0.154 0.111 0.122 0.076 0.09  0.076 0.
 class fractions, AE d = 2, uniform box:  [0.052 0.476 0.028 0.004 0.011 0.072 0.202 0.117 0.004 0.034]</code></pre>
 </div>
 </div>
-<p>The <span class="math inline">\(d=16\)</span> VAE produces every digit with roughly the frequency of the training set: no class is missing (no <em>mode collapse</em>). The <span class="math inline">\(d=2\)</span> VAE over-produces 0s and under-produces 3s, 5s and 7s: in two dimensions the digits are crowded, and the prior does not give each the same area. The classifier is confident about real digits far more often than about VAE samples: many samples are blurry or lie between two digits. The <span class="math inline">\(d=16\)</span> autoencoder decoded from a fitted Gaussian is the worst case. The <span class="math inline">\(d=2\)</span> autoencoder sampled uniformly over its box scores high: in two dimensions its decoder produces digit-like images almost everywhere, but uniform sampling of the box is not a model of the data (it over-produces the digits whose codes are spread over a large area of the plane; see the class fractions printed above); it has no probability distribution attached.</p>
-<p><strong>Try it.</strong> Sort the 10 000 VAE samples by the classifier confidence and show the 20 least confident ones. Which pairs of digits do they lie between? Compare with the largest off-diagonal entries of the confusion matrix.</p>
+<p>The <span class="math inline">\(d=16\)</span> VAE produces every digit with roughly the frequency of the training set: no class is missing (no <em>mode collapse</em>). The <span class="math inline">\(d=2\)</span> VAE over-produces 0s (15.4%) and under-produces 3s, 5s and 7s (about 7.6% each): in two dimensions the digits are crowded, and the prior does not give each the same area. The classifier is confident about real digits (95.9% above 0.9) far more often than about VAE samples (54.5% for <span class="math inline">\(d=16\)</span>), because many samples are blurry or lie between two digits. The <span class="math inline">\(d=16\)</span> autoencoder decoded from a fitted Gaussian is the worst case, at 36.7%. The <span class="math inline">\(d=2\)</span> autoencoder sampled uniformly over its box scores high, 78.1%: in two dimensions its decoder produces digit-like images almost everywhere. Uniform sampling of the box is nevertheless not a model of the data: it over-produces the digits whose codes are spread over a large area of the plane (47.6% are 1s, see the printed class fractions), and it has no probability distribution attached.</p>
+<p>As an exercise, sort the 10 000 VAE samples by the classifier confidence and show the 20 least confident ones. Identify the pairs of digits they lie between, and compare with the largest off-diagonal entries of the confusion matrix.</p>
 <hr>
 </section>
 </section>
 <section id="the-conditional-vae" class="level2">
 <h2 class="anchored" data-anchor-id="the-conditional-vae">6. The conditional VAE</h2>
-<p>A VAE draws <em>some</em> digit. Often we want to choose <em>what</em> to generate: the digit 7; or, in physics, a spin configuration at temperature <span class="math inline">\(T\)</span>. If a label <span class="math inline">\(\mathbf c\)</span> is known for every training image, it becomes an extra input of both networks [K. Sohn, H. Lee, X. Yan, <em>Learning Structured Output Representation using Deep Conditional Generative Models</em>, NeurIPS 2015, <a href="https://papers.nips.cc/paper_files/paper/2015/hash/8d55a249e6baa5c06772297520da2051-Abstract.html">proceedings</a>]:</p>
-<ul>
-<li><strong>encoder</strong> <span class="math inline">\(q_\phi(\mathbf z|\mathbf x,\mathbf c)=\mathcal N\big(\boldsymbol\mu_\phi(\mathbf x,\mathbf c),\mathrm{diag}\,\boldsymbol\sigma^2_\phi(\mathbf x,\mathbf c)\big)\)</span>: the input is the concatenation <span class="math inline">\([\mathbf x,\mathbf c]\in\mathbb R^{784+10}\)</span>;</li>
-<li><strong>decoder</strong> <span class="math inline">\(p_\theta(\mathbf x|\mathbf z,\mathbf c)\)</span>: the input is <span class="math inline">\([\mathbf z,\mathbf c]\in\mathbb R^{d+10}\)</span>;</li>
-<li><strong>prior</strong> <span class="math inline">\(p(\mathbf z)=\mathcal N(0,I)\)</span>, the same for every <span class="math inline">\(\mathbf c\)</span>;</li>
-<li><strong>generation:</strong> choose <span class="math inline">\(\mathbf c\)</span>, draw <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>, decode <span class="math inline">\(\sigma(G_\theta(\mathbf z,\mathbf c))\)</span>.</li>
-</ul>
-<p><strong>The conditioned ELBO.</strong> The model is now a model of the <em>conditional</em> distribution, <span class="math display">\[p_\theta(\mathbf x|\mathbf c)=\int p_\theta(\mathbf x|\mathbf z,\mathbf c)\,p(\mathbf z)\,d\mathbf z ,\]</span> and the derivation of Section 3.2 goes through with <span class="math inline">\(\mathbf c\)</span> carried along as a fixed parameter. Bayes’ rule at fixed <span class="math inline">\(\mathbf c\)</span>, <span class="math inline">\(p_\theta(\mathbf x|\mathbf c)=p_\theta(\mathbf x|\mathbf z,\mathbf c)p(\mathbf z)/p_\theta(\mathbf z|\mathbf x,\mathbf c)\)</span>; take the log, insert <span class="math inline">\(q_\phi(\mathbf z|\mathbf x,\mathbf c)\)</span>, average over it: <span class="math display">\[\log p_\theta(\mathbf x|\mathbf c)=\underbrace{\mathbb E_{q_\phi(\mathbf z|\mathbf x,\mathbf c)}\big[\log p_\theta(\mathbf x|\mathbf z,\mathbf c)\big]-\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x,\mathbf c)\,\|\,p(\mathbf z)\big)}_{\mathrm{ELBO}(\theta,\phi;\,\mathbf x,\mathbf c)}+\underbrace{\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x,\mathbf c)\,\|\,p_\theta(\mathbf z|\mathbf x,\mathbf c)\big)}_{\ge 0}.\]</span> The loss is again BCE + the closed-form KL, now computed from <span class="math inline">\((\boldsymbol\mu,\log\boldsymbol\sigma^2)=\)</span> encoder<span class="math inline">\(([\mathbf x,\mathbf c])\)</span> and logits <span class="math inline">\(=\)</span> decoder<span class="math inline">\(([\mathbf z,\mathbf c])\)</span>. The training data are pairs <span class="math inline">\((\mathbf x_i,\mathbf c_i)\)</span>. (Sohn <em>et al.</em> also allow a learned, <span class="math inline">\(\mathbf c\)</span>-dependent prior <span class="math inline">\(p_\theta(\mathbf z|\mathbf c)\)</span>; the fixed <span class="math inline">\(\mathcal N(0,I)\)</span> used here is the simplest choice and lets us sample <span class="math inline">\(\mathbf z\)</span> the same way for every <span class="math inline">\(\mathbf c\)</span>.)</p>
-<p><strong>Shapes.</strong> <span class="math inline">\(\mathbf x\)</span>: <span class="math inline">\((B,784)\)</span>; <span class="math inline">\(\mathbf c\)</span>: <span class="math inline">\((B,10)\)</span>; encoder input <span class="math inline">\([\mathbf x,\mathbf c]\)</span>: <span class="math inline">\((B,794)\)</span>; <span class="math inline">\(\boldsymbol\mu,\log\boldsymbol\sigma^2,\mathbf z\)</span>: <span class="math inline">\((B,d)\)</span>; decoder input <span class="math inline">\([\mathbf z,\mathbf c]\)</span>: <span class="math inline">\((B,d+10)\)</span>; logits: <span class="math inline">\((B,784)\)</span>.</p>
-<p>Here <span class="math inline">\(\mathbf c\)</span> is the <strong>one-hot</strong> vector of the digit, <span class="math inline">\(c_j=\delta_{j,y}\)</span>. (A single number <span class="math inline">\(y\in\{0,\dots,9\}\)</span> would impose an order and a distance on the classes, as if 3 were between 2 and 4.) Since <span class="math inline">\(\mathbf c\)</span> already tells the decoder <em>which</em> digit to draw, the KL term pushes <span class="math inline">\(\mathbf z\)</span> to carry only what <span class="math inline">\(\mathbf c\)</span> does not say: the <strong>style</strong> of the handwriting.</p>
-<p>The <code>VAE</code> class of Section 3 already supports this: <code>VAE(d, cond=10)</code>, with <code>model.encode(x, c)</code> and <code>model.decode(z, c)</code>; <code>vae_loss</code> receives the minibatch <code>(x, c)</code>. We train a cVAE with <span class="math inline">\(d=8\)</span> (20 epochs) and, to draw its latent plane, one with <span class="math inline">\(d=2\)</span> (10 epochs).</p>
+<p>A VAE draws <em>some</em> digit. Often we want to choose <em>what</em> to generate: the digit 7, or, in physics, a spin configuration at temperature <span class="math inline">\(T\)</span>. If a label <span class="math inline">\(\mathbf c\)</span> is known for every training image, it can be given to both networks as an extra input [K. Sohn, H. Lee, X. Yan, <em>Learning Structured Output Representation using Deep Conditional Generative Models</em>, NeurIPS 2015, <a href="https://papers.nips.cc/paper_files/paper/2015/hash/8d55a249e6baa5c06772297520da2051-Abstract.html">proceedings</a>]. The encoder becomes <span class="math inline">\(q_\phi(\mathbf z|\mathbf x,\mathbf c)=\mathcal N\big(\boldsymbol\mu_\phi(\mathbf x,\mathbf c),\mathrm{diag}\,\boldsymbol\sigma^2_\phi(\mathbf x,\mathbf c)\big)\)</span>, whose input is the concatenation <span class="math inline">\([\mathbf x,\mathbf c]\in\mathbb R^{784+10}\)</span>, and the decoder becomes <span class="math inline">\(p_\theta(\mathbf x|\mathbf z,\mathbf c)\)</span>, whose input is <span class="math inline">\([\mathbf z,\mathbf c]\in\mathbb R^{d+10}\)</span>. The prior stays <span class="math inline">\(p(\mathbf z)=\mathcal N(0,I)\)</span>, the same for every <span class="math inline">\(\mathbf c\)</span>. Generation then means choosing <span class="math inline">\(\mathbf c\)</span>, drawing <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span> and decoding <span class="math inline">\(\sigma(G_\theta(\mathbf z,\mathbf c))\)</span>.</p>
+<p>The model is now a model of the <em>conditional</em> distribution, <span class="math display">\[p_\theta(\mathbf x|\mathbf c)=\int p_\theta(\mathbf x|\mathbf z,\mathbf c)\,p(\mathbf z)\,d\mathbf z ,\]</span> and the derivation of Section 3.2 goes through with <span class="math inline">\(\mathbf c\)</span> carried along as a fixed parameter. Bayes’ rule at fixed <span class="math inline">\(\mathbf c\)</span> reads <span class="math inline">\(p_\theta(\mathbf x|\mathbf c)=p_\theta(\mathbf x|\mathbf z,\mathbf c)p(\mathbf z)/p_\theta(\mathbf z|\mathbf x,\mathbf c)\)</span>; taking the logarithm, inserting <span class="math inline">\(q_\phi(\mathbf z|\mathbf x,\mathbf c)\)</span> and averaging over it gives the conditioned ELBO, <span class="math display">\[\log p_\theta(\mathbf x|\mathbf c)=\underbrace{\mathbb E_{q_\phi(\mathbf z|\mathbf x,\mathbf c)}\big[\log p_\theta(\mathbf x|\mathbf z,\mathbf c)\big]-\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x,\mathbf c)\,\|\,p(\mathbf z)\big)}_{\mathrm{ELBO}(\theta,\phi;\,\mathbf x,\mathbf c)}+\underbrace{\mathrm{KL}\big(q_\phi(\mathbf z|\mathbf x,\mathbf c)\,\|\,p_\theta(\mathbf z|\mathbf x,\mathbf c)\big)}_{\ge 0}.\]</span> The loss is again BCE plus the closed-form KL divergence, now computed from <span class="math inline">\((\boldsymbol\mu,\log\boldsymbol\sigma^2)=\)</span> encoder<span class="math inline">\(([\mathbf x,\mathbf c])\)</span> and logits <span class="math inline">\(=\)</span> decoder<span class="math inline">\(([\mathbf z,\mathbf c])\)</span>, and the training data are pairs <span class="math inline">\((\mathbf x_i,\mathbf c_i)\)</span>. Sohn <em>et al.</em> also allow a learned, <span class="math inline">\(\mathbf c\)</span>-dependent prior <span class="math inline">\(p_\theta(\mathbf z|\mathbf c)\)</span>; the fixed <span class="math inline">\(\mathcal N(0,I)\)</span> used here is the simplest choice and lets us sample <span class="math inline">\(\mathbf z\)</span> the same way for every <span class="math inline">\(\mathbf c\)</span>.</p>
+<p>The shapes are <span class="math inline">\(\mathbf x\)</span>: <span class="math inline">\((B,784)\)</span>; <span class="math inline">\(\mathbf c\)</span>: <span class="math inline">\((B,10)\)</span>; encoder input <span class="math inline">\([\mathbf x,\mathbf c]\)</span>: <span class="math inline">\((B,794)\)</span>; <span class="math inline">\(\boldsymbol\mu,\log\boldsymbol\sigma^2,\mathbf z\)</span>: <span class="math inline">\((B,d)\)</span>; decoder input <span class="math inline">\([\mathbf z,\mathbf c]\)</span>: <span class="math inline">\((B,d+10)\)</span>; logits: <span class="math inline">\((B,784)\)</span>.</p>
+<p>Here <span class="math inline">\(\mathbf c\)</span> is the <strong>one-hot</strong> vector of the digit, <span class="math inline">\(c_j=\delta_{j,y}\)</span>. A single number <span class="math inline">\(y\in\{0,\dots,9\}\)</span> would impose an order and a distance on the classes, as if 3 were between 2 and 4. Since <span class="math inline">\(\mathbf c\)</span> already tells the decoder <em>which</em> digit to draw, the KL term pushes <span class="math inline">\(\mathbf z\)</span> to carry only what <span class="math inline">\(\mathbf c\)</span> does not say: the <strong>style</strong> of the handwriting.</p>
+<p>The <code>VAE</code> class of Section 3 already supports all this: <code>VAE(d, cond=10)</code> provides <code>model.encode(x, c)</code> and <code>model.decode(z, c)</code>, and <code>vae_loss</code> receives the minibatch <code>(x, c)</code>. We train a cVAE with <span class="math inline">\(d=8\)</span> (20 epochs) and, to draw its latent plane, one with <span class="math inline">\(d=2\)</span> (10 epochs).</p>
 <div class="cell" data-execution_count="22">
 <details open="">
 <summary>Code</summary>
@@ -1687,7 +1647,7 @@ cVAE, d = 2</code></pre>
 </div>
 <section id="digits-on-demand" class="level3">
 <h3 class="anchored" data-anchor-id="digits-on-demand">Digits on demand</h3>
-<p>Each row: one condition <span class="math inline">\(\mathbf c\)</span>, the digits 0 to 9. Each column: one random <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>, the <strong>same</strong> in every row.</p>
+<p>The first test of the cVAE is whether the condition and the latent vector play the roles we intended. Each row of the figure uses one condition <span class="math inline">\(\mathbf c\)</span>, the digits 0 to 9. Each column uses one random <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>, the <strong>same</strong> in every row.</p>
 <div class="cell" data-execution_count="23">
 <details open="">
 <summary>Code</summary>
@@ -1704,7 +1664,7 @@ cVAE, d = 2</code></pre>
 </section>
 <section id="style-transfer" class="level3">
 <h3 class="anchored" data-anchor-id="style-transfer">Style transfer</h3>
-<p>Encode a real test digit with its own label, <span class="math inline">\(\boldsymbol\mu=\boldsymbol\mu_\phi(\mathbf x,\mathbf c_y)\)</span>, then decode this one <span class="math inline">\(\mathbf z=\boldsymbol\mu\)</span> with every condition <span class="math inline">\(\mathbf c=0,\dots,9\)</span>: the same handwriting, all ten digits.</p>
+<p>The same separation lets us transfer the handwriting of a real digit to other digits. We encode a real test digit with its own label, <span class="math inline">\(\boldsymbol\mu=\boldsymbol\mu_\phi(\mathbf x,\mathbf c_y)\)</span>, then decode this one <span class="math inline">\(\mathbf z=\boldsymbol\mu\)</span> with every condition <span class="math inline">\(\mathbf c=0,\dots,9\)</span>: the same handwriting, all ten digits.</p>
 <div class="cell" data-execution_count="24">
 <details open="">
 <summary>Code</summary>
@@ -1723,7 +1683,7 @@ cVAE, d = 2</code></pre>
 </section>
 <section id="the-latent-plane-of-a-cvae" class="level3">
 <h3 class="anchored" data-anchor-id="the-latent-plane-of-a-cvae">The latent plane of a cVAE</h3>
-<p>The same test as in Section 4, for a cVAE with <span class="math inline">\(d=2\)</span>: the means <span class="math inline">\(\boldsymbol\mu_\phi(\mathbf x,\mathbf c)\)</span> of the test digits, coloured by the digit. Left, for comparison: the VAE with <span class="math inline">\(d=2\)</span>.</p>
+<p>If <span class="math inline">\(\mathbf z\)</span> really carries only style, the digit identity should no longer be visible in the latent plane. We repeat the test of Section 4 for a cVAE with <span class="math inline">\(d=2\)</span>: the right panel shows the means <span class="math inline">\(\boldsymbol\mu_\phi(\mathbf x,\mathbf c)\)</span> of the test digits, coloured by the digit, and the left panel the VAE with <span class="math inline">\(d=2\)</span> for comparison. A simple number quantifies the difference: we predict the digit from the nearest class mean in the latent plane and report how often this prediction is correct.</p>
 <div class="cell" data-execution_count="25">
 <details open="">
 <summary>Code</summary>
@@ -1760,11 +1720,11 @@ cVAE, d = 2</code></pre>
 <p><img src="lab-024-vae-cvae_files/figure-html/cell-26-output-3.png" class="img-fluid"></p>
 </div>
 </div>
-<p>In the VAE the digits form separate regions of the plane; in the cVAE all digits share the same disc, and the position of a digit in the latent plane says little about which digit it is (the nearest-class-mean test above). The latent plane of the cVAE is a map of style alone: decoding a grid of <span class="math inline">\(\mathbf z\)</span> with <span class="math inline">\(\mathbf c=7\)</span> gives sevens that differ in slant and width.</p>
+<p>In the VAE the digits form separate regions of the plane, and the nearest class mean predicts the digit correctly in 73% of the cases. In the cVAE all digits share the same disc, and the position of a digit in the latent plane says little about which digit it is: the nearest-class-mean prediction is correct in 18% of the cases, close to the chance level of 10%. The latent plane of the cVAE is a map of style alone: decoding a grid of <span class="math inline">\(\mathbf z\)</span> with <span class="math inline">\(\mathbf c=7\)</span> gives sevens that differ in slant and width.</p>
 </section>
-<section id="requested-versus-generated-digits" class="level3">
-<h3 class="anchored" data-anchor-id="requested-versus-generated-digits">Requested versus generated digits</h3>
-<p>For every requested digit <span class="math inline">\(a\)</span> we generate 1000 images, <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span>, <span class="math inline">\(\mathbf c=\)</span> one-hot<span class="math inline">\((a)\)</span>, and let the classifier of Section 5 label them. The confusion matrix now has one <strong>row per requested digit <span class="math inline">\(a\)</span></strong> and one <strong>column per digit <span class="math inline">\(b\)</span> assigned by the classifier</strong>, <span class="math display">\[C_{ab}=\frac{\#\{\text{samples generated with }\mathbf c=a\text{ assigned to }b\}}{1000}.\]</span></p>
+<section id="confusion-matrix-of-requested-digits" class="level3">
+<h3 class="anchored" data-anchor-id="confusion-matrix-of-requested-digits">Confusion matrix of requested digits</h3>
+<p>The classifier of Section 5 now tests whether the cVAE draws what we ask for. For every requested digit <span class="math inline">\(a\)</span> we generate 1000 images with <span class="math inline">\(\mathbf z\sim\mathcal N(0,I)\)</span> and <span class="math inline">\(\mathbf c=\)</span> one-hot<span class="math inline">\((a)\)</span>, and let the classifier label them. The confusion matrix now has one <strong>row per requested digit <span class="math inline">\(a\)</span></strong> and one <strong>column per digit <span class="math inline">\(b\)</span> assigned by the classifier</strong>, <span class="math display">\[C_{ab}=\frac{\#\{\text{samples generated with }\mathbf c=a\text{ assigned to }b\}}{1000}.\]</span></p>
 <div class="cell" data-execution_count="26">
 <details open="">
 <summary>Code</summary>
@@ -1809,250 +1769,18 @@ largest off-diagonal entry: requested 2, classified as 0: 0.032
 fraction of cVAE samples with classifier confidence &gt; 0.9: 0.875</code></pre>
 </div>
 </div>
-<p>For every requested digit the large majority of the samples is classified as requested (the diagonal printed above), by a classifier that never saw a synthetic image. The same protocol carries over to physics (Lab 025): a condition <span class="math inline">\(\mathbf c\)</span> that is a temperature <span class="math inline">\(T\)</span> or a point <span class="math inline">\((g,T)\)</span> of a phase diagram; samples generated at a chosen <span class="math inline">\(\mathbf c\)</span>; and referees trained on real Monte Carlo data, together with observables computed from the Hamiltonian itself.</p>
-<p><strong>Try it.</strong> Give the cVAE a <em>mixed</em> condition, <span class="math inline">\(\mathbf c=\frac12(\mathbf e_4+\mathbf e_9)\)</span>, a vector it never saw in training. What does it draw, and what does the classifier say?</p>
-<p><strong>Try it.</strong> Replace the one-hot condition by the single number <span class="math inline">\(c=y/9\)</span>. Does the cVAE still generate the requested digits? Measure it with the confusion matrix.</p>
+<p>For every requested digit the large majority of the samples is classified as requested, by a classifier that never saw a synthetic image: the diagonal entries range from 0.902 (digit 2) to 0.988 (digit 1), with mean 0.950, and the largest confusion is a requested 2 classified as 0 in 3.2% of the samples. The same protocol carries over to physics in Lab 025. There the condition <span class="math inline">\(\mathbf c\)</span> is a temperature <span class="math inline">\(T\)</span> or a point <span class="math inline">\((g,T)\)</span> of a phase diagram, samples are generated at a chosen <span class="math inline">\(\mathbf c\)</span>, and the referees are networks trained on real Monte Carlo data, together with observables computed from the Hamiltonian itself.</p>
+<p>Exercises:</p>
+<ol type="1">
+<li>Give the cVAE a <em>mixed</em> condition, <span class="math inline">\(\mathbf c=\frac12(\mathbf e_4+\mathbf e_9)\)</span>, a vector it never saw in training. What does it draw, and what does the classifier say?</li>
+<li>Replace the one-hot condition by the single number <span class="math inline">\(c=y/9\)</span>. Does the cVAE still generate the requested digits? Measure it with the confusion matrix.</li>
+</ol>
 <hr>
 </section>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<ul>
-<li>An autoencoder learns a latent space, but not a distribution on it: random latent vectors decode to non-digits.</li>
-<li>Maximum likelihood fits <span class="math inline">\(p_\theta\)</span> to data; for a latent-variable model <span class="math inline">\(p_\theta(\mathbf x)=\int p_\theta(\mathbf x|\mathbf z)p(\mathbf z)d\mathbf z\)</span> the VAE maximises a lower bound, <span class="math inline">\(\mathrm{ELBO}=\mathbb E_q\log p_\theta(\mathbf x|\mathbf z)-\mathrm{KL}(q\,\|\,p)\)</span>, made trainable by the reparametrisation trick.</li>
-<li>The KL term shapes the latent space into the prior <span class="math inline">\(\mathcal N(0,I)\)</span>: sampling, interpolation and traversals work; individual axes need not have a meaning.</li>
-<li>A classifier trained on real data is a referee for synthetic data: confusion matrices, class distributions, confidence.</li>
-<li>A conditional VAE adds a known label <span class="math inline">\(\mathbf c\)</span> to encoder and decoder; <span class="math inline">\(\mathbf c\)</span> selects <em>what</em> is generated, <span class="math inline">\(\mathbf z\)</span> carries the rest.</li>
-</ul>
-<div class="cell" data-execution_count="27">
-<details open="">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>nums[<span class="st">"runtime_s"</span>] <span class="op">=</span> <span class="bu">round</span>(time.time() <span class="op">-</span> t_start, <span class="dv">1</span>)</span>
-<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/numbers_lab024.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> fh:</span>
-<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>    json.dump(nums, fh, indent<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the same numbers, formatted as LaTeX macros for the slides (\nbnum{key} in the deck)</span></span>
-<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>w2, wc <span class="op">=</span> nums[<span class="st">"vae2_worst_confusion"</span>], nums[<span class="st">"cvae_worst_confusion"</span>]</span>
-<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>macros <span class="op">=</span> {</span>
-<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"coin_p7"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'coin_p7_given_half'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>, <span class="st">"coin_ml"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'coin_theta_ml'</span>]<span class="sc">:.1f}</span><span class="ss">"</span>,</span>
-<span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ll1"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'mle_loglik_1'</span>]<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="st">"ll3"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'mle_loglik_3'</span>]<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
-<span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"conf_real"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> nums[<span class="st">'frac_confident_0.9'</span>][<span class="st">'real_test'</span>]<span class="sc">:.0f}</span><span class="ss">"</span>,</span>
-<span id="cb82-11"><a href="#cb82-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"conf_ae16"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> nums[<span class="st">'frac_confident_0.9'</span>][<span class="st">'ae16_fitted_gauss'</span>]<span class="sc">:.0f}</span><span class="ss">"</span>,</span>
-<span id="cb82-12"><a href="#cb82-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"conf_vae16"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> nums[<span class="st">'frac_confident_0.9'</span>][<span class="st">'vae16_prior'</span>]<span class="sc">:.0f}</span><span class="ss">"</span>,</span>
-<span id="cb82-13"><a href="#cb82-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"conf_ae2box"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> nums[<span class="st">'frac_confident_0.9'</span>][<span class="st">'ae2_box'</span>]<span class="sc">:.0f}</span><span class="ss">"</span>,</span>
-<span id="cb82-14"><a href="#cb82-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ae2std"</span>: <span class="st">", "</span>.join(<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.1f}</span><span class="ss">"</span> <span class="cf">for</span> v <span class="kw">in</span> nums[<span class="st">"ae2_code_std"</span>]),</span>
-<span id="cb82-15"><a href="#cb82-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"vae2std"</span>: <span class="st">", "</span>.join(<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.2f}</span><span class="ss">"</span> <span class="cf">for</span> v <span class="kw">in</span> nums[<span class="st">"vae2_mu_std"</span>]),</span>
-<span id="cb82-16"><a href="#cb82-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nngen"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'vae_nn_dist_generated'</span>]<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="st">"nntest"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'vae_nn_dist_test'</span>]<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
-<span id="cb82-17"><a href="#cb82-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"elbo"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'vae16_bound'</span>][<span class="st">'elbo'</span>]<span class="sc">:.1f}</span><span class="ss">"</span>, <span class="st">"isest"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'vae16_bound'</span>][<span class="st">'log_px_importance'</span>]<span class="sc">:.1f}</span><span class="ss">"</span>,</span>
-<span id="cb82-18"><a href="#cb82-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"naive"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'vae16_bound'</span>][<span class="st">'log_px_naive'</span>]<span class="sc">:.1f}</span><span class="ss">"</span>,</span>
-<span id="cb82-19"><a href="#cb82-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"klmax"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="bu">max</span>(nums[<span class="st">'vae16_kl_per_dim_sorted'</span>])<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="st">"klmin"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="bu">min</span>(nums[<span class="st">'vae16_kl_per_dim_sorted'</span>])<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
-<span id="cb82-20"><a href="#cb82-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"clfacc"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'clf_test_acc'</span>]<span class="sc">:.4f}</span><span class="ss">"</span>,</span>
-<span id="cb82-21"><a href="#cb82-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"diagreal"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'confusion_diag_mean'</span>][<span class="st">'real'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>, <span class="st">"diagvaetwo"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'confusion_diag_mean'</span>][<span class="st">'vae2'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>,</span>
-<span id="cb82-22"><a href="#cb82-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"diagvaesixteen"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'confusion_diag_mean'</span>][<span class="st">'vae16'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>,</span>
-<span id="cb82-23"><a href="#cb82-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"worst2"</span>: <span class="ss">f"</span><span class="sc">{</span>w2[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> </span><span class="ch">\\</span><span class="ss">(</span><span class="ch">\\</span><span class="ss">to</span><span class="ch">\\</span><span class="ss">) </span><span class="sc">{</span>w2[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> w2[<span class="dv">2</span>]<span class="sc">:.0f}</span><span class="ch">\\</span><span class="ss">%"</span>,</span>
-<span id="cb82-24"><a href="#cb82-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"centvae"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'latent_centroid_acc_vae2'</span>]<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="st">"centcvae"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'latent_centroid_acc_cvae2'</span>]<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
-<span id="cb82-25"><a href="#cb82-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cvaeagree"</span>: <span class="ss">f"</span><span class="sc">{</span>nums[<span class="st">'cvae_agreement_mean'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>, <span class="st">"cvaeaggmin"</span>: <span class="ss">f"</span><span class="sc">{</span><span class="bu">min</span>(nums[<span class="st">'cvae_agreement_per_digit'</span>])<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
-<span id="cb82-26"><a href="#cb82-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"worstc"</span>: <span class="ss">f"</span><span class="sc">{</span>wc[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> </span><span class="ch">\\</span><span class="ss">(</span><span class="ch">\\</span><span class="ss">to</span><span class="ch">\\</span><span class="ss">) </span><span class="sc">{</span>wc[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> wc[<span class="dv">2</span>]<span class="sc">:.0f}</span><span class="ch">\\</span><span class="ss">%"</span>,</span>
-<span id="cb82-27"><a href="#cb82-27" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb82-28"><a href="#cb82-28" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../beamer/sections/nb_numbers_lab024.tex"</span>, <span class="st">"w"</span>) <span class="im">as</span> fh:</span>
-<span id="cb82-29"><a href="#cb82-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, v <span class="kw">in</span> macros.items():</span>
-<span id="cb82-30"><a href="#cb82-30" aria-hidden="true" tabindex="-1"></a>        fh.write(<span class="ss">f"</span><span class="ch">\\</span><span class="ss">setnbnum</span><span class="ch">{{</span><span class="sc">{</span>k<span class="sc">}</span><span class="ch">}}{{</span><span class="sc">{</span>v<span class="sc">}</span><span class="ch">}}\n</span><span class="ss">"</span>)</span>
-<span id="cb82-31"><a href="#cb82-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">""</span>.join(<span class="bu">open</span>(<span class="st">"../beamer/sections/nb_numbers_lab024.tex"</span>).readlines()))</span>
-<span id="cb82-32"><a href="#cb82-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(nums, indent<span class="op">=</span><span class="dv">1</span>)[:<span class="dv">3000</span>])</span>
-<span id="cb82-33"><a href="#cb82-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">total runtime </span><span class="sc">{</span>nums[<span class="st">'runtime_s'</span>] <span class="op">/</span> <span class="dv">60</span><span class="sc">:.1f}</span><span class="ss"> min"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>\setnbnum{coin_p7}{0.117}
-\setnbnum{coin_ml}{0.7}
-\setnbnum{ll1}{-4.64}
-\setnbnum{ll3}{-3.68}
-\setnbnum{conf_real}{96}
-\setnbnum{conf_ae16}{37}
-\setnbnum{conf_vae16}{54}
-\setnbnum{conf_ae2box}{78}
-\setnbnum{ae2std}{3.8, 7.5}
-\setnbnum{vae2std}{1.03, 1.09}
-\setnbnum{nngen}{4.48}
-\setnbnum{nntest}{4.19}
-\setnbnum{elbo}{-98.1}
-\setnbnum{isest}{-93.3}
-\setnbnum{naive}{-154.8}
-\setnbnum{klmax}{2.23}
-\setnbnum{klmin}{0.65}
-\setnbnum{clfacc}{0.9854}
-\setnbnum{diagreal}{0.985}
-\setnbnum{diagvaetwo}{0.783}
-\setnbnum{diagvaesixteen}{0.953}
-\setnbnum{worst2}{4 \(\to\) 9: 35\%}
-\setnbnum{centvae}{0.73}
-\setnbnum{centcvae}{0.18}
-\setnbnum{cvaeagree}{0.950}
-\setnbnum{cvaeaggmin}{0.90}
-\setnbnum{worstc}{2 \(\to\) 0: 3\%}
-
-{
- "ae16_code_std_range": [
-  1.80012047290802,
-  3.569979667663574
- ],
- "coin_p7_given_half": 0.1171875,
- "coin_theta_ml": 0.7000000000000001,
- "coin_L_integral": 0.09090909094815097,
- "mle_loglik_1": -4.635128498077393,
- "mle_loglik_3": -3.6789114475250244,
- "vae_train_seconds": 174.51642370224,
- "vae2_test": {
-  "kl": 6.706277847290039,
-  "loss": 141.92117309570312,
-  "rec": 135.2148895263672
- },
- "vae16_test": {
-  "kl": 22.66437530517578,
-  "loss": 100.95369720458984,
-  "rec": 78.28932189941406
- },
- "vae16_bound": {
-  "elbo": -98.06139373779297,
-  "log_px_importance": -93.28495788574219,
-  "log_px_naive": -154.7674102783203
- },
- "vae2_mu_std": [
-  1.029288649559021,
-  1.0919866561889648
- ],
- "ae2_code_std": [
-  3.8084754943847656,
-  7.456589698791504
- ],
- "vae_nn_dist_generated": 4.47999906539917,
- "vae_nn_dist_test": 4.1873369216918945,
- "vae16_kl_per_dim_sorted": [
-  2.2284679412841797,
-  2.1468441486358643,
-  2.1386804580688477,
-  1.7065861225128174,
-  1.7033110857009888,
-  1.528543472290039,
-  1.4905487298965454,
-  1.4763965606689453,
-  1.3559247255325317,
-  1.3180142641067505,
-  1.146059274673462,
-  1.1210253238677979,
-  1.0002341270446777,
-  0.9750294089317322,
-  0.6804009079933167,
-  0.648307204246521
- ],
- "vae16_active_dims": 16,
- "traversal_dims": [
-  8,
-  14,
-  16,
-  4,
-  15,
-  10,
-  13
- ],
- "clf_test_acc": 0.9854,
- "confusion_diag_mean": {
-  "real": 0.9853495819132055,
-  "vae2": 0.7826667783222012,
-  "vae16": 0.9532889271611754
- },
- "vae2_worst_confusion": [
-  4,
-  9,
-  0.34623217922606925
- ],
- "class_frac_train": [
-  0.09871666666666666,
-  0.11236666666666667,
-  0.0993,
-  0.10218333333333333,
-  0.09736666666666667,
-  0.09035,
-  0.09863333333333334,
-  0.10441666666666667,
-  0.09751666666666667,
-  0.09915
- ],
- "class_frac_vae16": [
-  0.107,
-  0.1231,
-  0.1152,
-  0.1074,
-  0.0819,
-  0.0911,
-  0.0771,
-  0.1141,
-  0.0709,
-  0.1122
- ],
- "class_frac_vae2": [
-  0.1544,
-  0.1111,
-  0.1215,
-  0.0757,
-  0.0905,
-  0.0761,
-  0.1206,
-  0.077,
-  0.0919,
-  0.0812
- ],
- "frac_confident_0.9": {
-  "real_test": 0.9592,
-  "vae16_prior": 0.5449,
-  "vae2_prior": 0.6805,
-  "ae16_fitted_gauss": 0.367,
-  "ae2_box": 0.7815
- },
- "class_frac_ae2_box": [
-  0.0525,
-  0.4765,
-  0.0275,
-  0.0035,
-  0.011,
-  0.072,
-  0.202,
-  0.117,
-  0.0045,
-  0.0335
- ],
- "cvae_train_seconds": 155.85454154014587,
- "cvae8_test": {
-  "kl": 14.288955688476562,
-  "loss": 99.5968017578125,
-  "rec": 85.30784606933594
- },
- "latent_centroid_acc_vae2": 0.7319,
- "latent_centroid_acc_cvae2": 0.1801,
- "cvae_agreement_per_digit": [
-  0.969,
-  0.988,
-  0.902,
-  0.952,
-  0.969,
-  0.952,
-  0.958,
-  0.951,
-  0.903,
-  0.954
- ],
- "cvae_agreement_mean": 0.9498000000000001,
- "cvae_frac_confident_0.9": 0.8752,
- "cvae_worst_confusion": [
-  2,
-  0,
-  0.032
- ],
- "runtime_s": 624.2
-}
-
-total runtime 10.4 min</code></pre>
-</div>
-</div>
+<section id="from-autoencoders-to-conditional-generation" class="level2">
+<h2 class="anchored" data-anchor-id="from-autoencoders-to-conditional-generation">From autoencoders to conditional generation</h2>
+<p>An autoencoder learns a latent space but not a distribution on it, which is why random latent vectors decode to non-digits. Maximum likelihood is the principle for fitting a distribution <span class="math inline">\(p_\theta\)</span> to data; for a latent-variable model <span class="math inline">\(p_\theta(\mathbf x)=\int p_\theta(\mathbf x|\mathbf z)p(\mathbf z)d\mathbf z\)</span> the likelihood cannot be computed, and the VAE maximises instead the lower bound <span class="math inline">\(\mathrm{ELBO}=\mathbb E_q\log p_\theta(\mathbf x|\mathbf z)-\mathrm{KL}(q\,\|\,p)\)</span>, made trainable by the reparametrisation trick. The KL term shapes the latent space into the prior <span class="math inline">\(\mathcal N(0,I)\)</span>, so that sampling, interpolation and traversals work, although individual axes need not have a meaning. A classifier trained on real data then serves as a referee for synthetic data through confusion matrices, class distributions and confidence. Finally, a conditional VAE adds a known label <span class="math inline">\(\mathbf c\)</span> to encoder and decoder: <span class="math inline">\(\mathbf c\)</span> selects <em>what</em> is generated, and <span class="math inline">\(\mathbf z\)</span> carries the rest. Lab 025 applies this machinery to spin configurations.</p>
 
 
 </section>

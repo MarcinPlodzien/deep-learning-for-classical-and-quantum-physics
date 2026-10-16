@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,27 +466,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-003c-jax-arrays-randomness-compilation-differentiation-and-vectorisation" id="toc-lab-003c-jax-arrays-randomness-compilation-differentiation-and-vectorisation" class="nav-link" data-scroll-target="#lab-003c-jax-arrays-randomness-compilation-differentiation-and-vectorisation">Lab 003c — JAX: arrays, randomness, compilation, differentiation and vectorisation</a>
+  <li><a href="#lab-003c-jax-basics" id="toc-lab-003c-jax-basics" class="nav-link" data-scroll-target="#lab-003c-jax-basics">Lab 003c — JAX basics</a>
   <ul class="collapse">
   <li><a href="#jax-and-its-role-in-this-course" id="toc-jax-and-its-role-in-this-course" class="nav-link" data-scroll-target="#jax-and-its-role-in-this-course">JAX and its role in this course</a></li>
-  <li><a href="#jax.numpy-vs-numpy" id="toc-jax.numpy-vs-numpy" class="nav-link" data-scroll-target="#jax.numpy-vs-numpy">1. <code>jax.numpy</code> vs NumPy</a>
+  <li><a href="#jax.numpy-and-numpy" id="toc-jax.numpy-and-numpy" class="nav-link" data-scroll-target="#jax.numpy-and-numpy">1. <code>jax.numpy</code> and NumPy</a>
   <ul class="collapse">
-  <li><a href="#same-interface" id="toc-same-interface" class="nav-link" data-scroll-target="#same-interface">1.1 Same interface</a></li>
-  <li><a href="#arrays-are-immutable-.at..." id="toc-arrays-are-immutable-.at..." class="nav-link" data-scroll-target="#arrays-are-immutable-.at...">1.2 Arrays are immutable: <code>.at[...]</code></a></li>
-  <li><a href="#data-types-float32-by-default" id="toc-data-types-float32-by-default" class="nav-link" data-scroll-target="#data-types-float32-by-default">1.3 Data types: <code>float32</code> by default</a></li>
+  <li><a href="#common-interface" id="toc-common-interface" class="nav-link" data-scroll-target="#common-interface">1.1 Common interface</a></li>
+  <li><a href="#immutable-arrays-and-.at..." id="toc-immutable-arrays-and-.at..." class="nav-link" data-scroll-target="#immutable-arrays-and-.at...">1.2 Immutable arrays and <code>.at[...]</code></a></li>
+  <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types">1.3 Data types</a></li>
   <li><a href="#devices" id="toc-devices" class="nav-link" data-scroll-target="#devices">1.4 Devices</a></li>
   </ul></li>
   <li><a href="#explicit-randomness-prng-keys" id="toc-explicit-randomness-prng-keys" class="nav-link" data-scroll-target="#explicit-randomness-prng-keys">2. Explicit randomness: PRNG keys</a>
   <ul class="collapse">
   <li><a href="#keys-split-and-reproducibility" id="toc-keys-split-and-reproducibility" class="nav-link" data-scroll-target="#keys-split-and-reproducibility">2.1 Keys, <code>split</code> and reproducibility</a></li>
-  <li><a href="#check-the-samples-have-the-requested-statistics" id="toc-check-the-samples-have-the-requested-statistics" class="nav-link" data-scroll-target="#check-the-samples-have-the-requested-statistics">2.2 Check: the samples have the requested statistics</a></li>
+  <li><a href="#statistics-of-the-samples" id="toc-statistics-of-the-samples" class="nav-link" data-scroll-target="#statistics-of-the-samples">2.2 Statistics of the samples</a></li>
   </ul></li>
   <li><a href="#jit-tracing-and-compilation" id="toc-jit-tracing-and-compilation" class="nav-link" data-scroll-target="#jit-tracing-and-compilation">3. <code>jit</code>: tracing and compilation</a>
   <ul class="collapse">
   <li><a href="#tracing" id="toc-tracing" class="nav-link" data-scroll-target="#tracing">3.1 Tracing</a></li>
-  <li><a href="#timing-compiled-code-correctly" id="toc-timing-compiled-code-correctly" class="nav-link" data-scroll-target="#timing-compiled-code-correctly">3.2 Timing compiled code correctly</a></li>
+  <li><a href="#timing-of-compiled-code" id="toc-timing-of-compiled-code" class="nav-link" data-scroll-target="#timing-of-compiled-code">3.2 Timing of compiled code</a></li>
   <li><a href="#static-arguments-and-recompilation" id="toc-static-arguments-and-recompilation" class="nav-link" data-scroll-target="#static-arguments-and-recompilation">3.3 Static arguments and recompilation</a></li>
-  <li><a href="#functions-that-cannot-be-compiled-directly" id="toc-functions-that-cannot-be-compiled-directly" class="nav-link" data-scroll-target="#functions-that-cannot-be-compiled-directly">3.4 Functions that cannot be compiled directly</a></li>
+  <li><a href="#value-dependent-shapes" id="toc-value-dependent-shapes" class="nav-link" data-scroll-target="#value-dependent-shapes">3.4 Value-dependent shapes</a></li>
   </ul></li>
   <li><a href="#automatic-differentiation" id="toc-automatic-differentiation" class="nav-link" data-scroll-target="#automatic-differentiation">4. Automatic differentiation</a>
   <ul class="collapse">
@@ -502,7 +502,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#control-flow-inside-jit" id="toc-control-flow-inside-jit" class="nav-link" data-scroll-target="#control-flow-inside-jit">6. Control flow inside <code>jit</code></a>
   <ul class="collapse">
-  <li><a href="#python-if-on-a-traced-value-fails" id="toc-python-if-on-a-traced-value-fails" class="nav-link" data-scroll-target="#python-if-on-a-traced-value-fails">6.1 Python <code>if</code> on a traced value fails</a></li>
+  <li><a href="#python-if-on-a-traced-value" id="toc-python-if-on-a-traced-value" class="nav-link" data-scroll-target="#python-if-on-a-traced-value">6.1 Python <code>if</code> on a traced value</a></li>
   <li><a href="#lax.scan-a-loop-with-a-carry" id="toc-lax.scan-a-loop-with-a-carry" class="nav-link" data-scroll-target="#lax.scan-a-loop-with-a-carry">6.2 <code>lax.scan</code>: a loop with a carry</a></li>
   <li><a href="#fori_loop-and-while_loop" id="toc-fori_loop-and-while_loop" class="nav-link" data-scroll-target="#fori_loop-and-while_loop">6.3 <code>fori_loop</code> and <code>while_loop</code></a></li>
   </ul></li>
@@ -514,9 +514,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#freezing-a-subset-of-parameters-with-a-wrt-filter" id="toc-freezing-a-subset-of-parameters-with-a-wrt-filter" class="nav-link" data-scroll-target="#freezing-a-subset-of-parameters-with-a-wrt-filter">8.3 Freezing a subset of parameters with a <code>wrt</code> filter</a></li>
   <li><a href="#working-with-the-layers-of-a-model" id="toc-working-with-the-layers-of-a-model" class="nav-link" data-scroll-target="#working-with-the-layers-of-a-model">8.4 Working with the layers of a model</a></li>
   </ul></li>
-  <li><a href="#common-pitfalls-and-their-fixes" id="toc-common-pitfalls-and-their-fixes" class="nav-link" data-scroll-target="#common-pitfalls-and-their-fixes">9. Common pitfalls and their fixes</a></li>
-  <li><a href="#example-metropolis-sampling-of-the-2d-ising-model-checked-against-exact-enumeration" id="toc-example-metropolis-sampling-of-the-2d-ising-model-checked-against-exact-enumeration" class="nav-link" data-scroll-target="#example-metropolis-sampling-of-the-2d-ising-model-checked-against-exact-enumeration">10. Example: Metropolis sampling of the 2D Ising model, checked against exact enumeration</a></li>
-  <li><a href="#cheat-sheet-numpy-jax-pytorch" id="toc-cheat-sheet-numpy-jax-pytorch" class="nav-link" data-scroll-target="#cheat-sheet-numpy-jax-pytorch">11. Cheat sheet: NumPy ↔︎ JAX ↔︎ PyTorch</a></li>
+  <li><a href="#common-pitfalls-and-their-fixes" id="toc-common-pitfalls-and-their-fixes" class="nav-link" data-scroll-target="#common-pitfalls-and-their-fixes">9. Common pitfalls and their fixes</a>
+  <ul class="collapse">
+  <li><a href="#in-place-updates" id="toc-in-place-updates" class="nav-link" data-scroll-target="#in-place-updates">9.1 In-place updates</a></li>
+  <li><a href="#out-of-bounds-indices" id="toc-out-of-bounds-indices" class="nav-link" data-scroll-target="#out-of-bounds-indices">9.2 Out-of-bounds indices</a></li>
+  <li><a href="#side-effects-inside-jit" id="toc-side-effects-inside-jit" class="nav-link" data-scroll-target="#side-effects-inside-jit">9.3 Side effects inside <code>jit</code></a></li>
+  <li><a href="#python-control-flow-on-traced-values" id="toc-python-control-flow-on-traced-values" class="nav-link" data-scroll-target="#python-control-flow-on-traced-values">9.4 Python control flow on traced values</a></li>
+  <li><a href="#recompilation-inside-a-loop" id="toc-recompilation-inside-a-loop" class="nav-link" data-scroll-target="#recompilation-inside-a-loop">9.5 Recompilation inside a loop</a></li>
+  <li><a href="#mixing-numpy-and-jax-random-numbers" id="toc-mixing-numpy-and-jax-random-numbers" class="nav-link" data-scroll-target="#mixing-numpy-and-jax-random-numbers">9.6 Mixing NumPy and JAX random numbers</a></li>
+  <li><a href="#precision-of-float32" id="toc-precision-of-float32" class="nav-link" data-scroll-target="#precision-of-float32">9.7 Precision of <code>float32</code></a></li>
+  </ul></li>
+  <li><a href="#metropolis-sampling-of-the-2d-ising-model" id="toc-metropolis-sampling-of-the-2d-ising-model" class="nav-link" data-scroll-target="#metropolis-sampling-of-the-2d-ising-model">10. Metropolis sampling of the 2D Ising model</a></li>
+  <li><a href="#correspondence-between-numpy-jax-and-pytorch" id="toc-correspondence-between-numpy-jax-and-pytorch" class="nav-link" data-scroll-target="#correspondence-between-numpy-jax-and-pytorch">11. Correspondence between NumPy, JAX and PyTorch</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">12. References</a></li>
   </ul></li>
   </ul>
@@ -546,11 +555,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <section id="deep-learning-in-classical-and-quantum-physics" class="level1">
 <h1>Deep Learning in Classical and Quantum Physics</h1>
-2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 003c
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 003c <br>
 <hr>
 </section>
-<section id="lab-003c-jax-arrays-randomness-compilation-differentiation-and-vectorisation" class="level1">
-<h1>Lab 003c — JAX: arrays, randomness, compilation, differentiation and vectorisation</h1>
+<section id="lab-003c-jax-basics" class="level1">
+<h1>Lab 003c — JAX basics</h1>
 <section id="jax-and-its-role-in-this-course" class="level2">
 <h2 class="anchored" data-anchor-id="jax-and-its-role-in-this-course">JAX and its role in this course</h2>
 <p>JAX is a Python library from Google for numerical computing. Its arrays follow the NumPy interface (Lab 002), and four kinds of <strong>function transformations</strong> are added on top of it:</p>
@@ -592,9 +601,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 <p>The transformations compose: <code>jit(vmap(grad(f)))</code> is a compiled function that returns the gradient of <code>f</code> for every example of a batch. This is the style of the later labs of the course (Monte Carlo sampling of spin models, autoencoders, phase diagrams). Networks are built with <strong>Flax NNX</strong> (the module library of Flax) and trained with the optimiser library <strong>Optax</strong>.</p>
 <p>The price for these transformations is a stricter programming model than in NumPy or PyTorch (Lab 003): arrays are <strong>immutable</strong>, random numbers need an <strong>explicit key</strong>, and functions passed to <code>jit</code> should be <strong>pure</strong> (output determined by the input, no side effects). Every section below introduces one of these rules together with the reason for it.</p>
-<p><strong>Plan</strong> 1. <code>jax.numpy</code> vs NumPy 2. Explicit randomness: PRNG keys 3. <code>jit</code>: tracing and compilation 4. Automatic differentiation 5. <code>vmap</code>: automatic batching 6. Control flow inside <code>jit</code> 7. Pytrees: nested containers of arrays 8. Flax NNX and Optax: a network, its training and its layers 9. Common pitfalls and their fixes 10. Example: Metropolis sampling of the 2D Ising model, checked against exact enumeration 11. Cheat sheet: NumPy ↔︎ JAX ↔︎ PyTorch 12. References</p>
+<p>We begin with the differences between <code>jax.numpy</code> and NumPy (Section 1) and with explicit random keys (Section 2). Sections 3–5 introduce the three central transformations, <code>jit</code> (tracing and compilation), automatic differentiation and <code>vmap</code> (automatic batching). Section 6 shows how loops and branches are expressed inside compiled code, and Section 7 how JAX handles nested containers of arrays (pytrees). Section 8 builds, trains and modifies a network with Flax NNX and Optax. Section 9 collects common pitfalls and their fixes, and Section 10 combines all tools in a Metropolis sampler of the 2D Ising model, tested against exact enumeration. Section 11 is a table of corresponding operations in NumPy, JAX and PyTorch, and Section 12 lists references.</p>
 <blockquote class="blockquote">
-<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em>. The notebook runs on the <strong>CPU</strong> (the first code cell sets <code>JAX_PLATFORMS=cpu</code>). 2. <code>jax</code>, <code>flax</code>, <code>optax</code>, <code>numpy</code> and <code>matplotlib</code> are pre-installed in Colab; no <code>pip install</code> required. 3. Run the cells <em>in order</em>: later cells use variables defined earlier. If the state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
+<p>To run this notebook in Google Colab, follow these steps: 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em>. The notebook runs on the <strong>CPU</strong> (the first code cell sets <code>JAX_PLATFORMS=cpu</code>). 2. <code>jax</code>, <code>flax</code>, <code>optax</code>, <code>numpy</code> and <code>matplotlib</code> are pre-installed in Colab; no <code>pip install</code> required. 3. Run the cells <em>in order</em>: later cells use variables defined earlier. If the state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
 </blockquote>
 <div class="cell" data-execution_count="1">
 <details open="">
@@ -632,11 +641,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <hr>
 </section>
-<section id="jax.numpy-vs-numpy" class="level2">
-<h2 class="anchored" data-anchor-id="jax.numpy-vs-numpy">1. <code>jax.numpy</code> vs NumPy</h2>
+<section id="jax.numpy-and-numpy" class="level2">
+<h2 class="anchored" data-anchor-id="jax.numpy-and-numpy">1. <code>jax.numpy</code> and NumPy</h2>
 <p><code>jax.numpy</code> (imported as <code>jnp</code>) re-implements the NumPy interface on top of XLA, so most of Lab 002 carries over by replacing <code>np.</code> with <code>jnp.</code>. Three differences matter in practice: arrays cannot be modified in place, the default floating-point type is 32-bit, and arrays live on a <strong>device</strong> (CPU = central processing unit, GPU = graphics processing unit, or TPU = tensor processing unit).</p>
-<section id="same-interface" class="level3">
-<h3 class="anchored" data-anchor-id="same-interface">1.1 Same interface</h3>
+<section id="common-interface" class="level3">
+<h3 class="anchored" data-anchor-id="common-interface">1.1 Common interface</h3>
 <p>We build the same <span class="math inline">\(3\times4\)</span> array in NumPy and in JAX and apply the same operations (reshape, mean along an axis, broadcasting, matrix product).</p>
 <div class="cell" data-execution_count="2">
 <details open="">
@@ -660,10 +669,10 @@ max |NumPy - JAX|          : 0.0</code></pre>
 </div>
 </div>
 </section>
-<section id="arrays-are-immutable-.at..." class="level3">
-<h3 class="anchored" data-anchor-id="arrays-are-immutable-.at...">1.2 Arrays are immutable: <code>.at[...]</code></h3>
+<section id="immutable-arrays-and-.at..." class="level3">
+<h3 class="anchored" data-anchor-id="immutable-arrays-and-.at...">1.2 Immutable arrays and <code>.at[...]</code></h3>
 <p>A JAX array cannot be changed after it is created. <code>x[0] = 1.0</code> raises an error; the functional replacement <code>x.at[0].set(1.0)</code> returns a <strong>new</strong> array with the change and leaves <code>x</code> untouched. Inside <code>jit</code> the compiler turns this into an in-place update whenever the old array is no longer used, so no copy is paid for.</p>
-<p>The reason: <code>jit</code>, <code>grad</code> and <code>vmap</code> analyse a function as a mathematical map from inputs to outputs. Hidden modifications of inputs would break this analysis.</p>
+<p>The reason is that <code>jit</code>, <code>grad</code> and <code>vmap</code> analyse a function as a mathematical map from inputs to outputs, and hidden modifications of inputs would break this analysis.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
@@ -690,8 +699,8 @@ y            : [ 1. 10. 10.  2.  1.]</code></pre>
 </div>
 <p>Other methods of <code>.at[...]</code>: <code>.multiply</code>, <code>.min</code>, <code>.max</code>, <code>.get</code>. The repeated-index behaviour of <code>.add</code> (accumulation) is the same as NumPy’s <code>np.add.at</code>, and differs from <code>y[idx] += 1</code> in NumPy, which adds only once per distinct index.</p>
 </section>
-<section id="data-types-float32-by-default" class="level3">
-<h3 class="anchored" data-anchor-id="data-types-float32-by-default">1.3 Data types: <code>float32</code> by default</h3>
+<section id="data-types" class="level3">
+<h3 class="anchored" data-anchor-id="data-types">1.3 Data types</h3>
 <p>JAX uses 32-bit numbers by default (single precision, about 7 significant digits), because GPUs and TPUs are much faster in single precision. NumPy uses <code>float64</code> (about 16 digits). Requests for <code>float64</code> are truncated to <code>float32</code> (with a warning) unless 64-bit mode is switched on with <code>jax.config.update("jax_enable_x64", True)</code> (or the environment variable <code>JAX_ENABLE_X64=1</code> before the import).</p>
 <p>Below we switch the mode on, compute <span class="math inline">\(1 + 10^{-10} - 1\)</span> in both precisions, and switch it off again (the rest of the notebook runs in <code>float32</code>).</p>
 <div class="cell" data-execution_count="4">
@@ -719,7 +728,7 @@ default dtype of np.array(1.0)     : float64
 <pre><code>1 + 1e-10 - 1 in float64           : 1.000000082740371e-10</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> <code>float32</code> is precise enough for training networks. For quantities that need many digits (energies of quantum systems to <span class="math inline">\(10^{-10}\)</span>, long time evolutions, comparisons with exact results), enable 64-bit mode at the top of the notebook, before any array is created.</p>
+<p><code>float32</code> is precise enough for training networks. For quantities that need many digits (energies of quantum systems to <span class="math inline">\(10^{-10}\)</span>, long time evolutions, comparisons with exact results), enable 64-bit mode at the top of the notebook, before any array is created.</p>
 </section>
 <section id="devices" class="level3">
 <h3 class="anchored" data-anchor-id="devices">1.4 Devices</h3>
@@ -746,7 +755,7 @@ back to NumPy, type : ndarray</code></pre>
 <p>NumPy keeps a hidden global state of the random-number generator: every call to <code>np.random.normal</code> modifies it. Hidden state is a side effect, and it is incompatible with compiled, parallel and differentiated functions: the result of a function would depend on how many random numbers were drawn before, possibly on another device. JAX therefore uses a <strong>PRNG (pseudo-random number generator) key</strong>: a small array that is passed explicitly, so that the random output of a function is determined by its arguments.</p>
 <section id="keys-split-and-reproducibility" class="level3">
 <h3 class="anchored" data-anchor-id="keys-split-and-reproducibility">2.1 Keys, <code>split</code> and reproducibility</h3>
-<p>Rules: * the same key gives the same numbers, always; * a key is <strong>used once</strong>. For new numbers, <code>jax.random.split</code> derives independent new keys from an old one; * <code>jax.random.fold_in(key, i)</code> derives a key from an integer, e.g.&nbsp;the index of a chain, a step or an epoch.</p>
+<p>Three rules govern the use of keys. The same key gives the same numbers, always. A key is therefore <strong>used once</strong>: for new numbers, <code>jax.random.split</code> derives independent new keys from an old one. Finally, <code>jax.random.fold_in(key, i)</code> derives a key from an integer, e.g.&nbsp;the index of a chain, a step or an epoch.</p>
 <div class="cell" data-execution_count="6">
 <details open="">
 <summary>Code</summary>
@@ -778,9 +787,9 @@ back to NumPy, type : ndarray</code></pre>
 </div>
 </div>
 </section>
-<section id="check-the-samples-have-the-requested-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="check-the-samples-have-the-requested-statistics">2.2 Check: the samples have the requested statistics</h3>
-<p><span class="math inline">\(10^6\)</span> samples of <span class="math inline">\(\mathcal N(\mu=2, \sigma=0.5)\)</span> and of the uniform distribution on <span class="math inline">\([0,1)\)</span>; the estimated moments must agree with the exact values within a few standard errors (<span class="math inline">\(\sigma/\sqrt{N} = 5\cdot10^{-4}\)</span> for the Gaussian mean).</p>
+<section id="statistics-of-the-samples" class="level3">
+<h3 class="anchored" data-anchor-id="statistics-of-the-samples">2.2 Statistics of the samples</h3>
+<p>To confirm that the keys produce the requested distributions, we draw <span class="math inline">\(10^6\)</span> samples of <span class="math inline">\(\mathcal N(\mu=2, \sigma=0.5)\)</span> and of the uniform distribution on <span class="math inline">\([0,1)\)</span>. The estimated moments must agree with the exact values within a few standard errors (<span class="math inline">\(\sigma/\sqrt{N} = 5\cdot10^{-4}\)</span> for the Gaussian mean).</p>
 <div class="cell" data-execution_count="7">
 <details open="">
 <summary>Code</summary>
@@ -797,7 +806,7 @@ back to NumPy, type : ndarray</code></pre>
 uniform : mean = 0.5000 (exact 0.5000), var = 0.0834 (exact 0.0833)</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> Pass keys as arguments, split before every use, never reuse a key. Reproducibility then comes for free: the same root seed gives the same run, also inside <code>jit</code> and <code>vmap</code>. Other samplers: <code>jax.random.bernoulli</code>, <code>randint</code>, <code>choice</code>, <code>permutation</code>, <code>categorical</code>.</p>
+<p>The rule that follows is to pass keys as arguments, split a key before every use and never reuse one. Reproducibility then comes for free: the same root seed gives the same run, also inside <code>jit</code> and <code>vmap</code>. Other samplers: <code>jax.random.bernoulli</code>, <code>randint</code>, <code>choice</code>, <code>permutation</code>, <code>categorical</code>.</p>
 <hr>
 </section>
 </section>
@@ -840,9 +849,9 @@ the jaxpr of the same computation:
 </div>
 </div>
 </section>
-<section id="timing-compiled-code-correctly" class="level3">
-<h3 class="anchored" data-anchor-id="timing-compiled-code-correctly">3.2 Timing compiled code correctly</h3>
-<p>Two rules for measuring the speed of JAX code: 1. JAX dispatches work <strong>asynchronously</strong>: a call returns as soon as the computation is queued. Call <code>.block_until_ready()</code> on the result before stopping the clock. 2. The first call includes tracing and compilation. Time it separately from the later calls.</p>
+<section id="timing-of-compiled-code" class="level3">
+<h3 class="anchored" data-anchor-id="timing-of-compiled-code">3.2 Timing of compiled code</h3>
+<p>Two rules apply when measuring the speed of JAX code. First, JAX dispatches work <strong>asynchronously</strong>: a call returns as soon as the computation is queued, so <code>.block_until_ready()</code> must be called on the result before stopping the clock. Second, the first call includes tracing and compilation, so it is timed separately from the later calls.</p>
 <p>The test function is a three-layer <span class="math inline">\(\tanh\)</span> network applied to a batch: <code>x</code> has shape <code>(2000, 256)</code>, each <code>W</code> has shape <code>(256, 256)</code>, output shape <code>(2000, 256)</code>.</p>
 <div class="cell" data-execution_count="9">
 <details open="">
@@ -942,9 +951,9 @@ total number of traces: 3</code></pre>
 </div>
 </div>
 </section>
-<section id="functions-that-cannot-be-compiled-directly" class="level3">
-<h3 class="anchored" data-anchor-id="functions-that-cannot-be-compiled-directly">3.4 Functions that cannot be compiled directly</h3>
-<p><code>jit</code> needs the <strong>shape</strong> of every intermediate array at trace time. Two kinds of code violate this: * <strong>output shapes that depend on values</strong>: <code>x[x &gt; 0]</code> (boolean masking), <code>jnp.nonzero(x)</code>, <code>jnp.unique(x)</code>; * <strong>Python control flow on values</strong>: <code>if x &gt; 0:</code> or <code>while err &gt; tol:</code> on a traced array (Section 6).</p>
+<section id="value-dependent-shapes" class="level3">
+<h3 class="anchored" data-anchor-id="value-dependent-shapes">3.4 Value-dependent shapes</h3>
+<p><code>jit</code> needs the <strong>shape</strong> of every intermediate array at trace time. Two kinds of code violate this. The first is code whose <strong>output shapes depend on values</strong>, such as <code>x[x &gt; 0]</code> (boolean masking), <code>jnp.nonzero(x)</code> or <code>jnp.unique(x)</code>. The second is <strong>Python control flow on values</strong>, such as <code>if x &gt; 0:</code> or <code>while err &gt; tol:</code> on a traced array (Section 6).</p>
 <p>The fixes keep the shapes fixed: compute on all entries and mask with <code>jnp.where</code>, or give the maximal size explicitly (<code>jnp.nonzero(x, size=..., fill_value=...)</code>).</p>
 <div class="cell" data-execution_count="11">
 <details open="">
@@ -974,7 +983,7 @@ sum of positive entries with jnp.where: 6.0 (exact 6.0)</code></pre>
 <pre><code>indices of positive entries (padded with -1): [ 1  3 -1 -1]</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> Compile whole steps (a training step, a Monte Carlo sweep), not single operations. Keep shapes fixed. Mark structural Python arguments as static, and expect one compilation per distinct shape or static value.</p>
+<p>The practical rule is to compile whole steps (a training step, a Monte Carlo sweep), not single operations. Keep shapes fixed, mark structural Python arguments as static, and expect one compilation per distinct shape or static value.</p>
 <hr>
 </section>
 </section>
@@ -1018,12 +1027,12 @@ max |V''_auto - V''_exact| on the grid = 9.54e-07</code></pre>
 <p><img src="lab-003c-jax_files/figure-html/cell-13-output-3.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Two rules of <code>grad</code>: the function must return a <strong>scalar</strong>, and the derivative is taken with respect to the <strong>first</strong> argument (<code>argnums=(0, 1)</code> selects others). Arguments must be floating-point: the gradient with respect to an integer is not defined.</p>
+<p>Two rules of <code>grad</code> follow from this example: the function must return a <strong>scalar</strong>, and the derivative is taken with respect to the <strong>first</strong> argument (<code>argnums=(0, 1)</code> selects others). Arguments must be floating-point: the gradient with respect to an integer is not defined.</p>
 </section>
 <section id="gradient-and-hessian-of-a-gaussian-log-density" class="level3">
 <h3 class="anchored" data-anchor-id="gradient-and-hessian-of-a-gaussian-log-density">4.2 Gradient and Hessian of a Gaussian log-density</h3>
 <p>For <span class="math inline">\(\mathbf x\in\mathbb R^3\)</span> and the Gaussian density with mean <span class="math inline">\(\boldsymbol\mu\)</span> and covariance <span class="math inline">\(\Sigma\)</span>, <span class="math display">\[\log p(\mathbf x) = -\tfrac12 (\mathbf x-\boldsymbol\mu)^T\Sigma^{-1}(\mathbf x-\boldsymbol\mu) - \tfrac12\log\det(2\pi\Sigma),\qquad
-\nabla\log p = -\Sigma^{-1}(\mathbf x-\boldsymbol\mu),\qquad \nabla^2\log p = -\Sigma^{-1}.\]</span> The gradient <span class="math inline">\(\nabla \log p\)</span> is called the <strong>score</strong>; it reappears in diffusion models and in Langevin sampling. <code>jax.hessian</code> returns the <span class="math inline">\(3\times3\)</span> matrix of second derivatives.</p>
+\nabla\log p = -\Sigma^{-1}(\mathbf x-\boldsymbol\mu),\qquad \nabla^2\log p = -\Sigma^{-1}.\]</span> The gradient <span class="math inline">\(\nabla \log p\)</span> is called the <strong>score</strong>; it reappears in diffusion models and in Langevin sampling. <code>jax.hessian</code> returns the <span class="math inline">\(3\times3\)</span> matrix of second derivatives, which we compare with <span class="math inline">\(-\Sigma^{-1}\)</span>.</p>
 <div class="cell" data-execution_count="13">
 <details open="">
 <summary>Code</summary>
@@ -1056,8 +1065,8 @@ score, analytic  : [ 0.9039935 -3.6418612  6.3390307]</code></pre>
 </section>
 <section id="jacobians-forward-mode-and-reverse-mode" class="level3">
 <h3 class="anchored" data-anchor-id="jacobians-forward-mode-and-reverse-mode">4.3 Jacobians: forward mode and reverse mode</h3>
-<p>For a vector function <span class="math inline">\(\mathbf f:\mathbb R^n\to\mathbb R^m\)</span>, the Jacobian <span class="math inline">\(J_{ij}=\partial f_i/\partial x_j\)</span> has shape <code>(m, n)</code>. JAX offers two algorithms: * <code>jax.jacfwd</code>: <strong>forward mode</strong>, one pass per input direction, <span class="math inline">\(n\)</span> passes; efficient for <span class="math inline">\(n \ll m\)</span>; * <code>jax.jacrev</code>: <strong>reverse mode</strong>, one pass per output component, <span class="math inline">\(m\)</span> passes; efficient for <span class="math inline">\(m \ll n\)</span>. <code>grad</code> is the special case <span class="math inline">\(m=1\)</span>, which is why training (one scalar loss, millions of parameters) uses reverse mode.</p>
-<p><code>jax.hessian</code> is implemented as <code>jacfwd(jacrev(f))</code>. Example: polar → Cartesian coordinates <span class="math inline">\(\mathbf f(r,\varphi) = (r\cos\varphi, r\sin\varphi)\)</span>, with <span class="math inline">\(\det J = r\)</span>.</p>
+<p>For a vector function <span class="math inline">\(\mathbf f:\mathbb R^n\to\mathbb R^m\)</span>, the Jacobian <span class="math inline">\(J_{ij}=\partial f_i/\partial x_j\)</span> has shape <code>(m, n)</code>. JAX offers two algorithms. <code>jax.jacfwd</code> uses <strong>forward mode</strong>, one pass per input direction, <span class="math inline">\(n\)</span> passes in total; it is efficient for <span class="math inline">\(n \ll m\)</span>. <code>jax.jacrev</code> uses <strong>reverse mode</strong>, one pass per output component, <span class="math inline">\(m\)</span> passes in total; it is efficient for <span class="math inline">\(m \ll n\)</span>. <code>grad</code> is the special case <span class="math inline">\(m=1\)</span>, which is why training (one scalar loss, millions of parameters) uses reverse mode.</p>
+<p><code>jax.hessian</code> is implemented as <code>jacfwd(jacrev(f))</code>. As an example we take the map from polar to Cartesian coordinates, <span class="math inline">\(\mathbf f(r,\varphi) = (r\cos\varphi, r\sin\varphi)\)</span>, whose Jacobian determinant is <span class="math inline">\(\det J = r\)</span>.</p>
 <div class="cell" data-execution_count="14">
 <details open="">
 <summary>Code</summary>
@@ -1086,7 +1095,7 @@ score, analytic  : [ 0.9039935 -3.6418612  6.3390307]</code></pre>
 det J = 2.00000 (exact r = 2)</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> <code>grad</code> turns a scalar function into its gradient function; <code>value_and_grad</code> returns both in one pass (the loss is needed anyway for monitoring); <code>jacfwd</code>, <code>jacrev</code> and <code>hessian</code> give full derivative matrices. All of them return ordinary functions that can be compiled with <code>jit</code> and batched with <code>vmap</code>.</p>
+<p>To sum up the derivative tools: <code>grad</code> turns a scalar function into its gradient function; <code>value_and_grad</code> returns both in one pass (the loss is needed anyway for monitoring); <code>jacfwd</code>, <code>jacrev</code> and <code>hessian</code> give full derivative matrices. All of them return ordinary functions that can be compiled with <code>jit</code> and batched with <code>vmap</code>.</p>
 <hr>
 </section>
 </section>
@@ -1130,9 +1139,9 @@ max |vmap - loop| = 0.0 | max |vmap - einsum| = 0.0</code></pre>
 </section>
 <section id="many-independent-monte-carlo-chains-at-once" class="level3">
 <h3 class="anchored" data-anchor-id="many-independent-monte-carlo-chains-at-once">5.2 Many independent Monte Carlo chains at once</h3>
-<p>Metropolis sampling of the Boltzmann distribution <span class="math inline">\(p(x)\propto e^{-V(x)/T}\)</span> for the double-well potential of Section 4. One step for <strong>one</strong> chain at position <span class="math inline">\(x\)</span>: 1. propose <span class="math inline">\(x' = x + \delta\,\xi\)</span> with <span class="math inline">\(\xi\sim\mathcal N(0,1)\)</span>; 2. accept with probability <span class="math inline">\(\min\!\big(1, e^{-[V(x')-V(x)]/T}\big)\)</span>, otherwise stay at <span class="math inline">\(x\)</span>.</p>
+<p>We sample the Boltzmann distribution <span class="math inline">\(p(x)\propto e^{-V(x)/T}\)</span> for the double-well potential of Section 4 with the Metropolis algorithm. One step for <strong>one</strong> chain at position <span class="math inline">\(x\)</span> proposes <span class="math inline">\(x' = x + \delta\,\xi\)</span> with <span class="math inline">\(\xi\sim\mathcal N(0,1)\)</span>, and accepts it with probability <span class="math inline">\(\min\!\big(1, e^{-[V(x')-V(x)]/T}\big)\)</span>; otherwise the chain stays at <span class="math inline">\(x\)</span>.</p>
 <p>The step takes a key and a scalar position. <code>vmap</code> over keys and positions runs <span class="math inline">\(C = 2000\)</span> chains in parallel: positions of shape <code>(C,)</code>, keys of shape <code>(C,)</code>. The loop over steps is still a Python loop around a compiled step here; Section 6 moves such loops into the compiled code.</p>
-<p><strong>Check.</strong> The exact <span class="math inline">\(\langle x^2\rangle = \int x^2 e^{-V/T}dx \big/ \int e^{-V/T}dx\)</span> is computed by quadrature on a fine grid and compared with the average over chains and steps.</p>
+<p>To test the sampler, the exact <span class="math inline">\(\langle x^2\rangle = \int x^2 e^{-V/T}dx \big/ \int e^{-V/T}dx\)</span> is computed by quadrature on a fine grid and compared with the average over chains and steps.</p>
 <div class="cell" data-execution_count="16">
 <details open="">
 <summary>Code</summary>
@@ -1175,7 +1184,7 @@ max |vmap - loop| = 0.0 | max |vmap - einsum| = 0.0</code></pre>
 <section id="per-example-gradients-vmap-of-grad" class="level3">
 <h3 class="anchored" data-anchor-id="per-example-gradients-vmap-of-grad">5.3 Per-example gradients: <code>vmap</code> of <code>grad</code></h3>
 <p><code>grad</code> of a mean loss gives the gradient averaged over the batch. Some methods need the gradient of <strong>every example separately</strong> (studies of gradient noise, influence of single data points, differentially private training). In JAX this is <code>vmap(grad(loss_one))</code>.</p>
-<p>Linear model <span class="math inline">\(\hat y = \mathbf w\cdot\mathbf x\)</span> with the loss of one example <span class="math inline">\(\ell = \frac12(\mathbf w\cdot\mathbf x - y)^2\)</span>, whose gradient is <span class="math inline">\((\mathbf w\cdot\mathbf x - y)\,\mathbf x\)</span>. Batch of <span class="math inline">\(B=8\)</span> examples with <span class="math inline">\(\mathbf x\)</span> of shape <code>(4,)</code>: the result has shape <code>(8, 4)</code>.</p>
+<p>We take a linear model <span class="math inline">\(\hat y = \mathbf w\cdot\mathbf x\)</span> with the loss of one example <span class="math inline">\(\ell = \frac12(\mathbf w\cdot\mathbf x - y)^2\)</span>, whose gradient is <span class="math inline">\((\mathbf w\cdot\mathbf x - y)\,\mathbf x\)</span>. For a batch of <span class="math inline">\(B=8\)</span> examples with <span class="math inline">\(\mathbf x\)</span> of shape <code>(4,)</code> the result has shape <code>(8, 4)</code>, and each row is compared with the analytic formula.</p>
 <div class="cell" data-execution_count="17">
 <details open="">
 <summary>Code</summary>
@@ -1205,7 +1214,7 @@ max |vmap - loop| = 0.0 | max |vmap - einsum| = 0.0</code></pre>
 <pre><code>max |mean of per-example gradients - gradient of mean loss| = 3.725290298461914e-08</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> Write the function for one example, add the batch with <code>vmap</code>, compile the result with <code>jit</code>. <code>in_axes=None</code> marks shared arguments (parameters, the matrix <span class="math inline">\(M\)</span>); keys are batched like any other array.</p>
+<p>The pattern of this section is: write the function for one example, add the batch with <code>vmap</code>, compile the result with <code>jit</code>. <code>in_axes=None</code> marks shared arguments (parameters, the matrix <span class="math inline">\(M\)</span>); keys are batched like any other array.</p>
 <hr>
 </section>
 </section>
@@ -1253,8 +1262,9 @@ max |vmap - loop| = 0.0 | max |vmap - einsum| = 0.0</code></pre>
 </tr>
 </tbody>
 </table>
-<section id="python-if-on-a-traced-value-fails" class="level3">
-<h3 class="anchored" data-anchor-id="python-if-on-a-traced-value-fails">6.1 Python <code>if</code> on a traced value fails</h3>
+<section id="python-if-on-a-traced-value" class="level3">
+<h3 class="anchored" data-anchor-id="python-if-on-a-traced-value">6.1 Python <code>if</code> on a traced value</h3>
+<p>The first cell shows the error raised by a Python <code>if</code> on a traced value, and the two compiled alternatives, <code>jnp.where</code> and <code>lax.cond</code>.</p>
 <div class="cell" data-execution_count="18">
 <details open="">
 <summary>Code</summary>
@@ -1291,7 +1301,7 @@ max |vmap - loop| = 0.0 | max |vmap - einsum| = 0.0</code></pre>
 <span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    ys.append(y)</span>
 <span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> carry, stack(ys)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>as one compiled loop. The <strong>carry</strong> is the state passed from step to step (positions, a key, spin configurations); <code>y</code> is what is recorded at each step. <code>xs</code> can be <code>None</code> together with <code>length=n</code>.</p>
-<p><strong>Example: random walks.</strong> <span class="math inline">\(W=10\,000\)</span> walkers in one dimension, <span class="math inline">\(x_{t+1} = x_t + \xi_t\)</span>, <span class="math inline">\(\xi_t\sim\mathcal N(0,1)\)</span>, <span class="math inline">\(x_0=0\)</span>, for <span class="math inline">\(T=400\)</span> steps. The carry is <code>(key, x)</code> with <code>x</code> of shape <code>(W,)</code>; the recorded output is <span class="math inline">\(\langle x_t^2\rangle\)</span> per step, shape <code>(T,)</code>. Exact result: <span class="math inline">\(\langle x_t^2\rangle = t\)</span> (diffusion).</p>
+<p>As an example we follow random walks: <span class="math inline">\(W=10\,000\)</span> walkers in one dimension, <span class="math inline">\(x_{t+1} = x_t + \xi_t\)</span>, <span class="math inline">\(\xi_t\sim\mathcal N(0,1)\)</span>, <span class="math inline">\(x_0=0\)</span>, for <span class="math inline">\(T=400\)</span> steps. The carry is <code>(key, x)</code> with <code>x</code> of shape <code>(W,)</code>; the recorded output is <span class="math inline">\(\langle x_t^2\rangle\)</span> per step, shape <code>(T,)</code>. The exact result is <span class="math inline">\(\langle x_t^2\rangle = t\)</span> (diffusion), and the figure compares the two.</p>
 <div class="cell" data-execution_count="19">
 <details open="">
 <summary>Code</summary>
@@ -1334,10 +1344,7 @@ max relative deviation of &lt;x_t^2&gt;/t from 1 for t &gt; 50: 0.019  (relative
 </section>
 <section id="fori_loop-and-while_loop" class="level3">
 <h3 class="anchored" data-anchor-id="fori_loop-and-while_loop">6.3 <code>fori_loop</code> and <code>while_loop</code></h3>
-<ul>
-<li><code>lax.fori_loop(lo, hi, body, init)</code> with <code>body(i, state) -&gt; state</code>. Example: <strong>power iteration</strong> <span class="math inline">\(\mathbf v\leftarrow A\mathbf v/\|A\mathbf v\|\)</span>, which converges to the eigenvector of the eigenvalue of largest modulus; compared with <code>jnp.linalg.eigvalsh</code>.</li>
-<li><code>lax.while_loop(cond, body, init)</code> stops when <code>cond(state)</code> is <code>False</code>; the number of iterations is decided at run time. Example: <strong>Newton’s method</strong> for the minimum <span class="math inline">\(x=1\)</span> of the double well, <span class="math inline">\(x\leftarrow x - V'(x)/V''(x)\)</span>, until <span class="math inline">\(|V'(x)|&lt;10^{-6}\)</span>; the derivatives come from <code>jax.grad</code>.</li>
-</ul>
+<p><code>lax.fori_loop(lo, hi, body, init)</code> runs a loop of fixed length with <code>body(i, state) -&gt; state</code>. We use it for <strong>power iteration</strong>, <span class="math inline">\(\mathbf v\leftarrow A\mathbf v/\|A\mathbf v\|\)</span>, which converges to the eigenvector of the eigenvalue of largest modulus; the result is compared with <code>jnp.linalg.eigvalsh</code>. <code>lax.while_loop(cond, body, init)</code> stops when <code>cond(state)</code> is <code>False</code>, so the number of iterations is decided at run time. We use it for <strong>Newton’s method</strong> for the minimum <span class="math inline">\(x=1\)</span> of the double well, <span class="math inline">\(x\leftarrow x - V'(x)/V''(x)\)</span>, until <span class="math inline">\(|V'(x)|&lt;10^{-6}\)</span>; the derivatives come from <code>jax.grad</code>.</p>
 <div class="cell" data-execution_count="20">
 <details open="">
 <summary>Code</summary>
@@ -1375,14 +1382,14 @@ max relative deviation of &lt;x_t^2&gt;/t from 1 for t &gt; 50: 0.019  (relative
 Newton from x0 = 2: x_min = 1.000000 (exact 1) after 6 iterations</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> Inside <code>jit</code>: <code>jnp.where</code> or <code>lax.cond</code> instead of <code>if</code> on values; <code>lax.scan</code> for loops that record a trajectory; <code>fori_loop</code> for fixed-length loops; <code>while_loop</code> for loops with a run-time stopping condition. Python <code>if</code>/<code>for</code> remain fine on <strong>static</strong> quantities (shapes, Python integers, flags).</p>
+<p>Inside <code>jit</code>, therefore, <code>jnp.where</code> or <code>lax.cond</code> replace <code>if</code> on values; <code>lax.scan</code> serves loops that record a trajectory, <code>fori_loop</code> fixed-length loops, and <code>while_loop</code> loops with a run-time stopping condition. Python <code>if</code>/<code>for</code> remain fine on <strong>static</strong> quantities (shapes, Python integers, flags).</p>
 <hr>
 </section>
 </section>
 <section id="pytrees-nested-containers-of-arrays" class="level2">
 <h2 class="anchored" data-anchor-id="pytrees-nested-containers-of-arrays">7. Pytrees: nested containers of arrays</h2>
 <p>The parameters of a network are not one array but a collection: one weight matrix and one bias per layer. JAX handles such collections as <strong>pytrees</strong>: nested Python lists, tuples and dictionaries (and registered classes, such as the states of Flax modules) whose <strong>leaves</strong> are arrays. All transformations accept pytrees: <code>grad</code> with respect to a pytree of parameters returns a pytree of gradients <strong>with the same structure</strong>.</p>
-<p>Example: a two-layer perceptron with parameters stored as a list of dictionaries, layer sizes <span class="math inline">\(2\to16\to1\)</span>.</p>
+<p>As an example we store the parameters of a two-layer perceptron, with layer sizes <span class="math inline">\(2\to16\to1\)</span>, as a list of dictionaries.</p>
 <div class="cell" data-execution_count="21">
 <details open="">
 <summary>Code</summary>
@@ -1410,7 +1417,7 @@ shapes of the leaves: [{'W': (2, 16), 'b': (16,)}, {'W': (16, 1), 'b': (1,)}]
 number of parameters: 65 (exact 2*16 + 16 + 16*1 + 1 = 65 )</code></pre>
 </div>
 </div>
-<p><code>tree_map(f, tree1, tree2, ...)</code> applies <code>f</code> leaf by leaf to trees of equal structure. One step of gradient descent <span class="math inline">\(\theta\leftarrow\theta - \eta\nabla_\theta L\)</span> on <strong>all</strong> parameters is therefore one line. Below: a mean squared error (MSE) loss on a toy target <span class="math inline">\(y = x_1 x_2\)</span> with 256 points (inputs <code>(256, 2)</code>, targets <code>(256, 1)</code>), the gradient pytree, and 200 compiled gradient-descent steps.</p>
+<p><code>tree_map(f, tree1, tree2, ...)</code> applies <code>f</code> leaf by leaf to trees of equal structure. One step of gradient descent <span class="math inline">\(\theta\leftarrow\theta - \eta\nabla_\theta L\)</span> on <strong>all</strong> parameters is therefore one line. The cell defines a mean squared error (MSE) loss on a toy target <span class="math inline">\(y = x_1 x_2\)</span> with 256 points (inputs <code>(256, 2)</code>, targets <code>(256, 1)</code>), computes the gradient pytree, and runs 200 compiled gradient-descent steps; the loss should decrease.</p>
 <div class="cell" data-execution_count="22">
 <details open="">
 <summary>Code</summary>
@@ -1444,15 +1451,15 @@ number of parameters: 65 (exact 2*16 + 16 + 16*1 + 1 = 65 )</code></pre>
 <pre><code>MSE before training = 0.2903, after 200 gradient-descent steps = 0.0048</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> Parameters, gradients, optimiser states and Monte Carlo states are pytrees. <code>tree_map</code> applies an update leaf by leaf, <code>tree_leaves</code> lists the arrays (for counting or norms), <code>tree_structure</code> compares layouts. Flax and Optax (next section) are built on this.</p>
+<p>Parameters, gradients, optimiser states and Monte Carlo states are all pytrees. <code>tree_map</code> applies an update leaf by leaf, <code>tree_leaves</code> lists the arrays (for counting or norms), and <code>tree_structure</code> compares layouts. Flax and Optax (next section) are built on this.</p>
 <hr>
 </section>
 <section id="flax-nnx-and-optax-a-network-its-training-and-its-layers" class="level2">
 <h2 class="anchored" data-anchor-id="flax-nnx-and-optax-a-network-its-training-and-its-layers">8. Flax NNX and Optax: a network, its training and its layers</h2>
-<p>Writing parameter dictionaries by hand (Section 7) becomes tedious for deep networks. <strong>Flax NNX</strong> provides layers as Python objects, close to <code>torch.nn.Module</code> (Lab 003): a module holds its parameters as attributes (<code>nnx.Param</code> variables) and is called like a function. <strong>Optax</strong> provides optimisers (stochastic gradient descent (SGD), Adam, learning-rate schedules, gradient clipping) as pure functions on pytrees.</p>
+<p>Keeping parameter dictionaries ourselves (Section 7) becomes tedious for deep networks. <strong>Flax NNX</strong> provides layers as Python objects, close to <code>torch.nn.Module</code> (Lab 003): a module holds its parameters as attributes (<code>nnx.Param</code> variables) and is called like a function. <strong>Optax</strong> provides optimisers (stochastic gradient descent (SGD), Adam, learning-rate schedules, gradient clipping) as pure functions on pytrees.</p>
 <section id="a-multilayer-perceptron" class="level3">
 <h3 class="anchored" data-anchor-id="a-multilayer-perceptron">8.1 A multilayer perceptron</h3>
-<p>A multilayer perceptron (MLP) <span class="math inline">\(1\to32\to32\to1\)</span> with <span class="math inline">\(\tanh\)</span> activations. Random initialisation needs keys; <code>nnx.Rngs(seed)</code> is a container that hands out a fresh key to each layer. Input shape <code>(B, 1)</code>, output shape <code>(B, 1)</code>.</p>
+<p>We define a multilayer perceptron (MLP) <span class="math inline">\(1\to32\to32\to1\)</span> with <span class="math inline">\(\tanh\)</span> activations. Random initialisation needs keys; <code>nnx.Rngs(seed)</code> is a container that hands out a fresh key to each layer. Input shape <code>(B, 1)</code>, output shape <code>(B, 1)</code>.</p>
 <div class="cell" data-execution_count="23">
 <details open="">
 <summary>Code</summary>
@@ -1479,9 +1486,9 @@ hidden1.kernel shape: (1, 32) | out.bias shape: (1,)</code></pre>
 </section>
 <section id="a-compiled-training-step" class="level3">
 <h3 class="anchored" data-anchor-id="a-compiled-training-step">8.2 A compiled training step</h3>
-<p>Toy regression: <span class="math inline">\(y = \sin(2x) + \varepsilon\)</span> with noise <span class="math inline">\(\varepsilon\sim\mathcal N(0, 0.1^2)\)</span> on <span class="math inline">\(x\in[-2,2]\)</span>, 256 training points, shapes <code>(256, 1)</code>.</p>
-<p>The training step: * <code>nnx.value_and_grad(loss_fn)(model, x, y)</code> returns the loss and the gradient with respect to the parameters of <code>model</code> (a state with the same structure as the parameters); * <code>nnx.Optimizer(model, optax.adam(lr), wrt=nnx.Param)</code> keeps the Adam state for the parameters, and <code>optimizer.update(model, grads)</code> changes the parameters of <code>model</code> in place; * <code>nnx.jit</code> is <code>jax.jit</code> for functions that take NNX modules: it splits the modules into arrays before compilation and writes the updated arrays back afterwards.</p>
-<p><strong>Check.</strong> A good fit reaches a training MSE close to the noise variance <span class="math inline">\(0.01\)</span>, and its MSE against the noise-free curve on a test grid is well below <span class="math inline">\(0.01\)</span>.</p>
+<p>We fit a toy regression problem, <span class="math inline">\(y = \sin(2x) + \varepsilon\)</span> with noise <span class="math inline">\(\varepsilon\sim\mathcal N(0, 0.1^2)\)</span> on <span class="math inline">\(x\in[-2,2]\)</span>, 256 training points, shapes <code>(256, 1)</code>.</p>
+<p>The training step combines three components. <code>nnx.value_and_grad(loss_fn)(model, x, y)</code> returns the loss and the gradient with respect to the parameters of <code>model</code> (a state with the same structure as the parameters). <code>nnx.Optimizer(model, optax.adam(lr), wrt=nnx.Param)</code> keeps the Adam state for the parameters, and <code>optimizer.update(model, grads)</code> changes the parameters of <code>model</code> in place. <code>nnx.jit</code> is <code>jax.jit</code> for functions that take NNX modules: it splits the modules into arrays before compilation and writes the updated arrays back afterwards.</p>
+<p>A good fit reaches a training MSE close to the noise variance <span class="math inline">\(0.01\)</span>, and its MSE against the noise-free curve on a test grid is well below <span class="math inline">\(0.01\)</span>; these are the two numbers to look for in the output.</p>
 <div class="cell" data-execution_count="24">
 <details open="">
 <summary>Code</summary>
@@ -1529,7 +1536,7 @@ MSE against the noise-free curve on the grid = 0.0003</code></pre>
 <section id="freezing-a-subset-of-parameters-with-a-wrt-filter" class="level3">
 <h3 class="anchored" data-anchor-id="freezing-a-subset-of-parameters-with-a-wrt-filter">8.3 Freezing a subset of parameters with a <code>wrt</code> filter</h3>
 <p>A <strong>filter</strong> selects variables of a model by type and by path. Training only some parameters needs the filter in two places: in the gradient (<code>argnums=nnx.DiffState(0, wrt)</code> differentiates the first argument only with respect to the selected variables) and in the optimiser (<code>wrt=</code> keeps optimiser state only for them).</p>
-<p>Below only the output layer <code>out</code> (kernel and bias, 33 numbers) is trained, on a new target <span class="math inline">\(y = \sin(2x) + 0.5\)</span>: the hidden layers stay a fixed feature extractor, and the output layer has to shift the prediction up by <span class="math inline">\(0.5\)</span>. <strong>Check:</strong> the hidden weights are bit-for-bit unchanged, and the prediction on the test grid has moved up by about <span class="math inline">\(0.5\)</span>.</p>
+<p>Below only the output layer <code>out</code> (kernel and bias, 33 numbers) is trained, on a new target <span class="math inline">\(y = \sin(2x) + 0.5\)</span>: the hidden layers stay a fixed feature extractor, and the output layer has to shift the prediction up by <span class="math inline">\(0.5\)</span>. If the freezing works, the hidden weights are bit-for-bit unchanged, and the prediction on the test grid has moved up by about <span class="math inline">\(0.5\)</span>.</p>
 <div class="cell" data-execution_count="25">
 <details open="">
 <summary>Code</summary>
@@ -1573,8 +1580,8 @@ trainable parameters: 33 of 1153</code></pre>
 </section>
 <section id="working-with-the-layers-of-a-model" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-the-layers-of-a-model">8.4 Working with the layers of a model</h3>
-<p>A trained network is an object that can be inspected and modified: list the layers, read and overwrite weights, replace or insert layers, separate the architecture from the numbers, save and restore. Below are the basic operations on the MLP trained above. <code>Lab_003b_Trained_models_toolbox_JAX.ipynb</code> (same folder) applies them in full to a trained convolutional network: kernels and feature maps, model surgery, transfer learning.</p>
-<p><strong>Walking the module tree.</strong> <code>nnx.iter_modules(model)</code> yields <code>(path, module)</code> for every submodule; <code>nnx.state(model, nnx.Param)</code> returns the parameters as a nested state, which <code>nnx.to_pure_dict</code> turns into a plain dictionary of arrays.</p>
+<p>A trained network is an object that can be inspected and modified: we can list the layers, read and overwrite weights, replace or insert layers, separate the architecture from the numbers, save and restore. Below are the basic operations on the MLP trained above. <code>Lab_003b_Trained_models_toolbox_JAX.ipynb</code> (same folder) applies them in full to a trained convolutional network: kernels and feature maps, model surgery, transfer learning.</p>
+<p>We start by walking the module tree. <code>nnx.iter_modules(model)</code> yields <code>(path, module)</code> for every submodule; <code>nnx.state(model, nnx.Param)</code> returns the parameters as a nested state, which <code>nnx.to_pure_dict</code> turns into a plain dictionary of arrays.</p>
 <div class="cell" data-execution_count="26">
 <details open="">
 <summary>Code</summary>
@@ -1593,7 +1600,7 @@ out      Linear parameters: 33
 parameter shapes: {'hidden1': {'bias': (32,), 'kernel': (1, 32)}, 'hidden2': {'bias': (32,), 'kernel': (32, 32)}, 'out': {'bias': (1,), 'kernel': (32, 1)}}</code></pre>
 </div>
 </div>
-<p><strong>Reading and overwriting weights.</strong> A parameter is an <code>nnx.Param</code> variable; <code>layer.kernel[...]</code> reads its array, <code>layer.kernel[...] = new_array</code> overwrites it (the shape must stay the same). Example: setting the output bias to zero shifts every prediction by exactly minus the old bias.</p>
+<p>A parameter is an <code>nnx.Param</code> variable; <code>layer.kernel[...]</code> reads its array, and <code>layer.kernel[...] = new_array</code> overwrites it (the shape must stay the same). For example, setting the output bias to zero shifts every prediction by exactly minus the old bias, which the cell verifies.</p>
 <div class="cell" data-execution_count="27">
 <details open="">
 <summary>Code</summary>
@@ -1609,8 +1616,8 @@ parameter shapes: {'hidden1': {'bias': (32,), 'kernel': (1, 32)}, 'hidden2': {'b
 <pre><code>old bias = 0.1538; prediction shift: min = -0.1538, max = -0.1538</code></pre>
 </div>
 </div>
-<p><strong>Replacing and inserting layers.</strong> A submodule is an attribute, so assigning a new <code>nnx.Linear</code> replaces it; the forward pass uses whatever is stored there. Example: a new output layer with 3 outputs instead of 1 (e.g.&nbsp;for a new task with three targets), on a copy of the model.</p>
-<p>To <strong>insert</strong> a layer, the model must allow it. With <code>nnx.Sequential</code> the layers form a list, and a new model can be assembled from the trained layers plus new ones. A check that the insertion is done right: a new linear layer initialised to the identity (kernel <span class="math inline">\(=\mathbb 1\)</span>, bias <span class="math inline">\(=0\)</span>) and inserted without an activation does not change the output.</p>
+<p>Layers can also be replaced and inserted. A submodule is an attribute, so assigning a new <code>nnx.Linear</code> replaces it; the forward pass uses whatever is stored there. As an example we give a copy of the model a new output layer with 3 outputs instead of 1 (e.g.&nbsp;for a new task with three targets).</p>
+<p>To <strong>insert</strong> a layer, the model must allow it. With <code>nnx.Sequential</code> the layers form a list, and a new model can be assembled from the trained layers plus new ones. To confirm that the insertion is done right, we insert a new linear layer initialised to the identity (kernel <span class="math inline">\(=\mathbb 1\)</span>, bias <span class="math inline">\(=0\)</span>) without an activation; it must not change the output.</p>
 <div class="cell" data-execution_count="28">
 <details open="">
 <summary>Code</summary>
@@ -1637,7 +1644,7 @@ parameter shapes: {'hidden1': {'bias': (32,), 'kernel': (1, 32)}, 'hidden2': {'b
 max |deeper - original| on the grid: 0.0</code></pre>
 </div>
 </div>
-<p><strong>Architecture and numbers: <code>nnx.split</code> and <code>nnx.merge</code>.</strong> <code>nnx.split(model)</code> returns a <code>GraphDef</code> (the architecture: which layers, how they are connected, no arrays) and a <code>State</code> (all arrays, a pytree). <code>nnx.merge(graphdef, state)</code> builds a model again. This is how <code>nnx.jit</code> passes modules through <code>jax.jit</code>, and how parameters are saved: only the state is written to disk; the architecture is the Python class.</p>
+<p>The architecture and the numbers of a model can be separated with <code>nnx.split</code> and <code>nnx.merge</code>. <code>nnx.split(model)</code> returns a <code>GraphDef</code> (the architecture: which layers, how they are connected, no arrays) and a <code>State</code> (all arrays, a pytree). <code>nnx.merge(graphdef, state)</code> builds a model again. This is how <code>nnx.jit</code> passes modules through <code>jax.jit</code>, and how parameters are saved: only the state is written to disk; the architecture is the Python class.</p>
 <p>Below the parameters are saved as a <code>.npz</code> file in a temporary folder, loaded into a <strong>freshly initialised</strong> model (with different random weights), and the predictions are compared. Lab 003b shows checkpointing with Orbax, the library used for large models.</p>
 <div class="cell" data-execution_count="29">
 <details open="">
@@ -1675,7 +1682,7 @@ max |deeper - original| on the grid: 0.0</code></pre>
 after loading,              max |prediction difference| = 0.0</code></pre>
 </div>
 </div>
-<p><strong>Selecting parameters with filters.</strong> The filters of Section 8.3 select parts of the state, for counting, for regularisation (e.g.&nbsp;weight decay on kernels only) or for freezing. <code>nnx.PathContains("kernel")</code> selects all weight matrices, <code>nnx.Not(...)</code> inverts a filter, <code>nnx.All</code> and <code>nnx.Any</code> combine filters.</p>
+<p>Finally, the filters of Section 8.3 select parts of the state, for counting, for regularisation (e.g.&nbsp;weight decay on kernels only) or for freezing. <code>nnx.PathContains("kernel")</code> selects all weight matrices, <code>nnx.Not(...)</code> inverts a filter, and <code>nnx.All</code> and <code>nnx.Any</code> combine filters.</p>
 <div class="cell" data-execution_count="30">
 <details open="">
 <summary>Code</summary>
@@ -1693,15 +1700,20 @@ kernels only         : 1088 (exact 1*32 + 32*32 + 32*1 = 1088 )
 body (all but `out`) : 1120 | output layer: 33</code></pre>
 </div>
 </div>
-<p><strong>Lesson.</strong> An NNX model is a tree of modules whose leaves are <code>nnx.Param</code> variables. The tree can be walked (<code>iter_modules</code>), read and written (<code>layer.kernel[...]</code>), restructured (attribute assignment, <code>nnx.Sequential</code>), split into architecture and arrays (<code>nnx.split</code>/<code>nnx.merge</code>), and filtered (<code>nnx.All</code>, <code>nnx.PathContains</code>, <code>nnx.Not</code>); the same filters decide which parameters are trained.</p>
+<p>An NNX model is thus a tree of modules whose leaves are <code>nnx.Param</code> variables. The tree can be walked (<code>iter_modules</code>), read and written (<code>layer.kernel[...]</code>), restructured (attribute assignment, <code>nnx.Sequential</code>), split into architecture and arrays (<code>nnx.split</code>/<code>nnx.merge</code>), and filtered (<code>nnx.All</code>, <code>nnx.PathContains</code>, <code>nnx.Not</code>); the same filters decide which parameters are trained.</p>
 <hr>
 </section>
 </section>
 <section id="common-pitfalls-and-their-fixes" class="level2">
 <h2 class="anchored" data-anchor-id="common-pitfalls-and-their-fixes">9. Common pitfalls and their fixes</h2>
-<p>Each pitfall is shown with its symptom and its fix.</p>
-<p><strong>9.1 In-place updates.</strong> <code>x[i] = v</code> raises <code>TypeError</code> (Section 1.2). Fix: <code>x = x.at[i].set(v)</code>.</p>
-<p><strong>9.2 Out-of-bounds indices do not raise.</strong> NumPy raises <code>IndexError</code>; JAX cannot raise errors from compiled code and <strong>clamps</strong> the index for reading (and drops the update for <code>.at[...].set</code>). Index arithmetic must be correct by construction (periodic boundaries: <code>% L</code> or <code>jnp.roll</code>).</p>
+<p>Each pitfall below is shown with its symptom and its fix.</p>
+<section id="in-place-updates" class="level3">
+<h3 class="anchored" data-anchor-id="in-place-updates">9.1 In-place updates</h3>
+<p><code>x[i] = v</code> raises <code>TypeError</code> (Section 1.2). The fix is <code>x = x.at[i].set(v)</code>.</p>
+</section>
+<section id="out-of-bounds-indices" class="level3">
+<h3 class="anchored" data-anchor-id="out-of-bounds-indices">9.2 Out-of-bounds indices</h3>
+<p>NumPy raises <code>IndexError</code> for an index outside the array. JAX cannot raise errors from compiled code and <strong>clamps</strong> the index for reading (and drops the update for <code>.at[...].set</code>), so no error appears. Index arithmetic must therefore be correct by construction (periodic boundaries: <code>% L</code> or <code>jnp.roll</code>).</p>
 <div class="cell" data-execution_count="31">
 <details open="">
 <summary>Code</summary>
@@ -1714,7 +1726,10 @@ body (all but `out`) : 1120 | output layer: 33</code></pre>
 arr.at[10].set(-1.0) : [0. 1. 2. 3. 4.] (update dropped, no error)</code></pre>
 </div>
 </div>
-<p><strong>9.3 Side effects inside <code>jit</code>.</strong> A Python <code>print</code> runs once, during tracing, and shows a tracer (Section 3.1). Appending to a global list or changing a global variable inside a compiled function also happens only at trace time. Fix: <code>jax.debug.print("{x}", x=x)</code> prints the runtime values at every call; return values instead of storing them in globals.</p>
+</section>
+<section id="side-effects-inside-jit" class="level3">
+<h3 class="anchored" data-anchor-id="side-effects-inside-jit">9.3 Side effects inside <code>jit</code></h3>
+<p>A Python <code>print</code> runs once, during tracing, and shows a tracer (Section 3.1). Appending to a global list or changing a global variable inside a compiled function also happens only at trace time. The fix is <code>jax.debug.print("{x}", x=x)</code>, which prints the runtime values at every call, and returning values instead of storing them in globals.</p>
 <div class="cell" data-execution_count="32">
 <details open="">
 <summary>Code</summary>
@@ -1733,8 +1748,14 @@ debug.print: sum = 0.0
 debug.print: sum = 3.0</code></pre>
 </div>
 </div>
-<p><strong>9.4 Python control flow on traced values.</strong> <code>if x &gt; 0</code> inside <code>jit</code> raises <code>TracerBoolConversionError</code> (Section 6.1). Fix: <code>jnp.where</code>, <code>lax.cond</code>, <code>lax.while_loop</code>; or, if the quantity is a constant of the computation (a number of layers, a flag), declare it static.</p>
-<p><strong>9.5 Recompilation inside a loop.</strong> <code>jax.jit(lambda ...)</code> written inside a loop creates a <strong>new</strong> function object at every iteration, and each one is traced and compiled again. The same happens if the input shape changes at every iteration (e.g.&nbsp;a last mini-batch of different size). Fix: define the compiled function once, outside the loop; keep shapes fixed (drop or pad the last batch).</p>
+</section>
+<section id="python-control-flow-on-traced-values" class="level3">
+<h3 class="anchored" data-anchor-id="python-control-flow-on-traced-values">9.4 Python control flow on traced values</h3>
+<p><code>if x &gt; 0</code> inside <code>jit</code> raises <code>TracerBoolConversionError</code> (Section 6.1). The fix is <code>jnp.where</code>, <code>lax.cond</code> or <code>lax.while_loop</code>; or, if the quantity is a constant of the computation (a number of layers, a flag), declaring it static.</p>
+</section>
+<section id="recompilation-inside-a-loop" class="level3">
+<h3 class="anchored" data-anchor-id="recompilation-inside-a-loop">9.5 Recompilation inside a loop</h3>
+<p><code>jax.jit(lambda ...)</code> placed inside a loop creates a <strong>new</strong> function object at every iteration, and each one is traced and compiled again. The same happens if the input shape changes at every iteration (e.g.&nbsp;a last mini-batch of different size). The fix is to define the compiled function once, outside the loop, and to keep shapes fixed (drop or pad the last batch). The cell compares the run times of the two versions.</p>
 <div class="cell" data-execution_count="33">
 <details open="">
 <summary>Code</summary>
@@ -1757,7 +1778,10 @@ debug.print: sum = 3.0</code></pre>
 20 calls, jit defined once    :    67.3 ms</code></pre>
 </div>
 </div>
-<p><strong>9.6 Mixing NumPy and JAX random numbers.</strong> <code>np.random</code> inside a compiled function is executed <strong>once</strong>, at trace time; the drawn number is stored in the compiled code as a constant, and every call returns the same “random” number. Fix: pass a JAX key as an argument (Section 2).</p>
+</section>
+<section id="mixing-numpy-and-jax-random-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="mixing-numpy-and-jax-random-numbers">9.6 Mixing NumPy and JAX random numbers</h3>
+<p><code>np.random</code> inside a compiled function is executed <strong>once</strong>, at trace time; the drawn number is stored in the compiled code as a constant, and every call returns the same “random” number. The fix is to pass a JAX key as an argument (Section 2).</p>
 <div class="cell" data-execution_count="34">
 <details open="">
 <summary>Code</summary>
@@ -1780,14 +1804,18 @@ debug.print: sum = 3.0</code></pre>
 <pre><code>jax.random with keys, 3 calls : [1.1219, -1.808, -1.4439]</code></pre>
 </div>
 </div>
-<p><strong>9.7 <code>float32</code> by default.</strong> Sums of many small numbers and differences of nearly equal numbers lose digits (Section 1.3). Fix: enable 64-bit mode at the top of the notebook when the precision matters.</p>
+</section>
+<section id="precision-of-float32" class="level3">
+<h3 class="anchored" data-anchor-id="precision-of-float32">9.7 Precision of <code>float32</code></h3>
+<p>Sums of many small numbers and differences of nearly equal numbers lose digits in the default <code>float32</code> (Section 1.3). The fix is to enable 64-bit mode at the top of the notebook when the precision matters.</p>
 <hr>
 </section>
-<section id="example-metropolis-sampling-of-the-2d-ising-model-checked-against-exact-enumeration" class="level2">
-<h2 class="anchored" data-anchor-id="example-metropolis-sampling-of-the-2d-ising-model-checked-against-exact-enumeration">10. Example: Metropolis sampling of the 2D Ising model, checked against exact enumeration</h2>
-<p>All tools together: a Metropolis sampler of the ferromagnetic Ising model on an <span class="math inline">\(L\times L\)</span> square lattice with periodic boundary conditions (PBC), <span class="math display">\[E(\mathbf s) = -J\sum_{\langle ij\rangle} s_i s_j,\qquad s_i=\pm1,\qquad p(\mathbf s) = e^{-E(\mathbf s)/T}/Z,\]</span> with <span class="math inline">\(J=1\)</span> and <span class="math inline">\(k_B=1\)</span>; the sum runs over nearest-neighbour pairs. The magnetisation per spin is <span class="math inline">\(m = \frac1{L^2}\sum_i s_i\)</span>; we estimate <span class="math inline">\(\langle|m|\rangle\)</span>.</p>
-<p><strong>Checkerboard update.</strong> Colour the lattice like a chessboard. The neighbours of a black site are all white, so all black spins can be updated <strong>at the same time</strong> given the white spins, and then all white spins (this needs an even <span class="math inline">\(L\)</span> with PBC). One sweep = black half-sweep + white half-sweep. Flipping <span class="math inline">\(s_i\)</span> changes the energy by <span class="math inline">\(\Delta E_i = 2Js_i h_i\)</span>, with <span class="math inline">\(h_i\)</span> the sum of the four neighbours, computed for all sites at once with <code>jnp.roll</code>. The flip is accepted with probability <span class="math inline">\(\min(1, e^{-\Delta E_i/T})\)</span>.</p>
-<p><strong>Structure.</strong> <code>sweep</code> acts on one lattice of shape <code>(L, L)</code>; <code>lax.scan</code> runs <code>n_sweeps</code> sweeps and records <span class="math inline">\(|m|\)</span> after each; <code>vmap</code> runs many independent chains; <code>jit</code> compiles everything. The complete sampler is the next cell.</p>
+</section>
+<section id="metropolis-sampling-of-the-2d-ising-model" class="level2">
+<h2 class="anchored" data-anchor-id="metropolis-sampling-of-the-2d-ising-model">10. Metropolis sampling of the 2D Ising model</h2>
+<p>All tools now come together in a Metropolis sampler of the ferromagnetic Ising model on an <span class="math inline">\(L\times L\)</span> square lattice with periodic boundary conditions (PBC), <span class="math display">\[E(\mathbf s) = -J\sum_{\langle ij\rangle} s_i s_j,\qquad s_i=\pm1,\qquad p(\mathbf s) = e^{-E(\mathbf s)/T}/Z,\]</span> with <span class="math inline">\(J=1\)</span> and <span class="math inline">\(k_B=1\)</span>; the sum runs over nearest-neighbour pairs. The magnetisation per spin is <span class="math inline">\(m = \frac1{L^2}\sum_i s_i\)</span>; we estimate <span class="math inline">\(\langle|m|\rangle\)</span>.</p>
+<p>The spins are updated in a checkerboard pattern. Colour the lattice like a chessboard. The neighbours of a black site are all white, so all black spins can be updated <strong>at the same time</strong> given the white spins, and then all white spins (this needs an even <span class="math inline">\(L\)</span> with PBC). One sweep = black half-sweep + white half-sweep. Flipping <span class="math inline">\(s_i\)</span> changes the energy by <span class="math inline">\(\Delta E_i = 2Js_i h_i\)</span>, with <span class="math inline">\(h_i\)</span> the sum of the four neighbours, computed for all sites at once with <code>jnp.roll</code>. The flip is accepted with probability <span class="math inline">\(\min(1, e^{-\Delta E_i/T})\)</span>.</p>
+<p>The code has the structure of the previous sections: <code>sweep</code> acts on one lattice of shape <code>(L, L)</code>; <code>lax.scan</code> runs <code>n_sweeps</code> sweeps and records <span class="math inline">\(|m|\)</span> after each; <code>vmap</code> runs many independent chains; <code>jit</code> compiles everything. The complete sampler is the next cell.</p>
 <div class="cell" data-execution_count="35">
 <details open="">
 <summary>Code</summary>
@@ -1813,7 +1841,7 @@ debug.print: sum = 3.0</code></pre>
 <span id="cb93-20"><a href="#cb93-20" aria-hidden="true" tabindex="-1"></a>run_chains <span class="op">=</span> jax.jit(jax.vmap(run_chain, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>)), static_argnums<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><strong>Exact enumeration of the <span class="math inline">\(4\times4\)</span> lattice.</strong> There are <span class="math inline">\(2^{16} = 65\,536\)</span> configurations. Configuration number <span class="math inline">\(n\)</span> is given by the binary digits of <span class="math inline">\(n\)</span> (bit <span class="math inline">\(k\)</span> → spin <span class="math inline">\(k\)</span>, <span class="math inline">\(0\to-1\)</span>, <span class="math inline">\(1\to+1\)</span>); <code>vmap</code> computes the energy of all of them at once (array of shape <code>(65536, 4, 4)</code>). Then <span class="math display">\[\langle|m|\rangle = \frac{\sum_{\mathbf s}|m(\mathbf s)|\,e^{-E(\mathbf s)/T}}{\sum_{\mathbf s}e^{-E(\mathbf s)/T}},\]</span> with the minimal energy subtracted in the exponent to avoid overflow.</p>
+<p>To know whether the sampler is correct, we need an exact reference. For the <span class="math inline">\(4\times4\)</span> lattice it can be obtained by enumeration: there are <span class="math inline">\(2^{16} = 65\,536\)</span> configurations. Configuration number <span class="math inline">\(n\)</span> is given by the binary digits of <span class="math inline">\(n\)</span> (bit <span class="math inline">\(k\)</span> → spin <span class="math inline">\(k\)</span>, <span class="math inline">\(0\to-1\)</span>, <span class="math inline">\(1\to+1\)</span>); <code>vmap</code> computes the energy of all of them at once (array of shape <code>(65536, 4, 4)</code>). Then <span class="math display">\[\langle|m|\rangle = \frac{\sum_{\mathbf s}|m(\mathbf s)|\,e^{-E(\mathbf s)/T}}{\sum_{\mathbf s}e^{-E(\mathbf s)/T}},\]</span> with the minimal energy subtracted in the exponent to avoid overflow.</p>
 <div class="cell" data-execution_count="36">
 <details open="">
 <summary>Code</summary>
@@ -1839,7 +1867,7 @@ debug.print: sum = 3.0</code></pre>
 <pre><code>ground-state energy: -32.0 (exact -2 L^2 = -32), ground-state degeneracy: 2 (exact 2)</code></pre>
 </div>
 </div>
-<p><strong>Comparison.</strong> <span class="math inline">\(C=512\)</span> chains, random initial lattices, <span class="math inline">\(1000\)</span> sweeps of which the first <span class="math inline">\(200\)</span> are discarded (equilibration). The error bar is the standard deviation of the per-chain averages divided by <span class="math inline">\(\sqrt C\)</span> (independent chains). The temperatures lie below, near and above the critical temperature of the infinite lattice, <span class="math inline">\(T_c = 2/\ln(1+\sqrt2)\approx 2.269\)</span>.</p>
+<p>We now compare the sampler with the exact values. We run <span class="math inline">\(C=512\)</span> chains from random initial lattices for <span class="math inline">\(1000\)</span> sweeps, of which the first <span class="math inline">\(200\)</span> are discarded (equilibration). The error bar is the standard deviation of the per-chain averages divided by <span class="math inline">\(\sqrt C\)</span> (independent chains). The temperatures lie below, near and above the critical temperature of the infinite lattice, <span class="math inline">\(T_c = 2/\ln(1+\sqrt2)\approx 2.269\)</span>. The last column of the printout gives the deviation from the exact value in units of the error bar; for a correct sampler it should be of order one or two, as expected for statistical fluctuations, while a systematic error would show up as much larger values.</p>
 <div class="cell" data-execution_count="37">
 <details open="">
 <summary>Code</summary>
@@ -1895,11 +1923,12 @@ time for 4 temperatures x 512 chains x 1000 sweeps: 9.43 s</code></pre>
 <p><img src="lab-003c-jax_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p><strong>Lesson.</strong> The sampler is the function for one lattice and one sweep, lifted by <code>lax.scan</code> (sweeps), <code>vmap</code> (chains) and <code>jit</code> (compilation); randomness enters only through keys. For a small system the exact answer is computable, and the sampler must reproduce it within its statistical error before it is trusted on large lattices, where no exact answer exists (Lab 018 in Lecture 5 continues from here).</p>
+<p>The sampler is the function for one lattice and one sweep, lifted by <code>lax.scan</code> (sweeps), <code>vmap</code> (chains) and <code>jit</code> (compilation); randomness enters only through keys. For a small system the exact answer is computable, and the sampler must reproduce it within its statistical error before it is trusted on large lattices, where no exact answer exists (Lab 018 in Lecture 5 continues from here).</p>
 <hr>
 </section>
-<section id="cheat-sheet-numpy-jax-pytorch" class="level2">
-<h2 class="anchored" data-anchor-id="cheat-sheet-numpy-jax-pytorch">11. Cheat sheet: NumPy ↔︎ JAX ↔︎ PyTorch</h2>
+<section id="correspondence-between-numpy-jax-and-pytorch" class="level2">
+<h2 class="anchored" data-anchor-id="correspondence-between-numpy-jax-and-pytorch">11. Correspondence between NumPy, JAX and PyTorch</h2>
+<p>The table lists the operations of this notebook with their counterparts in NumPy and PyTorch, for quick reference.</p>
 <table class="table">
 <colgroup>
 <col style="width: 25%">
@@ -2086,6 +2115,7 @@ time for 4 temperatures x 512 chains x 1000 sweeps: 9.43 s</code></pre>
 </tr>
 </tbody>
 </table>
+<p>The last cell prints the total run time of the notebook.</p>
 <div class="cell" data-execution_count="39">
 <details open="">
 <summary>Code</summary>

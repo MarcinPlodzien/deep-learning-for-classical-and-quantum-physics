@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,25 +466,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-003b-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-jax-flax-nnx" id="toc-lab-003b-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-jax-flax-nnx" class="nav-link" data-scroll-target="#lab-003b-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-jax-flax-nnx">Lab 003b — Working with trained networks: saving, inspecting, modifying and fine-tuning (JAX, Flax NNX)</a>
+  <li><a href="#lab-003b-trained-networks-in-jax" id="toc-lab-003b-trained-networks-in-jax" class="nav-link" data-scroll-target="#lab-003b-trained-networks-in-jax">Lab 003b — Trained networks in JAX</a>
   <ul class="collapse">
-  <li><a href="#train-once-and-save" id="toc-train-once-and-save" class="nav-link" data-scroll-target="#train-once-and-save">1. Train once and save</a>
+  <li><a href="#training-and-saving" id="toc-training-and-saving" class="nav-link" data-scroll-target="#training-and-saving">1. Training and saving</a>
   <ul class="collapse">
   <li><a href="#the-data-two-tasks-from-one-data-set" id="toc-the-data-two-tasks-from-one-data-set" class="nav-link" data-scroll-target="#the-data-two-tasks-from-one-data-set">1.1 The data: two tasks from one data set</a></li>
   <li><a href="#the-architecture-a-convolutional-body-and-a-dense-head" id="toc-the-architecture-a-convolutional-body-and-a-dense-head" class="nav-link" data-scroll-target="#the-architecture-a-convolutional-body-and-a-dense-head">1.2 The architecture: a convolutional body and a dense head</a></li>
   <li><a href="#training-on-the-source-task" id="toc-training-on-the-source-task" class="nav-link" data-scroll-target="#training-on-the-source-task">1.3 Training on the source task</a></li>
   <li><a href="#saving-and-loading-the-parameters" id="toc-saving-and-loading-the-parameters" class="nav-link" data-scroll-target="#saving-and-loading-the-parameters">1.4 Saving and loading the parameters</a></li>
   </ul></li>
-  <li><a href="#inspect" id="toc-inspect" class="nav-link" data-scroll-target="#inspect">2. Inspect</a>
+  <li><a href="#structure-of-a-trained-network" id="toc-structure-of-a-trained-network" class="nav-link" data-scroll-target="#structure-of-a-trained-network">2. Structure of a trained network</a>
   <ul class="collapse">
   <li><a href="#layers-parameter-shapes-and-counts" id="toc-layers-parameter-shapes-and-counts" class="nav-link" data-scroll-target="#layers-parameter-shapes-and-counts">2.1 Layers, parameter shapes and counts</a></li>
   <li><a href="#access-to-a-single-layer" id="toc-access-to-a-single-layer" class="nav-link" data-scroll-target="#access-to-a-single-layer">2.2 Access to a single layer</a></li>
   <li><a href="#trainable-and-frozen-parameters" id="toc-trainable-and-frozen-parameters" class="nav-link" data-scroll-target="#trainable-and-frozen-parameters">2.3 Trainable and frozen parameters</a></li>
   </ul></li>
-  <li><a href="#look-inside" id="toc-look-inside" class="nav-link" data-scroll-target="#look-inside">3. Look inside</a>
+  <li><a href="#learned-kernels-and-feature-maps" id="toc-learned-kernels-and-feature-maps" class="nav-link" data-scroll-target="#learned-kernels-and-feature-maps">3. Learned kernels and feature maps</a>
   <ul class="collapse">
   <li><a href="#first-layer-kernels" id="toc-first-layer-kernels" class="nav-link" data-scroll-target="#first-layer-kernels">3.1 First-layer kernels</a></li>
-  <li><a href="#feature-maps-two-ways-to-get-intermediate-outputs" id="toc-feature-maps-two-ways-to-get-intermediate-outputs" class="nav-link" data-scroll-target="#feature-maps-two-ways-to-get-intermediate-outputs">3.2 Feature maps: two ways to get intermediate outputs</a></li>
+  <li><a href="#feature-maps-from-intermediate-outputs" id="toc-feature-maps-from-intermediate-outputs" class="nav-link" data-scroll-target="#feature-maps-from-intermediate-outputs">3.2 Feature maps from intermediate outputs</a></li>
   </ul></li>
   <li><a href="#model-surgery" id="toc-model-surgery" class="nav-link" data-scroll-target="#model-surgery">4. Model surgery</a>
   <ul class="collapse">
@@ -496,12 +496,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#freezing-and-transfer-learning" id="toc-freezing-and-transfer-learning" class="nav-link" data-scroll-target="#freezing-and-transfer-learning">5. Freezing and transfer learning</a>
   <ul class="collapse">
   <li><a href="#the-target-task-with-few-labels" id="toc-the-target-task-with-few-labels" class="nav-link" data-scroll-target="#the-target-task-with-few-labels">5.1 The target task with few labels</a></li>
-  <li><a href="#a-random-initialisation" id="toc-a-random-initialisation" class="nav-link" data-scroll-target="#a-random-initialisation">5.2 (a) Random initialisation</a></li>
-  <li><a href="#b-frozen-body-new-head" id="toc-b-frozen-body-new-head" class="nav-link" data-scroll-target="#b-frozen-body-new-head">5.3 (b) Frozen body, new head</a></li>
-  <li><a href="#c-fine-tuning-everything-with-a-smaller-learning-rate" id="toc-c-fine-tuning-everything-with-a-smaller-learning-rate" class="nav-link" data-scroll-target="#c-fine-tuning-everything-with-a-smaller-learning-rate">5.4 (c) Fine-tuning everything with a smaller learning rate</a></li>
-  <li><a href="#accuracy-vs-number-of-labelled-images" id="toc-accuracy-vs-number-of-labelled-images" class="nav-link" data-scroll-target="#accuracy-vs-number-of-labelled-images">5.5 Accuracy vs number of labelled images</a></li>
+  <li><a href="#training-from-a-random-initialisation" id="toc-training-from-a-random-initialisation" class="nav-link" data-scroll-target="#training-from-a-random-initialisation">5.2 Training from a random initialisation</a></li>
+  <li><a href="#frozen-body-with-a-new-head" id="toc-frozen-body-with-a-new-head" class="nav-link" data-scroll-target="#frozen-body-with-a-new-head">5.3 Frozen body with a new head</a></li>
+  <li><a href="#fine-tuning-with-a-smaller-learning-rate" id="toc-fine-tuning-with-a-smaller-learning-rate" class="nav-link" data-scroll-target="#fine-tuning-with-a-smaller-learning-rate">5.4 Fine-tuning with a smaller learning rate</a></li>
+  <li><a href="#dependence-on-the-number-of-labelled-images" id="toc-dependence-on-the-number-of-labelled-images" class="nav-link" data-scroll-target="#dependence-on-the-number-of-labelled-images">5.5 Dependence on the number of labelled images</a></li>
   </ul></li>
-  <li><a href="#cheat-sheet-pytorch-and-jaxflax-nnx" id="toc-cheat-sheet-pytorch-and-jaxflax-nnx" class="nav-link" data-scroll-target="#cheat-sheet-pytorch-and-jaxflax-nnx">6. Cheat sheet: PyTorch and JAX/Flax NNX</a></li>
+  <li><a href="#correspondence-between-pytorch-and-jaxflax-nnx" id="toc-correspondence-between-pytorch-and-jaxflax-nnx" class="nav-link" data-scroll-target="#correspondence-between-pytorch-and-jaxflax-nnx">6. Correspondence between PyTorch and JAX/Flax NNX</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-01/lab-003b-trained-networks-jax.ipynb" class="toc-action">View source</a></p></div></div></nav>
@@ -530,25 +530,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr>
 <section id="deep-learning-in-classical-and-quantum-physics" class="level1">
 <h1>Deep Learning in Classical and Quantum Physics</h1>
-2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 003b
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 003b <br>
 <hr>
 </section>
-<section id="lab-003b-working-with-trained-networks-saving-inspecting-modifying-and-fine-tuning-jax-flax-nnx" class="level1">
-<h1>Lab 003b — Working with trained networks: saving, inspecting, modifying and fine-tuning (JAX, Flax NNX)</h1>
+<section id="lab-003b-trained-networks-in-jax" class="level1">
+<h1>Lab 003b — Trained networks in JAX</h1>
 <p>Training a network is rarely the last step. A trained network is a set of arrays (the parameters) together with a description of the computation (the architecture), and most of the daily work consists of doing things <em>with</em> it: storing it, reloading it, looking at what it has learned, cutting it into pieces, adding layers, and re-using it for a new problem. This lab is the toolbox for these operations.</p>
-<p>We train one small <strong>convolutional neural network (CNN)</strong> on the handwritten digits 0–4 of MNIST and then use it in every section:</p>
-<ol type="1">
-<li><strong>Train once and save.</strong> Train the CNN, write its parameters to disk, load them into a fresh model, and check that the predictions are identical.</li>
-<li><strong>Inspect.</strong> Layers, parameter shapes and counts, access to single weights, trainable vs frozen parameters.</li>
-<li><strong>Look inside.</strong> First-layer kernels as images, and the feature maps of one digit after each convolutional layer (intermediate outputs).</li>
-<li><strong>Model surgery.</strong> Cut the network into a feature extractor, attach a new head, insert a layer, replace a layer.</li>
-<li><strong>Freezing and transfer learning.</strong> A new task, the digits 5–9, with few labelled images: (a) random initialisation, (b) the trained body frozen and only a new head trained, (c) fine-tuning of all parameters after (b).</li>
-<li><strong>Cheat sheet.</strong> Every operation of this lab in PyTorch and in JAX/Flax side by side.</li>
-</ol>
+<p>We train one small <strong>convolutional neural network (CNN)</strong> on the handwritten digits 0–4 of MNIST and then use it in every section. Section 1 trains the CNN once, writes its parameters to disk, loads them into a fresh model, and checks that the predictions are identical. Section 2 inspects the trained model: its layers, parameter shapes and counts, access to single weights, and the distinction between trainable and frozen parameters. Section 3 looks inside the network, at the first-layer kernels drawn as images and at the feature maps of one digit after each convolutional layer, obtained as intermediate outputs. Section 4 performs model surgery: it cuts the network into a feature extractor, attaches a new head, inserts a layer and replaces a layer. Section 5 uses these tools for transfer learning on a new task, the digits 5–9 with few labelled images, comparing a random initialisation, a frozen trained body with a new head, and fine-tuning of all parameters. Section 6 lists every operation of the lab in PyTorch and in JAX/Flax side by side.</p>
 <p>The twin notebook <strong>Lab 003a</strong> does exactly the same in PyTorch: same data, same architecture, same sections, same printed quantities. The two can be read side by side.</p>
-<p>Libraries: <strong>JAX</strong> (arrays, automatic differentiation, compilation), <strong>Flax NNX</strong> (<code>flax.nnx</code>, neural-network layers as Python objects), <strong>optax</strong> (optimisers). Abbreviations used below: CNN (convolutional neural network), ReLU (rectified linear unit, <span class="math inline">\(\mathrm{ReLU}(z)=\max(0,z)\)</span>), Adam (adaptive moment estimation, the optimiser), CPU / GPU (central / graphics processing unit), XLA (Accelerated Linear Algebra, the compiler used by JAX).</p>
+<p>We use three libraries: <strong>JAX</strong> (arrays, automatic differentiation, compilation), <strong>Flax NNX</strong> (<code>flax.nnx</code>, neural-network layers as Python objects) and <strong>optax</strong> (optimisers). The network is a convolutional neural network (CNN): its first layers slide small learned filters over the image, so the same pattern detector is applied everywhere. Its activation function is the rectified linear unit, <span class="math inline">\(\mathrm{ReLU}(z)=\max(0,z)\)</span>, and it is trained with Adam (adaptive moment estimation), a gradient-descent optimiser that adapts the step size of every parameter to the recent size of its gradients. JAX compiles the computations with XLA (Accelerated Linear Algebra), a compiler that fuses many array operations into one fast kernel; here everything runs on the central processing unit (CPU), and the same code runs on a graphics processing unit (GPU).</p>
 <blockquote class="blockquote">
-<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em>. The notebook runs on the <strong>CPU</strong> (the first code cell sets <code>JAX_PLATFORMS=cpu</code>); the model and the data sets are small enough to finish in a few minutes. 2. <code>jax</code>, <code>flax</code>, <code>optax</code>, <code>orbax-checkpoint</code>, <code>numpy</code> and <code>matplotlib</code> are pre-installed in Colab. 3. The data are read from <code>data/MNIST_raw/</code> (the four <code>*-ubyte.gz</code> files). If they are missing, the notebook downloads them. 4. Run the cells <em>in order</em>: later cells use variables defined earlier. If the state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
+<p>To run this notebook in Google Colab, follow these steps: 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em>. The notebook runs on the <strong>CPU</strong> (the first code cell sets <code>JAX_PLATFORMS=cpu</code>); the model and the data sets are small enough to finish in a few minutes. 2. <code>jax</code>, <code>flax</code>, <code>optax</code>, <code>orbax-checkpoint</code>, <code>numpy</code> and <code>matplotlib</code> are pre-installed in Colab. 3. The data are read from <code>data/MNIST_raw/</code> (the four <code>*-ubyte.gz</code> files). If they are missing, the notebook downloads them. 4. Run the cells <em>in order</em>: later cells use variables defined earlier. If the state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
 </blockquote>
 <div class="cell" data-execution_count="1">
 <details open="">
@@ -583,17 +575,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <hr>
-<section id="train-once-and-save" class="level2">
-<h2 class="anchored" data-anchor-id="train-once-and-save">1. Train once and save</h2>
+<section id="training-and-saving" class="level2">
+<h2 class="anchored" data-anchor-id="training-and-saving">1. Training and saving</h2>
 <section id="the-data-two-tasks-from-one-data-set" class="level3">
 <h3 class="anchored" data-anchor-id="the-data-two-tasks-from-one-data-set">1.1 The data: two tasks from one data set</h3>
-<p>MNIST contains <span class="math inline">\(28\times28\)</span> grayscale images of handwritten digits, <span class="math inline">\(60\,000\)</span> for training and <span class="math inline">\(10\,000\)</span> for testing. We split it into two tasks:</p>
-<ul>
-<li><strong>source task</strong>: digits 0–4, all training images of these digits. The CNN is trained on it in this section;</li>
-<li><strong>target task</strong>: digits 5–9, used in Section 5. Their labels are shifted, <span class="math inline">\(5\to0,\dots,9\to4\)</span>, so both tasks have 5 classes.</li>
-</ul>
+<p>MNIST contains <span class="math inline">\(28\times28\)</span> grayscale images of handwritten digits, <span class="math inline">\(60\,000\)</span> for training and <span class="math inline">\(10\,000\)</span> for testing. We split it into two tasks. The <strong>source task</strong> consists of the digits 0–4, with all training images of these digits; the CNN is trained on it in this section. The <strong>target task</strong> consists of the digits 5–9 and is used in Section 5. Its labels are shifted, <span class="math inline">\(5\to0,\dots,9\to4\)</span>, so both tasks have 5 classes.</p>
 <p>The files are in the raw IDX format: a short big-endian header (a magic number, then the sizes), followed by one byte per pixel; we read them with <code>gzip</code> and <code>numpy</code>. Pixels are scaled to <span class="math inline">\([0,1]\)</span>.</p>
-<p><strong>Layout of image arrays.</strong> Flax convolutions expect <code>(N, H, W, C)</code>: batch size, height, width, channels (“channels last”). Our images are therefore stored as <code>(N, 28, 28, 1)</code>. (PyTorch uses <code>(N, C, H, W)</code>, see Lab 003a.) <code>jnp.asarray</code> copies the arrays once to the default device, here the CPU.</p>
+<p>Flax convolutions expect image arrays in the layout <code>(N, H, W, C)</code>: batch size, height, width, channels (“channels last”). Our images are therefore stored as <code>(N, 28, 28, 1)</code>. (PyTorch uses <code>(N, C, H, W)</code>, see Lab 003a.) <code>jnp.asarray</code> copies the arrays once to the default device, here the CPU.</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -641,14 +629,10 @@ pixel range: 0.0 to 1.0</code></pre>
 </section>
 <section id="the-architecture-a-convolutional-body-and-a-dense-head" class="level3">
 <h3 class="anchored" data-anchor-id="the-architecture-a-convolutional-body-and-a-dense-head">1.2 The architecture: a convolutional body and a dense head</h3>
-<p>The network (conv–pool–conv–pool–dense–output) is split into two named parts, because Sections 4 and 5 treat them separately:</p>
-<ul>
-<li>the <strong>body</strong> (the convolutional feature extractor) maps an image to a feature vector of <span class="math inline">\(7\cdot7\cdot32=1568\)</span> numbers, <span class="math display">\[
-(N,28,28,1)\xrightarrow{\text{conv }5\times5,\ 16}(N,28,28,16)\xrightarrow{\text{ReLU, max-pool }2}(N,14,14,16)\xrightarrow{\text{conv }3\times3,\ 32}(N,14,14,32)\xrightarrow{\text{ReLU, max-pool }2}(N,7,7,32)\xrightarrow{\text{flatten}}(N,1568);
-\]</span></li>
-<li>the <strong>head</strong> (the classifier) is a dense layer with ReLU and an output layer, <span class="math inline">\((N,1568)\xrightarrow{\text{fc, ReLU}}(N,64)\xrightarrow{\text{out}}(N,5)\)</span>, giving 5 logits (unnormalised log-probabilities of the classes).</li>
-</ul>
-<p><strong>Flax NNX idioms.</strong> A network is a Python class derived from <code>nnx.Module</code>: layers are created in <code>__init__</code> and stored as attributes, <code>__call__</code> is the forward pass. The attribute names (<code>body</code>, <code>conv1</code>, …) become the parameter names (<code>body/conv1/kernel</code>). <code>padding="SAME"</code> keeps height and width unchanged, so only pooling halves them. Every layer with parameters receives <code>rngs</code>, an <code>nnx.Rngs(seed)</code> key generator: JAX has no hidden global random state, and a fixed seed fixes the initial parameters.</p>
+<p>The network (conv–pool–conv–pool–dense–output) is split into two named parts, because Sections 4 and 5 treat them separately. The <strong>body</strong> (the convolutional feature extractor) maps an image to a feature vector of <span class="math inline">\(7\cdot7\cdot32=1568\)</span> numbers, <span class="math display">\[
+(N,28,28,1)\xrightarrow{\text{conv }5\times5,\ 16}(N,28,28,16)\xrightarrow{\text{ReLU, max-pool }2}(N,14,14,16)\xrightarrow{\text{conv }3\times3,\ 32}(N,14,14,32)\xrightarrow{\text{ReLU, max-pool }2}(N,7,7,32)\xrightarrow{\text{flatten}}(N,1568).
+\]</span> The <strong>head</strong> (the classifier) is a dense layer with ReLU followed by an output layer, <span class="math inline">\((N,1568)\xrightarrow{\text{fc, ReLU}}(N,64)\xrightarrow{\text{out}}(N,5)\)</span>, giving 5 logits (unnormalised log-probabilities of the classes).</p>
+<p>In Flax NNX a network is a Python class derived from <code>nnx.Module</code>: layers are created in <code>__init__</code> and stored as attributes, and <code>__call__</code> is the forward pass. The attribute names (<code>body</code>, <code>conv1</code>, …) become the parameter names (<code>body/conv1/kernel</code>). <code>padding="SAME"</code> keeps height and width unchanged, so only pooling halves them. Every layer with parameters receives <code>rngs</code>, an <code>nnx.Rngs(seed)</code> key generator: JAX has no hidden global random state, and a fixed seed fixes the initial parameters.</p>
 <p>The pooling operations have no parameters; they are stored as attributes anyway (<code>self.pool1 = partial(nnx.max_pool, ...)</code>, a function with fixed arguments) so that they can be replaced in Section 4.4, like the named <code>pool1</code> layer of the PyTorch model.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
@@ -696,12 +680,7 @@ pixel range: 0.0 to 1.0</code></pre>
 <section id="training-on-the-source-task" class="level3">
 <h3 class="anchored" data-anchor-id="training-on-the-source-task">1.3 Training on the source task</h3>
 <p>Standard supervised training: cross-entropy loss on the logits, Adam with learning rate <span class="math inline">\(10^{-3}\)</span>, minibatches of 128 images, one epoch (one pass over the <span class="math inline">\(30\,596\)</span> training images, 239 steps). The minibatch order comes from a NumPy generator with a fixed seed, exactly as in Lab 003a, so both notebooks see the same sequence of minibatches. (The initial parameters differ: the two libraries use different random generators and different default initialisations; Flax draws convolution and dense kernels from a normal distribution with variance <span class="math inline">\(1/\text{fan-in}\)</span> and sets biases to zero, PyTorch draws both from uniform distributions.)</p>
-<p><strong>The training step</strong> uses three NNX idioms:</p>
-<ul>
-<li><code>nnx.Optimizer(model, optax.adam(lr), wrt=nnx.Param)</code> holds the optax optimiser and its state (Adam’s running averages); <code>wrt</code> (“with respect to”) says <em>which</em> variables it updates — here all parameters. This argument is the key to freezing in Section 5;</li>
-<li><code>nnx.value_and_grad(loss_fn, argnums=nnx.DiffState(0, wrt))(model)</code> returns the loss and its gradient with respect to the variables of <code>model</code> selected by the filter <code>wrt</code>;</li>
-<li><code>nnx.jit</code> compiles the whole step (forward pass, gradient, Adam update) with XLA; the first call traces and compiles, later calls with the same shapes reuse the compiled code. <code>optimizer.update(model, grads)</code> changes the model’s parameters in place, also inside <code>nnx.jit</code>.</li>
-</ul>
+<p>The training step is built from three NNX components. <code>nnx.Optimizer(model, optax.adam(lr), wrt=nnx.Param)</code> holds the optax optimiser and its state (Adam’s running averages); <code>wrt</code> (“with respect to”) says <em>which</em> variables it updates — here all parameters. This argument is the key to freezing in Section 5. <code>nnx.value_and_grad(loss_fn, argnums=nnx.DiffState(0, wrt))(model)</code> returns the loss and its gradient with respect to the variables of <code>model</code> selected by the filter <code>wrt</code>. Finally, <code>nnx.jit</code> compiles the whole step (forward pass, gradient, Adam update) with XLA; the first call traces and compiles, later calls with the same shapes reuse the compiled code. <code>optimizer.update(model, grads)</code> changes the model’s parameters in place, also inside <code>nnx.jit</code>.</p>
 <p><code>make_train_step(wrt)</code> builds such a step for a given filter; <code>accuracy</code> evaluates in chunks of 2000 images.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
@@ -755,9 +734,9 @@ pixel range: 0.0 to 1.0</code></pre>
 </section>
 <section id="saving-and-loading-the-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="saving-and-loading-the-parameters">1.4 Saving and loading the parameters</h3>
-<p><strong>What is saved.</strong> <code>nnx.state(model, nnx.Param)</code> extracts all parameters as a nested <code>State</code>, <code>{"body": {"conv1": {"kernel": ..., "bias": ...}, ...}, "head": {...}}</code>. <code>nnx.to_pure_dict</code> turns it into nested plain dictionaries of arrays, and <code>flatten_dict(..., sep="/")</code> into one flat dictionary with keys such as <code>"body/conv1/kernel"</code>. Like PyTorch’s <code>state_dict</code>, it contains the numbers only, not the code of the class.</p>
-<p><strong>The file format: <code>.npz</code>.</strong> <code>np.savez</code> writes the flat dictionary as a zip archive of NumPy arrays. It needs no extra library and <code>np.load</code> reads only arrays (it refuses pickled objects by default). We do not use <code>pickle</code>: unpickling a file can execute arbitrary code, so a pickle from an unknown source is unsafe. For large models the Flax documentation recommends <strong>Orbax</strong> (<code>orbax-checkpoint</code>), which writes asynchronously, handles arrays split across many devices, and manages series of checkpoints during long training runs; for <span class="math inline">\(10^5\)</span> parameters on one CPU, <code>.npz</code> is sufficient and transparent. Orbax is shown after the <code>.npz</code> check, when it is installed.</p>
-<p><strong>Loading</strong> requires the architecture: we create a <em>fresh</em> <code>SmallCNN</code> (random parameters), take its parameter state as a template, overwrite the numbers with <code>nnx.replace_by_pure_dict</code>, and write them into the model with <code>nnx.update</code>. The check: before loading, the fresh model gives different logits; after loading, the logits on the whole test set are <strong>bit-for-bit identical</strong> (<code>jnp.array_equal</code>).</p>
+<p>What is saved is the parameter state. <code>nnx.state(model, nnx.Param)</code> extracts all parameters as a nested <code>State</code>, <code>{"body": {"conv1": {"kernel": ..., "bias": ...}, ...}, "head": {...}}</code>. <code>nnx.to_pure_dict</code> turns it into nested plain dictionaries of arrays, and <code>flatten_dict(..., sep="/")</code> into one flat dictionary with keys such as <code>"body/conv1/kernel"</code>. Like PyTorch’s <code>state_dict</code>, it contains the numbers only, not the code of the class.</p>
+<p>We store it in the <code>.npz</code> format: <code>np.savez</code> writes the flat dictionary as a zip archive of NumPy arrays. It needs no extra library and <code>np.load</code> reads only arrays (it refuses pickled objects by default). We do not use <code>pickle</code>: unpickling a file can execute arbitrary code, so a pickle from an unknown source is unsafe. For large models the Flax documentation recommends <strong>Orbax</strong> (<code>orbax-checkpoint</code>), which writes asynchronously, handles arrays split across many devices, and manages series of checkpoints during long training runs; for <span class="math inline">\(10^5\)</span> parameters on one CPU, <code>.npz</code> is sufficient and transparent. Orbax is shown after the <code>.npz</code> check, when it is installed.</p>
+<p>Loading requires the architecture: we create a <em>fresh</em> <code>SmallCNN</code> (random parameters), take its parameter state as a template, overwrite the numbers with <code>nnx.replace_by_pure_dict</code>, and write them into the model with <code>nnx.update</code>. To confirm that nothing is lost, we compare logits on the whole test set: before loading, the fresh model gives different logits; after loading, the logits should be <strong>bit-for-bit identical</strong> (<code>jnp.array_equal</code>).</p>
 <div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
@@ -818,15 +797,11 @@ pixel range: 0.0 to 1.0</code></pre>
 <hr>
 </section>
 </section>
-<section id="inspect" class="level2">
-<h2 class="anchored" data-anchor-id="inspect">2. Inspect</h2>
+<section id="structure-of-a-trained-network" class="level2">
+<h2 class="anchored" data-anchor-id="structure-of-a-trained-network">2. Structure of a trained network</h2>
 <section id="layers-parameter-shapes-and-counts" class="level3">
 <h3 class="anchored" data-anchor-id="layers-parameter-shapes-and-counts">2.1 Layers, parameter shapes and counts</h3>
-<p><code>print(model)</code> shows the module tree with all settings of every layer (long). The parameters are best listed from the flat dictionary of Section 1.4. Flax shapes follow the convention <strong>(input, …, output)</strong>, the transpose of PyTorch:</p>
-<ul>
-<li><code>Conv</code> kernel: <code>(kernel_height, kernel_width, in_features, out_features)</code>, bias: <code>(out_features,)</code>;</li>
-<li><code>Linear</code> kernel: <code>(in_features, out_features)</code>, so that <span class="math inline">\(y = x K + b\)</span>, bias: <code>(out_features,)</code>.</li>
-</ul>
+<p><code>print(model)</code> shows the module tree with all settings of every layer (long). The parameters are best listed from the flat dictionary of Section 1.4. Flax shapes follow the convention <strong>(input, …, output)</strong>, the transpose of PyTorch: a <code>Conv</code> kernel has shape <code>(kernel_height, kernel_width, in_features, out_features)</code> and its bias <code>(out_features,)</code>, while a <code>Linear</code> kernel has shape <code>(in_features, out_features)</code>, so that <span class="math inline">\(y = x K + b\)</span>, with bias <code>(out_features,)</code>.</p>
 <p>The number of parameters of a layer is the number of weights plus the number of biases, e.g.&nbsp;for <code>conv1</code>: <span class="math inline">\(5\cdot5\cdot1\cdot16+16=416\)</span>. The totals are the same as in Lab 003a.</p>
 <div class="cell" data-execution_count="7">
 <details open="">
@@ -918,8 +893,8 @@ filter head_only  -&gt; trainable / frozen: (100741, 5056)</code></pre>
 <hr>
 </section>
 </section>
-<section id="look-inside" class="level2">
-<h2 class="anchored" data-anchor-id="look-inside">3. Look inside</h2>
+<section id="learned-kernels-and-feature-maps" class="level2">
+<h2 class="anchored" data-anchor-id="learned-kernels-and-feature-maps">3. Learned kernels and feature maps</h2>
 <section id="first-layer-kernels" class="level3">
 <h3 class="anchored" data-anchor-id="first-layer-kernels">3.1 First-layer kernels</h3>
 <p>Each of the 16 kernels of <code>conv1</code> is a <span class="math inline">\(5\times5\)</span> array of weights acting on the single input channel, so it can be drawn as a small image (<code>kernel[:, :, 0, k]</code>). A kernel responds most strongly (largest output before the ReLU) to an image patch that looks like the kernel itself: red weights reward ink, blue weights penalise it. Each kernel is drawn with its own symmetric colour scale <span class="math inline">\([-\max|w|,\,\max|w|]\)</span>, so that its pattern is visible regardless of its overall magnitude.</p>
@@ -940,12 +915,12 @@ filter head_only  -&gt; trainable / frozen: (100741, 5056)</code></pre>
 </div>
 </div>
 </section>
-<section id="feature-maps-two-ways-to-get-intermediate-outputs" class="level3">
-<h3 class="anchored" data-anchor-id="feature-maps-two-ways-to-get-intermediate-outputs">3.2 Feature maps: two ways to get intermediate outputs</h3>
+<section id="feature-maps-from-intermediate-outputs" class="level3">
+<h3 class="anchored" data-anchor-id="feature-maps-from-intermediate-outputs">3.2 Feature maps from intermediate outputs</h3>
 <p>A <strong>feature map</strong> is the output of one channel of a convolutional layer: an image showing where in the input the corresponding pattern was found. <code>model(x)</code> returns only the logits. JAX has no forward hooks; there are two ways to obtain intermediate outputs.</p>
-<p><strong>Way 1: call the submodules step by step.</strong> The layers are ordinary attributes, so we repeat the forward pass of <code>Body.__call__</code> by hand and keep what we need. Fully explicit, and works for anything; the price is that the forward pass is written twice.</p>
-<p><strong>Way 2: <code>nnx.capture</code>.</strong> <code>nnx.capture(model, nnx.Intermediate, method_outputs=nnx.Intermediate)</code> wraps the model; calling it returns the logits <em>and</em> a <code>State</code> with the output of every submodule’s <code>__call__</code>, under paths such as <code>body/conv1/__call__</code>. Only module outputs are recorded: here <code>conv1</code>, <code>conv2</code> are captured <em>before</em> the ReLU (the ReLU is a function call inside <code>Body.__call__</code>, not a module), so we apply the ReLU ourselves. (A model can also record arbitrary values explicitly with <code>self.sow(nnx.Intermediate, "name", value)</code> inside <code>__call__</code>, collected by the same <code>nnx.capture</code>.)</p>
-<p>Shapes, after the ReLU: conv1 <code>(1, 28, 28, 16)</code>, conv2 <code>(1, 14, 14, 32)</code>. Both ways must give the same arrays.</p>
+<p>The first is to call the submodules step by step. The layers are ordinary attributes, so we repeat the forward pass of <code>Body.__call__</code> explicitly and keep what we need. This is fully explicit and works for anything; the price is that the forward pass is coded twice.</p>
+<p>The second is <code>nnx.capture</code>. <code>nnx.capture(model, nnx.Intermediate, method_outputs=nnx.Intermediate)</code> wraps the model; calling it returns the logits <em>and</em> a <code>State</code> with the output of every submodule’s <code>__call__</code>, under paths such as <code>body/conv1/__call__</code>. Only module outputs are recorded: here <code>conv1</code>, <code>conv2</code> are captured <em>before</em> the ReLU (the ReLU is a function call inside <code>Body.__call__</code>, not a module), so we apply the ReLU ourselves. (A model can also record arbitrary values explicitly with <code>self.sow(nnx.Intermediate, "name", value)</code> inside <code>__call__</code>, collected by the same <code>nnx.capture</code>.)</p>
+<p>After the ReLU the maps have shapes <code>(1, 28, 28, 16)</code> for conv1 and <code>(1, 14, 14, 32)</code> for conv2. Both ways must give the same arrays; the cell asserts this and prints “way 1 and way 2 agree”, with way 1 the explicit forward pass and way 2 <code>nnx.capture</code>.</p>
 <div class="cell" data-execution_count="11">
 <details open="">
 <summary>Code</summary>
@@ -1011,7 +986,7 @@ relu2: shape (1, 14, 14, 32), fraction of positive (active) entries 0.554</code>
 <p><img src="lab-003b-trained-networks-jax_files/figure-html/cell-13-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p><strong>Reading the maps.</strong> Most first-layer maps are filtered copies of the digit. In several of them only one side of the strokes, or only the strokes of one orientation, light up: a kernel with adjacent positive (red) and negative (blue) regions in Section 3.1 responds to a change of brightness in one direction, i.e.&nbsp;it is an oriented edge detector. Other maps respond to the background next to the ink. Second-layer maps have half the resolution, and each channel combines all 16 first-layer maps; the channels respond to more specific configurations, such as strokes of one direction in one part of the digit, and some are sparse for this image. This is the hierarchy of Lecture 4: local, generic patterns (edges, stroke directions) in the first layer, and combinations of them, more specific to the task, deeper in the network.</p>
+<p>Most first-layer maps are filtered copies of the digit. In several of them only one side of the strokes, or only the strokes of one orientation, light up: a kernel with adjacent positive (red) and negative (blue) regions in Section 3.1 responds to a change of brightness in one direction, i.e.&nbsp;it is an oriented edge detector. Other maps respond to the background next to the ink. Second-layer maps have half the resolution, and each channel combines all 16 first-layer maps; the channels respond to more specific configurations, such as strokes of one direction in one part of the digit, and some are sparse for this image. This is the hierarchy of Lecture 4: local, generic patterns (edges, stroke directions) in the first layer, and combinations of them, more specific to the task, deeper in the network.</p>
 <hr>
 </section>
 </section>
@@ -1020,7 +995,7 @@ relu2: shape (1, 14, 14, 32), fraction of positive (active) entries 0.554</code>
 <p>All operations of this section create new models from pieces of the trained one. One rule matters throughout: <strong>NNX modules are objects with reference semantics</strong>, like PyTorch modules. <code>nnx.Sequential(model.body, ...)</code> contains <em>the same</em> <code>body</code> object; training the new model would also change <code>model</code>. Use <code>nnx.clone</code> whenever the original must stay intact.</p>
 <section id="cutting-the-network-a-feature-extractor" class="level3">
 <h3 class="anchored" data-anchor-id="cutting-the-network-a-feature-extractor">4.1 Cutting the network: a feature extractor</h3>
-<p><code>model.body</code> alone maps images to feature vectors of 1568 numbers, <code>(N, 28, 28, 1) → (N, 1568)</code>. A Flax module cannot be sliced like <code>nn.Sequential</code>; a partial forward pass is written as a short function that calls the submodules: <code>feature_maps</code> stops before the flattening and returns the 32 feature maps, <code>(N, 7, 7, 32)</code>; <code>dense_features</code> applies the dense layer and ReLU of the head to the body’s output and gives the 64 features of the next level, <code>(N, 64)</code>.</p>
+<p><code>model.body</code> alone maps images to feature vectors of 1568 numbers, <code>(N, 28, 28, 1) → (N, 1568)</code>. A Flax module cannot be sliced like <code>nn.Sequential</code>; a partial forward pass is implemented as a short function that calls the submodules: <code>feature_maps</code> stops before the flattening and returns the 32 feature maps, <code>(N, 7, 7, 32)</code>; <code>dense_features</code> applies the dense layer and ReLU of the head to the body’s output and gives the 64 features of the next level, <code>(N, 64)</code>.</p>
 <p>We compute both kinds of features for 2000 test images of the source digits 0–4 and 2000 of the unseen digits 5–9 and count active units (positive after the ReLU). A unit that is zero for every image (“dead” unit) carries no information about these images. Features that stay active and varied for 5–9 are candidates for re-use in Section 5.</p>
 <div class="cell" data-execution_count="13">
 <details open="">
@@ -1065,7 +1040,7 @@ digits 5-9 (unseen): body features: active fraction 0.728, never active    3 of 
 <section id="trained-body-new-head" class="level3">
 <h3 class="anchored" data-anchor-id="trained-body-new-head">4.2 Trained body, new head</h3>
 <p>For the digits 5–9 we need a network with the trained body and a <em>new</em>, randomly initialised head with 5 outputs. We create a fresh <code>SmallCNN(n_classes=5)</code> and copy the body’s parameters with <code>nnx.update(new.body, nnx.state(model.body))</code>. This puts the trained arrays into the new body’s variables; the variables themselves are separate, so training <code>new</code> later replaces arrays in <code>new</code> only (JAX arrays are immutable, so sharing them is harmless).</p>
-<p>Checks: the new body gives the same feature vectors as the trained one; the new head is random, so the accuracy on the digits 5–9 is near chance level, <span class="math inline">\(1/5=0.2\)</span>.</p>
+<p>The new body should give the same feature vectors as the trained one, and the cell confirms it. The new head is random, so the accuracy on the digits 5–9 should be near chance level, <span class="math inline">\(1/5=0.2\)</span>.</p>
 <div class="cell" data-execution_count="14">
 <details open="">
 <summary>Code</summary>
@@ -1120,11 +1095,7 @@ parameters: original 105797 | deeper 109957</code></pre>
 </section>
 <section id="replacing-a-layer" class="level3">
 <h3 class="anchored" data-anchor-id="replacing-a-layer">4.4 Replacing a layer</h3>
-<p>A layer can be exchanged by assigning a new module (or function) to its attribute, <code>net.body.pool1 = partial(nnx.avg_pool, ...)</code>. The replacement must produce an output of the same shape, otherwise the next layer fails. The rest of the network was trained for the <em>old</em> layer, so its accuracy changes. Two examples on copies of the trained model:</p>
-<ul>
-<li>max-pooling → average-pooling in <code>pool1</code> (same shape <code>(N,14,14,16)</code>, different numbers);</li>
-<li><code>conv1</code> → a new, randomly initialised convolution of the same shape: everything after it receives inputs it was never trained on.</li>
-</ul>
+<p>A layer can be exchanged by assigning a new module (or function) to its attribute, <code>net.body.pool1 = partial(nnx.avg_pool, ...)</code>. The replacement must produce an output of the same shape, otherwise the next layer fails. The rest of the network was trained for the <em>old</em> layer, so its accuracy changes. We try two replacements on copies of the trained model. The first replaces max-pooling by average-pooling in <code>pool1</code>, which gives the same shape <code>(N,14,14,16)</code> but different numbers. The second replaces <code>conv1</code> by a new, randomly initialised convolution of the same shape, so that everything after it receives inputs it was never trained on.</p>
 <div class="cell" data-execution_count="16">
 <details open="">
 <summary>Code</summary>
@@ -1228,9 +1199,9 @@ parameters: original 105797 | deeper 109957</code></pre>
 </div>
 </div>
 </section>
-<section id="a-random-initialisation" class="level3">
-<h3 class="anchored" data-anchor-id="a-random-initialisation">5.2 (a) Random initialisation</h3>
-<p>All 105 797 parameters start random and are trained on the 500 labelled images only.</p>
+<section id="training-from-a-random-initialisation" class="level3">
+<h3 class="anchored" data-anchor-id="training-from-a-random-initialisation">5.2 Training from a random initialisation</h3>
+<p>In strategy (a) all 105 797 parameters start random and are trained on the 500 labelled images only. This is the baseline against which transfer is measured.</p>
 <div class="cell" data-execution_count="18">
 <details open="">
 <summary>Code</summary>
@@ -1245,15 +1216,11 @@ parameters: original 105797 | deeper 109957</code></pre>
 </div>
 </div>
 </section>
-<section id="b-frozen-body-new-head" class="level3">
-<h3 class="anchored" data-anchor-id="b-frozen-body-new-head">5.3 (b) Frozen body, new head</h3>
-<p><strong>The mechanism in JAX/Flax</strong> is the filter <code>head_only = nnx.All(nnx.Param, nnx.PathContains("head"))</code>, used in two places:</p>
-<ol type="1">
-<li><code>nnx.Optimizer(net, optax.adam(1e-3), wrt=head_only)</code>: the optimiser holds Adam’s state only for the head’s parameters and updates only them;</li>
-<li><code>nnx.DiffState(0, head_only)</code> in the gradient call (<code>step_head = make_train_step(head_only)</code>): JAX differentiates only with respect to the head, so no gradient of the body is ever computed, which also saves computation.</li>
-</ol>
+<section id="frozen-body-with-a-new-head" class="level3">
+<h3 class="anchored" data-anchor-id="frozen-body-with-a-new-head">5.3 Frozen body with a new head</h3>
+<p>Strategy (b) keeps the trained body fixed. In JAX/Flax the mechanism is the filter <code>head_only = nnx.All(nnx.Param, nnx.PathContains("head"))</code>, used in two places. In <code>nnx.Optimizer(net, optax.adam(1e-3), wrt=head_only)</code> the optimiser holds Adam’s state only for the head’s parameters and updates only them. In the gradient call, <code>nnx.DiffState(0, head_only)</code> (inside <code>step_head = make_train_step(head_only)</code>) makes JAX differentiate only with respect to the head, so no gradient of the body is ever computed, which also saves computation.</p>
 <p>Nothing in the model is marked as frozen; the same model trained with <code>step_all</code> and an optimiser with <code>wrt=nnx.Param</code> would change everywhere.</p>
-<p><strong>Check.</strong> We copy the body’s parameters before training and assert afterwards that they are bit-for-bit unchanged, while the head did change.</p>
+<p>To make sure the freezing works, we copy the body’s parameters before training and assert afterwards that they are bit-for-bit unchanged, while the head did change.</p>
 <div class="cell" data-execution_count="19">
 <details open="">
 <summary>Code</summary>
@@ -1287,7 +1254,7 @@ numbers stored in Adam's state (two moments per trained parameter, plus a step c
 <pre><code>(b) last minibatch loss 0.0289 | test accuracy on digits 5-9: 0.9517</code></pre>
 </div>
 </div>
-<p><strong>The place of the cut matters.</strong> Section 3 suggested that early layers compute generic patterns and later layers task-specific ones. A direct test: cut one layer later, i.e.&nbsp;keep the trained dense layer <code>head.fc</code> frozen as well and train only a new output layer (325 parameters) on the same 500 images, with the same 200 steps. The filter <code>nnx.PathContains("out")</code> selects the output layer only.</p>
+<p>The place of the cut matters. Section 3 suggested that early layers compute generic patterns and later layers task-specific ones. We test this directly by cutting one layer later: the trained dense layer <code>head.fc</code> is kept frozen as well, and only a new output layer (325 parameters) is trained on the same 500 images, with the same 200 steps. The filter <code>nnx.PathContains("out")</code> selects the output layer only.</p>
 <div class="cell" data-execution_count="20">
 <details open="">
 <summary>Code</summary>
@@ -1307,7 +1274,7 @@ numbers stored in Adam's state (two moments per trained parameter, plus a step c
 <pre><code>test accuracy on digits 5-9: cut after the convolutional body 0.9517 | cut after the dense layer 0.7149</code></pre>
 </div>
 </div>
-<p><strong>The same freezing with <code>optax.multi_transform</code>.</strong> An alternative keeps the gradient and the optimiser over <em>all</em> parameters but gives the optimiser different rules for different parts. Every parameter receives a <strong>label</strong> (<code>"body"</code> or <code>"head"</code>), computed from its path by <code>jax.tree_util.tree_map_with_path</code>; <code>optax.multi_transform({"body": rule, "head": rule}, labels)</code> applies to each parameter the rule of its label. With <code>optax.set_to_zero()</code> for the body, the body’s updates are zero. The gradient of the body is still computed (and then discarded), so this route costs more computation than the <code>wrt</code> filter; its advantage is that the same mechanism also gives each part its own learning rate, used in (c). A short check on a copy of the model, 20 steps:</p>
+<p>The same freezing can also be obtained with <code>optax.multi_transform</code>. This alternative keeps the gradient and the optimiser over <em>all</em> parameters but gives the optimiser different rules for different parts. Every parameter receives a <strong>label</strong> (<code>"body"</code> or <code>"head"</code>), computed from its path by <code>jax.tree_util.tree_map_with_path</code>; <code>optax.multi_transform({"body": rule, "head": rule}, labels)</code> applies to each parameter the rule of its label. With <code>optax.set_to_zero()</code> for the body, the body’s updates are zero. The gradient of the body is still computed (and then discarded), so this route costs more computation than the <code>wrt</code> filter; its advantage is that the same mechanism also gives each part its own learning rate, used in (c). The cell runs 20 steps on a copy of the model and checks that the body stays unchanged while the head changes.</p>
 <div class="cell" data-execution_count="21">
 <details open="">
 <summary>Code</summary>
@@ -1334,9 +1301,9 @@ numbers stored in Adam's state (two moments per trained parameter, plus a step c
 </div>
 </div>
 </section>
-<section id="c-fine-tuning-everything-with-a-smaller-learning-rate" class="level3">
-<h3 class="anchored" data-anchor-id="c-fine-tuning-everything-with-a-smaller-learning-rate">5.4 (c) Fine-tuning everything with a smaller learning rate</h3>
-<p>We continue from the result of (b) (a copy, <code>nnx.clone(net_b)</code>) and train all parameters for 100 more steps. Per-part learning rates are the <code>optax.multi_transform</code> of the previous cell with two Adam rules: the body moves with <span class="math inline">\(10^{-4}\)</span>, the head with <span class="math inline">\(3\cdot10^{-4}\)</span>. This is the counterpart of PyTorch’s parameter groups. The optimiser now has <code>wrt=nnx.Param</code> and the step is <code>step_all</code>, so the body is no longer frozen.</p>
+<section id="fine-tuning-with-a-smaller-learning-rate" class="level3">
+<h3 class="anchored" data-anchor-id="fine-tuning-with-a-smaller-learning-rate">5.4 Fine-tuning with a smaller learning rate</h3>
+<p>Strategy (c) continues from the result of (b) (a copy, <code>nnx.clone(net_b)</code>) and trains all parameters for 100 more steps. Per-part learning rates are the <code>optax.multi_transform</code> of the previous cell with two Adam rules: the body moves with <span class="math inline">\(10^{-4}\)</span>, the head with <span class="math inline">\(3\cdot10^{-4}\)</span>. This is the counterpart of PyTorch’s parameter groups. The optimiser now has <code>wrt=nnx.Param</code> and the step is <code>step_all</code>, so the body is no longer frozen.</p>
 <div class="cell" data-execution_count="22">
 <details open="">
 <summary>Code</summary>
@@ -1360,9 +1327,9 @@ n = 100 images per class: (a) 0.9443 | (b) 0.9517 | (c) 0.9525</code></pre>
 </div>
 </div>
 </section>
-<section id="accuracy-vs-number-of-labelled-images" class="level3">
-<h3 class="anchored" data-anchor-id="accuracy-vs-number-of-labelled-images">5.5 Accuracy vs number of labelled images</h3>
-<p>We repeat (a), (b), (c) for <span class="math inline">\(n\in\{10, 30, 100, 300\}\)</span> images per class, i.e.&nbsp;50 to 1500 labelled images, each with 3 different labelled subsets (seeds 0, 1, 2). The figure shows the mean test accuracy on all 4861 test images of the digits 5–9; the error bars are the standard deviation over the 3 subsets.</p>
+<section id="dependence-on-the-number-of-labelled-images" class="level3">
+<h3 class="anchored" data-anchor-id="dependence-on-the-number-of-labelled-images">5.5 Dependence on the number of labelled images</h3>
+<p>A single value of <span class="math inline">\(n\)</span> does not show when transfer pays off. We therefore repeat (a), (b), (c) for <span class="math inline">\(n\in\{10, 30, 100, 300\}\)</span> images per class, i.e.&nbsp;50 to 1500 labelled images, each with 3 different labelled subsets (seeds 0, 1, 2). The figure shows the mean test accuracy on all 4861 test images of the digits 5–9; the error bars are the standard deviation over the 3 subsets.</p>
 <div class="cell" data-execution_count="23">
 <details open="">
 <summary>Code</summary>
@@ -1420,13 +1387,14 @@ test accuracy on digits 5-9, mean ± std over 3 labelled subsets
 <p><img src="lab-003b-trained-networks-jax_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p><strong>Reading the figure.</strong> For <span class="math inline">\(n=30\)</span> and <span class="math inline">\(n=100\)</span> images per class the trained body helps: (b) and (c) lie above (a) by more than the spread over the labelled subsets. For <span class="math inline">\(n=10\)</span> the mean is also higher, but the spread over subsets is of the same size as the difference. At <span class="math inline">\(n=300\)</span> the network trained from a random initialisation catches up: with enough labels it learns features for 5–9 by itself, while the frozen body keeps the features learned for 0–4. Fine-tuning (c) gives at most a small gain over (b) with these 100 extra steps.</p>
+<p>For <span class="math inline">\(n=30\)</span> and <span class="math inline">\(n=100\)</span> images per class the trained body helps: (b) and (c) lie above (a) by more than the spread over the labelled subsets. For <span class="math inline">\(n=10\)</span> the mean is also higher, but the spread over subsets is of the same size as the difference. At <span class="math inline">\(n=300\)</span> the network trained from a random initialisation catches up: with enough labels it learns features for 5–9 by itself, while the frozen body keeps the features learned for 0–4. Fine-tuning (c) gives at most a small gain over (b) with these 100 extra steps.</p>
 <p>The gains from transfer are modest here because the target task is easy: a small CNN trained from a random initialisation on 50 images already classifies most test digits correctly. The choice of the cut (Section 5.3) mattered much more: a frozen dense layer trained on 0–4 left far fewer correctly classified digits than the frozen convolutional body. Generic early features transfer; task-specific late features do not.</p>
 <hr>
 </section>
 </section>
-<section id="cheat-sheet-pytorch-and-jaxflax-nnx" class="level2">
-<h2 class="anchored" data-anchor-id="cheat-sheet-pytorch-and-jaxflax-nnx">6. Cheat sheet: PyTorch and JAX/Flax NNX</h2>
+<section id="correspondence-between-pytorch-and-jaxflax-nnx" class="level2">
+<h2 class="anchored" data-anchor-id="correspondence-between-pytorch-and-jaxflax-nnx">6. Correspondence between PyTorch and JAX/Flax NNX</h2>
+<p>The table collects every operation of this lab together with its counterpart in Lab 003b, for quick reference when moving between the two frameworks.</p>
 <table class="table">
 <colgroup>
 <col style="width: 33%">
@@ -1477,7 +1445,7 @@ test accuracy on digits 5-9, mean ± std over 3 labelled subsets
 <td><code>np.asarray(model.body.conv1.kernel[...])</code></td>
 </tr>
 <tr class="even">
-<td>set weights by hand</td>
+<td>set weights directly</td>
 <td><code>with torch.no_grad(): layer.weight.copy_(W)</code></td>
 <td><code>layer.kernel[...] = W</code></td>
 </tr>
@@ -1489,7 +1457,7 @@ test accuracy on digits 5-9, mean ± std over 3 labelled subsets
 <tr class="even">
 <td>feature extractor</td>
 <td><code>model.body</code>, or slice <code>model.body[:6]</code></td>
-<td><code>model.body</code>; a partial forward pass is written as a function</td>
+<td><code>model.body</code>; a partial forward pass is implemented as a function</td>
 </tr>
 <tr class="odd">
 <td>new head on trained body</td>
@@ -1528,6 +1496,7 @@ test accuracy on digits 5-9, mean ± std over 3 labelled subsets
 </tr>
 </tbody>
 </table>
+<p>The last cell prints the total run time of the notebook.</p>
 <div class="cell" data-execution_count="25">
 <details open="">
 <summary>Code</summary>

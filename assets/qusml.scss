@@ -60,3 +60,6 @@ main.content .hero p { text-align: left; }
 .res-card .res-line { color: #666; font-size: 0.86rem; margin-bottom: 0.3rem; }
 .res-card .res-link { font-size: 0.86rem; }
 main.content .res-card div { text-align: left; }
+
+// long display equations (MathJax) scroll inside their own box instead of overflowing the page
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }

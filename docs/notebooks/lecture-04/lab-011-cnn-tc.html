@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model in JAX: Monte Carlo data, exact results and Tc from a CNN</a>
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
   </div>
 </li>
       </ul>
@@ -466,18 +466,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
-  <li><a href="#lab-011-finding-t_c-of-the-2d-ising-model-from-the-confidence-of-a-cnn" id="toc-lab-011-finding-t_c-of-the-2d-ising-model-from-the-confidence-of-a-cnn" class="nav-link" data-scroll-target="#lab-011-finding-t_c-of-the-2d-ising-model-from-the-confidence-of-a-cnn">Lab 011 — Finding <span class="math inline">\(T_c\)</span> of the 2D Ising model from the confidence of a CNN</a>
+  <li><a href="#lab-011-the-critical-temperature-from-cnn-confidence" id="toc-lab-011-the-critical-temperature-from-cnn-confidence" class="nav-link" data-scroll-target="#lab-011-the-critical-temperature-from-cnn-confidence">Lab 011 — The critical temperature from CNN confidence</a>
   <ul class="collapse">
-  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">1. The data</a></li>
-  <li><a href="#the-task-a-classifier-trained-only-far-from-t_c" id="toc-the-task-a-classifier-trained-only-far-from-t_c" class="nav-link" data-scroll-target="#the-task-a-classifier-trained-only-far-from-t_c">2. The task: a classifier trained only far from <span class="math inline">\(T_c\)</span></a></li>
-  <li><a href="#the-network" id="toc-the-network" class="nav-link" data-scroll-target="#the-network">3. The network</a></li>
+  <li><a href="#monte-carlo-data" id="toc-monte-carlo-data" class="nav-link" data-scroll-target="#monte-carlo-data">1. Monte Carlo data</a></li>
+  <li><a href="#a-classifier-trained-far-from-the-transition" id="toc-a-classifier-trained-far-from-the-transition" class="nav-link" data-scroll-target="#a-classifier-trained-far-from-the-transition">2. A classifier trained far from the transition</a></li>
+  <li><a href="#network-architecture" id="toc-network-architecture" class="nav-link" data-scroll-target="#network-architecture">3. Network architecture</a></li>
   <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">4. Training</a></li>
-  <li><a href="#asking-the-network-about-all-temperatures" id="toc-asking-the-network-about-all-temperatures" class="nav-link" data-scroll-target="#asking-the-network-about-all-temperatures">5. Asking the network about all temperatures</a></li>
+  <li><a href="#predictions-at-all-temperatures" id="toc-predictions-at-all-temperatures" class="nav-link" data-scroll-target="#predictions-at-all-temperatures">5. Predictions at all temperatures</a></li>
   <li><a href="#finite-size-effects" id="toc-finite-size-effects" class="nav-link" data-scroll-target="#finite-size-effects">6. Finite-size effects</a></li>
-  <li><a href="#opening-the-chinese-room-what-the-network-learned" id="toc-opening-the-chinese-room-what-the-network-learned" class="nav-link" data-scroll-target="#opening-the-chinese-room-what-the-network-learned">7. Opening the Chinese room: what the network learned</a>
+  <li><a href="#inside-the-chinese-room" id="toc-inside-the-chinese-room" class="nav-link" data-scroll-target="#inside-the-chinese-room">7. Inside the Chinese room</a>
   <ul class="collapse">
-  <li><a href="#output-vs-magnetisation" id="toc-output-vs-magnetisation" class="nav-link" data-scroll-target="#output-vs-magnetisation">7.1 Output vs magnetisation</a></li>
-  <li><a href="#a-controlled-experiment-shuffle-the-spins" id="toc-a-controlled-experiment-shuffle-the-spins" class="nav-link" data-scroll-target="#a-controlled-experiment-shuffle-the-spins">7.2 A controlled experiment: shuffle the spins</a></li>
+  <li><a href="#network-output-and-magnetisation" id="toc-network-output-and-magnetisation" class="nav-link" data-scroll-target="#network-output-and-magnetisation">7.1 Network output and magnetisation</a></li>
+  <li><a href="#shuffled-spins" id="toc-shuffled-spins" class="nav-link" data-scroll-target="#shuffled-spins">7.2 Shuffled spins</a></li>
   <li><a href="#the-learned-filters" id="toc-the-learned-filters" class="nav-link" data-scroll-target="#the-learned-filters">7.3 The learned filters</a></li>
   </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">8. Exercises</a></li>
@@ -512,18 +512,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Lab:</strong> 011
 <hr>
 </section>
-<section id="lab-011-finding-t_c-of-the-2d-ising-model-from-the-confidence-of-a-cnn" class="level1">
-<h1>Lab 011 — Finding <span class="math inline">\(T_c\)</span> of the 2D Ising model from the confidence of a CNN</h1>
-<p>This notebook reproduces the experiment of Lecture 4 (Lecture Notes, Chapter 2):</p>
-<ol type="1">
-<li>Take Monte Carlo spin configurations of an <span class="math inline">\(L\times L\)</span> Ising model on a grid of temperatures (from Lab 010, or generated here).</li>
-<li>Label <strong>only</strong> the configurations far from the transition: <span class="math inline">\(T&lt;1.5\)</span> as <em>ordered</em> (<span class="math inline">\(y=0\)</span>) and <span class="math inline">\(T&gt;3.0\)</span> as <em>disordered</em> (<span class="math inline">\(y=1\)</span>). Everything in between is never shown to the network during training.</li>
-<li>Train a small <strong>CNN</strong> to tell the two classes apart.</li>
-<li>Ask the trained network about <strong>all</strong> temperatures. Where is it least confident? That temperature, <span class="math inline">\(\bar T_c\)</span>, is our estimate of <span class="math inline">\(T_c\)</span>.</li>
-<li>Repeat for several lattice sizes (<strong>finite-size effects</strong>).</li>
-<li><strong>Open the Chinese room</strong> (Lecture 5): what did the network actually learn?</li>
-</ol>
-<p>The exact answer, for comparison: <span class="math inline">\(T_c = 2/\ln(1+\sqrt2)\)</span> (Onsager 1944, <span class="math inline">\(J=k_B=1\)</span>).</p>
+<section id="lab-011-the-critical-temperature-from-cnn-confidence" class="level1">
+<h1>Lab 011 — The critical temperature from CNN confidence</h1>
+<p>This notebook reproduces the experiment of Lecture 4 (Lecture Notes, Chapter 2). We take Monte Carlo spin configurations of an <span class="math inline">\(L\times L\)</span> Ising model on a grid of temperatures, either from Lab 010 or generated here, and label <strong>only</strong> those far from the transition: configurations with <span class="math inline">\(T&lt;1.5\)</span> are <em>ordered</em> (<span class="math inline">\(y=0\)</span>) and those with <span class="math inline">\(T&gt;3.0\)</span> are <em>disordered</em> (<span class="math inline">\(y=1\)</span>). Everything in between is never shown to the network during training. A small convolutional neural network (<strong>CNN</strong>) learns to tell the two classes apart, and we then ask the trained network about <strong>all</strong> temperatures. The temperature at which it is least confident, <span class="math inline">\(\bar T_c\)</span>, is our estimate of <span class="math inline">\(T_c\)</span>.</p>
+<p>Two further questions follow naturally. Since a finite lattice has no sharp transition, the estimate must depend on the lattice size, and we repeat the experiment for several sizes to see these <strong>finite-size effects</strong>. And since the network gives a number but no explanation, we finally <strong>open the Chinese room</strong> (Lecture 5) and ask what the network actually learned.</p>
+<p>The exact answer, for comparison, is <span class="math inline">\(T_c = 2/\ln(1+\sqrt2)\)</span> (Onsager 1944, <span class="math inline">\(J=k_B=1\)</span>).</p>
 <blockquote class="blockquote">
 <p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em> (or open it from Google Drive). 2. Run cells one by one with <strong>Shift + Enter</strong>. Run them <em>in order</em> — later cells use variables defined earlier. 3. The required packages (<code>numpy</code>, <code>scipy</code>, <code>matplotlib</code>, <code>torch</code>) are pre-installed in Colab; no <code>pip install</code> required. 4. The notebook looks for the dataset <code>data/ising_Nx{L}_Ny{L}.npz</code> made by Lab 010. If it is not there, it generates it (this takes from seconds to about a minute, depending on <span class="math inline">\(L\)</span>). In Colab you can upload the file from Lab 010 into a folder <code>data/</code>, or just let the notebook generate it. 5. If the notebook state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
 </blockquote>
@@ -554,9 +547,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <hr>
-<section id="the-data" class="level2">
-<h2 class="anchored" data-anchor-id="the-data">1. The data</h2>
-<p>We need configurations <span class="math inline">\(\boldsymbol s\in\{-1,+1\}^{L\times L}\)</span> sampled from <span class="math inline">\(p(\boldsymbol s)\propto e^{-H(\boldsymbol s)/T}\)</span> on a grid of temperatures. The cell below contains a compact copy of the checkerboard Metropolis sampler of Lab 010 (see Lab 010 for its derivation and its tests). It produces the same file format, so the two notebooks can share data: <code>configs</code> with shape <code>(temperatures, samples, L, L)</code> and the temperature grid <code>T</code>.</p>
+<section id="monte-carlo-data" class="level2">
+<h2 class="anchored" data-anchor-id="monte-carlo-data">1. Monte Carlo data</h2>
+<p>We need configurations <span class="math inline">\(\boldsymbol s\in\{-1,+1\}^{L\times L}\)</span> sampled from <span class="math inline">\(p(\boldsymbol s)\propto e^{-H(\boldsymbol s)/T}\)</span> on a grid of temperatures. The cell below contains a compact copy of the checkerboard Metropolis sampler of Lab 010, where it is derived and tested. It produces the same file format, so the two notebooks can share data: <code>configs</code> with shape <code>(temperatures, samples, L, L)</code> and the temperature grid <code>T</code>.</p>
 <div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
@@ -608,18 +601,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <hr>
 </section>
-<section id="the-task-a-classifier-trained-only-far-from-t_c" class="level2">
-<h2 class="anchored" data-anchor-id="the-task-a-classifier-trained-only-far-from-t_c">2. The task: a classifier trained only far from <span class="math inline">\(T_c\)</span></h2>
+<section id="a-classifier-trained-far-from-the-transition" class="level2">
+<h2 class="anchored" data-anchor-id="a-classifier-trained-far-from-the-transition">2. A classifier trained far from the transition</h2>
 <p>Each configuration gets a label from its temperature: <span class="math display">\[
 y = \begin{cases} 0 \ (\text{ordered}) &amp; T &lt; T_{\min}=1.5\\ 1 \ (\text{disordered}) &amp; T&gt;T_{\max}=3.0 \\ \text{not used for training} &amp; T_{\min}\le T\le T_{\max}\end{cases}
-\]</span> The network outputs two numbers (logits) <span class="math inline">\(z_0, z_1\)</span>, turned into probabilities by the <strong>softmax</strong> <span class="math display">\[
+\]</span> The network outputs two numbers (logits) <span class="math inline">\(z_0, z_1\)</span>, which the <strong>softmax</strong> turns into probabilities, <span class="math display">\[
 p_k(\boldsymbol s) = \frac{e^{z_k}}{e^{z_0}+e^{z_1}}, \qquad p_0+p_1 = 1,
-\]</span> and is trained by minimising the <strong>categorical cross-entropy</strong> <span class="math inline">\(\mathcal L = -\frac1n\sum_{a}\ln p_{y_a}(\boldsymbol s_a)\)</span> (Lecture 4).</p>
-<p><strong>Confidence.</strong> For any configuration the prediction is the class with the larger probability, and the confidence is that probability: <span class="math display">\[
+\]</span> and it is trained by minimising the <strong>categorical cross-entropy</strong> <span class="math inline">\(\mathcal L = -\frac1n\sum_{a}\ln p_{y_a}(\boldsymbol s_a)\)</span> (Lecture 4).</p>
+<p>For any configuration the prediction is the class with the larger probability, and the <strong>confidence</strong> is that probability: <span class="math display">\[
 \mathrm{conf}(\boldsymbol s) = \max\left(p_0(\boldsymbol s),\,p_1(\boldsymbol s)\right)\in\left[\tfrac12, 1\right].
-\]</span> The network is confident on configurations that look like its training data. Close to <span class="math inline">\(T_c\)</span> the configurations are neither clearly ordered nor clearly disordered, so we expect <span class="math inline">\(\mathrm{conf}\to\frac12\)</span> there. We define <span class="math display">\[
+\]</span> The network is confident on configurations that look like its training data. Close to <span class="math inline">\(T_c\)</span> the configurations are neither clearly ordered nor clearly disordered, so we expect <span class="math inline">\(\mathrm{conf}\to\frac12\)</span> there. This suggests the estimate <span class="math display">\[
 \bar T_c = \arg\min_T \ \big\langle \mathrm{conf}\big\rangle_T ,
-\]</span> the temperature of lowest average confidence. A closely related estimate is the temperature where the average <span class="math inline">\(\langle p_1\rangle_T\)</span> crosses <span class="math inline">\(\frac12\)</span>.</p>
+\]</span> the temperature of lowest average confidence. A closely related estimate is the temperature at which the average <span class="math inline">\(\langle p_1\rangle_T\)</span> crosses <span class="math inline">\(\frac12\)</span>. The next cell builds the training set; the printout lists the temperatures that enter each class.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
@@ -649,10 +642,10 @@ temperatures used for label 1: [3.05 3.1  3.15 3.2  3.25 3.3  3.35 3.4  3.45 3.5
 </div>
 <hr>
 </section>
-<section id="the-network" class="level2">
-<h2 class="anchored" data-anchor-id="the-network">3. The network</h2>
-<p>As in the Lecture Notes: two convolutional layers with <span class="math inline">\(32\)</span> kernels of size <span class="math inline">\(3\times3\)</span>, each followed by ReLU and <span class="math inline">\(2\times2\)</span> max-pooling, then a dense layer of <span class="math inline">\(64\)</span> ReLU nodes and an output layer of <span class="math inline">\(2\)</span> nodes (softmax inside the loss).</p>
-<p>One physics-motivated detail: we use <strong>circular padding</strong> (<code>padding_mode="circular"</code>). Our lattice is a torus, so the neighbour of the last column is the first column; circular padding makes the convolution see exactly the same neighbourhoods as the Hamiltonian.</p>
+<section id="network-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="network-architecture">3. Network architecture</h2>
+<p>We follow the Lecture Notes: two convolutional layers with <span class="math inline">\(32\)</span> kernels of size <span class="math inline">\(3\times3\)</span>, each followed by a ReLU and <span class="math inline">\(2\times2\)</span> max-pooling, then a dense layer of <span class="math inline">\(64\)</span> ReLU nodes and an output layer of <span class="math inline">\(2\)</span> nodes, with the softmax included in the loss.</p>
+<p>One detail is motivated by physics: we use <strong>circular padding</strong> (<code>padding_mode="circular"</code>). Our lattice is a torus, so the neighbour of the last column is the first column, and circular padding makes the convolution see exactly the same neighbourhoods as the Hamiltonian.</p>
 <div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
@@ -697,6 +690,7 @@ number of parameters: 60962</code></pre>
 </section>
 <section id="training" class="level2">
 <h2 class="anchored" data-anchor-id="training">4. Training</h2>
+<p>We train for five epochs with the Adam optimiser and monitor the loss and accuracy on the held-out validation configurations.</p>
 <div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
@@ -744,11 +738,12 @@ number of parameters: 60962</code></pre>
 training time: 4.3 s</code></pre>
 </div>
 </div>
-The two classes are easy to separate (at <span class="math inline">\(T&lt;1.5\)</span> almost all spins are aligned, at <span class="math inline">\(T&gt;3\)</span> they are not), so the training and validation accuracies come out close to <span class="math inline">\(1\)</span>. That is not the interesting part. The interesting part is what the network says about temperatures it has <strong>never seen</strong>.
+The two classes are easy to separate — at <span class="math inline">\(T&lt;1.5\)</span> almost all spins are aligned, at <span class="math inline">\(T&gt;3\)</span> they are not — so the training and validation accuracies reach <span class="math inline">\(1\)</span>. That is not the interesting part. The interesting part is what the network says about temperatures it has <strong>never seen</strong>.
 <hr>
 </section>
-<section id="asking-the-network-about-all-temperatures" class="level2">
-<h2 class="anchored" data-anchor-id="asking-the-network-about-all-temperatures">5. Asking the network about all temperatures</h2>
+<section id="predictions-at-all-temperatures" class="level2">
+<h2 class="anchored" data-anchor-id="predictions-at-all-temperatures">5. Predictions at all temperatures</h2>
+<p>We apply the trained network to every configuration at every temperature and compute both estimates of <span class="math inline">\(T_c\)</span>. For <span class="math inline">\(L=20\)</span> the confidence minimum lies at <span class="math inline">\(2.20\)</span> and the crossing of <span class="math inline">\(\langle p_1\rangle = \frac12\)</span> at <span class="math inline">\(2.247\)</span>, against the exact <span class="math inline">\(2.2692\)</span>; the figure that follows shows where these numbers come from.</p>
 <div class="cell" data-execution_count="6">
 <details open="">
 <summary>Code</summary>
@@ -804,12 +799,12 @@ The two classes are easy to separate (at <span class="math inline">\(T&lt;1.5\)<
 <p><img src="lab-011-cnn-tc_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<strong>Reading the plot.</strong> * In the shaded regions the network is (as trained) nearly certain. * Between them it was never told anything, yet its output switches from “ordered” to “disordered” in a narrow window, and the confidence has a sharp minimum there. Compare the printed <span class="math inline">\(\bar T_c\)</span> with the exact <span class="math inline">\(T_c\)</span>. * The band shows the spread over individual configurations: right at the minimum some configurations are classified confidently as ordered and others as disordered. The <em>average</em> confidence is low because the configurations at that temperature are a mixture of both.
+In the shaded regions the network is, as trained, nearly certain. Between them it was never told anything, yet its output switches from “ordered” to “disordered” in a narrow window, and the confidence has a sharp minimum there. The band shows the spread over individual configurations: right at the minimum some configurations are classified confidently as ordered and others as disordered. The <em>average</em> confidence is low because the configurations at that temperature are a mixture of both.
 <hr>
 </section>
 <section id="finite-size-effects" class="level2">
 <h2 class="anchored" data-anchor-id="finite-size-effects">6. Finite-size effects</h2>
-<p>The network sees an <span class="math inline">\(L\times L\)</span> lattice, which has no sharp phase transition (Lab 010, Section 8). We repeat the whole experiment — data, training, prediction — for <span class="math inline">\(L=10, 20, 40\)</span> with the same network architecture and the same training temperatures. Each training is repeated with <span class="math inline">\(3\)</span> random seeds, because a single training run is itself a random experiment.</p>
+<p>The network sees an <span class="math inline">\(L\times L\)</span> lattice, which has no sharp phase transition (Lab 010, Section 8). We therefore repeat the whole experiment — data, training, prediction — for <span class="math inline">\(L=10, 20, 40\)</span> with the same network architecture and the same training temperatures. Each training is repeated with <span class="math inline">\(3\)</span> random seeds, because a single training run is itself a random experiment.</p>
 <div class="cell" data-execution_count="8">
 <details open="">
 <summary>Code</summary>
@@ -871,15 +866,15 @@ The two classes are easy to separate (at <span class="math inline">\(T&lt;1.5\)<
  40   2.25  2.25  2.30                 2.282  2.249  2.319              2.283 +- 0.035               2.2692</code></pre>
 </div>
 </div>
-<strong>What to notice.</strong> * The switch from “ordered” to “disordered” becomes <strong>sharper</strong> as <span class="math inline">\(L\)</span> grows: the transition region of a finite lattice shrinks (Lab 010). * The estimates depend on <span class="math inline">\(L\)</span>, on the temperature grid (spacing <span class="math inline">\(0.05\)</span>) and on the random training run — compare the per-seed values in the table: the seed-to-seed spread is not small compared with the distance to <span class="math inline">\(T_c\)</span>. A single number such as “<span class="math inline">\(\bar T_c\)</span> for <span class="math inline">\(L=50\)</span>” is a <em>pseudo-critical</em> temperature; extracting <span class="math inline">\(T_c\)</span> itself needs several <span class="math inline">\(L\)</span> and an extrapolation <span class="math inline">\(L\to\infty\)</span>.
+As <span class="math inline">\(L\)</span> grows, the switch from “ordered” to “disordered” becomes <strong>sharper</strong>: the transition region of a finite lattice shrinks (Lab 010). The estimates themselves depend on <span class="math inline">\(L\)</span>, on the temperature grid (spacing <span class="math inline">\(0.05\)</span>) and on the random training run. The per-seed values in the table show that the seed-to-seed spread, a standard deviation of <span class="math inline">\(0.035\)</span>–<span class="math inline">\(0.041\)</span> for the crossing, is not small compared with the distance to <span class="math inline">\(T_c\)</span>. A single number such as “<span class="math inline">\(\bar T_c\)</span> for <span class="math inline">\(L=50\)</span>” is a <em>pseudo-critical</em> temperature; extracting <span class="math inline">\(T_c\)</span> itself requires several <span class="math inline">\(L\)</span> and an extrapolation <span class="math inline">\(L\to\infty\)</span>.
 <hr>
 </section>
-<section id="opening-the-chinese-room-what-the-network-learned" class="level2">
-<h2 class="anchored" data-anchor-id="opening-the-chinese-room-what-the-network-learned">7. Opening the Chinese room: what the network learned</h2>
-<p>The network located the transition, but it did not <em>tell</em> us anything — no order parameter, no mechanism (Lecture 5, <em>The Chinese Room</em>). Can we look inside?</p>
-<section id="output-vs-magnetisation" class="level3">
-<h3 class="anchored" data-anchor-id="output-vs-magnetisation">7.1 Output vs magnetisation</h3>
-<p>For every configuration we compute <span class="math inline">\(|m| = \frac1N\left|\sum_i s_i\right|\)</span> and plot it against the network output <span class="math inline">\(p_1\)</span>. If the network had learned “<span class="math inline">\(p_1\)</span> is a function of <span class="math inline">\(|m|\)</span>”, all points would collapse onto one curve, whatever their temperature.</p>
+<section id="inside-the-chinese-room" class="level2">
+<h2 class="anchored" data-anchor-id="inside-the-chinese-room">7. Inside the Chinese room</h2>
+<p>The network located the transition, but it did not <em>tell</em> us anything — no order parameter, no mechanism (Lecture 5, <em>The Chinese Room</em>). We now try to look inside.</p>
+<section id="network-output-and-magnetisation" class="level3">
+<h3 class="anchored" data-anchor-id="network-output-and-magnetisation">7.1 Network output and magnetisation</h3>
+<p>The obvious hypothesis is that the network has learned the order parameter. For every configuration we compute <span class="math inline">\(|m| = \frac1N\left|\sum_i s_i\right|\)</span> and plot it against the network output <span class="math inline">\(p_1\)</span>. If the network had learned “<span class="math inline">\(p_1\)</span> is a function of <span class="math inline">\(|m|\)</span>”, all points would collapse onto one curve, whatever their temperature.</p>
 <div class="cell" data-execution_count="9">
 <details open="">
 <summary>Code</summary>
@@ -914,11 +909,11 @@ The two classes are easy to separate (at <span class="math inline">\(T&lt;1.5\)<
 <p><img src="lab-011-cnn-tc_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>The rank correlation printed above measures how well the ordering of configurations by <span class="math inline">\(|m|\)</span> agrees with their ordering by <span class="math inline">\(p_1\)</span> (<span class="math inline">\(\pm1\)</span>: perfectly monotonic, <span class="math inline">\(0\)</span>: unrelated). The right panel asks a sharper question: at the <strong>same</strong> <span class="math inline">\(|m|\)</span>, does the network answer differently for configurations from below and above <span class="math inline">\(T_c\)</span>? If the two curves lie on top of each other, the output depends (almost) only on <span class="math inline">\(|m|\)</span>. If they separate, the network uses more information than the magnetisation.</p>
-<p><em>In the run stored in this notebook:</em> the rank correlation is strongly negative (large <span class="math inline">\(|m|\)</span> ↔︎ “ordered”), so <span class="math inline">\(|m|\)</span> explains most of the output. But in the overlapping range of <span class="math inline">\(|m|\)</span> the two curves do not coincide: at equal magnetisation, configurations from <span class="math inline">\(T&gt;T_c\)</span> get a larger <span class="math inline">\(p_1\)</span>. The network uses more than <span class="math inline">\(|m|\)</span>.</p>
+<p>The rank correlation measures how well the ordering of configurations by <span class="math inline">\(|m|\)</span> agrees with their ordering by <span class="math inline">\(p_1\)</span> (<span class="math inline">\(\pm1\)</span> for a perfectly monotonic relation, <span class="math inline">\(0\)</span> for unrelated quantities). The right panel asks a sharper question: at the <strong>same</strong> <span class="math inline">\(|m|\)</span>, does the network answer differently for configurations from below and above <span class="math inline">\(T_c\)</span>? If the two curves lie on top of each other, the output depends (almost) only on <span class="math inline">\(|m|\)</span>; if they separate, the network uses more information than the magnetisation.</p>
+<p>In the run stored in this notebook the rank correlation is strongly negative, <span class="math inline">\(-0.914\)</span> (large <span class="math inline">\(|m|\)</span> goes with “ordered”), so <span class="math inline">\(|m|\)</span> explains most of the output. But in the overlapping range of <span class="math inline">\(|m|\)</span> the two curves do not coincide: at equal magnetisation, configurations from <span class="math inline">\(T&gt;T_c\)</span> get a larger <span class="math inline">\(p_1\)</span>. The network uses more than <span class="math inline">\(|m|\)</span>.</p>
 </section>
-<section id="a-controlled-experiment-shuffle-the-spins" class="level3">
-<h3 class="anchored" data-anchor-id="a-controlled-experiment-shuffle-the-spins">7.2 A controlled experiment: shuffle the spins</h3>
+<section id="shuffled-spins" class="level3">
+<h3 class="anchored" data-anchor-id="shuffled-spins">7.2 Shuffled spins</h3>
 <p>We can test directly whether spatial structure matters. For each configuration we <strong>randomly permute the positions</strong> of its spins. This keeps <span class="math inline">\(m\)</span> <em>exactly</em>, but destroys all spatial correlations (domains, clusters, domain walls), so the nearest-neighbour energy changes. A pure “<span class="math inline">\(|m|\)</span>-detector” would give identical outputs for original and shuffled configurations.</p>
 <div class="cell" data-execution_count="10">
 <details open="">
@@ -956,12 +951,12 @@ The two classes are easy to separate (at <span class="math inline">\(T&lt;1.5\)<
 3.00      1.000            1.000          0.133</code></pre>
 </div>
 </div>
-<p>Compare the two curves (and the printed table). Where they coincide, shuffling did not matter: those configurations are classified by their magnetisation alone. Where they differ, the network’s decision depends on the <strong>arrangement</strong> of the spins, not only on how many point up — for example on the size of clusters, which is what changes most near <span class="math inline">\(T_c\)</span>.</p>
-<p><em>In the run stored in this notebook:</em> far from <span class="math inline">\(T_c\)</span> shuffling changes nothing, but around <span class="math inline">\(T_c\)</span> the shuffled configurations are called “disordered” more often. Without their large clusters they look more like high-temperature noise to the network, at exactly the same <span class="math inline">\(m\)</span>.</p>
+<p>Where the two curves coincide, shuffling did not matter, and those configurations are classified by their magnetisation alone. Where they differ, the network’s decision depends on the <strong>arrangement</strong> of the spins, not only on how many point up — for example on the size of clusters, which is what changes most near <span class="math inline">\(T_c\)</span>.</p>
+<p>In the run stored in this notebook shuffling changes nothing far from <span class="math inline">\(T_c\)</span>, but around <span class="math inline">\(T_c\)</span> the shuffled configurations are called “disordered” more often: at <span class="math inline">\(T=2.2\)</span>, <span class="math inline">\(\langle p_1\rangle\)</span> rises from <span class="math inline">\(0.356\)</span> to <span class="math inline">\(0.572\)</span>. Without their large clusters they look more like high-temperature noise to the network, at exactly the same <span class="math inline">\(m\)</span>.</p>
 </section>
 <section id="the-learned-filters" class="level3">
 <h3 class="anchored" data-anchor-id="the-learned-filters">7.3 The learned filters</h3>
-<p>The first layer applies <span class="math inline">\(32\)</span> different <span class="math inline">\(3\times3\)</span> filters to the spin image. A filter with all weights of the same sign computes a local (smoothed) magnetisation; a filter with weights of both signs responds to local <em>differences</em>, i.e.&nbsp;domain walls — which is what the bond energy <span class="math inline">\(-s_is_j\)</span> measures.</p>
+<p>The first layer applies <span class="math inline">\(32\)</span> different <span class="math inline">\(3\times3\)</span> filters to the spin image. A filter with all weights of the same sign computes a local (smoothed) magnetisation; a filter with weights of both signs responds to local <em>differences</em>, i.e.&nbsp;to domain walls — which is what the bond energy <span class="math inline">\(-s_is_j\)</span> measures. The cell below draws the filters, counts those with weights of a single sign, and measures how far training moved them from their random initial values.</p>
 <div class="cell" data-execution_count="11">
 <details open="">
 <summary>Code</summary>
@@ -988,8 +983,8 @@ The two classes are easy to separate (at <span class="math inline">\(T&lt;1.5\)<
 relative change of the first-layer filters during training, |W - W0| / |W0| = 8.003</code></pre>
 </div>
 </div>
-<p>The printed relative change shows that training moved the filters far from their random initial values, so they are learned, not leftovers. Yet in the run stored here none of them is a plain local average of the spins. Each mixes positive and negative weights, i.e.&nbsp;it responds to local spin <em>patterns</em>. Whatever the network computes is spread over all the layers (the <em>systems reply</em> of Lecture 5). Individual filters are hard to read, and any physical interpretation has to be tested from outside, as in 7.1 and 7.2.</p>
-<strong>Take-home message.</strong> * The network’s output is strongly tied to the magnetisation — the order parameter we know from physics — although nobody told it about <span class="math inline">\(m\)</span>. The shuffle test shows to what extent it also uses spatial structure. * Even so, finding this out required <strong>us</strong>: we chose <span class="math inline">\(|m|\)</span> as the hypothesis, designed the shuffle test and interpreted the filters. The network itself gave a number, <span class="math inline">\(\bar T_c\)</span>, not an explanation. This is the point of the Chinese room — and of opening it (<em>interpretability</em>). * Exact understanding came from somewhere else: Onsager’s solution (Lecture 5).
+<p>The relative change of <span class="math inline">\(8.0\)</span> shows that training moved the filters far from their random initial values, so they are learned rather than left over. Yet in the run stored here none of them is a plain local average of the spins: each mixes positive and negative weights, i.e.&nbsp;responds to local spin <em>patterns</em>. Whatever the network computes is spread over all the layers (the <em>systems reply</em> of Lecture 5). Individual filters are hard to read, and any physical interpretation has to be tested from outside, as in 7.1 and 7.2.</p>
+The network’s output is thus strongly tied to the magnetisation — the order parameter we know from physics — although nobody told it about <span class="math inline">\(m\)</span>, and the shuffle test shows to what extent it also uses spatial structure. Even so, finding this out required <strong>us</strong>: we chose <span class="math inline">\(|m|\)</span> as the hypothesis, designed the shuffle test and interpreted the filters. The network itself gave a number, <span class="math inline">\(\bar T_c\)</span>, not an explanation. This is the point of the Chinese room — and of opening it (<em>interpretability</em>). Exact understanding came from elsewhere, from Onsager’s solution (Lecture 5).
 <hr>
 </section>
 </section>
