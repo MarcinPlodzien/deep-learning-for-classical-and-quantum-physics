@@ -933,13 +933,13 @@ crossing (30, 50):  U4(m) 2.2784   U4(PC1) 2.2773</code></pre>
 <pre><code>Yang: M(T = 1.7) = 0.9701</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>L = 20: train on 768 configs, final loss 0.0298;  T* = 2.308 +- 0.001,  width w = 0.215 +- 0.001   (26 s)</code></pre>
+<pre><code>L = 20: train on 768 configs, final loss 0.0298;  T* = 2.308 +- 0.001,  width w = 0.215 +- 0.001   (27 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>L = 30: train on 768 configs, final loss 0.0376;  T* = 2.277 +- 0.002,  width w = 0.151 +- 0.000   (51 s)</code></pre>
+<pre><code>L = 30: train on 768 configs, final loss 0.0376;  T* = 2.277 +- 0.002,  width w = 0.151 +- 0.000   (54 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>L = 50: train on 768 configs, final loss 0.0412;  T* = 2.264 +- 0.000,  width w = 0.102 +- 0.003   (85 s)</code></pre>
+<pre><code>L = 50: train on 768 configs, final loss 0.0412;  T* = 2.264 +- 0.000,  width w = 0.102 +- 0.003   (87 s)</code></pre>
 </div>
 </div>
 <p>The figure collects the result: the error curves for the three sizes (left), the centres <span class="math inline">\(T^\ast(L)\)</span> next to the susceptibility peaks <span class="math inline">\(T_c(L)\)</span> as functions of <span class="math inline">\(1/L\)</span> (middle), and the widths <span class="math inline">\(w(L)\)</span> on logarithmic axes (right).</p>
@@ -956,7 +956,7 @@ crossing (30, 50):  U4(m) 2.2784   U4(PC1) 2.2773</code></pre>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].axvspan(T_GRID.<span class="bu">min</span>(), T_TRAIN_MAX, color<span class="op">=</span>UJBlue, alpha<span class="op">=</span><span class="fl">0.08</span>)</span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].text(<span class="fl">1.55</span>, <span class="fl">0.9</span> <span class="op">*</span> ax[<span class="dv">0</span>].get_ylim()[<span class="dv">1</span>], <span class="st">"train"</span>, color<span class="op">=</span>UJBlue)</span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].axvline(TC, color<span class="op">=</span>UJGray, ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span> ax[<span class="dv">0</span>].set_xlabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax[<span class="dv">0</span>].set_ylabel(<span class="vs">r"mean error $\bar\varepsilon$"</span>)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, loc<span class="op">=</span><span class="st">"lower right"</span>, handlelength<span class="op">=</span><span class="fl">1.2</span>)</span>
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    invL <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> np.array(L_LIST)</span>
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    ts <span class="op">=</span> np.array([T_star[L].mean() <span class="cf">for</span> L <span class="kw">in</span> L_LIST])<span class="op">;</span> ts_err <span class="op">=</span> np.array([T_star[L].std() <span class="cf">for</span> L <span class="kw">in</span> L_LIST])</span>
@@ -1044,10 +1044,10 @@ susceptibility peaks extrapolated with T_c(L) = T_c + a/L:  2.269   (exact 2.269
 <pre><code>ordered, $T\leq1.7$             : T* = L=20: 2.308, L=30: 2.278, L=50: 2.264   (28 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>paramagnet, $T\geq3.0$          : T* = L=20: 2.279, L=30: 2.253, L=50: 2.197   (86 s)</code></pre>
+<pre><code>paramagnet, $T\geq3.0$          : T* = L=20: 2.279, L=30: 2.253, L=50: 2.197   (83 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>middle, $2.20\leq T\leq2.34$    : T* = L=20: 2.389, L=30: 2.363, L=50: 2.328   (159 s)</code></pre>
+<pre><code>middle, $2.20\leq T\leq2.34$    : T* = L=20: 2.389, L=30: 2.363, L=50: 2.328   (157 s)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="lab-019-ising-without-labels_files/figure-html/cell-12-output-4.png" class="img-fluid"></p>

@@ -756,7 +756,7 @@ PC6: uniform (0,0) 0.001  stripes (pi,0) 0.000  stripes (0,pi) 0.000</code></pre
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> cos_sub.<span class="bu">min</span>() <span class="op">&gt;</span> <span class="fl">0.9999</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>scikit-learn PCA of 127980 x 1024 snapshots: 9.4 s
+<pre><code>scikit-learn PCA of 127980 x 1024 snapshots: 6.3 s
 fraction of variance: JAX          [0.1659  0.0839  0.08216 0.00306 0.003   0.00281]
                       scikit-learn [0.1659  0.0839  0.08216 0.00306 0.003   0.00281]
 cosines of the principal angles between the two PC 1-3 subspaces: [1.0000007 1.0000006 1.0000002]
@@ -889,13 +889,13 @@ overlaps of the scikit-learn components with the patterns:
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"min/max over map </span><span class="sc">{</span>err<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.4f}</span><span class="ss">/</span><span class="sc">{</span>err<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.4f}</span><span class="ss">   (</span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>A: ferromagnet  : 12920 training snapshots, final loss 0.0009, mean error inside region 0.0006, min/max over map 0.0000/1.9888   (198 s)</code></pre>
+<pre><code>A: ferromagnet  : 12920 training snapshots, final loss 0.0009, mean error inside region 0.0006, min/max over map 0.0000/1.9888   (78 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>B: paramagnet   :  7480 training snapshots, final loss 0.9863, mean error inside region 0.9859, min/max over map 0.1785/1.0018   (107 s)</code></pre>
+<pre><code>B: paramagnet   :  7480 training snapshots, final loss 0.9863, mean error inside region 0.9859, min/max over map 0.1785/1.0018   (44 s)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>C: stripes      : 12920 training snapshots, final loss 0.0005, mean error inside region 0.0006, min/max over map 0.0000/2.0057   (126 s)</code></pre>
+<pre><code>C: stripes      : 12920 training snapshots, final loss 0.0005, mean error inside region 0.0006, min/max over map 0.0000/2.0057   (82 s)</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="8">
