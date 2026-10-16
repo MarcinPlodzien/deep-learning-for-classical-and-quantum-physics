@@ -889,16 +889,10 @@ L = 30: loaded (51, 200, 30, 30) in 0 s</code></pre>
 <span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>ax.text(T_conf <span class="op">+</span> <span class="fl">0.03</span>, <span class="fl">0.52</span>, <span class="ss">f"minimum at </span><span class="sc">{</span>T_conf<span class="sc">:.2f}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> ax.set_xlabel(<span class="st">"$T$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"confidence"</span>)</span>
 <span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">8</span>, loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
 <span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/gen_Ising_confidence_vs_T.png"</span>, dpi<span class="op">=</span><span class="dv">170</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)<span class="op">;</span> plt.show()</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(slide_L<span class="op">=</span>L, slide_T_conf<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(T_conf), <span class="dv">3</span>), slide_T_cross<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(T_cross), <span class="dv">3</span>))</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(NUMBERS)</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/numbers_ising2d.json"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    json.dump(NUMBERS, f, indent<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(slide_L<span class="op">=</span>L, slide_T_conf<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(T_conf), <span class="dv">3</span>), slide_T_cross<span class="op">=</span><span class="bu">round</span>(<span class="bu">float</span>(T_cross), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="ising-2d-monte-carlo-and-cnn_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'tc_conf': {'10': [2.267, 0.103], '20': [2.283, 0.024], '30': [2.283, 0.024], '40': [2.283, 0.024], '50': [2.283, 0.024]}, 'tc_cross': {'10': [2.281, 0.03], '20': [2.286, 0.03], '30': [2.293, 0.018], '40': [2.285, 0.027], '50': [2.285, 0.031]}, 'tc_cross_extrap': 2.29, 'slide_L': 50, 'slide_T_conf': 2.25, 'slide_T_cross': 2.241}</code></pre>
 </div>
 </div>
 <section id="exercises" class="level3">

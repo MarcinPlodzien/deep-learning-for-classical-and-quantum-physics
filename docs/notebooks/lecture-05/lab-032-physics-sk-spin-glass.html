@@ -2609,7 +2609,7 @@ g(T,N)=\frac12\left(3-\frac{[\langle q^4\rangle]}{[\langle q^2\rangle]^2}\right)
 <span id="cb81-45"><a href="#cb81-45" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">2</span>].set_title(<span class="st">"finite-size scaling"</span>)<span class="op">;</span> ax[<span class="dv">2</span>].legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb81-46"><a href="#cb81-46" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()<span class="op">;</span> savefig(fig, <span class="st">"gen_sk_binder.png"</span>)<span class="op">;</span> plt.show()</span>
 <span id="cb81-47"><a href="#cb81-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-48"><a href="#cb81-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Binder crossings (bootstrap mean ± std over disorder resamplings):"</span>)</span>
+<span id="cb81-48"><a href="#cb81-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Binder crossings (bootstrap median and 68</span><span class="sc">% i</span><span class="st">nterval over disorder resamplings):"</span>)</span>
 <span id="cb81-49"><a href="#cb81-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> N1, N2 <span class="kw">in</span> ((<span class="dv">32</span>, <span class="dv">64</span>), (<span class="dv">64</span>, <span class="dv">128</span>), (<span class="dv">32</span>, <span class="dv">128</span>)):</span>
 <span id="cb81-50"><a href="#cb81-50" aria-hidden="true" tabindex="-1"></a>    c0 <span class="op">=</span> crossing(T_GRID, binder(<span class="op">*</span>mom[N1]), binder(<span class="op">*</span>mom[N2]))</span>
 <span id="cb81-51"><a href="#cb81-51" aria-hidden="true" tabindex="-1"></a>    cb <span class="op">=</span> np.array([crossing(T_GRID, g_boot[N1][i], g_boot[N2][i]) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_boot)])</span>
@@ -2624,7 +2624,7 @@ g(T,N)=\frac12\left(3-\frac{[\langle q^4\rangle]}{[\langle q^2\rangle]^2}\right)
 <p><img src="lab-032-physics-sk-spin-glass_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Binder crossings (bootstrap mean ± std over disorder resamplings):
+<pre><code>Binder crossings (bootstrap median and 68% interval over disorder resamplings):
   N =  32 and  64:  T_cross = 0.870;  bootstrap median 0.867, 68% interval [0.765, 0.933], no crossing in 6 of 200 resamplings;   exact T_c = 1.0 J
   N =  64 and 128:  T_cross = 0.920;  bootstrap median 0.914, 68% interval [0.816, 0.999], no crossing in 4 of 200 resamplings;   exact T_c = 1.0 J
   N =  32 and 128:  T_cross = 0.894;  bootstrap median 0.885, 68% interval [0.848, 0.938], no crossing in 0 of 200 resamplings;   exact T_c = 1.0 J
