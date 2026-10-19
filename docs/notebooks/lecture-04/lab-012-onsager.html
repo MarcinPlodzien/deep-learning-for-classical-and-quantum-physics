@@ -607,8 +607,8 @@ Z(T) &amp;= \sum_{\mathbf s\in\{\pm1\}^N} e^{-\beta H(\mathbf s)} ,
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_sketch(fig, name, extra_dirs<span class="op">=</span>()):</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PNG copy for the lecture slides: white background, 300 dpi, included at its physical width</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"../beamer/figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"../beamer/figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        fig.savefig(os.path.join(d, name), dpi<span class="op">=</span><span class="dv">300</span>, facecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_spin(ax, x, y, s, r<span class="op">=</span><span class="fl">0.26</span>, sign<span class="op">=</span><span class="va">False</span>, alpha<span class="op">=</span><span class="fl">1.0</span>, fs<span class="op">=</span><span class="dv">10</span>, lw<span class="op">=</span><span class="fl">1.3</span>):</span>
@@ -682,7 +682,7 @@ Z(T) &amp;= \sum_{\mathbf s\in\{\pm1\}^N} e^{-\beta H(\mathbf s)} ,
 <span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> plt.rc_context(SKETCH_STYLE):</span>
 <span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> sketch_ising_model()</span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>save_sketch(fig, <span class="st">"sketch_ising_card.png"</span>, extra_dirs<span class="op">=</span>(<span class="st">"../../Lecture_5/beamer/figures"</span>,))</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>save_sketch(fig, <span class="st">"sketch_ising_card.png"</span>)</span>
 <span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
@@ -936,8 +936,8 @@ H = -\sum_{i=1}^N s_is_{i+1} - h\sum_{i=1}^N s_i ,\qquad K = \beta,\quad \tilde 
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_sketch(fig, name, extra_dirs<span class="op">=</span>()):</span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PNG copy for the lecture slides: white background, 300 dpi, included at its physical width</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"../beamer/figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"../beamer/figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        fig.savefig(os.path.join(d, name), dpi<span class="op">=</span><span class="dv">300</span>, facecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_spin(ax, x, y, s, r<span class="op">=</span><span class="fl">0.26</span>, sign<span class="op">=</span><span class="va">False</span>, alpha<span class="op">=</span><span class="fl">1.0</span>, fs<span class="op">=</span><span class="dv">10</span>, lw<span class="op">=</span><span class="fl">1.3</span>):</span>
@@ -1220,8 +1220,8 @@ Z &amp;= \sum_{\sigma_1,\dots,\sigma_{L'}}\mathsf V_{\sigma_1\sigma_2}\mathsf V_
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_sketch(fig, name, extra_dirs<span class="op">=</span>()):</span>
 <span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PNG copy for the lecture slides: white background, 300 dpi, included at its physical width</span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"../beamer/figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"../beamer/figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
 <span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>        fig.savefig(os.path.join(d, name), dpi<span class="op">=</span><span class="dv">300</span>, facecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_spin(ax, x, y, s, r<span class="op">=</span><span class="fl">0.26</span>, sign<span class="op">=</span><span class="va">False</span>, alpha<span class="op">=</span><span class="fl">1.0</span>, fs<span class="op">=</span><span class="dv">10</span>, lw<span class="op">=</span><span class="fl">1.3</span>):</span>
@@ -1537,8 +1537,8 @@ Z = 2e^{2NK}\sum_{\text{closed walls } W}x^{|W|} = 2e^{2NK}\big(1 + N x^4 + 2N x
 <span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_sketch(fig, name, extra_dirs<span class="op">=</span>()):</span>
 <span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PNG copy for the lecture slides: white background, 300 dpi, included at its physical width</span></span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"../beamer/figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"../beamer/figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
 <span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>        fig.savefig(os.path.join(d, name), dpi<span class="op">=</span><span class="dv">300</span>, facecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_spin(ax, x, y, s, r<span class="op">=</span><span class="fl">0.26</span>, sign<span class="op">=</span><span class="va">False</span>, alpha<span class="op">=</span><span class="fl">1.0</span>, fs<span class="op">=</span><span class="dv">10</span>, lw<span class="op">=</span><span class="fl">1.3</span>):</span>
@@ -1689,8 +1689,8 @@ t^6: 128 = 32 rectangles + 96 winding loops with one step aside (2 directions x 
 <span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_sketch(fig, name, extra_dirs<span class="op">=</span>()):</span>
 <span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PNG copy for the lecture slides: white background, 300 dpi, included at its physical width</span></span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"../beamer/figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"../beamer/figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
 <span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>        fig.savefig(os.path.join(d, name), dpi<span class="op">=</span><span class="dv">300</span>, facecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_spin(ax, x, y, s, r<span class="op">=</span><span class="fl">0.26</span>, sign<span class="op">=</span><span class="va">False</span>, alpha<span class="op">=</span><span class="fl">1.0</span>, fs<span class="op">=</span><span class="dv">10</span>, lw<span class="op">=</span><span class="fl">1.3</span>):</span>
@@ -2411,8 +2411,8 @@ exact amplitude: A = (2/pi)(2/T_c)^2 = 0.494539</code></pre>
 <span id="cb84-16"><a href="#cb84-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb84-17"><a href="#cb84-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_sketch(fig, name, extra_dirs<span class="op">=</span>()):</span>
 <span id="cb84-18"><a href="#cb84-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PNG copy for the lecture slides: white background, 300 dpi, included at its physical width</span></span>
-<span id="cb84-19"><a href="#cb84-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"../beamer/figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb84-20"><a href="#cb84-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"../beamer/figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
+<span id="cb84-19"><a href="#cb84-19" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"figures"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb84-20"><a href="#cb84-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> (<span class="st">"figures"</span>,) <span class="op">+</span> <span class="bu">tuple</span>(d <span class="cf">for</span> d <span class="kw">in</span> extra_dirs <span class="cf">if</span> os.path.isdir(d)):</span>
 <span id="cb84-21"><a href="#cb84-21" aria-hidden="true" tabindex="-1"></a>        fig.savefig(os.path.join(d, name), dpi<span class="op">=</span><span class="dv">300</span>, facecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb84-22"><a href="#cb84-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb84-23"><a href="#cb84-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sketch_ising_phase_diagram():</span>
@@ -2451,7 +2451,7 @@ exact amplitude: A = (2/pi)(2/T_c)^2 = 0.494539</code></pre>
 <span id="cb84-56"><a href="#cb84-56" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb84-57"><a href="#cb84-57" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> plt.rc_context(SKETCH_STYLE):</span>
 <span id="cb84-58"><a href="#cb84-58" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> sketch_ising_phase_diagram()</span>
-<span id="cb84-59"><a href="#cb84-59" aria-hidden="true" tabindex="-1"></a>save_sketch(fig, <span class="st">"sketch_ising_phases.png"</span>, extra_dirs<span class="op">=</span>(<span class="st">"../../Lecture_5/beamer/figures"</span>,))</span>
+<span id="cb84-59"><a href="#cb84-59" aria-hidden="true" tabindex="-1"></a>save_sketch(fig, <span class="st">"sketch_ising_phases.png"</span>)</span>
 <span id="cb84-60"><a href="#cb84-60" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">

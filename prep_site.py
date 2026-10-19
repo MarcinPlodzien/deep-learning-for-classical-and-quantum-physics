@@ -298,11 +298,11 @@ def drop_slide_export(cells):
 
 
 def copy_md_figures(md, src_nb, out_dir):
-    """Images referenced in markdown by a relative path (e.g. ../beamer/figures/x.png) are copied
-    next to the web notebook (figures/x.png) and the reference is rewritten."""
+    """Images referenced in markdown are copied next to the web notebook (figures/x.png)
+    and the reference is rewritten."""
     def fix(m):
         alt, path = m.group(1), m.group(2)
-        if path.startswith(("http", "data:", "figures/")):
+        if path.startswith(("http", "data:")):
             return m.group(0)
         full = os.path.normpath(os.path.join(os.path.dirname(src_nb), path))
         if not os.path.exists(full):
