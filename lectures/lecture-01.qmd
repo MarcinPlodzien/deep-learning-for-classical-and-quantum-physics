@@ -4,7 +4,7 @@ code-tools: false
 toc: false
 ---
 
-Big goals of quantum physics that machine learning can serve. The approaches to artificial intelligence, the hierarchy of AI, machine learning and deep learning, and the step from algorithm-driven to data-driven programming, with features extracted by hand or learned automatically. The anatomy of a neural network as a non-linear parametrised function: without a non-linearity depth does nothing, ReLU pieces build any curve, a steep sigmoid becomes a step, and the universal approximation theorem. Regression and classification, and the literature of the course.
+The lecture opens with goals of quantum physics that machine learning can serve and places deep learning within artificial intelligence, where programs are learned from data and the features that describe the data are learned by the network. We then introduce a neural network as a non-linear function with parameters. Without a non-linear activation, extra layers add no expressive power. With ReLU units a network approximates any continuous curve by straight pieces, and a steep sigmoid approximates a step, which leads to the universal approximation theorem. The lecture closes with regression and classification and with the literature of the course.
 
 ## Slides
 

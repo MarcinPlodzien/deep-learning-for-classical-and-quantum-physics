@@ -4,7 +4,7 @@ code-tools: false
 toc: false
 ---
 
-MNIST digit classification step by step: the feed-forward pass, and the parameter update of the output and the hidden layer derived by hand and checked against automatic differentiation. A single output trained with the mean squared error against ten outputs trained with the categorical cross-entropy.
+We work through the classification of MNIST digits in detail. After the feed-forward pass we derive the parameter updates of the output layer and of the hidden layer analytically and check them against automatic differentiation. We then train the same network with a single output and the mean squared error, and with ten outputs and the categorical cross-entropy, and compare the two.
 
 ## Slides
 
