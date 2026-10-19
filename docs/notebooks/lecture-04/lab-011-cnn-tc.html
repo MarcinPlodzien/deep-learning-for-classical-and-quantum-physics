@@ -548,7 +548,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Two further questions follow naturally. Since a finite lattice has no sharp transition, the estimate must depend on the lattice size, and we repeat the experiment for several sizes to see these <strong>finite-size effects</strong>. And since the network gives a number but no explanation, we finally <strong>open the Chinese room</strong> (Lecture 5) and ask what the network actually learned.</p>
 <p>The exact answer, for comparison, is <span class="math inline">\(T_c = 2/\ln(1+\sqrt2)\)</span> (Onsager 1944, <span class="math inline">\(J=k_B=1\)</span>).</p>
 <blockquote class="blockquote">
-<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em> (or open it from Google Drive). 2. Run cells one by one with <strong>Shift + Enter</strong>. Run them <em>in order</em> — later cells use variables defined earlier. 3. The required packages (<code>numpy</code>, <code>scipy</code>, <code>matplotlib</code>, <code>torch</code>) are pre-installed in Colab; no <code>pip install</code> required. 4. The notebook looks for the dataset <code>data/ising_Nx{L}_Ny{L}.npz</code> made by Lab 010. If it is not there, it generates it (this takes from seconds to about a minute, depending on <span class="math inline">\(L\)</span>). In Colab you can upload the file from Lab 010 into a folder <code>data/</code>, or just let the notebook generate it. 5. If the notebook state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
+<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em> (or open it from Google Drive). 2. Run cells one by one with <strong>Shift + Enter</strong>. Run them <em>in order</em> — later cells use variables defined earlier. 3. The required packages (<code>numpy</code>, <code>scipy</code>, <code>matplotlib</code>, <code>torch</code>) are pre-installed in Colab; no <code>pip install</code> required. 4. The notebook uses the dataset made by Lab 010. If it is not available, the notebook generates it (this takes from seconds to about a minute, depending on <span class="math inline">\(L\)</span>). 5. If the notebook state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
 </blockquote>
 <div class="cell" data-execution_count="1">
 <details open="">
@@ -610,7 +610,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="ss">f"data/ising_Nx</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">_Ny</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">.npz"</span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(path):</span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> np.load(path)</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"loaded </span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">: configs </span><span class="sc">{</span>d[<span class="st">'configs'</span>]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"loaded L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">: configs </span><span class="sc">{</span>d[<span class="st">'configs'</span>]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> d[<span class="st">"configs"</span>], d[<span class="st">"T"</span>]</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    temperatures <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">1.0</span>, <span class="fl">3.5</span> <span class="op">+</span> <span class="fl">1e-9</span>, <span class="fl">0.05</span>), <span class="dv">2</span>)</span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    n_chains <span class="op">=</span> <span class="dv">20</span> <span class="cf">if</span> L <span class="op">&lt;=</span> <span class="dv">20</span> <span class="cf">else</span> <span class="dv">10</span>                       <span class="co"># fewer, longer chains for large lattices (same 200 samples per T)</span></span>
@@ -619,14 +619,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                               n_equil<span class="op">=</span><span class="dv">1000</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> L <span class="op">*</span> L <span class="op">//</span> <span class="dv">4</span>, n_between<span class="op">=</span><span class="dv">20</span>, rng<span class="op">=</span>rng)</span>
 <span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"data"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    np.savez_compressed(path, configs<span class="op">=</span>configs, T<span class="op">=</span>temperatures, Nx<span class="op">=</span>L, Ny<span class="op">=</span>L)</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"generated </span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">: configs </span><span class="sc">{</span>configs<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"generated L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">: configs </span><span class="sc">{</span>configs<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> in </span><span class="sc">{</span>time<span class="sc">.</span>time() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
 <span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> configs, temperatures</span>
 <span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="dv">20</span></span>
 <span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>configs, temperatures <span class="op">=</span> load_or_generate(L, rng)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>loaded data/ising_Nx20_Ny20.npz: configs (51, 200, 20, 20)</code></pre>
+<pre><code>loaded L = 20: configs (51, 200, 20, 20)</code></pre>
 </div>
 </div>
 <hr>
@@ -875,13 +875,13 @@ In the shaded regions the network is, as trained, nearly certain. Between them i
 <span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>t2<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> +- </span><span class="sc">{</span>t2<span class="sc">.</span>std(ddof<span class="op">=</span><span class="dv">1</span>)<span class="sc">:.3f}</span><span class="ss">               </span><span class="sc">{</span>TC<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>loaded data/ising_Nx10_Ny10.npz: configs (51, 200, 10, 10)</code></pre>
+<pre><code>loaded L = 10: configs (51, 200, 10, 10)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>loaded data/ising_Nx20_Ny20.npz: configs (51, 200, 20, 20)</code></pre>
+<pre><code>loaded L = 20: configs (51, 200, 20, 20)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>loaded data/ising_Nx40_Ny40.npz: configs (51, 200, 40, 40)</code></pre>
+<pre><code>loaded L = 40: configs (51, 200, 40, 40)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3 trainings for each of 3 lattice sizes done in 38 s</code></pre>

@@ -574,7 +574,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We begin in Section 2 with the model itself: spins on links, plaquette variables, the energy, and a Monte Carlo sampler in JAX. Section 3 introduces the gauge symmetry, under which flipping all links at one site changes nothing physical, and derives its consequence, Elitzur’s theorem: every link has zero average. Section 4 solves the two-dimensional model exactly. The plaquettes turn out to be independent, <span class="math inline">\(\langle U_p\rangle=\tanh\beta J\)</span>, Wilson loops obey an area law and there is no phase transition at <span class="math inline">\(T&gt;0\)</span>; on the torus the ground states fall into topological sectors. In three dimensions, the subject of Section 5, a genuine confinement–deconfinement transition appears. Wegner’s duality to the 3D Ising model locates it exactly, and Monte Carlo simulations of plaquettes, their fluctuations, Wilson loops and Creutz ratios show it in the data. Section 6 draws the consequences of the gauge redundancy for data analysis: raw links carry no linear signal at all, while gauge-invariant features do. Along the way we save two Monte Carlo data sets for the anomaly-detection study later in Lecture 5.</p>
 <p>Every derivation is followed by a symbolic check in SymPy (a Python library for symbolic mathematics) and a numerical check (exact enumeration or Monte Carlo).</p>
 <blockquote class="blockquote">
-<p>The notebook runs in Google Colab: run the cells in order. JAX, SymPy, NumPy and Matplotlib are pre-installed in Colab, and the notebook runs on the CPU. The Monte Carlo data sets are written to <code>data/</code> and loaded from there if they already exist; generating them takes several minutes (the generating cells print their running times).</p>
+<p>The notebook runs in Google Colab: run the cells in order. JAX, SymPy, NumPy and Matplotlib are pre-installed in Colab, and the notebook runs on the CPU. The Monte Carlo data sets are saved once and loaded on later runs; generating them takes several minutes (the generating cells print their running times).</p>
 </blockquote>
 <div class="cell" data-execution_count="1">
 <details open="">
@@ -1393,7 +1393,7 @@ beta = 2.0:  &lt;U_p&gt; MC = 0.9902 +- 0.0006   exact 4x4 torus = 0.9902
 </div>
 </div>
 <p>The sampler reproduces the exact finite-torus values within its error bars (the largest difference, at <span class="math inline">\(\beta=0.3\)</span>, is <span class="math inline">\(0.0036\)</span>, or 1.5 error bars), and the gauge randomisation leaves every plaquette in place while removing the excess of positive links (link average <span class="math inline">\(+0.127\)</span> before, <span class="math inline">\(-0.016\)</span> after).</p>
-<p>The 2D data set is stored in <code>data/z2gauge_2d_L{L}.npz</code>, one file per lattice size, with the following keys.</p>
+<p>The 2D data set is stored with one file per lattice size and the following keys.</p>
 <table class="table">
 <colgroup>
 <col style="width: 33%">
@@ -1454,7 +1454,7 @@ beta = 2.0:  &lt;U_p&gt; MC = 0.9902 +- 0.0006   exact 4x4 torus = 0.9902
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">/z2gauge_</span><span class="sc">{</span>d<span class="sc">}</span><span class="ss">d_L</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">.npz"</span></span>
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(path):</span>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> <span class="bu">dict</span>(np.load(path))</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"loaded </span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">: links </span><span class="sc">{</span>ds[<span class="st">'links'</span>]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"loaded </span><span class="sc">{</span>d<span class="sc">}</span><span class="ss">D, L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">: links </span><span class="sc">{</span>ds[<span class="st">'links'</span>]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ds</span>
 <span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    t0 <span class="op">=</span> time.perf_counter()</span>
 <span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    links <span class="op">=</span> run_gauge(d, L, betas, n_rep, n_equil, n_samples, n_between, seed)</span>
@@ -1463,7 +1463,7 @@ beta = 2.0:  &lt;U_p&gt; MC = 0.9902 +- 0.0006   exact 4x4 torus = 0.9902
 <span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>              chain<span class="op">=</span>np.repeat(np.arange(n_rep), n_samples), L<span class="op">=</span>L, d<span class="op">=</span>d, n_rep<span class="op">=</span>n_rep, n_equil<span class="op">=</span>n_equil,</span>
 <span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>              n_between<span class="op">=</span>n_between, seed<span class="op">=</span>seed, sampler<span class="op">=</span>SAMPLER, layout<span class="op">=</span>LAYOUT)</span>
 <span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>    np.savez_compressed(path, <span class="op">**</span>ds)</span>
-<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"generated and saved </span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">: links </span><span class="sc">{</span>links<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s, "</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"generated and saved </span><span class="sc">{</span>d<span class="sc">}</span><span class="ss">D, L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">: links </span><span class="sc">{</span>links<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s, "</span></span>
 <span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>getsize(path) <span class="op">/</span> <span class="dv">2</span><span class="op">**</span><span class="dv">20</span><span class="sc">:.1f}</span><span class="ss"> MB"</span>)</span>
 <span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ds</span>
 <span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a></span>
@@ -1471,10 +1471,10 @@ beta = 2.0:  &lt;U_p&gt; MC = 0.9902 +- 0.0006   exact 4x4 torus = 0.9902
 <span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>ds2 <span class="op">=</span> {L: make_dataset(<span class="dv">2</span>, L, BETAS_2D, n_rep<span class="op">=</span><span class="dv">16</span>, n_equil<span class="op">=</span><span class="dv">500</span>, n_samples<span class="op">=</span><span class="dv">32</span>, n_between<span class="op">=</span><span class="dv">4</span>, seed<span class="op">=</span><span class="dv">2000</span> <span class="op">+</span> L) <span class="cf">for</span> L <span class="kw">in</span> (<span class="dv">16</span>, <span class="dv">32</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>generated and saved data/z2gauge_2d_L16.npz: links (24, 512, 2, 16, 16), 10.3 s, 1.0 MB</code></pre>
+<pre><code>generated and saved 2D, L = 16: links (24, 512, 2, 16, 16), 10.3 s, 1.0 MB</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>generated and saved data/z2gauge_2d_L32.npz: links (24, 512, 2, 32, 32), 25.9 s, 3.8 MB</code></pre>
+<pre><code>generated and saved 2D, L = 32: links (24, 512, 2, 32, 32), 25.9 s, 3.8 MB</code></pre>
 </div>
 </div>
 <p>From each configuration we compute the plaquette average <span class="math inline">\(\bar U=\frac1{N_p}\sum_pU_p\)</span>. Its mean gives <span class="math inline">\(\langle U_p\rangle=\langle\bar U\rangle\)</span>, and its fluctuations give the specific heat, <span class="math inline">\(c=\beta^2N_p\big(\langle\bar U^2\rangle-\langle\bar U\rangle^2\big)\)</span>. Error bars are standard errors of the mean over the independent chains.</p>
@@ -2073,7 +2073,7 @@ beta_c(gauge) = -1/2 ln tanh K_c = 0.761413292 +- 1e-08</code></pre>
 <section id="the-3d-data-sets" class="level3">
 <h3 class="anchored" data-anchor-id="the-3d-data-sets">5.4 The 3D data sets</h3>
 <p>The 3D simulations use lattices <span class="math inline">\(L=6,8,10\)</span> and couplings from <span class="math inline">\(0.3\)</span> to <span class="math inline">\(1.2\)</span> in steps of <span class="math inline">\(0.05\)</span>, refined to steps of <span class="math inline">\(0.01\)</span> in <span class="math inline">\([0.70,0.82]\)</span> around <span class="math inline">\(\beta_c\)</span>. Chains start cold (<span class="math inline">\(\sigma\equiv+1\)</span>), a configuration without flux loops; the cell below checks, deep in the deconfined phase, that a random (hot) start gives the same plaquette average after equilibration. The statistics are modest: independent chains with local updates near a continuous transition suffer from critical slowing down (Lab 018, Section 2.2), so the error bars near <span class="math inline">\(\beta_c\)</span> are the largest.</p>
-<p>The data are saved in <code>data/z2gauge_3d_L{L}.npz</code> with the same keys as in 2D, and <code>links</code> of shape <code>(n_beta, n_samples, 3, L, L, L)</code>: <code>links[i, k, mu, x, y, z]</code> <span class="math inline">\(=\sigma_\mu(x,y,z)\)</span>, <span class="math inline">\(\mu=0,1,2\)</span> the directions <span class="math inline">\(x,y,z\)</span>.</p>
+<p>The 3D data set has the same keys as in 2D, and <code>links</code> of shape <code>(n_beta, n_samples, 3, L, L, L)</code>: <code>links[i, k, mu, x, y, z]</code> <span class="math inline">\(=\sigma_\mu(x,y,z)\)</span>, <span class="math inline">\(\mu=0,1,2\)</span> the directions <span class="math inline">\(x,y,z\)</span>.</p>
 <div class="cell" data-execution_count="24">
 <details open="">
 <summary>Code</summary>
@@ -2118,13 +2118,13 @@ beta_c(gauge) = -1/2 ln tanh K_c = 0.761413292 +- 1e-08</code></pre>
 beta_c from duality = 0.761413</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>generated and saved data/z2gauge_3d_L6.npz: links (29, 1024, 3, 6, 6, 6), 33.1 s, 2.9 MB</code></pre>
+<pre><code>generated and saved 3D, L = 6: links (29, 1024, 3, 6, 6, 6), 33.1 s, 2.9 MB</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>generated and saved data/z2gauge_3d_L8.npz: links (29, 1024, 3, 8, 8, 8), 47.1 s, 6.9 MB</code></pre>
+<pre><code>generated and saved 3D, L = 8: links (29, 1024, 3, 8, 8, 8), 47.1 s, 6.9 MB</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>generated and saved data/z2gauge_3d_L10.npz: links (29, 1024, 3, 10, 10, 10), 124.1 s, 13.5 MB
+<pre><code>generated and saved 3D, L = 10: links (29, 1024, 3, 10, 10, 10), 124.1 s, 13.5 MB
 3D data sets ready: 204.4 s</code></pre>
 </div>
 </div>
@@ -2522,7 +2522,7 @@ beta_c from duality = 0.761413</code></pre>
 <span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir(DATA)):</span>
 <span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> f.startswith(<span class="st">"z2gauge"</span>):</span>
 <span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> np.load(<span class="ss">f"</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>f<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>DATA<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>f<span class="sc">}</span><span class="ss">: links </span><span class="sc">{</span>z[<span class="st">'links'</span>]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>z[<span class="st">'links'</span>]<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">, beta in [</span><span class="sc">{</span>z[<span class="st">'beta'</span>]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>z[<span class="st">'beta'</span>]<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.2f}</span><span class="ss">] (</span><span class="sc">{</span><span class="bu">len</span>(z[<span class="st">'beta'</span>])<span class="sc">}</span><span class="ss"> values), "</span></span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>f<span class="sc">.</span>removesuffix(<span class="st">'.npz'</span>)<span class="sc">}</span><span class="ss">: links </span><span class="sc">{</span>z[<span class="st">'links'</span>]<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>z[<span class="st">'links'</span>]<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">, beta in [</span><span class="sc">{</span>z[<span class="st">'beta'</span>]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>z[<span class="st">'beta'</span>]<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.2f}</span><span class="ss">] (</span><span class="sc">{</span><span class="bu">len</span>(z[<span class="st">'beta'</span>])<span class="sc">}</span><span class="ss"> values), "</span></span>
 <span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"n_rep = </span><span class="sc">{</span><span class="bu">int</span>(z[<span class="st">'n_rep'</span>])<span class="sc">}</span><span class="ss">, n_equil = </span><span class="sc">{</span><span class="bu">int</span>(z[<span class="st">'n_equil'</span>])<span class="sc">}</span><span class="ss">, n_between = </span><span class="sc">{</span><span class="bu">int</span>(z[<span class="st">'n_between'</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"total notebook running time: </span><span class="sc">{</span>(time.perf_counter() <span class="op">-</span> T_NOTEBOOK) <span class="op">/</span> <span class="dv">60</span><span class="sc">:.1f}</span><span class="ss"> min"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -2531,19 +2531,19 @@ beta_c from duality = 0.761413</code></pre>
 L =  6: &lt;U_p&gt; at the coupling closest to beta_c (0.76) = 0.9519
 L =  8: &lt;U_p&gt; at the coupling closest to beta_c (0.76) = 0.9523
 L = 10: &lt;U_p&gt; at the coupling closest to beta_c (0.76) = 0.9495
-data/z2gauge_2d_L16.npz: links (24, 512, 2, 16, 16) int8, beta in [0.10, 2.40] (24 values), n_rep = 16, n_equil = 500, n_between = 4</code></pre>
+z2gauge_2d_L16: links (24, 512, 2, 16, 16) int8, beta in [0.10, 2.40] (24 values), n_rep = 16, n_equil = 500, n_between = 4</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>data/z2gauge_2d_L32.npz: links (24, 512, 2, 32, 32) int8, beta in [0.10, 2.40] (24 values), n_rep = 16, n_equil = 500, n_between = 4</code></pre>
+<pre><code>z2gauge_2d_L32: links (24, 512, 2, 32, 32) int8, beta in [0.10, 2.40] (24 values), n_rep = 16, n_equil = 500, n_between = 4</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>data/z2gauge_3d_L10.npz: links (29, 1024, 3, 10, 10, 10) int8, beta in [0.30, 1.20] (29 values), n_rep = 16, n_equil = 600, n_between = 4</code></pre>
+<pre><code>z2gauge_3d_L10: links (29, 1024, 3, 10, 10, 10) int8, beta in [0.30, 1.20] (29 values), n_rep = 16, n_equil = 600, n_between = 4</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>data/z2gauge_3d_L6.npz: links (29, 1024, 3, 6, 6, 6) int8, beta in [0.30, 1.20] (29 values), n_rep = 16, n_equil = 600, n_between = 4</code></pre>
+<pre><code>z2gauge_3d_L6: links (29, 1024, 3, 6, 6, 6) int8, beta in [0.30, 1.20] (29 values), n_rep = 16, n_equil = 600, n_between = 4</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>data/z2gauge_3d_L8.npz: links (29, 1024, 3, 8, 8, 8) int8, beta in [0.30, 1.20] (29 values), n_rep = 16, n_equil = 600, n_between = 4
+<pre><code>z2gauge_3d_L8: links (29, 1024, 3, 8, 8, 8) int8, beta in [0.30, 1.20] (29 values), n_rep = 16, n_equil = 600, n_between = 4
 total notebook running time: 7.2 min</code></pre>
 </div>
 </div>

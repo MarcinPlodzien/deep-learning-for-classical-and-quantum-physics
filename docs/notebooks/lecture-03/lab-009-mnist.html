@@ -586,7 +586,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Both networks therefore share the hidden layer (about <span class="math inline">\(16\,500\)</span> parameters), the data, the optimiser and the number of epochs; they differ only in the output layer and the <strong>loss function</strong>. This difference alone decides the outcome. The single-output regression recognises about <span class="math inline">\(65\%\)</span> of the test digits, the ten-output cross-entropy network about <span class="math inline">\(95\%\)</span> (the chapter reports <span class="math inline">\(56\%\)</span> and <span class="math inline">\(95\%\)</span>). The gain comes from the output layer and the loss together, and Exercise 2 separates the two ingredients: ten sigmoid outputs trained with the MSE already reach about <span class="math inline">\(94\%\)</span>, so the ten outputs account for most of it.</p>
 <p>Every stage of the pipeline is visible in the code, with nothing hidden in a library call. We download the <strong>original MNIST files</strong> and decode their binary format with NumPy instead of <code>torchvision.datasets</code>. After a look at the data we <strong>flatten</strong> and <strong>standardise</strong> the images and <strong>split</strong> them into training, validation and test sets. We then cut the training set into <strong>mini-batches</strong> with a few lines of our own code and see that PyTorch’s <code>Dataset</code> and <code>DataLoader</code> do exactly the same. Complete <strong>training loops</strong> record the learning curves, both models are evaluated and compared with <strong>confusion matrices</strong> (Box 2.11), and five exercises test the conclusions. The whole notebook runs on a CPU (central processing unit) in a few minutes.</p>
 <blockquote class="blockquote">
-<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em> (or open it from Google Drive). 2. Run cells one by one with <strong>Shift + Enter</strong>. Run them <em>in order</em> — later cells use variables defined earlier. 3. The required packages (<code>numpy</code>, <code>matplotlib</code>, <code>torch</code>) are pre-installed in Colab; no <code>pip install</code> required. 4. The data (about 11 MB) are downloaded once into the folder <code>data/MNIST_raw</code> in the current working directory (in Colab: <code>/content</code>, which is cleared when the runtime is recycled). 5. If the notebook state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
+<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> → <em>File → Upload notebook</em> (or open it from Google Drive). 2. Run cells one by one with <strong>Shift + Enter</strong>. Run them <em>in order</em> — later cells use variables defined earlier. 3. The required packages (<code>numpy</code>, <code>matplotlib</code>, <code>torch</code>) are pre-installed in Colab; no <code>pip install</code> required. 4. The data (about 11 MB) are downloaded at the first run (in Colab again after the runtime is recycled). 5. If the notebook state becomes inconsistent: <em>Runtime → Restart session</em> and run from the top.</p>
 </blockquote>
 <div class="cell" data-execution_count="1">
 <details open="">
@@ -624,7 +624,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         <span class="st">"test_labels"</span>:  <span class="st">"t10k-labels-idx1-ubyte.gz"</span>}</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download(filename):</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Download one MNIST file into DATA_DIR (only if it is not there yet) and return its path.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Download one MNIST file (only if it is not there yet) and return its path.</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> os.path.join(DATA_DIR, filename)</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(path):</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> path</span>
@@ -641,13 +641,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> {key: download(name) <span class="cf">for</span> key, name <span class="kw">in</span> FILES.items()}</span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, path <span class="kw">in</span> paths.items():</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>key<span class="sc">:13s}</span><span class="ss"> </span><span class="sc">{</span>path<span class="sc">:45s}</span><span class="ss"> </span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>getsize(path) <span class="op">/</span> <span class="fl">1e6</span><span class="sc">:5.2f}</span><span class="ss"> MB"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>key<span class="sc">:13s}</span><span class="ss"> </span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>getsize(path) <span class="op">/</span> <span class="fl">1e6</span><span class="sc">:5.2f}</span><span class="ss"> MB"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>train_images  data/MNIST_raw/train-images-idx3-ubyte.gz      9.91 MB
-train_labels  data/MNIST_raw/train-labels-idx1-ubyte.gz      0.03 MB
-test_images   data/MNIST_raw/t10k-images-idx3-ubyte.gz       1.65 MB
-test_labels   data/MNIST_raw/t10k-labels-idx1-ubyte.gz       0.00 MB</code></pre>
+<pre><code>train_images   9.91 MB
+train_labels   0.03 MB
+test_images    1.65 MB
+test_labels    0.00 MB</code></pre>
 </div>
 </div>
 </section>

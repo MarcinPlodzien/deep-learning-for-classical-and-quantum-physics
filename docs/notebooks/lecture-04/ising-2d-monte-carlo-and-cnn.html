@@ -540,7 +540,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="the-2d-ising-model-and-a-cnn" class="level1">
 <h1>The 2D Ising model and a CNN</h1>
-<p>This notebook gathers everything the lecture shows about the Ising model in a form that runs on a laptop CPU. We first set up the model and a Metropolis sampler implemented in JAX, using <code>jit</code> for compilation, <code>vmap</code> for many chains in parallel and <code>lax.scan</code> for the loop over sweeps. With it we generate datasets of configurations for <span class="math inline">\(L = 10, 20, 30, 40, 50\)</span>, saved to <code>data/ising_L{L}.npz</code>, and compare their magnetisation and energy with Onsager’s exact results. We then draw the pictures used in the lecture — a 1D chain, snapshots across <span class="math inline">\(T_c\)</span>, the dataset — and finally train a convolutional neural network (CNN) only far from the transition, read off its confidence at every temperature, and follow how the resulting estimate of <span class="math inline">\(T_c\)</span> depends on <span class="math inline">\(L\)</span>.</p>
+<p>This notebook gathers everything the lecture shows about the Ising model in a form that runs on a laptop CPU. We first set up the model and a Metropolis sampler implemented in JAX, using <code>jit</code> for compilation, <code>vmap</code> for many chains in parallel and <code>lax.scan</code> for the loop over sweeps. With it we generate datasets of configurations for <span class="math inline">\(L = 10, 20, 30, 40, 50\)</span> and compare their magnetisation and energy with Onsager’s exact results. We then draw the pictures used in the lecture — a 1D chain, snapshots across <span class="math inline">\(T_c\)</span>, the dataset — and finally train a convolutional neural network (CNN) only far from the transition, read off its confidence at every temperature, and follow how the resulting estimate of <span class="math inline">\(T_c\)</span> depends on <span class="math inline">\(L\)</span>.</p>
 <div class="cell" data-execution_count="1">
 <details open="">
 <summary>Code</summary>
@@ -623,7 +623,7 @@ H(\mathbf s) = -J\sum_{\langle i,j\rangle} s_is_j,\qquad p(\mathbf s)=\frac{e^{-
 <li><code>T</code>: the temperatures (ascending);</li>
 <li>the generation settings, so that every file documents itself.</li>
 </ul>
-<p>Files already present in <code>data/</code> are loaded; the others are generated, which takes several minutes for the largest lattices.</p>
+<p>Data sets that already exist are loaded; the others are generated, which takes several minutes for the largest lattices.</p>
 <div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>

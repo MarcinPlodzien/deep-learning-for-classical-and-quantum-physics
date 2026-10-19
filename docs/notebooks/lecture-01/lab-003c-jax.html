@@ -1610,7 +1610,7 @@ trainable parameters: 33 of 1153</code></pre>
 </section>
 <section id="working-with-the-layers-of-a-model" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-the-layers-of-a-model">8.4 Working with the layers of a model</h3>
-<p>A trained network is an object that can be inspected and modified: we can list the layers, read and overwrite weights, replace or insert layers, separate the architecture from the numbers, save and restore. Below are the basic operations on the MLP trained above. <code>Lab_003b_Trained_models_toolbox_JAX.ipynb</code> (same folder) applies them in full to a trained convolutional network: kernels and feature maps, model surgery, transfer learning.</p>
+<p>A trained network is an object that can be inspected and modified: we can list the layers, read and overwrite weights, replace or insert layers, separate the architecture from the numbers, save and restore. Below are the basic operations on the MLP trained above. <code>Lab_003b_Trained_models_toolbox_JAX.ipynb</code> applies them in full to a trained convolutional network: kernels and feature maps, model surgery, transfer learning.</p>
 <p>We start by walking the module tree. <code>nnx.iter_modules(model)</code> yields <code>(path, module)</code> for every submodule; <code>nnx.state(model, nnx.Param)</code> returns the parameters as a nested state, which <code>nnx.to_pure_dict</code> turns into a plain dictionary of arrays.</p>
 <div class="cell" data-execution_count="26">
 <details open="">
@@ -1675,7 +1675,7 @@ max |deeper - original| on the grid: 0.0</code></pre>
 </div>
 </div>
 <p>The architecture and the numbers of a model can be separated with <code>nnx.split</code> and <code>nnx.merge</code>. <code>nnx.split(model)</code> returns a <code>GraphDef</code> (the architecture: which layers, how they are connected, no arrays) and a <code>State</code> (all arrays, a pytree). <code>nnx.merge(graphdef, state)</code> builds a model again. This is how <code>nnx.jit</code> passes modules through <code>jax.jit</code>, and how parameters are saved: only the state is written to disk; the architecture is the Python class.</p>
-<p>Below the parameters are saved as a <code>.npz</code> file in a temporary folder, loaded into a <strong>freshly initialised</strong> model (with different random weights), and the predictions are compared. Lab 003b shows checkpointing with Orbax, the library used for large models.</p>
+<p>Below the parameters are saved as a <code>.npz</code> file, loaded into a <strong>freshly initialised</strong> model (with different random weights), and the predictions are compared. Lab 003b shows checkpointing with Orbax, the library used for large models.</p>
 <div class="cell" data-execution_count="29">
 <details open="">
 <summary>Code</summary>
