@@ -32,7 +32,7 @@ COURSE = os.path.dirname(HERE)
 REPO = "MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"
 
 # lectures that are published
-READY = {1, 2, 3, 4, 5, 6}
+READY = {1, 2, 3, 4, 5, 6, 7, 8}
 
 # Each lecture: deck (kind, path relative to the course folder; None = no slides on
 # the site), optionally last_frame (publish the deck only up to the last page of the
@@ -124,6 +124,31 @@ LECTURES = {
             ("Lecture_6/Notebooks/Lab_027_Galaxy_morphology_beta_VAE.ipynb", "lab-027-galaxy-morphology", "Lab 027: Galaxy morphology with a β-VAE", "Galaxy10 DECaLS images in PyTorch: latent coordinates against measured size, brightness and shape, and counterfactual images for a morphology classifier."),
         ],
     ),
+    7: dict(
+        deck=("beamer", "Lecture_7/beamer/main.tex"),
+        title="Time Series: Characterisation and Forecasting",
+        ship_data=True,   # data files are published next to the notebooks (data/), with a download cell for Colab
+        summary="A forecast maps the past of a signal to a value at a chosen horizon, and we score it with the normalised mean-square error and with the capacity, the squared correlation between forecast and target. Constant, periodic and quasi-periodic signals are trivial to forecast. Chaotic signals come from known deterministic equations, yet a small initial error grows exponentially at the rate of the Lyapunov exponent, which sets the prediction horizon. Stochastic signals contain a new random part at every step. We characterise signals with the autocorrelation function, the power spectrum, delay vectors after Takens, the Lyapunov exponents and the Kaplan–Yorke dimension, and apply these tools to the Lorenz-63 model, the Mackey–Glass delay equation at three delays and the Santa Fe laser record. We then forecast them with the linear models AR, MA, ARMA and ARIMA and with the nonlinear vector autoregression (NVAR), all written as linear combinations of features of the past, and compare the models by their one-step forecasts and their capacities.",
+        table_note="Labs 033–034: signal characterisation, delay embedding, AR, MA, ARMA, ARIMA and NVAR forecasts",
+        notebooks=[
+            ("Lecture_7/Notebooks/Lab_033_Signal_characterisation.ipynb", "lab-033-signal-characterisation", "Lab 033: Signal characterisation", "Lorenz, Mackey–Glass and Santa Fe signals, autocorrelation, power spectra, surrogate data tests, delay embedding, Lyapunov exponents and the Kaplan–Yorke dimension."),
+            ("Lecture_7/Notebooks/Lab_034_Forecasting_with_linear_models_and_NVAR.ipynb", "lab-034-linear-models-nvar", "Lab 034: Forecasting with linear models and NVAR", "Scores and baselines, AR, MA, ARMA and ARIMA models, and the nonlinear vector autoregression in JAX, scikit-learn and ReservoirPy."),
+        ],
+    ),
+    8: dict(
+        deck=("beamer", "Lecture_8/beamer/main.tex"),
+        title="Koopman Operator, Recurrent Networks and Reservoir Computing",
+        ship_data=True,   # data files are published next to the notebooks (data/), with a download cell for Colab
+        media=["Lecture_8/beamer/figures/nakajima2015_movieS1.mp4"],   # videos linked from the slides, copied to slides/media
+        summary="The lecture opens with the Koopman operator, which evolves functions of the state linearly even when the dynamics is nonlinear. It explains why a linear readout on good features can forecast nonlinear dynamics, why delays and their products (AR and NVAR) work for periodic signals, and why no finite set of features is exact for chaos. Networks then produce the features. A recurrent network carries a state that summarises the past of the signal. We define the recurrent neural network (RNN), train it by backpropagation through time and discuss why its gradients vanish or explode. The gated cells LSTM and GRU keep information over longer times, and we write each of them as equations and as a drawing. Reservoir computing trains only the linear readout of a fixed random network. We introduce the echo state network, the echo state property, the memory capacity and the NARMA benchmark, and discuss physical reservoirs such as the soft silicone arm of Nakajima et al. All models are compared with the linear models and NVAR of Lecture 7 on the same signals. Two exercises apply the full analysis and forecasting pipeline to the Rössler system and superimposed oscillators, and to daily returns of the S&P 500 index.",
+        table_note="Labs 035–036 and Exercises 01–02: the Koopman operator, RNN, LSTM, GRU and echo state networks; Rössler, oscillators and stock market returns",
+        notebooks=[
+            ("Lecture_8/Notebooks/Lab_035_Lifting_and_the_Koopman_operator.ipynb", "lab-035-koopman", "Lab 035: Lifting and the Koopman operator", "Lifted observables, dynamic mode decomposition and its extended and delay versions on the example signals."),
+            ("Lecture_8/Notebooks/Lab_036_Recurrent_neural_networks.ipynb", "lab-036-recurrent-networks", "Lab 036: Recurrent neural networks", "MLP, RNN, LSTM and GRU trained in JAX and Flax, the echo state network in JAX and ReservoirPy, the echo state property, memory capacity, NARMA and the comparison on all signals."),
+            ("Lecture_8/Exercises/Exercise_01_Rossler_and_superimposed_oscillators_tasks.ipynb", "exercise-01-rossler-oscillators", "Exercise 01: Rössler system and superimposed oscillators", "Characterise and forecast the Rössler signal and a sum of sine waves with the methods of Lectures 7 and 8."),
+            ("Lecture_8/Exercises/Exercise_02_Stock_market_returns_tasks.ipynb", "exercise-02-stock-market-returns", "Exercise 02: Stock market returns", "The same analysis on daily returns of the S&P 500 index, with the baselines that every forecast must beat."),
+        ],
+    ),
 }
 
 # the Resources page: the literature tiles (\restile calls) of the starter deck,
@@ -210,6 +235,14 @@ def cut_after_frame(pdf, title, tmp):
 
 def build_slides():
     out = os.path.join(HERE, "slides"); os.makedirs(out, exist_ok=True)
+    media = os.path.join(out, "media")
+    if os.path.isdir(media):
+        shutil.rmtree(media)
+    for lec in published():
+        for rel in LECTURES[lec].get("media", []):
+            os.makedirs(media, exist_ok=True)
+            shutil.copyfile(os.path.join(COURSE, rel), os.path.join(media, os.path.basename(rel)))
+            print(f"media   lecture {lec}: slides/media/{os.path.basename(rel)}")
     for old in glob.glob(os.path.join(out, "lecture-*.pdf")):
         n = int(re.search(r"lecture-(\d+)", old).group(1))
         if n not in READY or not LECTURES.get(n, {}).get("deck"):
@@ -313,6 +346,40 @@ def copy_md_figures(md, src_nb, out_dir):
     return re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)", fix, md)
 
 
+def data_files(nb, src):
+    """Data files data/<name> that the notebook uses and that exist next to the source notebook."""
+    text = "\n".join(c.source for c in nb.cells)
+    names = sorted(set(re.findall(r"(?<![\w.-])([\w.-]+\.(?:txt|csv|npz|npy))\b", text)))
+    return [n for n in names if os.path.exists(os.path.join(os.path.dirname(src), "data", n))]
+
+
+def with_data(nb, src, out_dir, rel):
+    """Copy the data files next to the web notebook and add a first code cell that downloads
+    them from the course repository when the notebook runs elsewhere (Colab)."""
+    names = data_files(nb, src)
+    if not names:
+        return
+    os.makedirs(os.path.join(out_dir, "data"), exist_ok=True)
+    for n in names:
+        shutil.copyfile(os.path.join(os.path.dirname(src), "data", n), os.path.join(out_dir, "data", n))
+    base = f"https://raw.githubusercontent.com/{REPO}/main/{os.path.dirname(rel)}/data"
+    cell = nbformat.v4.new_code_cell(
+        "# data files of this notebook, downloaded from the course repository if they are not in ./data\n"
+        "import os, urllib.request\n"
+        "os.makedirs(\"data\", exist_ok=True)\n"
+        f"for name in {names!r}:\n"
+        "    if not os.path.exists(f\"data/{name}\"):\n"
+        f"        urllib.request.urlretrieve(f\"{base}/{{name}}\", f\"data/{{name}}\")")
+    cell.id = "web-data"
+    for c in nb.cells:
+        if c.cell_type == "markdown":
+            c.source = re.sub(r"(?m)^> (\d+)\. Upload [^\n]*`(?:data/)?[\w.-]+\.txt`[^\n]*next to the notebook\.",
+                              r"> \1. The first code cell downloads the data file into a folder `data` next to the notebook.",
+                              c.source)
+    first = next(i for i, c in enumerate(nb.cells) if c.cell_type == "code")
+    nb.cells.insert(first, cell)
+
+
 def build_notebooks():
     dst = os.path.join(HERE, "notebooks")
     if os.path.isdir(dst):
@@ -330,6 +397,8 @@ def build_notebooks():
                     c.source = re.sub(r"(?m)^\s*---\s*$", "<hr/>", c.source)
                 elif c.cell_type == "code":
                     c.source = standalone_paths(c.source)
+            if LECTURES[lec].get("ship_data"):
+                with_data(nb, src, os.path.join(HERE, os.path.dirname(rel)), rel)
             safe = title.replace("'", "''").replace("T_c", "Tc")
             front = nbformat.v4.new_raw_cell(f"---\ntitle: '{safe}'\n---")
             badge = nbformat.v4.new_markdown_cell(

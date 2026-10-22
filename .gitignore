@@ -8,6 +8,9 @@ __pycache__/
 # figures and data written when notebooks are run locally
 notebooks/**/figures/
 notebooks/**/data/
+# the small data files of Lectures 7 and 8 are published (the notebooks download them in Colab)
+!notebooks/lecture-07/data/
+!notebooks/lecture-08/data/
 notebooks/**/results/
 # NOTE: docs/ is intentionally committed (GitHub Pages serves it).
 

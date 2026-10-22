@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Exercise 01: Rössler system and superimposed oscillators</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" rel="next">
+<link href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-07.html">
+ <span class="dropdown-text">7 · Time Series: Characterisation and Forecasting</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-08.html">
+ <span class="dropdown-text">8 · Koopman Operator, Recurrent Networks and Reservoir Computing</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Exercise 01: Rössler system and superimposed oscillators</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-021-xy-without-labels.html" class="sidebar-item-text sidebar-link">Lab 021: The 2D XY model without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-022-gauge-without-labels.html" class="sidebar-item-text sidebar-link">Lab 022: Ising gauge theory without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-023-sk-without-labels.html" class="sidebar-item-text sidebar-link">Lab 023: The SK spin glass without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-030-physics-2d-xy.html" class="sidebar-item-text sidebar-link">Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-07.html" class="sidebar-item-text sidebar-link">7 · Time Series: Characterisation and Forecasting</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-033-signal-characterisation.html" class="sidebar-item-text sidebar-link">Lab 033: Signal characterisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-034-linear-models-nvar.html" class="sidebar-item-text sidebar-link">Lab 034: Forecasting with linear models and NVAR</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-08.html" class="sidebar-item-text sidebar-link">8 · Koopman Operator, Recurrent Networks and Reservoir Computing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-035-koopman.html" class="sidebar-item-text sidebar-link">Lab 035: Lifting and the Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="sidebar-item-text sidebar-link">Lab 036: Recurrent neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-01-rossler-oscillators.html" class="sidebar-item-text sidebar-link active">Exercise 01: Rössler system and superimposed oscillators</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="sidebar-item-text sidebar-link">Exercise 02: Stock market returns</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#deep-learning-in-classical-and-quantum-physics" id="toc-deep-learning-in-classical-and-quantum-physics" class="nav-link active" data-scroll-target="#deep-learning-in-classical-and-quantum-physics">Deep Learning in Classical and Quantum Physics</a></li>
+  <li><a href="#exercise-01-rössler-system-and-superimposed-oscillators" id="toc-exercise-01-rössler-system-and-superimposed-oscillators" class="nav-link" data-scroll-target="#exercise-01-rössler-system-and-superimposed-oscillators">Exercise 01 — Rössler system and superimposed oscillators</a>
+  <ul class="collapse">
+  <li><a href="#multiple-superimposed-oscillators" id="toc-multiple-superimposed-oscillators" class="nav-link" data-scroll-target="#multiple-superimposed-oscillators">1. Multiple superimposed oscillators</a>
+  <ul class="collapse">
+  <li><a href="#exercise-1.1.-signal-and-sampling" id="toc-exercise-1.1.-signal-and-sampling" class="nav-link" data-scroll-target="#exercise-1.1.-signal-and-sampling">Exercise 1.1. Signal and sampling</a></li>
+  <li><a href="#exercise-1.2.-power-spectrum-and-spectral-lines" id="toc-exercise-1.2.-power-spectrum-and-spectral-lines" class="nav-link" data-scroll-target="#exercise-1.2.-power-spectrum-and-spectral-lines">Exercise 1.2. Power spectrum and spectral lines</a></li>
+  <li><a href="#exercise-1.3.-autocorrelation-function" id="toc-exercise-1.3.-autocorrelation-function" class="nav-link" data-scroll-target="#exercise-1.3.-autocorrelation-function">Exercise 1.3. Autocorrelation function</a></li>
+  <li><a href="#exercise-1.4.-autoregressive-model-and-koopman-eigenvalues" id="toc-exercise-1.4.-autoregressive-model-and-koopman-eigenvalues" class="nav-link" data-scroll-target="#exercise-1.4.-autoregressive-model-and-koopman-eigenvalues">Exercise 1.4. Autoregressive model and Koopman eigenvalues</a></li>
+  <li><a href="#exercise-1.5.-forecasts-of-the-mso-signal" id="toc-exercise-1.5.-forecasts-of-the-mso-signal" class="nav-link" data-scroll-target="#exercise-1.5.-forecasts-of-the-mso-signal">Exercise 1.5. Forecasts of the MSO signal</a></li>
+  </ul></li>
+  <li><a href="#rössler-system" id="toc-rössler-system" class="nav-link" data-scroll-target="#rössler-system">2. Rössler system</a>
+  <ul class="collapse">
+  <li><a href="#exercise-2.1.-equations-fixed-points-and-the-generated-signal" id="toc-exercise-2.1.-equations-fixed-points-and-the-generated-signal" class="nav-link" data-scroll-target="#exercise-2.1.-equations-fixed-points-and-the-generated-signal">Exercise 2.1. Equations, fixed points and the generated signal</a></li>
+  <li><a href="#exercise-2.2.-sampling-and-power-spectrum" id="toc-exercise-2.2.-sampling-and-power-spectrum" class="nav-link" data-scroll-target="#exercise-2.2.-sampling-and-power-spectrum">Exercise 2.2. Sampling and power spectrum</a></li>
+  <li><a href="#exercise-2.3.-autocorrelation-function" id="toc-exercise-2.3.-autocorrelation-function" class="nav-link" data-scroll-target="#exercise-2.3.-autocorrelation-function">Exercise 2.3. Autocorrelation function</a></li>
+  <li><a href="#exercise-2.4.-delay-embedding" id="toc-exercise-2.4.-delay-embedding" class="nav-link" data-scroll-target="#exercise-2.4.-delay-embedding">Exercise 2.4. Delay embedding</a></li>
+  <li><a href="#exercise-2.5.-lyapunov-spectrum-from-the-equations" id="toc-exercise-2.5.-lyapunov-spectrum-from-the-equations" class="nav-link" data-scroll-target="#exercise-2.5.-lyapunov-spectrum-from-the-equations">Exercise 2.5. Lyapunov spectrum from the equations</a></li>
+  <li><a href="#exercise-2.6.-exponent-from-data-kaplanyorke-dimension-and-prediction-horizon" id="toc-exercise-2.6.-exponent-from-data-kaplanyorke-dimension-and-prediction-horizon" class="nav-link" data-scroll-target="#exercise-2.6.-exponent-from-data-kaplanyorke-dimension-and-prediction-horizon">Exercise 2.6. Exponent from data, Kaplan–Yorke dimension and prediction horizon</a></li>
+  <li><a href="#optional-exercise-2.7.-surrogate-tests" id="toc-optional-exercise-2.7.-surrogate-tests" class="nav-link" data-scroll-target="#optional-exercise-2.7.-surrogate-tests">Optional exercise 2.7. Surrogate tests</a></li>
+  </ul></li>
+  <li><a href="#forecasts" id="toc-forecasts" class="nav-link" data-scroll-target="#forecasts">3. Forecasts</a>
+  <ul class="collapse">
+  <li><a href="#exercise-3.1.-persistence-ar-and-nvar" id="toc-exercise-3.1.-persistence-ar-and-nvar" class="nav-link" data-scroll-target="#exercise-3.1.-persistence-ar-and-nvar">Exercise 3.1. Persistence, AR and NVAR</a></li>
+  <li><a href="#exercise-3.2.-moving-average-model" id="toc-exercise-3.2.-moving-average-model" class="nav-link" data-scroll-target="#exercise-3.2.-moving-average-model">Exercise 3.2. Moving-average model</a></li>
+  <li><a href="#exercise-3.3.-recurrent-networks" id="toc-exercise-3.3.-recurrent-networks" class="nav-link" data-scroll-target="#exercise-3.3.-recurrent-networks">Exercise 3.3. Recurrent networks</a></li>
+  <li><a href="#exercise-3.4.-one-step-forecasts" id="toc-exercise-3.4.-one-step-forecasts" class="nav-link" data-scroll-target="#exercise-3.4.-one-step-forecasts">Exercise 3.4. One-step forecasts</a></li>
+  <li><a href="#exercise-3.5.-capacity-curves-and-interpretation" id="toc-exercise-3.5.-capacity-curves-and-interpretation" class="nav-link" data-scroll-target="#exercise-3.5.-capacity-curves-and-interpretation">Exercise 3.5. Capacity curves and interpretation</a></li>
+  <li><a href="#optional-exercise-3.6.-echo-state-network" id="toc-optional-exercise-3.6.-echo-state-network" class="nav-link" data-scroll-target="#optional-exercise-3.6.-echo-state-network">Optional exercise 3.6. Echo state network</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-08/exercise-01-rossler-oscillators.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Exercise 01: Rössler system and superimposed oscillators</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-08/exercise-01-rossler-oscillators.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<hr>
+<section id="deep-learning-in-classical-and-quantum-physics" class="level1">
+<h1>Deep Learning in Classical and Quantum Physics</h1>
+2026/2027 <br> <strong>Author:</strong> Marcin Płodzień <br> <strong>Exercise:</strong> 01 <br> <strong>Related labs:</strong> 033, 034, 035, 036
+<hr>
+</section>
+<section id="exercise-01-rössler-system-and-superimposed-oscillators" class="level1">
+<h1>Exercise 01 — Rössler system and superimposed oscillators</h1>
+<p>In Lectures 7 and 8 we characterised three signals and forecast them with linear models, NVAR (nonlinear vector autoregression) and recurrent neural networks. In this exercise we apply the same toolbox to two new signals taken from <code>reservoirpy.datasets</code>, and we analyse each of them before we forecast it, as in the labs.</p>
+<p>The first signal is a sum of eight sine waves with incommensurate frequencies, the multiple superimposed oscillator (MSO) benchmark of reservoir computing. Its motion is quasi-periodic, with a finite number of oscillation modes. We locate its spectral lines, show that an autoregressive (AR) model of order <span class="math inline">\(2K\)</span> for <span class="math inline">\(K\)</span> sinusoids forecasts it almost perfectly, and explain this with the Koopman picture of Lab 035. The second signal is the <span class="math inline">\(x\)</span> coordinate of the Rössler system, a three-dimensional chaotic flow with a single nonlinear term. We study its physics, spectrum, autocorrelation function (ACF), delay embedding, Lyapunov spectrum and Kaplan–Yorke dimension <span class="math inline">\(D_{\rm KY}\)</span>. In Section 3 we forecast both signals with persistence, AR, the moving-average (MA) model, NVAR, a recurrent neural network (RNN) and a long short-term memory (LSTM) network, and read the results against the leading Lyapunov exponent <span class="math inline">\(\lambda_1\)</span> and <span class="math inline">\(D_{\rm KY}\)</span>.</p>
+<p>Each exercise states what to compute and what to report, and names the lab whose functions and conventions it reuses. The protocol and the scores are those of Lab 036 and are defined in the first code cell. Two exercises are marked as optional. The surrogate test of both signals closes the analysis part, and an echo state network (ESN) closes the forecasting part. No other exercise uses their results.</p>
+<blockquote class="blockquote">
+<p><strong>How to run this notebook in Google Colab</strong> 1. Go to <a href="https://colab.research.google.com" class="uri">https://colab.research.google.com</a> and upload the notebook with <em>File → Upload notebook</em>. The first code cell sets <code>JAX_PLATFORMS=cpu</code>. 2. <code>jax</code>, <code>flax</code>, <code>optax</code>, <code>scipy</code>, <code>statsmodels</code>, <code>pandas</code> and <code>matplotlib</code> are pre-installed in Colab. Install ReservoirPy with <code>pip install reservoirpy</code>. 3. Run the cells in order. Later cells use variables defined earlier.</p>
+</blockquote>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"JAX_PLATFORMS"</span>] <span class="op">=</span> <span class="st">"cpu"</span>     <span class="co"># run JAX on the CPU (set before importing jax)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json, time</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.signal</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> acf <span class="im">as</span> sm_acf</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.ar_model <span class="im">import</span> AutoReg</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>jax.config.update(<span class="st">"jax_enable_x64"</span>, <span class="va">True</span>)   <span class="co"># signals, spectra, exponents and ridge regressions in float64</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> optax</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> flax</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax <span class="im">import</span> nnx</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> reservoirpy</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> reservoirpy.datasets <span class="im">import</span> mso, mso2, mso8, rossler</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> reservoirpy.nodes <span class="im">import</span> NVAR, Reservoir, Ridge <span class="im">as</span> RpyRidge</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># common style of the notebook figures</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>mpl.rcParams.update({<span class="st">"font.size"</span>: <span class="dv">14</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">15</span>, <span class="st">"axes.titlesize"</span>: <span class="dv">15</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"xtick.labelsize"</span>: <span class="dv">13</span>, <span class="st">"ytick.labelsize"</span>: <span class="dv">13</span>, <span class="st">"legend.fontsize"</span>: <span class="dv">12</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"figure.titlesize"</span>: <span class="dv">16</span>, <span class="st">"lines.linewidth"</span>: <span class="fl">2.0</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"axes.spines.top"</span>: <span class="va">False</span>, <span class="st">"axes.spines.right"</span>: <span class="va">False</span>, <span class="st">"legend.frameon"</span>: <span class="va">False</span>})</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>SLIDE_RC <span class="op">=</span> {<span class="st">"font.size"</span>: <span class="dv">11</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">11</span>, <span class="st">"axes.titlesize"</span>: <span class="dv">11</span>, <span class="st">"xtick.labelsize"</span>: <span class="dv">11</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>            <span class="st">"ytick.labelsize"</span>: <span class="dv">11</span>, <span class="st">"legend.fontsize"</span>: <span class="dv">11</span>, <span class="st">"lines.linewidth"</span>: <span class="fl">1.4</span>, <span class="st">"figure.dpi"</span>: <span class="dv">150</span>}</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>UJBlue, UJNavy, DSOrange, UJGray <span class="op">=</span> <span class="st">"#005CA7"</span>, <span class="st">"#002B5C"</span>, <span class="st">"#D35A05"</span>, <span class="st">"#5A6270"</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>STYLE <span class="op">=</span> {<span class="st">"persistence"</span>: <span class="bu">dict</span>(color<span class="op">=</span><span class="st">"0.55"</span>, ls<span class="op">=</span><span class="st">":"</span>), <span class="st">"AR"</span>: <span class="bu">dict</span>(color<span class="op">=</span><span class="st">"0.35"</span>, ls<span class="op">=</span><span class="st">"--"</span>),</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>         <span class="st">"AR recursive"</span>: <span class="bu">dict</span>(color<span class="op">=</span>UJBlue, ls<span class="op">=</span><span class="st">"-."</span>), <span class="st">"MA"</span>: <span class="bu">dict</span>(color<span class="op">=</span><span class="st">"#8172B2"</span>, ls<span class="op">=</span><span class="st">"-."</span>),</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>         <span class="st">"NVAR"</span>: <span class="bu">dict</span>(color<span class="op">=</span>DSOrange, ls<span class="op">=</span><span class="st">"--"</span>), <span class="st">"RNN"</span>: <span class="bu">dict</span>(color<span class="op">=</span>UJBlue, ls<span class="op">=</span><span class="st">"-"</span>),</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>         <span class="st">"LSTM"</span>: <span class="bu">dict</span>(color<span class="op">=</span><span class="st">"#C44E52"</span>, ls<span class="op">=</span><span class="st">"-"</span>), <span class="st">"ESN"</span>: <span class="bu">dict</span>(color<span class="op">=</span><span class="st">"#8C564B"</span>, ls<span class="op">=</span><span class="st">"-."</span>)}   <span class="co"># as in Lab 036</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>OUT <span class="op">=</span> <span class="st">"figures"</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>os.makedirs(OUT, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save(fig, name):</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># figures are drawn at their printed size and saved as PDF and PNG</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ext <span class="kw">in</span> (<span class="st">"pdf"</span>, <span class="st">"png"</span>):</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        fig.savefig(<span class="ss">f"</span><span class="sc">{</span>OUT<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>ext<span class="sc">}</span><span class="ss">"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>, pad_inches<span class="op">=</span><span class="fl">0.02</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Common protocol of Lectures 7 and 8 (as in Lab 036): N = 4000 samples, training block = first 3000</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># (its last 500 = validation), test block = last 1000, rescaling to [0, 1] with the training min/max,</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># leads tau = 1..50, input windows of at most L = 64 past values.</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>N_SAMPLES, N_TRAIN, N_VAL, TAU_MAX, L_WIN <span class="op">=</span> <span class="dv">4000</span>, <span class="dv">3000</span>, <span class="dv">500</span>, <span class="dv">50</span>, <span class="dv">64</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>TAUS <span class="op">=</span> np.arange(<span class="dv">1</span>, TAU_MAX <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>K_FIT <span class="op">=</span> np.arange(L_WIN <span class="op">-</span> <span class="dv">1</span>, N_TRAIN <span class="op">-</span> N_VAL <span class="op">-</span> TAU_MAX)      <span class="co"># fitting origins 63..2449</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>K_VAL <span class="op">=</span> np.arange(N_TRAIN <span class="op">-</span> N_VAL <span class="op">-</span> <span class="dv">1</span>, N_TRAIN <span class="op">-</span> TAU_MAX)    <span class="co"># validation origins 2499..2949</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>K_TEST <span class="op">=</span> np.arange(N_TRAIN <span class="op">-</span> <span class="dv">1</span>, N_SAMPLES <span class="op">-</span> TAU_MAX)         <span class="co"># test origins 2999..3949</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rescale01(s, n_train<span class="op">=</span>N_TRAIN):</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    lo, hi <span class="op">=</span> s[:n_train].<span class="bu">min</span>(), s[:n_train].<span class="bu">max</span>()</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (s <span class="op">-</span> lo) <span class="op">/</span> (hi <span class="op">-</span> lo)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> windows(s, ks, L<span class="op">=</span>L_WIN):</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># inputs U[i] = (s_{k-L+1}, ..., s_k) and targets Y[i] = (s_{k+1}, ..., s_{k+50}) for k = ks[i]</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    U <span class="op">=</span> s[ks[:, <span class="va">None</span>] <span class="op">+</span> np.arange(<span class="op">-</span>L <span class="op">+</span> <span class="dv">1</span>, <span class="dv">1</span>)[<span class="va">None</span>, :]]</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> s[ks[:, <span class="va">None</span>] <span class="op">+</span> TAUS[<span class="va">None</span>, :]]</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> U, Y</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nmse_and_r(pred, true):</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pred, true: (n, TAU_MAX); averages over the n origins, one value per lead</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    err <span class="op">=</span> jnp.mean((pred <span class="op">-</span> true) <span class="op">**</span> <span class="dv">2</span>, axis<span class="op">=</span><span class="dv">0</span>) <span class="op">/</span> jnp.var(true, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    pc, tc <span class="op">=</span> pred <span class="op">-</span> pred.mean(<span class="dv">0</span>), true <span class="op">-</span> true.mean(<span class="dv">0</span>)</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> jnp.<span class="bu">sum</span>(pc <span class="op">*</span> tc, <span class="dv">0</span>) <span class="op">/</span> jnp.sqrt(jnp.<span class="bu">sum</span>(pc <span class="op">**</span> <span class="dv">2</span>, <span class="dv">0</span>) <span class="op">*</span> jnp.<span class="bu">sum</span>(tc <span class="op">**</span> <span class="dv">2</span>, <span class="dv">0</span>))</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> err, r</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> score(pred, true):</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># NMSE(tau), r(tau), C(tau) = r^2, C_tot = sum_tau C(tau) and the skill horizon tau_1/2 (first tau with C &lt; 0.5)</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    e, r <span class="op">=</span> (np.asarray(a) <span class="cf">for</span> a <span class="kw">in</span> nmse_and_r(jnp.asarray(pred, jnp.float64), jnp.asarray(true, jnp.float64)))</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> r <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    below <span class="op">=</span> np.nonzero(C <span class="op">&lt;</span> <span class="fl">0.5</span>)[<span class="dv">0</span>]</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">dict</span>(nmse<span class="op">=</span>e, r<span class="op">=</span>r, C<span class="op">=</span>C, Ctot<span class="op">=</span><span class="bu">float</span>(C.<span class="bu">sum</span>()), tau_half<span class="op">=</span><span class="bu">int</span>(below[<span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span>) <span class="cf">if</span> <span class="bu">len</span>(below) <span class="cf">else</span> <span class="va">None</span>)</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>nums <span class="op">=</span> {}</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>t_start <span class="op">=</span> time.time()</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"jax"</span>, jax.__version__, <span class="st">"| flax"</span>, flax.__version__, <span class="st">"| reservoirpy"</span>, reservoirpy.__version__,</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>      <span class="st">"| devices"</span>, jax.devices())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+<section id="multiple-superimposed-oscillators" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-superimposed-oscillators">1. Multiple superimposed oscillators</h2>
+<p>The MSO signal is a sum of <span class="math inline">\(K\)</span> sine waves sampled at integer times <span class="math inline">\(n=0,1,\dots,N-1\)</span>, <span class="math display">\[
+s_n=\sum_{i=1}^{K}\sin(\omega_i n),
+\]</span> where <span class="math inline">\(\omega_i\)</span> are angular frequencies in radians per sample. The cyclic frequency of the <span class="math inline">\(i\)</span>-th wave is <span class="math inline">\(f_i=\omega_i/2\pi\)</span> in cycles per sample. Jaeger introduced the two-frequency version as a benchmark that a standard echo state network fails to continue in free run [H. Jaeger, M. Lukoševičius, D. Popovici and U. Siewert, Neural Netw. <strong>20</strong>, 335 (2007), <a href="https://doi.org/10.1016/j.neunet.2007.04.016">doi:10.1016/j.neunet.2007.04.016</a>], and Roeschies and Igel extended it to eight frequencies [B. Roeschies and C. Igel, Logic J. IGPL <strong>18</strong>, 635 (2010), <a href="https://doi.org/10.1093/jigpal/jzp043">doi:10.1093/jigpal/jzp043</a>]. ReservoirPy provides the generator <code>mso(n_timesteps, freqs, normalize=True)</code> and the two presets <code>mso2</code> with <span class="math inline">\(\omega=(0.2,0.311)\)</span> and <code>mso8</code> with <span class="math display">\[
+\boldsymbol\omega=(0.2,\ 0.311,\ 0.42,\ 0.51,\ 0.63,\ 0.74,\ 0.85,\ 0.97).
+\]</span> With <code>normalize=True</code> the library rescales the whole record to <span class="math inline">\([-1,1]\)</span> with its own minimum and maximum, which uses the test block. We therefore generate the signal with <code>normalize=False</code> and apply the protocol rescaling to <span class="math inline">\([0,1]\)</span> fitted on the training block.</p>
+<section id="exercise-1.1.-signal-and-sampling" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1.1.-signal-and-sampling">Exercise 1.1. Signal and sampling</h3>
+<p>Generate <span class="math inline">\(N=4000\)</span> samples of <code>mso8</code> with <code>normalize=False</code>. Check them against the formula above, apply the protocol rescaling, and plot the whole record and a zoom on the first 300 samples. Make a table of <span class="math inline">\(\omega_i\)</span>, <span class="math inline">\(f_i\)</span> and the period <span class="math inline">\(1/f_i\)</span> in samples. Compute the Nyquist frequency <span class="math inline">\(f_{\rm Ny}=1/(2\Delta t)\)</span> with <span class="math inline">\(\Delta t=1\)</span> sample, the number of samples per period of the fastest wave and the frequency resolution <span class="math inline">\(1/(N\Delta t)\)</span> of the record, and state whether the sampling resolves all eight waves. The frequency ratios are irrational, so the signal never repeats. Check this by computing the mean mismatch <span class="math inline">\(\langle|s_{n+T}-s_n|\rangle\)</span> for all shifts <span class="math inline">\(T=20,\dots,2000\)</span> and comparing its minimum with the standard deviation of the signal.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: generate mso8 without normalisation, check it against the formula, rescale, plot,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># tabulate omega_i, f_i and periods, sampling numbers, and the shift mismatch</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-1.2.-power-spectrum-and-spectral-lines" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1.2.-power-spectrum-and-spectral-lines">Exercise 1.2. Power spectrum and spectral lines</h3>
+<p>Compute the one-sided periodogram of the record without a window and with the Hann window, and the Welch estimate with segments of <span class="math inline">\(L=1024\)</span> samples (functions <code>periodogram_jax</code>, <code>windowed_periodogram</code> and <code>welch_jax</code> of Lab 033, checked against <code>scipy.signal</code>). Plot the three on a logarithmic scale with the true frequencies <span class="math inline">\(f_i\)</span> marked. Find the eight spectral peaks of the Hann periodogram with <code>spectral_peaks</code> of Lab 033 and compare their frequencies with <span class="math inline">\(f_i\)</span> in units of the resolution <span class="math inline">\(\Delta f=1/N\)</span>. A peak located on the grid <span class="math inline">\(f_q=q/N\)</span> is uncertain by <span class="math inline">\(\Delta f/2\)</span>. Refine each peak by fitting a parabola through <span class="math inline">\(\ln\hat S\)</span> at the three bins <span class="math inline">\(q-1\)</span>, <span class="math inline">\(q\)</span>, <span class="math inline">\(q+1\)</span>, whose vertex lies at <span class="math inline">\(q+\delta\)</span> with <span class="math display">\[
+\delta=\frac{1}{2}\,\frac{\ln\hat S_{q-1}-\ln\hat S_{q+1}}{\ln\hat S_{q-1}-2\ln\hat S_{q}+\ln\hat S_{q+1}},
+\]</span> and report how much the refinement reduces the error. Explain the role of the window for this signal.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: periodogram (rectangular and Hann), Welch with L = 1024, eight peaks of the Hann periodogram,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># parabolic refinement, table of errors in units of 1/N, figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-1.3.-autocorrelation-function" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1.3.-autocorrelation-function">Exercise 1.3. Autocorrelation function</h3>
+<p>Compute the ACF <span class="math inline">\(\hat\rho(k)\)</span> for lags <span class="math inline">\(k=0,\dots,400\)</span> with <code>acf_jax</code> of Lab 033 and check it against <code>statsmodels</code>. For equal amplitudes and a long record the time average of <span class="math inline">\(\sin(\omega_in)\sin(\omega_jn+\omega_jk)\)</span> vanishes for <span class="math inline">\(i\neq j\)</span> and equals <span class="math inline">\(\tfrac12\cos(\omega_ik)\)</span> for <span class="math inline">\(i=j\)</span>, which gives <span class="math display">\[
+\rho(k)=\frac{1}{K}\sum_{i=1}^{K}\cos(\omega_ik).
+\]</span> The estimator <span class="math inline">\(\hat\rho\)</span> sums <span class="math inline">\(N-k\)</span> products and divides by <span class="math inline">\(N\)</span>, so compare it with <span class="math inline">\((1-k/N)\,\rho(k)\)</span>. Plot both, report the largest difference, and compute the correlation times of Lab 033 (first zero, first drop below <span class="math inline">\(1/e\)</span>, envelope below <span class="math inline">\(1/e\)</span>). Explain why the envelope of a quasi-periodic ACF does not decay to zero.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: ACF in JAX vs statsmodels, comparison with (1 - k/N) rho(k), correlation times, figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-1.4.-autoregressive-model-and-koopman-eigenvalues" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1.4.-autoregressive-model-and-koopman-eigenvalues">Exercise 1.4. Autoregressive model and Koopman eigenvalues</h3>
+<p>A single sine wave obeys an exact linear recursion. From <span class="math inline">\(\sin(\omega(n+1))+\sin(\omega(n-1))=2\cos\omega\,\sin(\omega n)\)</span>, <span class="math display">\[
+s_{n+1}=2\cos\omega\;s_n-s_{n-1},
+\]</span> an AR(2) model without noise whose characteristic roots are <span class="math inline">\(e^{\pm i\omega}\)</span>. A sum of <span class="math inline">\(K\)</span> sine waves with distinct frequencies obeys the AR(<span class="math inline">\(2K\)</span>) recursion whose characteristic polynomial is the product of the <span class="math inline">\(K\)</span> factors <span class="math inline">\(1-2\cos\omega_i\,z+z^2\)</span>. In the language of Lab 035, each wave is spanned by a pair of Koopman eigenfunctions with eigenvalues <span class="math inline">\(e^{\pm i\omega_i}\)</span>, the delay vector of length <span class="math inline">\(2K\)</span> is a dictionary that is invariant under the dynamics, and the AR coefficients form the last row of its companion matrix.</p>
+<p>Verify this numerically. Fit AR(<span class="math inline">\(p\)</span>) models with intercept by least squares (Lab 034) on the samples before the validation block, for <span class="math inline">\(p=1,\dots,24\)</span>, and compute the one-step NMSE (normalised mean-square error) on the validation block, for <code>mso2</code> (<span class="math inline">\(K=2\)</span>) and <code>mso8</code> (<span class="math inline">\(K=8\)</span>), both rescaled with the protocol. Plot NMSE against <span class="math inline">\(p\)</span> and locate the drop. Then fit AR(16) to <code>mso8</code> on the whole training block, check the coefficients against <code>statsmodels</code> <code>AutoReg</code>, expand the product polynomial above with <code>numpy.polynomial</code> and compare its coefficients with the fitted ones. Compute the eigenvalues of the companion matrix (Lab 035), plot them in the complex plane with the unit circle, and compare their moduli and angles with <span class="math inline">\(1\)</span> and <span class="math inline">\(\omega_i\)</span>.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: validation NMSE of AR(p), p = 1..24, for mso2 and mso8; AR(16) coefficients (JAX and statsmodels)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># against the product polynomial; companion-matrix eigenvalues against exp(+-i omega_i); figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-1.5.-forecasts-of-the-mso-signal" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1.5.-forecasts-of-the-mso-signal">Exercise 1.5. Forecasts of the MSO signal</h3>
+<p>Forecast the rescaled <code>mso8</code> signal with the protocol of Lab 036 at the test origins <span class="math inline">\(k=2999,\dots,3949\)</span> and leads <span class="math inline">\(\tau=1,\dots,50\)</span>. Use persistence, <span class="math inline">\(\hat s_{k+\tau}=s_k\)</span>, the direct AR model of Lab 036 (one ridge readout per lead, order <span class="math inline">\(p\)</span> and ridge strength chosen by the validation <span class="math inline">\(C_{\rm tot}\)</span>), and the recursive AR(16) model of Exercise 1.4 iterated from every test origin (Lab 034). Report <span class="math inline">\(C_{\rm tot}=\sum_\tau C(\tau)\)</span> with <span class="math inline">\(C(\tau)=r(\tau)^2\)</span>, the skill horizon <span class="math inline">\(\tau_{1/2}\)</span> and the NMSE at <span class="math inline">\(\tau=1\)</span> and <span class="math inline">\(\tau=50\)</span> for each model, and plot <span class="math inline">\(C(\tau)\)</span>. Finally run AR(16) freely from the first test origin over the whole test block and plot it on top of the data.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: persistence, direct AR (ridge, selection on the validation block), recursive AR(16) from every test origin,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># scores, C(tau) figure, free run over the test block</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+</section>
+</section>
+<section id="rössler-system" class="level2">
+<h2 class="anchored" data-anchor-id="rössler-system">2. Rössler system</h2>
+<p>Rössler looked for the simplest autonomous flow with chaotic motion and found a system with three variables and a single nonlinear term [O. E. Rössler, Phys. Lett. A <strong>57</strong>, 397 (1976), <a href="https://doi.org/10.1016/0375-9601(76)90101-8">doi:10.1016/0375-9601(76)90101-8</a>], <span class="math display">\[
+\dot x=-y-z,\qquad \dot y=x+a\,y,\qquad \dot z=b+z\,(x-c).
+\]</span> The linear part in the <span class="math inline">\((x,y)\)</span> plane is an oscillator with negative damping for <span class="math inline">\(a&gt;0\)</span>, so trajectories near the plane spiral outwards. The variable <span class="math inline">\(z\)</span> stays small until <span class="math inline">\(x\)</span> exceeds <span class="math inline">\(c\)</span>. Then the product <span class="math inline">\(zx\)</span> makes <span class="math inline">\(z\)</span> grow quickly, and the term <span class="math inline">\(-z\)</span> in <span class="math inline">\(\dot x\)</span> throws the trajectory back towards the centre of the spiral, where the outward motion starts again. The stretching happens on the spiral and the folding in the excursion in <span class="math inline">\(z\)</span>, the same two ingredients as in the logistic map of Lab 033. We use the standard parameters <span class="math inline">\(a=0.2\)</span>, <span class="math inline">\(b=0.2\)</span>, <span class="math inline">\(c=5.7\)</span>, which are the defaults of ReservoirPy, and we observe only <span class="math inline">\(x(t)\)</span>.</p>
+<section id="exercise-2.1.-equations-fixed-points-and-the-generated-signal" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2.1.-equations-fixed-points-and-the-generated-signal">Exercise 2.1. Equations, fixed points and the generated signal</h3>
+<p>Read the source of <code>reservoirpy.datasets.rossler</code> (for example with <code>inspect.getsource</code>). State its default parameters, initial state, sampling step <code>h</code> and the integrator it calls. Check how the output times are constructed from <code>n_timesteps</code> and <code>h</code>, and find the value of <code>h</code> that gives a sampling interval of exactly <span class="math inline">\(\Delta t=0.1\)</span>. Generate the trajectory with this sampling interval and tolerances <code>rtol = atol = 1e-10</code> passed to the integrator, discard the first 500 time units as a transient, and keep <span class="math inline">\(N=4000\)</span> samples. Plot the attractor in <span class="math inline">\((x,y,z)\)</span> and <span class="math inline">\(x(t)\)</span>.</p>
+<p>Find the fixed points of the flow analytically, check <span class="math inline">\(\mathbf F(\mathbf u^*)=0\)</span> numerically, and compute the eigenvalues of the Jacobian <span class="math inline">\(J=\partial\mathbf F/\partial\mathbf u\)</span> with <code>jax.jacfwd</code> (as for Lorenz-63 in Lab 033). From the complex pair at the fixed point near the origin derive the rotation frequency of the spiral in cycles per time unit. Finally write the right-hand side in JAX, integrate it with RK4 at step <span class="math inline">\(h=0.01\)</span> from the first stored state, and compare with the ReservoirPy trajectory over the first 20 time units.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: defaults and time grid of reservoirpy.datasets.rossler, generation with dt = 0.1 and transient removed,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fixed points and Jacobian eigenvalues with jax.jacfwd, JAX RK4 check, attractor and x(t) figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-2.2.-sampling-and-power-spectrum" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2.2.-sampling-and-power-spectrum">Exercise 2.2. Sampling and power spectrum</h3>
+<p>Compute the Nyquist frequency and the frequency resolution of the record in cycles per time unit, and the number of samples per rotation. Estimate the PSD (power spectral density) with the Hann-windowed periodogram of the whole record and with Welch segments of <span class="math inline">\(L=1024\)</span> samples (Lab 033), and plot both. Locate the dominant peak <span class="math inline">\(f_0\)</span> and the peaks near its harmonics <span class="math inline">\(2f_0\)</span> and <span class="math inline">\(3f_0\)</span>. Compare <span class="math inline">\(f_0\)</span> with the rotation frequency at the inner fixed point of Exercise 2.1 and with the mean rotation frequency <span class="math inline">\(\langle\dot\theta\rangle/2\pi\)</span> of the phase <span class="math inline">\(\theta=\arctan(y/x)\)</span> (use <code>np.unwrap</code> of <code>np.arctan2(y, x)</code> on the full state). Measure the full width at half maximum of the dominant peak in the Hann periodogram and compare it with the width of the Hann peak of a pure sine wave of the same frequency and length. Describe the spectrum in the terms of Lab 033 (lines, broad peaks, broadband).</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: Nyquist and resolution, Hann periodogram and Welch, dominant peak and harmonics, comparison with the</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rotation frequencies, peak width against a pure sine wave, figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-2.3.-autocorrelation-function" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2.3.-autocorrelation-function">Exercise 2.3. Autocorrelation function</h3>
+<p>Compute <span class="math inline">\(\hat\rho(k)\)</span> of Rössler <span class="math inline">\(x\)</span> for lags up to 1000 samples (100 time units) with <code>acf_jax</code> and the three correlation times of Lab 033, in samples and in time units. Find the lag of the first local maximum of <span class="math inline">\(\hat\rho\)</span> and compare it with <span class="math inline">\(1/f_0\)</span>. Plot <span class="math inline">\(\hat\rho\)</span> with its envelope and explain the slow decay of the envelope with the result of Exercise 2.2.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: ACF up to lag 1000, correlation times, first maximum against 1/f0, figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-2.4.-delay-embedding" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2.4.-delay-embedding">Exercise 2.4. Delay embedding</h3>
+<p>Choose the delay <span class="math inline">\(\ell\)</span> as the first minimum of the mutual information <span class="math inline">\(I(\ell)\)</span> with 16 bins and the embedding dimension <span class="math inline">\(m\)</span> as the smallest dimension at which the ratio test of false nearest neighbours (FNN) falls below 5%, with <span class="math inline">\(R_{\rm tol}=15\)</span> and a Theiler window of 50 samples (functions <code>mutual_information</code>, <code>delay_embed</code>, <code>nearest_neighbour</code> and <code>fnn_fractions</code> of Lab 033). Compare <span class="math inline">\(\ell\)</span> with the first zero of the ACF and with a quarter of the rotation period. Plot <span class="math inline">\(I(\ell)\)</span>, the FNN fractions and a three-dimensional delay reconstruction next to the true attractor.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: mutual information and its first minimum, FNN fractions and m, delay reconstruction figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-2.5.-lyapunov-spectrum-from-the-equations" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2.5.-lyapunov-spectrum-from-the-equations">Exercise 2.5. Lyapunov spectrum from the equations</h3>
+<p>Compute the three Lyapunov exponents of the flow with the Benettin QR algorithm of Lab 033. Propagate three orthonormal tangent vectors with the Jacobian <span class="math inline">\(D\boldsymbol\Phi_h\)</span> of one RK4 step (<span class="math inline">\(h=0.01\)</span>) obtained with <code>jax.jacfwd</code>, re-orthonormalise every <span class="math inline">\(T_r=0.1\)</span> time units, and average <span class="math inline">\(\ln|R_{ii}|\)</span> over 20000 time units, starting from the last stored state. Estimate the standard errors from ten segments of 2000 time units. The sum of the exponents equals the mean phase-space contraction rate. For the Rössler flow <span class="math inline">\(\nabla\cdot\mathbf F=a+x-c\)</span> depends on the position, so compare <span class="math inline">\(\sum_i\lambda_i\)</span> with the time average <span class="math inline">\(a-c+\langle x\rangle\)</span> along the same trajectory. Plot the running averages of the exponents against the averaging time.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: Benettin QR with jax.jacfwd of the RK4 step, exponents and standard errors, sum rule, convergence figure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-2.6.-exponent-from-data-kaplanyorke-dimension-and-prediction-horizon" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2.6.-exponent-from-data-kaplanyorke-dimension-and-prediction-horizon">Exercise 2.6. Exponent from data, Kaplan–Yorke dimension and prediction horizon</h3>
+<p>Estimate <span class="math inline">\(\lambda_1\)</span> from the measured <span class="math inline">\(x\)</span> alone with the method of Rosenstein <em>et al.</em> (function <code>rosenstein_curve</code> of Lab 033) with the embedding of Exercise 2.4, the Theiler window of 50 samples and <span class="math inline">\(k\)</span> up to 400 samples. Plot <span class="math inline">\(\langle\ln d(k)\rangle\)</span>, choose a fit range in the linear part of the curve, and report the slope per sample and per time unit for a few fit ranges next to the Benettin value.</p>
+<p>Compute the Kaplan–Yorke dimension <span class="math inline">\(D_{\rm KY}=j+\Sigma_j/|\lambda_{j+1}|\)</span> (function <code>kaplan_yorke</code> of Lab 033, with exponents below three standard errors set to zero). Compute the Lyapunov time <span class="math inline">\(T_\lambda=1/\lambda_1\)</span> in time units and in samples, the mean error growth factor <span class="math inline">\(e^{\lambda_1\cdot50\Delta t}\)</span> over the longest forecast lead, and the prediction horizon <span class="math inline">\(T_{\rm pred}=\lambda_1^{-1}\ln(\Delta/\delta_0)\)</span> for <span class="math inline">\(\delta_0=10^{-6}\)</span> and <span class="math inline">\(\Delta=1\)</span>. Check <span class="math inline">\(T_{\rm pred}\)</span> with 100 pairs of trajectories that start <span class="math inline">\(10^{-6}\)</span> apart, as in Lab 033.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: Rosenstein curve and slopes, D_KY, Lyapunov time, error growth over 50 samples, T_pred and the twin test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="optional-exercise-2.7.-surrogate-tests" class="level3">
+<h3 class="anchored" data-anchor-id="optional-exercise-2.7.-surrogate-tests">Optional exercise 2.7. Surrogate tests</h3>
+<p>Apply the surrogate test of Lab 033 (Appendix A) to both signals. The null hypothesis is a white Gaussian noise passed through a linear filter and observed through a static monotone function. Generate 19 IAAFT (iterative amplitude-adjusted Fourier transform) surrogates of each signal, use the normalised error <span class="math inline">\(E\)</span> of the nearest-neighbour forecast one step ahead as the statistic with a Theiler window of 50 samples, and reject the null hypothesis when the data error is the smallest of the 20 values. Use delay vectors of <span class="math inline">\(m=16\)</span> entries and delay <span class="math inline">\(\ell=1\)</span> for <code>mso8</code>, the window of the exact AR(16) model, and the embedding <span class="math inline">\((m,\ell)\)</span> of Exercise 2.4 for Rössler <span class="math inline">\(x\)</span>. Report the data error, the range of the surrogate errors, <span class="math inline">\(z=(E_{\rm data}-\bar E_{\rm surr})/\sigma_{\rm surr}\)</span> and the rank, and the fraction of the total periodogram power in the eight largest bins.</p>
+<p>Repeat the test for a control signal, the sum of eight sine waves whose frequencies are moved to the nearest Fourier frequencies <span class="math inline">\(q/N\)</span> of the record. Interpret the three outcomes. Keep in mind what a phase-randomised surrogate does to a spectral line that falls between two Fourier frequencies, and that a deterministic signal obeying an exact linear recursion lies outside the null hypothesis.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: IAAFT surrogates, nearest-neighbour prediction error, rank test for mso8 (m = 16, l = 1),</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for the control signal with frequencies on the Fourier grid, and for Rossler x with the embedding of Exercise 2.4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+</section>
+</section>
+<section id="forecasts" class="level2">
+<h2 class="anchored" data-anchor-id="forecasts">3. Forecasts</h2>
+<p>We forecast both signals with the protocol of Lab 036. At every test origin <span class="math inline">\(k=2999,\dots,3949\)</span> a model reads at most the window of the last <span class="math inline">\(L=64\)</span> values and returns the leads <span class="math inline">\(\tau=1,\dots,50\)</span> at once, one output per lead. Four models are static, they map a fixed window of past values to the future. Persistence repeats the last value, AR and NVAR are ridge regressions on the delay vector and on the delay vector with its quadratic monomials, and the MA model forecasts from the past one-step prediction errors (Lecture 7, Lab 034). The RNN and the LSTM network carry a hidden state through the window and learn their recurrence by gradient descent (Lecture 8, Lab 036). For the MSO signal, persistence and the direct AR model were computed in Exercise 1.5.</p>
+<section id="exercise-3.1.-persistence-ar-and-nvar" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3.1.-persistence-ar-and-nvar">Exercise 3.1. Persistence, AR and NVAR</h3>
+<p>Compute persistence, the direct AR model and the direct NVAR model for Rössler <span class="math inline">\(x\)</span> with <code>ridge_model</code> of Lab 036 (order and ridge strength chosen by the validation <span class="math inline">\(C_{\rm tot}\)</span>), and the direct NVAR model for the MSO signal. Rebuild the selected Rössler NVAR model with ReservoirPy, <code>NVAR(delay=p, order=2, strides=1) &gt;&gt; Ridge(ridge=beta)</code>, fitted on the same origins with <code>warmup=63</code> as in Lab 034, and check that its test predictions agree with the JAX model.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: persistence, direct AR and NVAR with validation selection, ReservoirPy NVAR check</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-3.2.-moving-average-model" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3.2.-moving-average-model">Exercise 3.2. Moving-average model</h3>
+<p>The MA(<span class="math inline">\(q\)</span>) model writes the signal as its mean plus a weighted sum of the present and the last <span class="math inline">\(q\)</span> innovations, <span class="math inline">\(s_k=\mu+\varepsilon_k+\sum_{j=1}^{q}\theta_j\varepsilon_{k-j}\)</span>. Fit MA(8) to the first 3000 samples of each signal by maximum likelihood with <code>statsmodels</code>, <code>ARIMA(order=(0, 0, 8), trend="c")</code>, as in Lab 036. Compute the one-step prediction errors <span class="math inline">\(e_k=s_k-\hat s_k\)</span> of the fitted model over the whole record with <code>apply</code>, and forecast with <span class="math display">\[
+\hat s_{k+\tau}=\mu+\sum_{j=\tau}^{q}\theta_j\,e_{k+\tau-j},
+\]</span> which uses only errors up to the origin <span class="math inline">\(k\)</span>. Compare the forecast from the first test origin with the <code>forecast</code> method of <code>statsmodels</code>. Report <span class="math inline">\(\mu\)</span>, the coefficients <span class="math inline">\(\theta_j\)</span>, the smallest modulus of the roots of the MA polynomial <span class="math inline">\(1+\sum_j\theta_jz^j\)</span>, <span class="math inline">\(C(1)\)</span>, <span class="math inline">\(C(8)\)</span> and <span class="math inline">\(C_{\rm tot}\)</span>, and explain the value of <span class="math inline">\(C(\tau)\)</span> for <span class="math inline">\(\tau&gt;8\)</span>.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: ARIMA(0, 0, 8) fit on the training block, one-step errors over the record, MA forecasts at the test origins,</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># check against statsmodels forecast, scores for both signals</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-3.3.-recurrent-networks" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3.3.-recurrent-networks">Exercise 3.3. Recurrent networks</h3>
+<p>Train an RNN and an LSTM network in <code>flax.nnx</code> as in Lab 036. The RNN updates its hidden state <span class="math inline">\(\mathbf h_k\in\mathbb R^{n_h}\)</span> by <span class="math inline">\(\mathbf h_k=\tanh(W_h\mathbf h_{k-1}+W_xs_k+\mathbf b)\)</span>. The LSTM adds a cell state <span class="math inline">\(\mathbf c_k\)</span> controlled by three gates, with the sigmoid <span class="math inline">\(\sigma(a)=1/(1+e^{-a})\)</span>, the elementwise product <span class="math inline">\(\odot\)</span> and the concatenation <span class="math inline">\([\mathbf h_{k-1},s_k]\)</span>, <span class="math display">\[
+\begin{aligned}
+\mathbf f_k&amp;=\sigma\big(W_f[\mathbf h_{k-1},s_k]+\mathbf b_f\big), &amp;
+\mathbf i_k&amp;=\sigma\big(W_i[\mathbf h_{k-1},s_k]+\mathbf b_i\big),\\
+\mathbf g_k&amp;=\tanh\big(W_g[\mathbf h_{k-1},s_k]+\mathbf b_g\big), &amp;
+\mathbf o_k&amp;=\sigma\big(W_o[\mathbf h_{k-1},s_k]+\mathbf b_o\big),\\
+\mathbf c_k&amp;=\mathbf f_k\odot\mathbf c_{k-1}+\mathbf i_k\odot\mathbf g_k, &amp;
+\mathbf h_k&amp;=\mathbf o_k\odot\tanh(\mathbf c_k),
+\end{aligned}
+\]</span> the forget gate <span class="math inline">\(\mathbf f_k\)</span>, the input gate <span class="math inline">\(\mathbf i_k\)</span>, the candidate <span class="math inline">\(\mathbf g_k\)</span> and the output gate <span class="math inline">\(\mathbf o_k\)</span>, with the initial forget bias <span class="math inline">\(\mathbf b_f=1\)</span>. Both networks have <span class="math inline">\(n_h=32\)</span> hidden units, run over the window of <span class="math inline">\(L=64\)</span> values with <code>jax.lax.scan</code> from <span class="math inline">\(\mathbf h=0\)</span>, and read the 50 leads from the last hidden state with a linear layer. Train them on both signals with the loop <code>fit_network</code> of Lab 036 (minibatches of 128 windows, Adam with learning rate <span class="math inline">\(5\times10^{-3}\)</span>, gradient clipping at norm 1, early stopping with patience 20, at most 250 epochs, seed 0). Check the number of parameters against the formula, and report the number of epochs, the training time, the best validation loss and the test <span class="math inline">\(C_{\rm tot}\)</span>. Plot the training and validation losses.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: RNNCell, LSTMCell and Recurrent modules in flax.nnx, training loop of Lab 036, both signals, loss curves</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-3.4.-one-step-forecasts" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3.4.-one-step-forecasts">Exercise 3.4. One-step forecasts</h3>
+<p>Plot for every model the forecast one step ahead, <span class="math inline">\(\tau=1\)</span>, in the style of Labs 034 and 036, with one column per signal. The upper panels show the target <span class="math inline">\(s_{k+1}\)</span> and the forecast <span class="math inline">\(\hat s_{k+1}\)</span> on the first 100 test targets, and the lower panels show <span class="math inline">\(\hat s_{k+1}\)</span> against <span class="math inline">\(s_{k+1}\)</span> on all test targets, with <span class="math inline">\(C(1)=r(1)^2\)</span> and the one-step NMSE. Describe what each figure shows about the model.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: one figure per model (persistence, AR, MA, NVAR, RNN, LSTM), columns MSO and Rossler,</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># upper row target and forecast on the first 100 test steps, lower row forecast against target with C and NMSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exercise-3.5.-capacity-curves-and-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-3.5.-capacity-curves-and-interpretation">Exercise 3.5. Capacity curves and interpretation</h3>
+<p>Plot the capacity curves <span class="math inline">\(C(\tau)=r(\tau)^2\)</span>, <span class="math inline">\(\tau=1,\dots,50\)</span>, of the six models for both signals, and tabulate <span class="math inline">\(C_{\rm tot}=\sum_\tau C(\tau)\)</span> for both signals, together with <span class="math inline">\(\tau_{1/2}\)</span> and the NMSE at <span class="math inline">\(\tau=1\)</span> and <span class="math inline">\(\tau=50\)</span> for Rössler <span class="math inline">\(x\)</span>. Plot also the one-step return map of the maxima, <span class="math inline">\(x_{\max,j+1}\)</span> against <span class="math inline">\(x_{\max,j}\)</span>, of successive local maxima of the rescaled Rössler signal. Read the results against the characterisation. Express the longest lead in Lyapunov times and state what this implies for the attainable skill. Compare the static models with the recurrent networks, explain the gap between the linear and the nonlinear models with the property of the attractor visible in <span class="math inline">\(D_{\rm KY}\)</span>, in the spectrum and in the return map, and compare with the MSO signal and with the chaotic signals of Labs 034 and 036.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: C(tau) of all models for both signals, C_tot table, return map of successive maxima, interpretation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="optional-exercise-3.6.-echo-state-network" class="level3">
+<h3 class="anchored" data-anchor-id="optional-exercise-3.6.-echo-state-network">Optional exercise 3.6. Echo state network</h3>
+<p>Forecast Rössler <span class="math inline">\(x\)</span> with the ESN of Lab 036, a fixed random recurrent network whose state is read by a ridge readout. Use one fixed random reservoir of <span class="math inline">\(N=300\)</span> units with 10% nonzero couplings (seed 0), driven by the rescaled signal from the first sample, and choose the spectral radius <span class="math inline">\(\rho\in\{0.5,0.8,0.95,1.1\}\)</span>, the input scaling <span class="math inline">\(\sigma_{\rm in}\in\{0.1,0.5,1\}\)</span>, the leak rate <span class="math inline">\(\alpha\in\{0.3,1\}\)</span> and the ridge strength <span class="math inline">\(\beta\in\{10^{-8},10^{-6},10^{-4},10^{-2}\}\)</span> by the validation <span class="math inline">\(C_{\rm tot}\)</span>. Rebuild the selected model with ReservoirPy, <code>Reservoir(W=..., Win=..., bias=0, lr=alpha) &gt;&gt; Ridge(ridge=beta)</code>, compare its readout predictions with the JAX version, and place the test <span class="math inline">\(C_{\rm tot}\)</span> of the ESN in the table of Exercise 3.5.</p>
+<div class="cell">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># your code: ESN in JAX with the grid search of Lab 036, ReservoirPy check</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 036: Recurrent neural networks</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="pagination-link">
+        <span class="nav-page-text">Exercise 02: Stock market returns</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

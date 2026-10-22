@@ -1,0 +1,39 @@
+---
+title: "8 · Koopman Operator, Recurrent Networks and Reservoir Computing"
+code-tools: false
+toc: false
+---
+
+The lecture opens with the Koopman operator, which evolves functions of the state linearly even when the dynamics is nonlinear. It explains why a linear readout on good features can forecast nonlinear dynamics, why delays and their products (AR and NVAR) work for periodic signals, and why no finite set of features is exact for chaos. Networks then produce the features. A recurrent network carries a state that summarises the past of the signal. We define the recurrent neural network (RNN), train it by backpropagation through time and discuss why its gradients vanish or explode. The gated cells LSTM and GRU keep information over longer times, and we write each of them as equations and as a drawing. Reservoir computing trains only the linear readout of a fixed random network. We introduce the echo state network, the echo state property, the memory capacity and the NARMA benchmark, and discuss physical reservoirs such as the soft silicone arm of Nakajima et al. All models are compared with the linear models and NVAR of Lecture 7 on the same signals. Two exercises apply the full analysis and forecasting pipeline to the Rössler system and superimposed oscillators, and to daily returns of the S&P 500 index.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-08.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-08.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 035: Lifting and the Koopman operator](../notebooks/lecture-08/lab-035-koopman.ipynb)
+
+Lifted observables, dynamic mode decomposition and its extended and delay versions on the example signals.
+:::
+
+::: {.nb-item}
+[Lab 036: Recurrent neural networks](../notebooks/lecture-08/lab-036-recurrent-networks.ipynb)
+
+MLP, RNN, LSTM and GRU trained in JAX and Flax, the echo state network in JAX and ReservoirPy, the echo state property, memory capacity, NARMA and the comparison on all signals.
+:::
+
+::: {.nb-item}
+[Exercise 01: Rössler system and superimposed oscillators](../notebooks/lecture-08/exercise-01-rossler-oscillators.ipynb)
+
+Characterise and forecast the Rössler signal and a sum of sine waves with the methods of Lectures 7 and 8.
+:::
+
+::: {.nb-item}
+[Exercise 02: Stock market returns](../notebooks/lecture-08/exercise-02-stock-market-returns.ipynb)
+
+The same analysis on daily returns of the S&P 500 index, with the baselines that every forecast must beat.
+:::

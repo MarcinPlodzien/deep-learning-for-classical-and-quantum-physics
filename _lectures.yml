@@ -18,6 +18,10 @@ website:
             href: lectures/lecture-05.qmd
           - text: "6 · Generative Models: Variational Autoencoders and Disentanglement"
             href: lectures/lecture-06.qmd
+          - text: "7 · Time Series: Characterisation and Forecasting"
+            href: lectures/lecture-07.qmd
+          - text: "8 · Koopman Operator, Recurrent Networks and Reservoir Computing"
+            href: lectures/lecture-08.qmd
       - text: "Resources"
         href: resources.qmd
       - text: "About"
@@ -79,6 +83,18 @@ website:
           - notebooks/lecture-06/lab-026-beta-vae.ipynb
           - notebooks/lecture-06/lab-028-trajectories.ipynb
           - notebooks/lecture-06/lab-027-galaxy-morphology.ipynb
+      - section: "7 · Time Series: Characterisation and Forecasting"
+        href: lectures/lecture-07.qmd
+        contents:
+          - notebooks/lecture-07/lab-033-signal-characterisation.ipynb
+          - notebooks/lecture-07/lab-034-linear-models-nvar.ipynb
+      - section: "8 · Koopman Operator, Recurrent Networks and Reservoir Computing"
+        href: lectures/lecture-08.qmd
+        contents:
+          - notebooks/lecture-08/lab-035-koopman.ipynb
+          - notebooks/lecture-08/lab-036-recurrent-networks.ipynb
+          - notebooks/lecture-08/exercise-01-rossler-oscillators.ipynb
+          - notebooks/lecture-08/exercise-02-stock-market-returns.ipynb
       - text: "Resources"
         href: resources.qmd
       - text: "About"

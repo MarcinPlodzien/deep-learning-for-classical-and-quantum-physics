@@ -1,0 +1,27 @@
+---
+title: "7 · Time Series: Characterisation and Forecasting"
+code-tools: false
+toc: false
+---
+
+A forecast maps the past of a signal to a value at a chosen horizon, and we score it with the normalised mean-square error and with the capacity, the squared correlation between forecast and target. Constant, periodic and quasi-periodic signals are trivial to forecast. Chaotic signals come from known deterministic equations, yet a small initial error grows exponentially at the rate of the Lyapunov exponent, which sets the prediction horizon. Stochastic signals contain a new random part at every step. We characterise signals with the autocorrelation function, the power spectrum, delay vectors after Takens, the Lyapunov exponents and the Kaplan–Yorke dimension, and apply these tools to the Lorenz-63 model, the Mackey–Glass delay equation at three delays and the Santa Fe laser record. We then forecast them with the linear models AR, MA, ARMA and ARIMA and with the nonlinear vector autoregression (NVAR), all written as linear combinations of features of the past, and compare the models by their one-step forecasts and their capacities.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-07.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-07.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 033: Signal characterisation](../notebooks/lecture-07/lab-033-signal-characterisation.ipynb)
+
+Lorenz, Mackey–Glass and Santa Fe signals, autocorrelation, power spectra, surrogate data tests, delay embedding, Lyapunov exponents and the Kaplan–Yorke dimension.
+:::
+
+::: {.nb-item}
+[Lab 034: Forecasting with linear models and NVAR](../notebooks/lecture-07/lab-034-linear-models-nvar.ipynb)
+
+Scores and baselines, AR, MA, ARMA and ARIMA models, and the nonlinear vector autoregression in JAX, scikit-learn and ReservoirPy.
+:::
