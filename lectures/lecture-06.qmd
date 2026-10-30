@@ -1,0 +1,45 @@
+---
+title: "6 · Generative Models: Variational Autoencoders and Disentanglement"
+code-tools: false
+toc: false
+---
+
+A generative model learns the probability distribution of the data and draws new samples from it. An autoencoder maps each image to an isolated code, and most points of its latent space decode to images that are not digits. The variational autoencoder (VAE) replaces each code by a small cloud, fits a continuous distribution in latent space with the evidence lower bound, and generates a new image in two steps, a latent vector from the prior followed by the decoder. We compare reconstruction with generation, study interpolation and the coverage of the prior, and judge the synthetic images with classifiers trained on real data. The conditional VAE generates at a chosen condition. For spin configurations at a chosen temperature it reproduces the phase and the order parameter, while the energy deviates because the spins are drawn independently once the latent vector is fixed. The β-VAE pushes each latent coordinate towards a single property of the data. We measure the result with rate and distortion, latent traversals and the mutual information gap on simple shapes and faces, and use the same model to extract physical parameters from spin configurations, noisy trajectories and galaxy images.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-06.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-06.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 024: Variational and conditional autoencoders](../notebooks/lecture-06/lab-024-vae-cvae.ipynb)
+
+The ELBO derived step by step, VAE and cVAE on MNIST, and synthetic images judged by a classifier.
+:::
+
+::: {.nb-item}
+[Lab 025: Synthetic spin configurations from a conditional VAE](../notebooks/lecture-06/lab-025-cvae-physics.ipynb)
+
+Generated Ising and J1–J2 configurations tested against Monte Carlo and the Hamiltonian.
+:::
+
+::: {.nb-item}
+[Lab 026: Disentangled representations and the β-VAE](../notebooks/lecture-06/lab-026-beta-vae.ipynb)
+
+The β-weighted loss, rate and distortion, dSprites and the mutual information gap, CelebA faces, and the physics learned from spin configurations, noisy trajectories and galaxy images.
+:::
+
+::: {.nb-item}
+[Lab 028: Physical parameters from trajectories](../notebooks/lecture-06/lab-028-trajectories.ipynb)
+
+A β-VAE on noisy oscillator and coupled-mass trajectories: which latent coordinates follow the physical parameters, and a reimplementation of the question-and-answer network of Iten et al.
+:::
+
+::: {.nb-item}
+[Lab 027: Galaxy morphology with a β-VAE](../notebooks/lecture-06/lab-027-galaxy-morphology.ipynb)
+
+Galaxy10 DECaLS images in PyTorch: latent coordinates against measured size, brightness and shape, and counterfactual images for a morphology classifier.
+:::

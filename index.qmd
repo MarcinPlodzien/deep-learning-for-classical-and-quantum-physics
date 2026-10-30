@@ -1,0 +1,37 @@
+---
+pagetitle: "Deep Learning in Classical and Quantum Physics"
+toc: false
+code-tools: false
+code-fold: false
+---
+
+::: {.hero}
+::: {.hero-text}
+<h1 class="hero-title">Deep Learning in Classical and Quantum Physics</h1>
+
+<p class="hero-tagline">A course at the Faculty of Physics, Astronomy and Applied Computer Science, Jagiellonian University in Kraków</p>
+
+<p class="hero-sub">Neural networks from first principles, applied to classical and quantum physics: the fundamentals of deep learning, capturing correlations, classical deep learning with quantum data, reinforcement learning for quantum tasks, and explainability and uncertainty in deep learning.</p>
+
+<p class="hero-author"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/"><b>Marcin Płodzień</b></a> · Atomic Optics Department, Institute of Theoretical Physics, Jagiellonian University in Kraków</p>
+
+[Start with Lecture 1](lectures/lecture-01.qmd){.btn .btn-primary} [Browse the lectures](#lectures){.btn .btn-outline-primary}
+:::
+
+::: {.hero-image}
+![](assets/hero.png){fig-alt="Spin configurations of the 2D Ising model below, at and above the critical temperature"}
+:::
+:::
+
+## The course
+
+The course consists of lectures and hands-on workshops with computer labs. The lectures come with slides and Jupyter notebooks, shown with their stored outputs; each notebook page has an *Open in Colab* button.
+
+## Lectures {#lectures}
+
+{{< include _lectures_table.md >}}
+
+## Main reading
+
+- T. Heightman, M. Płodzień, *Deep Learning in Classical and Quantum Physics*, Springer (to appear, 2027), [arXiv:2508.10666](https://arxiv.org/abs/2508.10666)
+- A. Dawid, J. Arnold, …, M. Płodzień et al., *Machine Learning in Quantum Sciences*, Cambridge University Press (2025), [arXiv:2204.04198](https://arxiv.org/abs/2204.04198)

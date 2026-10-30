@@ -1,0 +1,43 @@
+---
+title: "9 · Reservoir Computing"
+code-tools: false
+toc: false
+---
+
+Reservoir computing forecasts without training the network. A fixed random driven system, the echo state network, lifts the record into many nonlinear features, and only a linear readout is fitted. We define the echo state property and fading memory, measure the memory capacity and the NARMA tasks, and compare the reservoir with trained networks on the benchmark signals. Run in a closed loop on the Lorenz system, the reservoir forecasts the weather, the trajectory for a few Lyapunov times, and reproduces the climate, the attractor and its Lyapunov exponents, for some random reservoirs and not for others. The same idea works with physical systems. A network of leaky integrate-and-fire neurons, the liquid state machine, is a spiking reservoir, and a cellular automaton is a reservoir of discrete cells, tested on the 5-bit memory task, on the edge-of-chaos hypothesis and on forecasting.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-09.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-09.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Lecture notes
+
+[Download the lecture notes (PDF)](../notes/lecture-09.pdf){.btn .btn-outline-primary}
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 046: Echo state networks](../notebooks/lecture-09/lab-046-echo-state-networks.ipynb)
+
+The leaky echo state network in JAX, the echo state property and fading memory, the roles of spectral radius, leak and input scale, memory capacity, NARMA and the comparison with trained networks.
+:::
+
+::: {.nb-item}
+[Lab 048: Spiking reservoir](../notebooks/lecture-09/lab-048-spiking-reservoir.ipynb)
+
+The membrane as an RC circuit, the leaky integrate-and-fire neuron and its rate curve, the liquid state machine, the echo state property for spikes and the comparison with the echo state network.
+:::
+
+::: {.nb-item}
+[Lab 049: Weather and climate of an echo state network](../notebooks/lecture-09/lab-049-reservoir-climate.ipynb)
+
+A closed-loop echo state network on Lorenz-63, the valid time, attractor densities, the return map, Lyapunov exponents of the reservoir, and a scan over 240 random reservoirs.
+:::
+
+::: {.nb-item}
+[Lab 050: Cellular automaton reservoir](../notebooks/lecture-09/lab-050-cellular-automaton-reservoir.ipynb)
+
+Elementary rules and their classes, damage spreading, the cellular automaton as a reservoir, the 5-bit memory task, the edge-of-chaos hypothesis and forecasts against the echo state network.
+:::

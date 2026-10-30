@@ -1,0 +1,109 @@
+---
+title: "8 · Forecasting Models: Linear, Neural and Physics-Informed"
+code-tools: false
+toc: false
+---
+
+After a recap of the forecasting problem we forecast the benchmark signals from the record alone, with AR, MA and ARMA models, the Koopman view of a linear readout and the nonlinear vector autoregression (NVAR), and then with neural networks that learn the features, the multilayer perceptron and the recurrent RNN and LSTM. The second part adds physics to the models. A neural ordinary differential equation learns the unknown vector field of the equation of motion and is trained through the solver, and the learned field is analysed like an equation of motion, with its fixed points and its divergence, which tells a dissipative from a conservative system. A physics-informed neural network (PINN) puts a known law into the loss as a residual, for the damped oscillator, the heat equation in a rod and the Schrödinger equation of a trapped particle, and we compare it with classical solvers and use it to estimate unknown parameters from sparse data. Hybrid models keep the known terms and learn only the missing one, the friction of a pendulum and the interaction of predators and prey, and sparse regression turns the learned term into a formula.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-08.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-08.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Lecture notes
+
+[Download the lecture notes (PDF)](../notes/lecture-08.pdf){.btn .btn-outline-primary}
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 034: Forecasting with linear models and NVAR](../notebooks/lecture-08/lab-034-linear-models-nvar.ipynb)
+
+Scores and baselines, AR, MA, ARMA and ARIMA models, and the nonlinear vector autoregression in JAX, scikit-learn and ReservoirPy.
+:::
+
+::: {.nb-item}
+[Lab 035: Lifting and the Koopman operator](../notebooks/lecture-08/lab-035-koopman.ipynb)
+
+An exactly linearisable nonlinear map, the Koopman operator, dynamic mode decomposition, its delay version and AR as the smallest dictionary.
+:::
+
+::: {.nb-item}
+[Lab 036: Recurrent neural networks and reservoirs](../notebooks/lecture-08/lab-036-recurrent-networks.ipynb)
+
+MLP, RNN, LSTM and GRU trained in JAX and Flax, the echo state network in JAX and ReservoirPy, the echo state property, memory capacity, NARMA and the comparison on all signals.
+:::
+
+::: {.nb-item}
+[Lab 037: MLP forecaster](../notebooks/lecture-08/lab-037-mlp-forecaster.ipynb)
+
+A multilayer perceptron on the window of past values, trained in JAX and with a library version, on Santa Fe and Mackey–Glass at three delays.
+:::
+
+::: {.nb-item}
+[Lab 038: RNN forecaster](../notebooks/lecture-08/lab-038-rnn-forecaster.ipynb)
+
+The Elman recurrent network, backpropagation through time and vanishing gradients, forecasts at many horizons on Santa Fe and Mackey–Glass.
+:::
+
+::: {.nb-item}
+[Lab 039: LSTM forecaster](../notebooks/lecture-08/lab-039-lstm-forecaster.ipynb)
+
+The long short-term memory cell, its gates and learned memory times, forecasts on Santa Fe and Mackey–Glass.
+:::
+
+::: {.nb-item}
+[Lab 041: Physics-informed neural networks](../notebooks/lecture-08/lab-041-pinn.ipynb)
+
+PINN for the damped oscillator against a classical solver, the residual as prior knowledge, an inverse problem and time marching for the pendulum.
+:::
+
+::: {.nb-item}
+[Lab 042: Neural ordinary differential equations](../notebooks/lecture-08/lab-042-neural-ode.ipynb)
+
+Euler steps and residual networks, training through the solver with backpropagation and the adjoint method, the damped pendulum, Lorenz-63 and irregular sampling.
+:::
+
+::: {.nb-item}
+[Lab 043: Pendulum with unknown friction](../notebooks/lecture-08/lab-043-pendulum-friction.ipynb)
+
+A hybrid model with known gravity and a learned friction, sparse regression of the friction law and forecasts far beyond the data.
+:::
+
+::: {.nb-item}
+[Lab 044: Predator–prey with unknown interaction](../notebooks/lecture-08/lab-044-predator-prey.ipynb)
+
+Lotka–Volterra and a saturating predator, the learned interaction, its formula from sparse regression and a seasonal driver.
+:::
+
+::: {.nb-item}
+[Lab 045: Schrödinger equation with PINNs](../notebooks/lecture-08/lab-045-schroedinger-pinn.ipynb)
+
+A particle in a harmonic trap and tunnelling in a double well, the evolution predicted from a few snapshots with and without the Schrödinger residual against split-step Fourier, energy and phase checks, scans of snapshots and noise, and unknown trap frequency and barrier height.
+:::
+
+::: {.nb-item}
+[Exercise 01: Rössler system and superimposed oscillators](../notebooks/lecture-08/exercise-01-rossler-oscillators.ipynb)
+
+Characterise and forecast the Rössler signal and a sum of sine waves with the methods of Lectures 7 and 8.
+:::
+
+::: {.nb-item}
+[Exercise 02: Stock market returns](../notebooks/lecture-08/exercise-02-stock-market-returns.ipynb)
+
+The same analysis on daily returns of the S&P 500 index, with the baselines that every forecast must beat.
+:::
+
+::: {.nb-item}
+[Exercise 03: Koopman operator](../notebooks/lecture-08/exercise-03-koopman.ipynb)
+
+Closed dictionaries of a lifted map, DMD eigenvalues, Koopman eigenfunctions of the pendulum with EDMD, and delay DMD of measured signals with a ridge penalty.
+:::
+
+::: {.nb-item}
+[Exercise 04: Schrödinger equation with PINNs](../notebooks/lecture-08/exercise-04-schroedinger-pinn.ipynb)
+
+A coherent state, Crank–Nicolson and split-step references, a PINN in an anharmonic trap, and how the collocation density controls the norm drift.
+:::

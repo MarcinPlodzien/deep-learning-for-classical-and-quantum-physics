@@ -1,0 +1,87 @@
+---
+title: "5 · Unsupervised Learning and Phase Diagrams without Labels"
+code-tools: false
+toc: false
+---
+
+Unsupervised learning finds structure in data without labels. Principal component analysis gives each sample new coordinates along the directions of largest variance, and t-SNE draws a two-dimensional map that preserves neighbourhoods. k-means and DBSCAN group the samples into clusters, and an autoencoder compresses each sample through a narrow latent layer, so that a large reconstruction error marks an anomaly. We then apply these tools to phase diagrams. For the 2D Ising model the first principal component is the magnetisation, and an autoencoder trained in one phase gives a signal that sharpens towards T_c as the lattice grows, which we compare with finite-size scaling from Swendsen–Wang cluster updates. In the frustrated J1–J2 model with ferromagnetic and stripe order, PCA finds both order parameters, and autoencoders trained in three corners of the phase diagram recover the diagram from a coarse scan. The 2D XY model has no order parameter, and its Berezinskii–Kosterlitz–Thouless transition is driven by vortices. Autoencoders trained on spins, vortex maps and bond energies place the transition above the known temperature.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-05.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-05.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 016: PCA, t-SNE and clustering in JAX](../notebooks/lecture-05/lab-016-pca-tsne-clustering.ipynb)
+
+Low-dimensional maps of MNIST and groups of samples found without labels.
+:::
+
+::: {.nb-item}
+[Lab 017: Autoencoders and anomaly detection](../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.ipynb)
+
+Images compressed through a narrow latent layer, and anomalies found from the reconstruction error.
+:::
+
+::: {.nb-item}
+[Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model](../notebooks/lecture-05/lab-018-spin-models-monte-carlo.ipynb)
+
+Metropolis and Swendsen–Wang samples of the 2D Ising model and of the frustrated J1–J2 model.
+:::
+
+::: {.nb-item}
+[Lab 019: The 2D Ising transition without labels](../notebooks/lecture-05/lab-019-ising-without-labels.ipynb)
+
+PCA, autoencoders and finite-size scaling.
+:::
+
+::: {.nb-item}
+[Lab 020: The J1–J2 phase diagram without labels](../notebooks/lecture-05/lab-020-j1j2-without-labels.ipynb)
+
+PCA and autoencoders trained on one corner of the phase diagram.
+:::
+
+::: {.nb-item}
+[Lab 021: The 2D XY model without labels](../notebooks/lecture-05/lab-021-xy-without-labels.ipynb)
+
+PCA and autoencoders on spins, vortex maps and bond energies; the magnetisation crossover, network capacity and the BKT extrapolation.
+:::
+
+::: {.nb-item}
+[Lab 022: Ising gauge theory without labels](../notebooks/lecture-05/lab-022-gauge-without-labels.ipynb)
+
+Raw links, plaquettes and Wilson loops as inputs for PCA and autoencoders (optional).
+:::
+
+::: {.nb-item}
+[Lab 023: The SK spin glass without labels](../notebooks/lecture-05/lab-023-sk-without-labels.ipynb)
+
+Single snapshots against replica overlap fields, with the Mattis model as a control (optional).
+:::
+
+::: {.nb-item}
+[Lab 029: Physics of the frustrated J1–J2 Ising model](../notebooks/lecture-05/lab-029-physics-j1j2.ipynb)
+
+Ground states, domain walls, exact limits, mean field, transfer matrices and Binder cumulants.
+:::
+
+::: {.nb-item}
+[Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition](../notebooks/lecture-05/lab-030-physics-2d-xy.ipynb)
+
+Spin waves and Mermin–Wagner, vortices, the helicity modulus and its universal jump, and three Monte Carlo samplers.
+:::
+
+::: {.nb-item}
+[Lab 031: Physics of the Ising lattice gauge theory](../notebooks/lecture-05/lab-031-physics-ising-gauge.ipynb)
+
+Gauge symmetry, Elitzur's theorem, the exact 2D solution, Wegner duality and Wilson loops.
+:::
+
+::: {.nb-item}
+[Lab 032: Physics of the Sherrington–Kirkpatrick spin glass](../notebooks/lecture-05/lab-032-physics-sk-spin-glass.ipynb)
+
+Frustration, replicas and overlaps, parallel tempering, the energy landscape and the Mattis model.
+:::

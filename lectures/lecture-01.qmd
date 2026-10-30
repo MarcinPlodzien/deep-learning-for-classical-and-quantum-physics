@@ -1,0 +1,63 @@
+---
+title: "1 · From Artificial Intelligence to Neural Networks"
+code-tools: false
+toc: false
+---
+
+The lecture opens with goals of quantum physics that machine learning can serve and places deep learning within artificial intelligence, where programs are learned from data and the features that describe the data are learned by the network. We then introduce a neural network as a non-linear function with parameters. Without a non-linear activation, extra layers add no expressive power. With ReLU units a network approximates any continuous curve by straight pieces, and a steep sigmoid approximates a step, which leads to the universal approximation theorem. The lecture closes with regression and classification and with the literature of the course.
+
+## Slides
+
+[Download the slides (PDF)](../slides/lecture-01.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-01.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 001: Python, Matplotlib and Pandas](../notebooks/lecture-01/lab-001-python-matplotlib-pandas.ipynb)
+
+A warm-up with the tools used in every later notebook.
+:::
+
+::: {.nb-item}
+[Lab 002: NumPy, thinking in arrays](../notebooks/lecture-01/lab-002-numpy.ipynb)
+
+Vectorised computation instead of loops.
+:::
+
+::: {.nb-item}
+[Lab 003: PyTorch tensors, devices and layers](../notebooks/lecture-01/lab-003-pytorch.ipynb)
+
+The basic objects of PyTorch.
+:::
+
+::: {.nb-item}
+[Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation](../notebooks/lecture-01/lab-003c-jax.ipynb)
+
+jit, grad and vmap, Flax NNX and Optax, and a Metropolis sampler checked against exact enumeration.
+:::
+
+::: {.nb-item}
+[Lab 003a: Working with trained networks in PyTorch](../notebooks/lecture-01/lab-003a-trained-networks-pytorch.ipynb)
+
+Saving, inspecting, cutting, freezing and fine-tuning a trained CNN, and transfer learning with few labels.
+:::
+
+::: {.nb-item}
+[Lab 003b: Working with trained networks in JAX and Flax NNX](../notebooks/lecture-01/lab-003b-trained-networks-jax.ipynb)
+
+The same toolbox in JAX, with a PyTorch–JAX cheat sheet.
+:::
+
+::: {.nb-item}
+[Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks](../notebooks/lecture-01/lab-003d-framework-benchmark.ipynb)
+
+Speed, compilation cost and code of four tools on array operations, derivatives, Monte Carlo and training.
+:::
+
+::: {.nb-item}
+[Non-linear activations and universal approximation](../notebooks/lecture-01/nonlinearity-and-universal-approximation.ipynb)
+
+The figures of the lecture: depth without a non-linearity, ReLU pieces and sigmoid steps.
+:::
