@@ -1,0 +1,95 @@
+---
+title: "10 · Reinforcement Learning for Quantum State Preparation"
+code-tools: false
+toc: false
+---
+
+We first develop reinforcement learning through states, actions, rewards, returns, policies and the Bellman equation. We show a changing Q-table, Q-learning, Double Q-learning, replay, target networks, DQN and Double DQN, followed by policy gradient, reward-to-go, REINFORCE, actor–critic and PPO. Quantum state preparation is then the implementation example. We state the target-state objective and introduce the action, matrices and exponential generators of H, T, CNOT, single-qubit rotations and XX/YY/ZZ interactions. GHZ, W and Dicke states are defined and their properties explained before constructing reference circuits. The cavity example introduces open evolution, weak measurement and the source feedback-learning result.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-10.pdf){.btn .btn-outline-primary} [Download the lecture companion (PDF)](../notes/lecture-10.pdf){.btn .btn-outline-primary} [Download the full lecture notes (PDF)](../notes/lecture-10-extended.pdf){.btn .btn-outline-primary}
+
+The lecture companion follows the main presentation. The full notes include the derivations and extended comparisons.
+
+<iframe src="../slides/lecture-10.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 063: Bellman equations from sampled experience](../notebooks/lecture-10/lab-063-bellman-from-experience.ipynb)
+
+Exact values of the running three-state process, sampled Bellman targets, TD errors at the solution, and tabular learning with its residual.
+:::
+
+::: {.nb-item}
+[Lab 061: Balancing a pole on a cart](../notebooks/lecture-10/lab-061-cartpole.ipynb)
+
+Observations, pushes and survival return, evaluation of a saved REINFORCE policy and one new policy-gradient update.
+:::
+
+::: {.nb-item}
+[Lab 062: Landing with discrete engine commands](../notebooks/lecture-10/lab-062-lunarlander.ipynb)
+
+Engine actions and the shaped reward, evaluation of saved DQN and PPO agents, and a one-step TD target.
+:::
+
+::: {.nb-item}
+[Lab 057: GHZ, W and Dicke target states](../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.ipynb)
+
+Gate matrices and Hamiltonian forms, target vectors, entanglement, losing a qubit, and reference circuits for GHZ6 and W6. No agent training.
+:::
+
+::: {.nb-item}
+[Lab 058: Finite-budget GHZ compilation](../notebooks/lecture-10/lab-058-finite-budget-ghz.ipynb)
+
+Backward induction, a Q-table learned from transitions, DQN and Double DQN targets, and baseline estimators with an exact gradient.
+:::
+
+::: {.nb-item}
+[Lab 059: Continuous angles with REINFORCE](../notebooks/lecture-10/lab-059-continuous-angles.ipynb)
+
+Gaussian and categorical scores, a small angle-and-gate policy for a two-qubit target, and a parameter-shift reference.
+:::
+
+::: {.nb-item}
+[Lab 060: Cavity feedback checks](../notebooks/lecture-10/lab-060-cavity-checks.ipynb)
+
+Constant drive and threshold feedback on validation and test trajectories, with timestep, cutoff and noise scans. No agent training.
+:::
+
+::: {.nb-item}
+[Lab 056a: Pendulum swing-up by planning](../notebooks/lecture-10/lab-056a-pendulum-planning.ipynb)
+
+Energy and phase portrait, value iteration on a grid, and evaluation of the planned policies on the continuous dynamics (optional).
+:::
+
+::: {.nb-item}
+[Lab 052: Quantum circuit compilation (full study)](../notebooks/lecture-10/lab-052-quantum-circuit-compilation.ipynb)
+
+Discrete gate sequences learned by DQN, Double DQN and policy gradient, with exact small-system references.
+:::
+
+::: {.nb-item}
+[Lab 055: Compilation with continuous angles (full study)](../notebooks/lecture-10/lab-055-continuous-state-compilation.ipynb)
+
+Policy gradient over rotation angles and entangling gates, compared with differentiating the simulator.
+:::
+
+::: {.nb-item}
+[Lab 054: Preparation with Hamiltonian evolutions (full study)](../notebooks/lecture-10/lab-054-quantum-state-preparation.ipynb)
+
+The full control study, including introductory and robustness extensions beyond the main lecture.
+:::
+
+::: {.nb-item}
+[Lab 053: One photon in a leaky cavity (full study)](../notebooks/lecture-10/lab-053-fock-state-cavity.ipynb)
+
+A simplified simulation of noisy photon-number feedback and policy-gradient control, separate from the source paper's result.
+:::
+
+::: {.nb-item}
+[Lab 056: Pendulum swing-up with Q-learning (full study)](../notebooks/lecture-10/lab-056-pendulum-swing-up.ipynb)
+
+Value iteration and tabular Q-learning over four seeds, with learning curves and final success rates (optional).
+:::

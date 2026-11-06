@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Lab 057: GHZ, W and Dicke target states</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" rel="next">
+<link href="../../notebooks/lecture-10/lab-062-lunarlander.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-07.html">
+ <span class="dropdown-text">7 · Time Series: Dynamical Systems, Chaos and Embedding</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-08.html">
+ <span class="dropdown-text">8 · Forecasting Models: Linear, Neural and Physics-Informed</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-09.html">
+ <span class="dropdown-text">9 · Reservoir Computing</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-10.html">
+ <span class="dropdown-text">10 · Reinforcement Learning for Quantum State Preparation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-11.html">
+ <span class="dropdown-text">11 · Quantum Information for Newcomers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-12.html">
+ <span class="dropdown-text">12 · Parametrised Quantum Circuits as Variational Ansätze</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lab 057: GHZ, W and Dicke target states</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-021-xy-without-labels.html" class="sidebar-item-text sidebar-link">Lab 021: The 2D XY model without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-022-gauge-without-labels.html" class="sidebar-item-text sidebar-link">Lab 022: Ising gauge theory without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-023-sk-without-labels.html" class="sidebar-item-text sidebar-link">Lab 023: The SK spin glass without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-030-physics-2d-xy.html" class="sidebar-item-text sidebar-link">Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-07.html" class="sidebar-item-text sidebar-link">7 · Time Series: Dynamical Systems, Chaos and Embedding</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-033-signal-characterisation.html" class="sidebar-item-text sidebar-link">Lab 033: Signal characterisation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-08.html" class="sidebar-item-text sidebar-link">8 · Forecasting Models: Linear, Neural and Physics-Informed</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-034-linear-models-nvar.html" class="sidebar-item-text sidebar-link">Lab 034: Forecasting with linear models and NVAR</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-035-koopman.html" class="sidebar-item-text sidebar-link">Lab 035: Lifting and the Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="sidebar-item-text sidebar-link">Lab 036: Recurrent neural networks and reservoirs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-037-mlp-forecaster.html" class="sidebar-item-text sidebar-link">Lab 037: MLP forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-038-rnn-forecaster.html" class="sidebar-item-text sidebar-link">Lab 038: RNN forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-039-lstm-forecaster.html" class="sidebar-item-text sidebar-link">Lab 039: LSTM forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-041-pinn.html" class="sidebar-item-text sidebar-link">Lab 041: Physics-informed neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-042-neural-ode.html" class="sidebar-item-text sidebar-link">Lab 042: Neural ordinary differential equations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-043-pendulum-friction.html" class="sidebar-item-text sidebar-link">Lab 043: Pendulum with unknown friction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-044-predator-prey.html" class="sidebar-item-text sidebar-link">Lab 044: Predator–prey with unknown interaction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-045-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Lab 045: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-01-rossler-oscillators.html" class="sidebar-item-text sidebar-link">Exercise 01: Rössler system and superimposed oscillators</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="sidebar-item-text sidebar-link">Exercise 02: Stock market returns</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-03-koopman.html" class="sidebar-item-text sidebar-link">Exercise 03: Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-04-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Exercise 04: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-09.html" class="sidebar-item-text sidebar-link">9 · Reservoir Computing</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-046-echo-state-networks.html" class="sidebar-item-text sidebar-link">Lab 046: Echo state networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-047-quantum-reservoir-computing.html" class="sidebar-item-text sidebar-link">Lab 047: Quantum reservoir computing</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-049-reservoir-climate.html" class="sidebar-item-text sidebar-link">Lab 049: Weather and climate of an echo state network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-050-cellular-automaton-reservoir.html" class="sidebar-item-text sidebar-link">Lab 050: Cellular automaton reservoir</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-10.html" class="sidebar-item-text sidebar-link">10 · Reinforcement Learning for Quantum State Preparation</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-063-bellman-from-experience.html" class="sidebar-item-text sidebar-link">Lab 063: Bellman equations from sampled experience</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-061-cartpole.html" class="sidebar-item-text sidebar-link">Lab 061: Balancing a pole on a cart</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-062-lunarlander.html" class="sidebar-item-text sidebar-link">Lab 062: Landing with discrete engine commands</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" class="sidebar-item-text sidebar-link active">Lab 057: GHZ, W and Dicke target states</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" class="sidebar-item-text sidebar-link">Lab 058: Finite-budget GHZ compilation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-059-continuous-angles.html" class="sidebar-item-text sidebar-link">Lab 059: Continuous angles with REINFORCE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-060-cavity-checks.html" class="sidebar-item-text sidebar-link">Lab 060: Cavity feedback checks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056a-pendulum-planning.html" class="sidebar-item-text sidebar-link">Lab 056a: Pendulum swing-up by planning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-052-quantum-circuit-compilation.html" class="sidebar-item-text sidebar-link">Lab 052: Quantum circuit compilation (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-055-continuous-state-compilation.html" class="sidebar-item-text sidebar-link">Lab 055: Compilation with continuous angles (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-054-quantum-state-preparation.html" class="sidebar-item-text sidebar-link">Lab 054: Preparation with Hamiltonian evolutions (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-053-fock-state-cavity.html" class="sidebar-item-text sidebar-link">Lab 053: One photon in a leaky cavity (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056-pendulum-swing-up.html" class="sidebar-item-text sidebar-link">Lab 056: Pendulum swing-up with Q-learning (full study)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-11.html" class="sidebar-item-text sidebar-link">11 · Quantum Information for Newcomers</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-064-one-qubit.html" class="sidebar-item-text sidebar-link">Lab 064: One qubit, measurements and gates as rotations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-065-two-spin-register.html" class="sidebar-item-text sidebar-link">Lab 065: The two-spin register</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066-density-matrices-noise.html" class="sidebar-item-text sidebar-link">Lab 066: Density matrices, measurement and noise</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-067-atom-light-qubit.html" class="sidebar-item-text sidebar-link">Lab 067: An atom in laser light as a qubit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-068-interacting-qubits-gates.html" class="sidebar-item-text sidebar-link">Lab 068: Interactions and two-qubit gates</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-12.html" class="sidebar-item-text sidebar-link">12 · Parametrised Quantum Circuits as Variational Ansätze</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" class="sidebar-item-text sidebar-link">Lab 069: Parametrised circuits and their gradients</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" class="sidebar-item-text sidebar-link">Lab 070: VQE and the choice of ansatz</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070a-xxz-phase-diagram.html" class="sidebar-item-text sidebar-link">Lab 070a: VQE phase diagram of the XXZ chain in a field</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" class="sidebar-item-text sidebar-link">Lab 071: Barren plateaus</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-072-born-machine.html" class="sidebar-item-text sidebar-link">Lab 072: Modelling probabilities with a quantum circuit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" class="sidebar-item-text sidebar-link">Lab 073: QUBO and QAOA</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lab-057-ghz-w-and-dicke-target-states" id="toc-lab-057-ghz-w-and-dicke-target-states" class="nav-link active" data-scroll-target="#lab-057-ghz-w-and-dicke-target-states">Lab 057 — GHZ, W and Dicke target states</a>
+  <ul class="collapse">
+  <li><a href="#operations-on-qubits" id="toc-operations-on-qubits" class="nav-link" data-scroll-target="#operations-on-qubits">Operations on qubits</a>
+  <ul class="collapse">
+  <li><a href="#single-qubit-gates" id="toc-single-qubit-gates" class="nav-link" data-scroll-target="#single-qubit-gates">Single-qubit gates</a></li>
+  <li><a href="#two-qubit-gates" id="toc-two-qubit-gates" class="nav-link" data-scroll-target="#two-qubit-gates">Two-qubit gates</a></li>
+  </ul></li>
+  <li><a href="#three-target-superpositions" id="toc-three-target-superpositions" class="nav-link" data-scroll-target="#three-target-superpositions">Three target superpositions</a></li>
+  <li><a href="#entanglement-across-a-cut" id="toc-entanglement-across-a-cut" class="nav-link" data-scroll-target="#entanglement-across-a-cut">Entanglement across a cut</a></li>
+  <li><a href="#predictions-from-excitation-counting" id="toc-predictions-from-excitation-counting" class="nav-link" data-scroll-target="#predictions-from-excitation-counting">Predictions from excitation counting</a></li>
+  <li><a href="#losing-a-qubit" id="toc-losing-a-qubit" class="nav-link" data-scroll-target="#losing-a-qubit">Losing a qubit</a></li>
+  <li><a href="#entanglement-created-by-two-qubit-rotations" id="toc-entanglement-created-by-two-qubit-rotations" class="nav-link" data-scroll-target="#entanglement-created-by-two-qubit-rotations">Entanglement created by two-qubit rotations</a></li>
+  <li><a href="#a-reference-circuit-for-ghz6" id="toc-a-reference-circuit-for-ghz6" class="nav-link" data-scroll-target="#a-reference-circuit-for-ghz6">A reference circuit for GHZ6</a></li>
+  <li><a href="#a-continuous-reference-construction-for-w6" id="toc-a-continuous-reference-construction-for-w6" class="nav-link" data-scroll-target="#a-continuous-reference-construction-for-w6">A continuous reference construction for W6</a></li>
+  <li><a href="#compilation-experiments" id="toc-compilation-experiments" class="nav-link" data-scroll-target="#compilation-experiments">Compilation experiments</a></li>
+  <li><a href="#student-investigations" id="toc-student-investigations" class="nav-link" data-scroll-target="#student-investigations">Student investigations</a></li>
+  <li><a href="#optional-mixed-state-entanglement-diagnostic" id="toc-optional-mixed-state-entanglement-diagnostic" class="nav-link" data-scroll-target="#optional-mixed-state-entanglement-diagnostic">Optional mixed-state entanglement diagnostic</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Lab 057: GHZ, W and Dicke target states</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<section id="lab-057-ghz-w-and-dicke-target-states" class="level1">
+<h1>Lab 057 — GHZ, W and Dicke target states</h1>
+<p>A six-qubit register starts in <span class="math inline">\(|000000\rangle\)</span>. We want to bring it to a chosen target state <span class="math inline">\(|\psi_{\rm target}\rangle\)</span> by applying a sequence of allowed operations. A prepared state <span class="math inline">\(|\psi\rangle\)</span> is judged by its fidelity <span class="math inline">\(F=|\langle\psi_{\rm target}|\psi\rangle|^2\)</span>, which equals one for a perfect preparation and is the reward signal used by the compilation agents of the lecture.</p>
+<p>We first introduce the available operations with their matrices and Hamiltonian forms. We then define the three targets, GHZ, W and Dicke, and compare their amplitudes, excitation numbers, entanglement and response to losing a qubit. Only then do we build reference circuits for GHZ and W from the introduced operations.</p>
+<p>This notebook uses exact state vectors with NumPy, SciPy and Matplotlib. It trains no reinforcement-learning agent and reports no new compilation benchmark. The Dicke state is an additional target for future compilation experiments.</p>
+<section id="operations-on-qubits" class="level2">
+<h2 class="anchored" data-anchor-id="operations-on-qubits">Operations on qubits</h2>
+<p>Each qubit has basis states <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span>. In a basis string <span class="math inline">\(|x_0x_1\dots x_5\rangle\)</span> qubit 0 is the most significant bit. The Pauli matrices are <span class="math display">\[\hat X=\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix},\qquad \hat Y=\begin{pmatrix}0&amp;-i\\ i&amp;0\end{pmatrix},\qquad \hat Z=\begin{pmatrix}1&amp;0\\0&amp;-1\end{pmatrix}.\]</span></p>
+<p>Every operation is a unitary matrix, and every unitary is the time evolution <span class="math inline">\(e^{-i\hat{\mathcal H} t}\)</span> under some Hamiltonian <span class="math inline">\(\hat{\mathcal H}\)</span> acting for a time <span class="math inline">\(t\)</span>, with <span class="math inline">\(\hbar=1\)</span>. Hardware implements a gate by switching on such a Hamiltonian, so we give both forms.</p>
+<section id="single-qubit-gates" class="level3">
+<h3 class="anchored" data-anchor-id="single-qubit-gates">Single-qubit gates</h3>
+<p>The Hadamard gate maps <span class="math inline">\(|0\rangle\to(|0\rangle+|1\rangle)/\sqrt2\)</span> and <span class="math inline">\(|1\rangle\to(|0\rangle-|1\rangle)/\sqrt2\)</span>. It creates an equal superposition from a basis state. The phase gates S and T leave <span class="math inline">\(|0\rangle\)</span> unchanged and multiply <span class="math inline">\(|1\rangle\)</span> by a phase, <span class="math display">\[\hat H=\frac1{\sqrt2}\begin{pmatrix}1&amp;1\\1&amp;-1\end{pmatrix}=e^{-i\pi(\hat I-\hat H)/2},\qquad \hat S=\begin{pmatrix}1&amp;0\\0&amp;i\end{pmatrix}=e^{i\pi/4}e^{-i\pi \hat Z/4},\qquad \hat T=\begin{pmatrix}1&amp;0\\0&amp;e^{i\pi/4}\end{pmatrix}=e^{i\pi/8}e^{-i\pi \hat Z/8}.\]</span> A rotation by a continuous angle <span class="math inline">\(\theta\)</span> about the axis <span class="math inline">\(\alpha\in\{x,y,z\}\)</span> is <span class="math display">\[\hat R_\alpha(\theta)=e^{-i\theta\hat\sigma_\alpha/2}=\cos\tfrac\theta2\,\hat I-i\sin\tfrac\theta2\,\hat\sigma_\alpha ,\]</span> with <span class="math inline">\(\hat\sigma_x=\hat X\)</span>, <span class="math inline">\(\hat\sigma_y=\hat Y\)</span>, <span class="math inline">\(\hat\sigma_z=\hat Z\)</span>. It is generated by the field term <span class="math inline">\(\hat{\mathcal H}=\tfrac\Omega2\hat\sigma_\alpha\)</span> acting for the time <span class="math inline">\(t=\theta/\Omega\)</span>.</p>
+</section>
+<section id="two-qubit-gates" class="level3">
+<h3 class="anchored" data-anchor-id="two-qubit-gates">Two-qubit gates</h3>
+<p>The controlled-NOT gate (CNOT) flips the second (target) qubit when the first (control) qubit is <span class="math inline">\(|1\rangle\)</span>. In the basis <span class="math inline">\(|00\rangle,|01\rangle,|10\rangle,|11\rangle\)</span>, <span class="math display">\[\widehat{\mathrm{CNOT}}=\begin{pmatrix}1&amp;0&amp;0&amp;0\\0&amp;1&amp;0&amp;0\\0&amp;0&amp;0&amp;1\\0&amp;0&amp;1&amp;0\end{pmatrix}=e^{-i\pi(\hat I-\hat Z)\otimes(\hat I-\hat X)/4}.\]</span> The operator <span class="math inline">\((\hat I-\hat Z)/2\)</span> projects the control on <span class="math inline">\(|1\rangle\)</span> and <span class="math inline">\((\hat I-\hat X)/2\)</span> has eigenvalue one on the target state that X flips, which is why this product generates the flip. The continuous two-qubit rotations <span class="math display">\[\hat R_{\alpha\alpha}(\theta)=e^{-i\theta\,\hat\sigma_\alpha\otimes\hat\sigma_\alpha/2}=\cos\tfrac\theta2\,\hat I-i\sin\tfrac\theta2\,\hat\sigma_\alpha\otimes\hat\sigma_\alpha\]</span> are generated by the Ising-type couplings <span class="math inline">\(\hat{\mathcal H}=\tfrac J2\hat\sigma_\alpha\otimes\hat\sigma_\alpha\)</span> (XX, YY and ZZ interactions) acting for <span class="math inline">\(t=\theta/J\)</span>. Only the two-qubit operations can create entanglement.</p>
+<p>The cell below checks every matrix against its exponential form. It also checks that the excitation-transfer gate used later for the W state, <span class="math inline">\(\hat G(\theta)=(\hat I\otimes \hat S)\,\hat R_{xx}(\theta)\hat R_{yy}(\theta)\,(\hat I\otimes \hat S)^\dagger\)</span>, rotates <span class="math inline">\(|01\rangle\)</span> and <span class="math inline">\(|10\rangle\)</span> into each other by the angle <span class="math inline">\(\theta\)</span> and leaves <span class="math inline">\(|00\rangle\)</span> and <span class="math inline">\(|11\rangle\)</span> unchanged. The helper functions apply a one- or two-qubit matrix to chosen qubits of the register.</p>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> comb</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.linalg <span class="im">import</span> expm</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> np.eye(<span class="dv">2</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([[<span class="dv">0</span>,<span class="dv">1</span>],[<span class="dv">1</span>,<span class="dv">0</span>]],dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> np.array([[<span class="dv">0</span>,<span class="op">-</span><span class="ot">1j</span>],[<span class="ot">1j</span>,<span class="dv">0</span>]])</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> np.diag([<span class="fl">1.0</span>,<span class="op">-</span><span class="fl">1.0</span>]).astype(<span class="bu">complex</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> (X<span class="op">+</span>Z)<span class="op">/</span>np.sqrt(<span class="dv">2</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> np.diag([<span class="dv">1</span>,<span class="ot">1j</span>])</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> np.diag([<span class="dv">1</span>,np.exp(<span class="ot">1j</span><span class="op">*</span>np.pi<span class="op">/</span><span class="dv">4</span>)])</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>CX <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>],[<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>],[<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>]],dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> R(pauli, theta):</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>theta<span class="op">*</span>pauli<span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> R2(pauli, theta):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>theta<span class="op">*</span>np.kron(pauli,pauli)<span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> transfer_gate(theta):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    phases <span class="op">=</span> np.kron(I,S)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> phases<span class="op">@</span>R2(X,theta)<span class="op">@</span>R2(Y,theta)<span class="op">@</span>phases.conj().T</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(H, expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>np.pi<span class="op">*</span>(I<span class="op">-</span>H)<span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(S, np.exp(<span class="ot">1j</span><span class="op">*</span>np.pi<span class="op">/</span><span class="dv">4</span>)<span class="op">*</span>expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>np.pi<span class="op">*</span>Z<span class="op">/</span><span class="dv">4</span>))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(T, np.exp(<span class="ot">1j</span><span class="op">*</span>np.pi<span class="op">/</span><span class="dv">8</span>)<span class="op">*</span>expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>np.pi<span class="op">*</span>Z<span class="op">/</span><span class="dv">8</span>))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(CX, expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>np.pi<span class="op">*</span>np.kron(I<span class="op">-</span>Z,I<span class="op">-</span>X)<span class="op">/</span><span class="dv">4</span>))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> theta <span class="kw">in</span> (<span class="dv">0</span>, <span class="fl">0.3</span>, np.pi<span class="op">/</span><span class="dv">2</span>, np.pi, <span class="dv">2</span><span class="op">*</span>np.pi):</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    c2, s2 <span class="op">=</span> np.cos(theta<span class="op">/</span><span class="dv">2</span>), np.sin(theta<span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pauli <span class="kw">in</span> (X,Y,Z):</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> np.allclose(R(pauli,theta), c2<span class="op">*</span>I<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>s2<span class="op">*</span>pauli)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> np.allclose(R2(pauli,theta), c2<span class="op">*</span>np.eye(<span class="dv">4</span>)<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>s2<span class="op">*</span>np.kron(pauli,pauli))</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    c, s <span class="op">=</span> np.cos(theta), np.sin(theta)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    expected <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],[<span class="dv">0</span>,c,s,<span class="dv">0</span>],[<span class="dv">0</span>,<span class="op">-</span>s,c,<span class="dv">0</span>],[<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>]])</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.allclose(transfer_gate(theta), expected)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>basis <span class="op">=</span> np.eye(<span class="dv">4</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"CNOT on 00,01,10,11 gives"</span>, [<span class="bu">format</span>(<span class="bu">int</span>(np.argmax(<span class="bu">abs</span>(CX<span class="op">@</span>e))),<span class="st">'02b'</span>) <span class="cf">for</span> e <span class="kw">in</span> basis])</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"H, S, T, rotation, CNOT and transfer-gate identities pass."</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_1q(v, U, q, n<span class="op">=</span>N):</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> np.moveaxis(v.reshape([<span class="dv">2</span>]<span class="op">*</span>n), q, <span class="dv">0</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> np.tensordot(U, psi, axes<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.moveaxis(psi, <span class="dv">0</span>, q).reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_2q(v, U, q1, q2, n<span class="op">=</span>N):</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> np.moveaxis(v.reshape([<span class="dv">2</span>]<span class="op">*</span>n), (q1,q2), (<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> np.tensordot(U.reshape(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>), psi, axes<span class="op">=</span>((<span class="dv">2</span>,<span class="dv">3</span>),(<span class="dv">0</span>,<span class="dv">1</span>)))</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.moveaxis(psi, (<span class="dv">0</span>,<span class="dv">1</span>), (q1,q2)).reshape(<span class="op">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>CNOT on 00,01,10,11 gives ['00', '01', '11', '10']
+H, S, T, rotation, CNOT and transfer-gate identities pass.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="three-target-superpositions" class="level2">
+<h2 class="anchored" data-anchor-id="three-target-superpositions">Three target superpositions</h2>
+<p>The excitation number <span class="math inline">\(|x|\)</span> of a basis string is its number of 1s. The three targets are <span class="math display">\[|\mathrm{GHZ}_6\rangle=\frac{|000000\rangle+|111111\rangle}{\sqrt2},\qquad |W_6\rangle=\frac{|100000\rangle+|010000\rangle+\dots+|000001\rangle}{\sqrt6},\qquad |D_6^{(3)}\rangle=\frac1{\sqrt{20}}\sum_{|x|=3}|x\rangle .\]</span> The GHZ state superposes the two strings in which all qubits agree. The W state is an equal positive superposition of the six strings with one excitation. The Dicke state is an equal positive superposition of all <span class="math inline">\(\binom63=20\)</span> strings with three excitations, each with amplitude <span class="math inline">\(1/\sqrt{20}\approx0.224\)</span>. W and Dicke states have a fixed excitation number and are invariant under exchanges of qubits.</p>
+<p>These states are coherent superpositions. Replacing them by a classical mixture with the same computational-basis probabilities removes relative-phase information. The cell below builds the three vectors and checks normalisation and the number of nonzero amplitudes.</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>strings <span class="op">=</span> [<span class="bu">format</span>(i, <span class="ss">f"0</span><span class="sc">{</span>N<span class="sc">}</span><span class="ss">b"</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span><span class="op">**</span>N)]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> np.array([s.count(<span class="st">"1"</span>) <span class="cf">for</span> s <span class="kw">in</span> strings])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dicke(n, k):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="dv">0</span> <span class="op">&lt;=</span> k <span class="op">&lt;=</span> n</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([<span class="dv">1</span><span class="op">/</span>np.sqrt(comb(n,k)) <span class="cf">if</span> i.bit_count()<span class="op">==</span>k <span class="cf">else</span> <span class="fl">0.0</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                     <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span><span class="op">**</span>n)])</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>ghz <span class="op">=</span> np.zeros(<span class="dv">2</span><span class="op">**</span>N)<span class="op">;</span> ghz[<span class="dv">0</span>] <span class="op">=</span> ghz[<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> <span class="dv">1</span><span class="op">/</span>np.sqrt(<span class="dv">2</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> dicke(N,<span class="dv">1</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>d3 <span class="op">=</span> dicke(N,<span class="dv">3</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> {<span class="st">"GHZ6"</span>:ghz,<span class="st">"W6"</span>:w,<span class="st">"Dicke6,3"</span>:d3}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, v <span class="kw">in</span> states.items():</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.isclose(v<span class="op">@</span>v,<span class="dv">1</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, <span class="st">"nonzero amplitudes"</span>, np.count_nonzero(v),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>          <span class="st">"values"</span>, np.unique(v[v<span class="op">!=</span><span class="dv">0</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>GHZ6 nonzero amplitudes 2 values [0.70710678]
+W6 nonzero amplitudes 6 values [0.40824829]
+Dicke6,3 nonzero amplitudes 20 values [0.2236068]</code></pre>
+</div>
+</div>
+<p>The histograms show the probability of each excitation number. GHZ splits equally between 0 and 6 excitations, W sits at one excitation and the Dicke state at three.</p>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">3</span>,figsize<span class="op">=</span>(<span class="dv">11</span>,<span class="dv">3</span>),layout<span class="op">=</span><span class="st">"constrained"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax,(name,v) <span class="kw">in</span> <span class="bu">zip</span>(axes,states.items()):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    distribution <span class="op">=</span> np.bincount(weights,weights<span class="op">=</span>np.<span class="bu">abs</span>(v)<span class="op">**</span><span class="dv">2</span>,minlength<span class="op">=</span>N<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    ax.bar(np.arange(N<span class="op">+</span><span class="dv">1</span>),distribution)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(title<span class="op">=</span>name,xlabel<span class="op">=</span><span class="st">"Excitation number"</span>,ylabel<span class="op">=</span><span class="st">"Probability"</span>,ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="fl">1.05</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.count_nonzero(d3)<span class="op">==</span><span class="dv">20</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-057-ghz-w-dicke-target-states_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="entanglement-across-a-cut" class="level2">
+<h2 class="anchored" data-anchor-id="entanglement-across-a-cut">Entanglement across a cut</h2>
+<p>Divide the qubits into parts A and B and arrange the amplitudes as a matrix, with A’s basis states labelling rows and B’s basis states labelling columns. A singular-value decomposition writes this matrix in orthogonal basis directions with nonnegative coefficients. These are the Schmidt coefficients. One nonzero coefficient describes a product state. More than one means that the pure state is entangled across that cut.</p>
+<p>Ignoring B gives a reduced density matrix with entries <span class="math inline">\((\rho_A)_{ij}=\sum_b\psi_{ib}\psi^*_{jb}\)</span>. Summing out the unobserved index is the partial trace. The squared Schmidt coefficients <span class="math inline">\(p_j\)</span> sum to one. They are the eigenvalues of the reduced density matrix, and their entropy is <span class="math inline">\(-\sum_jp_j\log_2p_j\)</span>. The notes derive the reduced-state rule before applying it to these targets.</p>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cut_entropy(v, left):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    coefficients <span class="op">=</span> np.linalg.svd(v.reshape(<span class="dv">2</span><span class="op">**</span>left,<span class="op">-</span><span class="dv">1</span>),compute_uv<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> coefficients<span class="op">**</span><span class="dv">2</span><span class="op">;</span> p <span class="op">=</span> p[p<span class="op">&gt;</span><span class="fl">1e-14</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">float</span>(<span class="op">-</span>np.<span class="bu">sum</span>(p<span class="op">*</span>np.log2(p)))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name,v <span class="kw">in</span> states.items():</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    entropies <span class="op">=</span> [cut_entropy(v,left) <span class="cf">for</span> left <span class="kw">in</span> (<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, <span class="st">"entropy for cuts 1|5, 2|4, 3|3"</span>,np.<span class="bu">round</span>(entropies,<span class="dv">6</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">all</span>(x<span class="op">&gt;</span><span class="dv">0</span> <span class="cf">for</span> x <span class="kw">in</span> entropies)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>GHZ6 entropy for cuts 1|5, 2|4, 3|3 [1. 1. 1.]
+W6 entropy for cuts 1|5, 2|4, 3|3 [0.650022 0.918296 1.      ]
+Dicke6,3 entropy for cuts 1|5, 2|4, 3|3 [1.       1.370951 1.468996]</code></pre>
+</div>
+</div>
+</section>
+<section id="predictions-from-excitation-counting" class="level2">
+<h2 class="anchored" data-anchor-id="predictions-from-excitation-counting">Predictions from excitation counting</h2>
+<p>For a cut with <span class="math inline">\(m\)</span> qubits on the left, group the Dicke strings by the number <span class="math inline">\(j\)</span> of excitations on that side. Each group contributes one Schmidt term, and its probability is the fraction of the <span class="math inline">\(\binom Nk\)</span> strings in the group, <span class="math inline">\(p_j=\binom mj\binom{N-m}{k-j}/\binom Nk\)</span>. We compare these probabilities with the squared singular values of the target reshaped across the cut, for the 2|4 and 3|3 cuts of <span class="math inline">\(|D_6^{(3)}\rangle\)</span>. The counting reproduces the entropies printed above without a numerical decomposition.</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> (<span class="dv">2</span>, <span class="dv">3</span>):</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    js <span class="op">=</span> <span class="bu">range</span>(<span class="bu">max</span>(<span class="dv">0</span>,k<span class="op">-</span>N<span class="op">+</span>m), <span class="bu">min</span>(k,m)<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    predicted <span class="op">=</span> np.array([comb(m,j)<span class="op">*</span>comb(N<span class="op">-</span>m,k<span class="op">-</span>j)<span class="op">/</span>comb(N,k) <span class="cf">for</span> j <span class="kw">in</span> js])</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    spectrum <span class="op">=</span> np.linalg.svd(d3.reshape(<span class="dv">2</span><span class="op">**</span>m,<span class="op">-</span><span class="dv">1</span>),compute_uv<span class="op">=</span><span class="va">False</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.allclose(np.sort(predicted),np.sort(spectrum[spectrum<span class="op">&gt;</span><span class="fl">1e-12</span>]))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.isclose(predicted.<span class="bu">sum</span>(),<span class="dv">1</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'cut </span><span class="sc">{</span>m<span class="sc">}</span><span class="ss">|</span><span class="sc">{</span>N<span class="op">-</span>m<span class="sc">}</span><span class="ss">: Schmidt probabilities'</span>,predicted,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">'entropy in bits'</span>,<span class="bu">round</span>(<span class="bu">float</span>(<span class="op">-</span>np.<span class="bu">sum</span>(predicted<span class="op">*</span>np.log2(predicted))),<span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>cut 2|4: Schmidt probabilities [0.2 0.6 0.2] entropy in bits 1.370951
+cut 3|3: Schmidt probabilities [0.05 0.45 0.45 0.05] entropy in bits 1.468996</code></pre>
+</div>
+</div>
+</section>
+<section id="losing-a-qubit" class="level2">
+<h2 class="anchored" data-anchor-id="losing-a-qubit">Losing a qubit</h2>
+<p>We apply the partial-trace rule above to discard the first qubit. A reduced state can be mixed even when the whole register has one state vector.</p>
+<p>Discarding the first qubit of GHZ leaves <span class="math inline">\(\tfrac12\big(|00000\rangle\langle00000|+|11111\rangle\langle11111|\big)\)</span>. This is a classical mixture of two product states, so the remaining five qubits carry no entanglement at all. W leaves a mixture of <span class="math inline">\(|W_5\rangle\)</span> and the five-qubit vacuum with weights <span class="math inline">\(5/6\)</span> and <span class="math inline">\(1/6\)</span>. Its dominant part is still the entangled <span class="math inline">\(|W_5\rangle\)</span>, and the optional diagnostic at the end certifies that this mixture remains entangled. We check both reduced states directly and print their purities <span class="math inline">\(\mathrm{Tr}\,\hat\rho^2\)</span>, which equal one only for a pure state.</p>
+<div class="cell" data-execution_count="6">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lose_first_qubit(v):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    branches<span class="op">=</span>v.reshape(<span class="dv">2</span>,<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> branches.T<span class="op">@</span>branches.conj()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name,v <span class="kw">in</span> states.items():</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    rho<span class="op">=</span>lose_first_qubit(v)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.isclose(np.trace(rho),<span class="dv">1</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name,<span class="st">'reduced-state purity'</span>,<span class="bu">round</span>(<span class="bu">float</span>(np.trace(rho<span class="op">@</span>rho).real),<span class="dv">6</span>))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>zeros5<span class="op">=</span>np.zeros(<span class="dv">32</span>)<span class="op">;</span> zeros5[<span class="dv">0</span>]<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>ones5<span class="op">=</span>np.zeros(<span class="dv">32</span>)<span class="op">;</span> ones5[<span class="op">-</span><span class="dv">1</span>]<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(lose_first_qubit(ghz),<span class="fl">0.5</span><span class="op">*</span>np.outer(zeros5,zeros5)<span class="op">+</span><span class="fl">0.5</span><span class="op">*</span>np.outer(ones5,ones5))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>rho_w<span class="op">=</span>lose_first_qubit(w)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>w5<span class="op">=</span>dicke(<span class="dv">5</span>,<span class="dv">1</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(rho_w,<span class="dv">5</span><span class="op">/</span><span class="dv">6</span><span class="op">*</span>np.outer(w5,w5)<span class="op">+</span><span class="dv">1</span><span class="op">/</span><span class="dv">6</span><span class="op">*</span>np.outer(zeros5,zeros5))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"GHZ leaves a mixture of two product states; W leaves 5/6 W5 + 1/6 vacuum."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>GHZ6 reduced-state purity 0.5
+W6 reduced-state purity 0.722222
+Dicke6,3 reduced-state purity 0.5
+GHZ leaves a mixture of two product states; W leaves 5/6 W5 + 1/6 vacuum.</code></pre>
+</div>
+</div>
+</section>
+<section id="entanglement-created-by-two-qubit-rotations" class="level2">
+<h2 class="anchored" data-anchor-id="entanglement-created-by-two-qubit-rotations">Entanglement created by two-qubit rotations</h2>
+<p>Single-qubit gates act on each qubit separately and cannot change the Schmidt coefficients across any cut. Entanglement must therefore come from the two-qubit operations. An XX rotation on <span class="math inline">\(|00\rangle\)</span> gives <span class="math inline">\(\hat R_{xx}(\theta)|00\rangle=\cos\tfrac\theta2|00\rangle-i\sin\tfrac\theta2|11\rangle\)</span> and transfers population to <span class="math inline">\(|11\rangle\)</span>. A ZZ rotation on <span class="math inline">\(|{+}{+}\rangle\)</span>, with <span class="math inline">\(|{+}\rangle=(|0\rangle+|1\rangle)/\sqrt2\)</span>, leaves every computational-basis probability unchanged but creates entanglement through relative phases. We plot the transferred population and the entanglement entropy of the two resulting pure states.</p>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>angles <span class="op">=</span> np.linspace(<span class="dv">0</span>,<span class="dv">2</span><span class="op">*</span>np.pi,<span class="dv">101</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>zero2 <span class="op">=</span> np.array([<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plus2 <span class="op">=</span> np.ones(<span class="dv">4</span>)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>population,entropy_xx,entropy_zz <span class="op">=</span> [],[],[]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> angle <span class="kw">in</span> angles:</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    vx <span class="op">=</span> expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>angle<span class="op">*</span>np.kron(X,X)<span class="op">/</span><span class="dv">2</span>)<span class="op">@</span>zero2</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    vz <span class="op">=</span> expm(<span class="op">-</span><span class="ot">1j</span><span class="op">*</span>angle<span class="op">*</span>np.kron(Z,Z)<span class="op">/</span><span class="dv">2</span>)<span class="op">@</span>plus2</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    population.append(<span class="bu">abs</span>(vx[<span class="dv">3</span>])<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    entropy_xx.append(cut_entropy(vx,<span class="dv">1</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    entropy_zz.append(cut_entropy(vz,<span class="dv">1</span>))</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>fig,axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>,figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">3</span>),layout<span class="op">=</span><span class="st">"constrained"</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot(angles,population)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Angle theta"</span>,ylabel<span class="op">=</span><span class="st">"Probability of 11"</span>,title<span class="op">=</span><span class="st">"Rxx on 00"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].plot(angles,entropy_xx,label<span class="op">=</span><span class="st">"Rxx on 00"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].plot(angles,entropy_zz,ls<span class="op">=</span><span class="st">"--"</span>,label<span class="op">=</span><span class="st">"Rzz on ++"</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Angle theta"</span>,ylabel<span class="op">=</span><span class="st">"Entanglement entropy in bits"</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].legend()<span class="op">;</span>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-057-ghz-w-dicke-target-states_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Both states have Schmidt probabilities <span class="math inline">\(\cos^2\tfrac\theta2\)</span> and <span class="math inline">\(\sin^2\tfrac\theta2\)</span>, so the two entropy curves coincide. The entanglement reaches one bit at <span class="math inline">\(\theta=\pi/2\)</span>, where <span class="math inline">\(\hat R_{xx}(\pi/2)|00\rangle=(|00\rangle-i|11\rangle)/\sqrt2\)</span> becomes the two-qubit GHZ state <span class="math inline">\((|00\rangle+|11\rangle)/\sqrt2\)</span> after the phase gate <span class="math inline">\(\hat S\)</span> on one qubit, and vanishes again at <span class="math inline">\(\theta=\pi\)</span>.</p>
+</section>
+<section id="a-reference-circuit-for-ghz6" class="level2">
+<h2 class="anchored" data-anchor-id="a-reference-circuit-for-ghz6">A reference circuit for GHZ6</h2>
+<p>The initial state is <span class="math inline">\(|000000\rangle\)</span>, the target is <span class="math inline">\(|\mathrm{GHZ}_6\rangle\)</span>, the allowed operations are H and CNOT, and success means fidelity <span class="math inline">\(F=1\)</span> up to rounding. The Hadamard on qubit 0 creates two coherent branches, <span class="math inline">\((|0\rangle+|1\rangle)|00000\rangle/\sqrt2\)</span>. Each CNOT copies the value of its control into the next qubit, so the branch <span class="math inline">\(|1\rangle|00000\rangle\)</span> becomes <span class="math inline">\(|111111\rangle\)</span> after five neighbouring CNOTs while <span class="math inline">\(|000000\rangle\)</span> is unchanged.</p>
+<pre><code>q0: ─H──●──────────────────
+q1: ────X──●───────────────
+q2: ───────X──●────────────
+q3: ──────────X──●─────────
+q4: ─────────────X──●──────
+q5: ────────────────X──────</code></pre>
+<p>The circuit uses one H and five CNOT gates in six layers. This is an analytic reference construction. Shallower circuits are not tested here.</p>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> np.zeros(<span class="dv">2</span><span class="op">**</span>N)<span class="op">;</span> v[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> apply_1q(v, H, <span class="dv">0</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N<span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> apply_2q(v, CX, q, q<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(v,ghz)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"GHZ reference: 1 H + 5 CNOT, fidelity"</span>, <span class="bu">round</span>(<span class="bu">float</span>(<span class="bu">abs</span>(ghz<span class="op">@</span>v)<span class="op">**</span><span class="dv">2</span>),<span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>GHZ reference: 1 H + 5 CNOT, fidelity 1.0</code></pre>
+</div>
+</div>
+</section>
+<section id="a-continuous-reference-construction-for-w6" class="level2">
+<h2 class="anchored" data-anchor-id="a-continuous-reference-construction-for-w6">A continuous reference construction for W6</h2>
+<p>The initial state is <span class="math inline">\(|000000\rangle\)</span> and the target is <span class="math inline">\(|W_6\rangle\)</span>. An X gate on qubit 0 places one excitation there, giving <span class="math inline">\(|100000\rangle\)</span>. The transfer gate <span class="math inline">\(\hat G(\theta)\)</span> introduced above sends <span class="math inline">\(|10\rangle\)</span> to <span class="math inline">\(\cos\theta|10\rangle+\sin\theta|01\rangle\)</span> and <span class="math inline">\(|01\rangle\)</span> to <span class="math inline">\(-\sin\theta|10\rangle+\cos\theta|01\rangle\)</span>. It preserves <span class="math inline">\(|00\rangle\)</span> and <span class="math inline">\(|11\rangle\)</span> and therefore conserves the excitation number. On bond <span class="math inline">\((j,j+1)\)</span>, for <span class="math inline">\(j=0,\dots,4\)</span>, choose <span class="math inline">\(\cos\theta_j=1/\sqrt{6-j}\)</span>. Each gate leaves amplitude <span class="math inline">\(1/\sqrt6\)</span> on qubit <span class="math inline">\(j\)</span> and moves the remaining amplitude one qubit to the right.</p>
+<p>The construction uses one X gate and five transfer gates, each built from one XX rotation, one YY rotation and the phase gates <span class="math inline">\(\hat S\)</span> and <span class="math inline">\(\hat S^\dagger\)</span>. Success again means <span class="math inline">\(F=1\)</span> up to rounding. This is an analytic reference construction with continuous angles.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> np.zeros(<span class="dv">2</span><span class="op">**</span>N)<span class="op">;</span> v[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> apply_1q(v, X, <span class="dv">0</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(N<span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    theta <span class="op">=</span> np.arccos(<span class="dv">1</span><span class="op">/</span>np.sqrt(<span class="dv">6</span><span class="op">-</span>j))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> apply_2q(v, transfer_gate(theta), j, j<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(v,w)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"W reference: 1 X + 5 transfer gates, fidelity"</span>, <span class="bu">round</span>(<span class="bu">float</span>(<span class="bu">abs</span>(w<span class="op">@</span>v)<span class="op">**</span><span class="dv">2</span>),<span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>W reference: 1 X + 5 transfer gates, fidelity 1.0</code></pre>
+</div>
+</div>
+</section>
+<section id="compilation-experiments" class="level2">
+<h2 class="anchored" data-anchor-id="compilation-experiments">Compilation experiments</h2>
+<p>Use these exact vectors as fidelity targets. A learned circuit must be evaluated against the target appropriate to that run, with the allowed gate set and resource budget stated. The continuous W construction above and a discrete H,S,T,CNOT agent use different operations. Lab 052 contains the discrete compilation experiments. The new Dicke target has no trained-agent result here.</p>
+</section>
+<section id="student-investigations" class="level2">
+<h2 class="anchored" data-anchor-id="student-investigations">Student investigations</h2>
+<p>Predict the reduced spectra before running the cells. Replace each coherent target by the diagonal mixture with identical computational-basis probabilities and compare an off-diagonal observable. Trace out a qubit and explain why pure-state entanglement entropy has a different interpretation for the resulting mixed state. Verify excitation conservation for the W transfer gate. Explain why that gate alone cannot prepare a W state from vacuum.</p>
+</section>
+<section id="optional-mixed-state-entanglement-diagnostic" class="level2">
+<h2 class="anchored" data-anchor-id="optional-mixed-state-entanglement-diagnostic">Optional mixed-state entanglement diagnostic</h2>
+<p>The core target-state route ends before this diagnostic. Negativity sums the absolute negative eigenvalues of a partial transpose. A positive value certifies entanglement across the tested division. A zero value alone supplies no general separability proof, but for GHZ the reduced state was already shown above to be a mixture of product states. After discarding qubit 0 we test the division between qubit 1 and qubits 2 to 5.</p>
+<div class="cell" data-execution_count="10">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> negativity(rho, left_dim<span class="op">=</span><span class="dv">2</span>):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    right_dim <span class="op">=</span> rho.shape[<span class="dv">0</span>]<span class="op">//</span>left_dim</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    pt <span class="op">=</span> rho.reshape(left_dim,right_dim,left_dim,right_dim).transpose(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">3</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    eigenvalues <span class="op">=</span> np.linalg.eigvalsh(pt.reshape(rho.shape))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">abs</span>(<span class="bu">float</span>(<span class="op">-</span>eigenvalues[eigenvalues<span class="op">&lt;</span><span class="dv">0</span>].<span class="bu">sum</span>()))</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name,v <span class="kw">in</span> states.items():</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    rho <span class="op">=</span> lose_first_qubit(v)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name,<span class="st">"negativity, qubit 1 versus qubits 2-5, after losing qubit 0"</span>,<span class="bu">round</span>(negativity(rho),<span class="dv">6</span>))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(negativity(lose_first_qubit(ghz)),<span class="dv">0</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> negativity(lose_first_qubit(w))<span class="op">&gt;</span><span class="dv">0</span> <span class="kw">and</span> negativity(lose_first_qubit(d3))<span class="op">&gt;</span><span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>GHZ6 negativity, qubit 1 versus qubits 2-5, after losing qubit 0 0.0
+W6 negativity, qubit 1 versus qubits 2-5, after losing qubit 0 0.260259
+Dicke6,3 negativity, qubit 1 versus qubits 2-5, after losing qubit 0 0.274456</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-10/lab-062-lunarlander.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 062: Landing with discrete engine commands</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" class="pagination-link">
+        <span class="nav-page-text">Lab 058: Finite-budget GHZ compilation</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

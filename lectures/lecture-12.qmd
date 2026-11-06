@@ -1,0 +1,51 @@
+---
+title: "12 · Parametrised Quantum Circuits as Variational Ansätze"
+code-tools: false
+toc: false
+---
+
+Many-body quantum states need exponentially many amplitudes, and decades of classical approximations, from mean field (the Gross–Pitaevskii equation and the mean-field Ising chain) to tensor networks and Monte Carlo methods, each restrict the states they can describe. Controlled quantum registers allow a different ansatz, a parametrised quantum circuit whose state is prepared on the device and whose angles are optimised classically. We estimate the energy from measured bit strings, obtain gradients by automatic differentiation in simulation and by the parameter-shift rule on hardware, and compare hardware-efficient, Hamiltonian-variational and symmetry-preserving ansätze in the variational quantum eigensolver, by energy, fidelity and entanglement entropy, including excited states and phase diagrams of the transverse-field Ising chain and of the XXZ chain in a transverse field. Barren plateaus limit the training of deep random circuits. The same circuits then become probability models, quantum circuit Born machines trained with the Kullback–Leibler divergence on data binned into bit strings, and solvers of binary optimisation problems, with MaxCut, number partitioning and the maximum independent set mapped to Ising Hamiltonians and sampled with the quantum approximate optimisation algorithm.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-12.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-12.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-12.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 069: Parametrised circuits and their gradients](../notebooks/lecture-12/lab-069-circuits-gradients.ipynb)
+
+The cost of many-body states, mean field from the Gross–Pitaevskii equation to the Ising chain, a circuit as a quantum trial state, the energy from bit strings, the parameter-shift rule against automatic differentiation and the cost of a gradient on a device.
+:::
+
+::: {.nb-item}
+[Lab 070: VQE and the choice of ansatz](../notebooks/lecture-12/lab-070-vqe-ansatz.ipynb)
+
+Hardware-efficient, Hamiltonian-variational and symmetry-preserving circuits for the Ising and Heisenberg chains, energy against entanglement entropy, the ordered-phase trap, excited states by deflation, and the eight-spin Ising phase diagram.
+:::
+
+::: {.nb-item}
+[Lab 070a: VQE phase diagram of the XXZ chain in a field](../notebooks/lecture-12/lab-070a-xxz-phase-diagram.ipynb)
+
+Exact and variational maps of energy, order parameters, entanglement entropy and fidelity over the anisotropy and transverse field, computed matrix-free (runs several minutes, or redraws the saved scan).
+:::
+
+::: {.nb-item}
+[Lab 071: Barren plateaus](../notebooks/lecture-12/lab-071-barren-plateaus.ipynb)
+
+Gradient variances over random angles for global and local costs and for structured circuits, concentration in random states, and the number of shots needed to resolve a gradient.
+:::
+
+::: {.nb-item}
+[Lab 072: Modelling probabilities with a quantum circuit](../notebooks/lecture-12/lab-072-born-machine.ipynb)
+
+Continuous data binned into bit strings, the Born-rule model, the Kullback–Leibler divergence as negative log-likelihood, product against entangling circuits, depth, data-set size and evaluation from samples.
+:::
+
+::: {.nb-item}
+[Lab 073: QUBO and QAOA](../notebooks/lecture-12/lab-073-qubo-qaoa.ipynb)
+
+Binary optimisation as an Ising Hamiltonian diagonal in the computational basis, MaxCut, number partitioning and the maximum independent set, the QAOA circuit, its training and the sampled bit strings.
+:::

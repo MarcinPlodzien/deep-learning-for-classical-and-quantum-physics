@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Lab 072: Modelling probabilities with a quantum circuit</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" rel="next">
+<link href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-07.html">
+ <span class="dropdown-text">7 · Time Series: Dynamical Systems, Chaos and Embedding</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-08.html">
+ <span class="dropdown-text">8 · Forecasting Models: Linear, Neural and Physics-Informed</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-09.html">
+ <span class="dropdown-text">9 · Reservoir Computing</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-10.html">
+ <span class="dropdown-text">10 · Reinforcement Learning for Quantum State Preparation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-11.html">
+ <span class="dropdown-text">11 · Quantum Information for Newcomers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-12.html">
+ <span class="dropdown-text">12 · Parametrised Quantum Circuits as Variational Ansätze</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lab 072: Modelling probabilities with a quantum circuit</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-021-xy-without-labels.html" class="sidebar-item-text sidebar-link">Lab 021: The 2D XY model without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-022-gauge-without-labels.html" class="sidebar-item-text sidebar-link">Lab 022: Ising gauge theory without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-023-sk-without-labels.html" class="sidebar-item-text sidebar-link">Lab 023: The SK spin glass without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-030-physics-2d-xy.html" class="sidebar-item-text sidebar-link">Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-07.html" class="sidebar-item-text sidebar-link">7 · Time Series: Dynamical Systems, Chaos and Embedding</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-033-signal-characterisation.html" class="sidebar-item-text sidebar-link">Lab 033: Signal characterisation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-08.html" class="sidebar-item-text sidebar-link">8 · Forecasting Models: Linear, Neural and Physics-Informed</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-034-linear-models-nvar.html" class="sidebar-item-text sidebar-link">Lab 034: Forecasting with linear models and NVAR</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-035-koopman.html" class="sidebar-item-text sidebar-link">Lab 035: Lifting and the Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="sidebar-item-text sidebar-link">Lab 036: Recurrent neural networks and reservoirs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-037-mlp-forecaster.html" class="sidebar-item-text sidebar-link">Lab 037: MLP forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-038-rnn-forecaster.html" class="sidebar-item-text sidebar-link">Lab 038: RNN forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-039-lstm-forecaster.html" class="sidebar-item-text sidebar-link">Lab 039: LSTM forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-041-pinn.html" class="sidebar-item-text sidebar-link">Lab 041: Physics-informed neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-042-neural-ode.html" class="sidebar-item-text sidebar-link">Lab 042: Neural ordinary differential equations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-043-pendulum-friction.html" class="sidebar-item-text sidebar-link">Lab 043: Pendulum with unknown friction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-044-predator-prey.html" class="sidebar-item-text sidebar-link">Lab 044: Predator–prey with unknown interaction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-045-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Lab 045: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-01-rossler-oscillators.html" class="sidebar-item-text sidebar-link">Exercise 01: Rössler system and superimposed oscillators</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="sidebar-item-text sidebar-link">Exercise 02: Stock market returns</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-03-koopman.html" class="sidebar-item-text sidebar-link">Exercise 03: Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-04-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Exercise 04: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-09.html" class="sidebar-item-text sidebar-link">9 · Reservoir Computing</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-046-echo-state-networks.html" class="sidebar-item-text sidebar-link">Lab 046: Echo state networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-047-quantum-reservoir-computing.html" class="sidebar-item-text sidebar-link">Lab 047: Quantum reservoir computing</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-049-reservoir-climate.html" class="sidebar-item-text sidebar-link">Lab 049: Weather and climate of an echo state network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-050-cellular-automaton-reservoir.html" class="sidebar-item-text sidebar-link">Lab 050: Cellular automaton reservoir</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-10.html" class="sidebar-item-text sidebar-link">10 · Reinforcement Learning for Quantum State Preparation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-063-bellman-from-experience.html" class="sidebar-item-text sidebar-link">Lab 063: Bellman equations from sampled experience</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-061-cartpole.html" class="sidebar-item-text sidebar-link">Lab 061: Balancing a pole on a cart</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-062-lunarlander.html" class="sidebar-item-text sidebar-link">Lab 062: Landing with discrete engine commands</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" class="sidebar-item-text sidebar-link">Lab 057: GHZ, W and Dicke target states</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" class="sidebar-item-text sidebar-link">Lab 058: Finite-budget GHZ compilation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-059-continuous-angles.html" class="sidebar-item-text sidebar-link">Lab 059: Continuous angles with REINFORCE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-060-cavity-checks.html" class="sidebar-item-text sidebar-link">Lab 060: Cavity feedback checks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056a-pendulum-planning.html" class="sidebar-item-text sidebar-link">Lab 056a: Pendulum swing-up by planning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-052-quantum-circuit-compilation.html" class="sidebar-item-text sidebar-link">Lab 052: Quantum circuit compilation (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-055-continuous-state-compilation.html" class="sidebar-item-text sidebar-link">Lab 055: Compilation with continuous angles (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-054-quantum-state-preparation.html" class="sidebar-item-text sidebar-link">Lab 054: Preparation with Hamiltonian evolutions (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-053-fock-state-cavity.html" class="sidebar-item-text sidebar-link">Lab 053: One photon in a leaky cavity (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056-pendulum-swing-up.html" class="sidebar-item-text sidebar-link">Lab 056: Pendulum swing-up with Q-learning (full study)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-11.html" class="sidebar-item-text sidebar-link">11 · Quantum Information for Newcomers</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-064-one-qubit.html" class="sidebar-item-text sidebar-link">Lab 064: One qubit, measurements and gates as rotations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-065-two-spin-register.html" class="sidebar-item-text sidebar-link">Lab 065: The two-spin register</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066-density-matrices-noise.html" class="sidebar-item-text sidebar-link">Lab 066: Density matrices, measurement and noise</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-067-atom-light-qubit.html" class="sidebar-item-text sidebar-link">Lab 067: An atom in laser light as a qubit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-068-interacting-qubits-gates.html" class="sidebar-item-text sidebar-link">Lab 068: Interactions and two-qubit gates</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-12.html" class="sidebar-item-text sidebar-link">12 · Parametrised Quantum Circuits as Variational Ansätze</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" class="sidebar-item-text sidebar-link">Lab 069: Parametrised circuits and their gradients</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" class="sidebar-item-text sidebar-link">Lab 070: VQE and the choice of ansatz</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070a-xxz-phase-diagram.html" class="sidebar-item-text sidebar-link">Lab 070a: VQE phase diagram of the XXZ chain in a field</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" class="sidebar-item-text sidebar-link">Lab 071: Barren plateaus</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-072-born-machine.html" class="sidebar-item-text sidebar-link active">Lab 072: Modelling probabilities with a quantum circuit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" class="sidebar-item-text sidebar-link">Lab 073: QUBO and QAOA</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lab-072.-modelling-probabilities-with-a-quantum-circuit" id="toc-lab-072.-modelling-probabilities-with-a-quantum-circuit" class="nav-link active" data-scroll-target="#lab-072.-modelling-probabilities-with-a-quantum-circuit">Lab 072. Modelling probabilities with a quantum circuit</a>
+  <ul class="collapse">
+  <li><a href="#double-precision-arithmetic" id="toc-double-precision-arithmetic" class="nav-link" data-scroll-target="#double-precision-arithmetic">1. Double-precision arithmetic</a></li>
+  <li><a href="#state-vector-simulator" id="toc-state-vector-simulator" class="nav-link" data-scroll-target="#state-vector-simulator">2. State-vector simulator</a></li>
+  <li><a href="#generative-modelling" id="toc-generative-modelling" class="nav-link" data-scroll-target="#generative-modelling">3. Generative modelling</a></li>
+  <li><a href="#data-as-bit-strings" id="toc-data-as-bit-strings" class="nav-link" data-scroll-target="#data-as-bit-strings">4. Data as bit strings</a></li>
+  <li><a href="#the-target-distribution-and-the-data-set" id="toc-the-target-distribution-and-the-data-set" class="nav-link" data-scroll-target="#the-target-distribution-and-the-data-set">5. The target distribution and the data set</a></li>
+  <li><a href="#the-born-machine" id="toc-the-born-machine" class="nav-link" data-scroll-target="#the-born-machine">6. The Born machine</a></li>
+  <li><a href="#the-loss-function" id="toc-the-loss-function" class="nav-link" data-scroll-target="#the-loss-function">7. The loss function</a></li>
+  <li><a href="#the-product-circuit" id="toc-the-product-circuit" class="nav-link" data-scroll-target="#the-product-circuit">8. The product circuit</a></li>
+  <li><a href="#layered-circuits-with-entanglers" id="toc-layered-circuits-with-entanglers" class="nav-link" data-scroll-target="#layered-circuits-with-entanglers">9. Layered circuits with entanglers</a></li>
+  <li><a href="#evaluation-from-samples" id="toc-evaluation-from-samples" class="nav-link" data-scroll-target="#evaluation-from-samples">10. Evaluation from samples</a></li>
+  <li><a href="#an-example-from-the-literature" id="toc-an-example-from-the-literature" class="nav-link" data-scroll-target="#an-example-from-the-literature">11. An example from the literature</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">12. Exercises</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">13. Summary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-072-born-machine.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Lab 072: Modelling probabilities with a quantum circuit</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-072-born-machine.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<section id="lab-072.-modelling-probabilities-with-a-quantum-circuit" class="level1">
+<h1>Lab 072. Modelling probabilities with a quantum circuit</h1>
+<p>A data set is a list of samples drawn from a probability distribution that nobody has written down. Generative modelling asks for a model distribution from which new samples can be drawn and which is close to the unknown one. A register of qubits measured in the computational basis can serve as such a model, because every measurement returns a random bit string with the probabilities given by the Born rule. A parametrised circuit therefore defines a probability distribution over bit strings, and changing its gate angles changes that distribution. Such a model is called a quantum circuit Born machine.</p>
+<p>We are given a data set of a few thousand real numbers <span class="math inline">\(x\)</span>. We encode each number as a bit string of <span class="math inline">\(N=6\)</span> bits by cutting the range of <span class="math inline">\(x\)</span> into <span class="math inline">\(2^N=64\)</span> bins. A circuit of rotations and entangling gates prepares a trial state, and we train its angles so that the bit strings measured on the register reproduce the histogram of the data. We compute the exact model probabilities in a state-vector simulation, train with automatic differentiation, and evaluate the trained model from simulated measurement records, as an experiment would.</p>
+<p>Sections 2 to 5 set up the simulator, the task and the encoding of numbers as bit strings. Section 6 defines the Born machine and Section 7 the loss function. Sections 8 and 9 compare a circuit without entangling gates with a layered circuit with entanglers, and Section 10 evaluates the trained models from samples. These sections form the core route. Section 11 describes a model from the research literature and can be read at home.</p>
+<p>All results are exact state-vector calculations or simulated measurement records with fixed random seeds.</p>
+<section id="double-precision-arithmetic" class="level2">
+<h2 class="anchored" data-anchor-id="double-precision-arithmetic">1. Double-precision arithmetic</h2>
+<p>We work in double precision, <code>float64</code> and <code>complex128</code>. JAX does the linear algebra, the automatic differentiation and the random sampling on the CPU, NumPy and SciPy handle the data set and the tables, and Matplotlib draws the figures. The cells run in order.</p>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"JAX_PLATFORMS"</span>] <span class="op">=</span> <span class="st">"cpu"</span>          <span class="co"># small calculations, the CPU is enough</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json, time</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> erf</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax <span class="im">import</span> lax</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Rectangle, FancyBboxPatch, Arc</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>jax.config.update(<span class="st">"jax_enable_x64"</span>, <span class="va">True</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>CDTYPE <span class="op">=</span> jnp.complex128</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>TOL <span class="op">=</span> <span class="fl">1e-12</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>FIG <span class="op">=</span> Path(<span class="st">"figures"</span>)<span class="op">;</span> FIG.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>RES <span class="op">=</span> Path(<span class="st">"classroom_results"</span>)<span class="op">;</span> RES.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"font.size"</span>: <span class="dv">11</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">11</span>, <span class="st">"xtick.labelsize"</span>: <span class="dv">11</span>, <span class="st">"ytick.labelsize"</span>: <span class="dv">11</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"legend.fontsize"</span>: <span class="dv">10</span>, <span class="st">"figure.figsize"</span>: (<span class="fl">4.8</span>, <span class="fl">3.2</span>), <span class="st">"savefig.bbox"</span>: <span class="st">"tight"</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"pdf.fonttype"</span>: <span class="dv">42</span>, <span class="st">"ps.fonttype"</span>: <span class="dv">42</span>})</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>COL <span class="op">=</span> {<span class="st">"target"</span>: <span class="st">"black"</span>, <span class="st">"data"</span>: <span class="st">"#3E8FD0"</span>, <span class="st">"model"</span>: <span class="st">"#D35A05"</span>, <span class="st">"prod"</span>: <span class="st">"#5A6270"</span>, <span class="st">"samples"</span>: <span class="st">"#002B5C"</span>, <span class="st">"hi"</span>: <span class="st">"#D35A05"</span>}</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save(fig, name):</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.pdf"</span>)<span class="op">;</span> fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>started <span class="op">=</span> time.perf_counter()</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>NUMBERS <span class="op">=</span> {}</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"JAX"</span>, jax.__version__, <span class="st">"| devices:"</span>, jax.devices())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAX 0.11.0 | devices: [CpuDevice(id=0)]</code></pre>
+</div>
+</div>
+</section>
+<section id="state-vector-simulator" class="level2">
+<h2 class="anchored" data-anchor-id="state-vector-simulator">2. State-vector simulator</h2>
+<p>The simulator stores the state of <span class="math inline">\(N\)</span> qubits as a tensor <span class="math inline">\(\psi[b_0,\dots,b_{N-1}]\)</span> with one axis of length 2 per qubit, and qubit 0 is the most significant bit, so the amplitude of the bit string <span class="math inline">\(b_0b_1\dots b_{N-1}\)</span> sits at the flat index <span class="math display">\[k=\sum_{q=0}^{N-1}b_q\,2^{N-1-q}. \tag{1}\]</span> A rotation generated by a Pauli matrix <span class="math inline">\(\hat P\)</span> is <span class="math display">\[\hat R_P(\theta)=e^{-i\theta\hat P/2}=\cos\frac\theta2\,\hat I-i\sin\frac\theta2\,\hat P , \tag{2}\]</span> and a one-qubit gate acts on qubit <span class="math inline">\(q\)</span> by a contraction with axis <span class="math inline">\(q\)</span> of the state tensor. The controlled-<span class="math inline">\(Z\)</span> gate <span class="math inline">\(\widehat{\mathrm{CZ}}\)</span> on the pair <span class="math inline">\((q,q+1)\)</span> multiplies the amplitude of every bit string with <span class="math inline">\(b_q=b_{q+1}=1\)</span> by <span class="math inline">\(-1\)</span>. It is diagonal in the computational basis, so a chain of such gates is one vector of signs <span class="math inline">\(\pm1\)</span> multiplied element-wise into the state. The last check compares the contraction with the Kronecker-product matrix <span class="math inline">\(\hat I\otimes\hat U\otimes\hat I\)</span> on three qubits.</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recap: one-qubit matrices, rotations (2), gates on a state tensor, CZ chain as a sign vector</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>I2 <span class="op">=</span> jnp.eye(<span class="dv">2</span>, dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> jnp.array([[<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>]], dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> jnp.array([[<span class="dv">0</span>, <span class="op">-</span><span class="ot">1j</span>], [<span class="ot">1j</span>, <span class="dv">0</span>]], dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> jnp.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]], dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rot(P, theta):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.cos(theta <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> I2 <span class="op">-</span> <span class="ot">1j</span> <span class="op">*</span> jnp.sin(theta <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> P</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_1q(psi, U, q):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># psi has shape (2,)*N; contract the gate with axis q and put the new axis back at position q</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.moveaxis(jnp.tensordot(U, psi, axes<span class="op">=</span>([<span class="dv">1</span>], [q])), <span class="dv">0</span>, q)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bit_table(N):</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># row k holds the bits b_0 ... b_{N-1} of index k, qubit 0 most significant, equation (1)</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> np.arange(<span class="dv">2</span> <span class="op">**</span> N)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (k[:, <span class="va">None</span>] <span class="op">&gt;&gt;</span> (N <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> np.arange(N))) <span class="op">&amp;</span> <span class="dv">1</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cz_chain_signs(N):</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> bit_table(N)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.prod([<span class="dv">1</span> <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> b[:, q] <span class="op">*</span> b[:, q <span class="op">+</span> <span class="dv">1</span>] <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N <span class="op">-</span> <span class="dv">1</span>)], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>U_test <span class="op">=</span> rot(Y, <span class="fl">0.7</span>) <span class="op">@</span> rot(Z, <span class="op">-</span><span class="fl">1.1</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>psi3 <span class="op">=</span> jax.random.normal(jax.random.PRNGKey(<span class="dv">7201</span>), (<span class="dv">8</span>,)) <span class="op">+</span> <span class="ot">0j</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>psi3 <span class="op">=</span> psi3 <span class="op">/</span> jnp.linalg.norm(psi3)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> jnp.allclose(apply_1q(psi3.reshape(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>), U_test, <span class="dv">1</span>).reshape(<span class="op">-</span><span class="dv">1</span>), jnp.kron(jnp.kron(I2, U_test), I2) <span class="op">@</span> psi3, atol<span class="op">=</span>TOL)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> jnp.allclose(rot(X, jnp.pi), <span class="op">-</span><span class="ot">1j</span> <span class="op">*</span> X, atol<span class="op">=</span>TOL)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">list</span>(bit_table(<span class="dv">3</span>)[<span class="dv">3</span>]) <span class="op">==</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>CZ01 <span class="op">=</span> jnp.diag(jnp.array([<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>], dtype<span class="op">=</span>CDTYPE))</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(np.diag(np.kron(CZ01, np.eye(<span class="dv">2</span>)) <span class="op">@</span> np.kron(np.eye(<span class="dv">2</span>), CZ01)), cz_chain_signs(<span class="dv">3</span>))</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"simulator ready: contraction = Kronecker matrix, CZ chain = sign vector"</span>, cz_chain_signs(<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>simulator ready: contraction = Kronecker matrix, CZ chain = sign vector [ 1  1  1 -1  1  1 -1  1]</code></pre>
+</div>
+</div>
+</section>
+<section id="generative-modelling" class="level2">
+<h2 class="anchored" data-anchor-id="generative-modelling">3. Generative modelling</h2>
+<p>We consider an unknown probability distribution <span class="math inline">\(p\)</span> over a space of outcomes and a data set <span class="math display">\[\mathcal D=\{x^{(1)},x^{(2)},\dots,x^{(|\mathcal D|)}\} \tag{3}\]</span> of <span class="math inline">\(|\mathcal D|\)</span> independent samples drawn from it. The learner sees the samples and never the distribution <span class="math inline">\(p\)</span> itself. A generative model is a family of distributions <span class="math inline">\(q_{\boldsymbol\theta}\)</span>, labelled by parameters <span class="math inline">\(\boldsymbol\theta\)</span>. New samples can be drawn from <span class="math inline">\(q_{\boldsymbol\theta}\)</span>, and <span class="math inline">\(\boldsymbol\theta\)</span> is adjusted so that <span class="math inline">\(q_{\boldsymbol\theta}\)</span> comes close to <span class="math inline">\(p\)</span> in a measure of distance between distributions. Training means choosing <span class="math inline">\(\boldsymbol\theta\)</span> from the data, and a trained model produces new samples that look like the data without copying them.</p>
+<p>Classical machine learning offers many such families. A histogram of the data is the simplest one, and it can be sampled by picking a bin with the stored frequency. A Boltzmann machine assigns the probability <span class="math inline">\(e^{-E_{\boldsymbol\theta}(x)}/Z\)</span> through an energy function with trainable couplings. An autoregressive network writes the probability of a vector as a product of conditional probabilities, one component after another. Generative adversarial networks and variational autoencoders transform random noise into samples with a neural network. The quantum model studied here addresses the same task and differs in how the probabilities arise.</p>
+<p>The sketch summarises the task, a model trained on samples of an unknown distribution that produces new samples, and the Born machine as one such model.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-072-born-machine_files/figure-html/e465c081-1-sketch_generative.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">generative modelling</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="data-as-bit-strings" class="level2">
+<h2 class="anchored" data-anchor-id="data-as-bit-strings">4. Data as bit strings</h2>
+<p>A register of <span class="math inline">\(N\)</span> qubits returns bit strings <span class="math inline">\(\mathbf b=b_0b_1\dots b_{N-1}\)</span>, so the data must be written as bit strings before a circuit can model them. Discrete data such as spin configurations or binary images are bit strings already. A continuous variable <span class="math inline">\(x\in[x_{\min},x_{\max}]\)</span> is first discretised. We cut the interval into <span class="math inline">\(2^N\)</span> bins of equal width <span class="math display">\[w=\frac{x_{\max}-x_{\min}}{2^N}, \tag{4}\]</span> and number them from left to right by the bin index <span class="math display">\[k(x)=\left\lfloor\frac{x-x_{\min}}{w}\right\rfloor\in\{0,1,\dots,2^N-1\}, \tag{5}\]</span> where <span class="math inline">\(\lfloor\cdot\rfloor\)</span> rounds down to an integer and the right end <span class="math inline">\(x=x_{\max}\)</span> is assigned to the last bin. The index written in binary, <span class="math display">\[k=\sum_{q=0}^{N-1}b_q\,2^{N-1-q}, \tag{6}\]</span> is the bit string <span class="math inline">\(\mathbf b\)</span>, with <span class="math inline">\(b_0\)</span> the most significant bit, which is the ordering (1) of the amplitudes. Every value of <span class="math inline">\(x\)</span> in bin <span class="math inline">\(k\)</span> therefore corresponds to the computational basis state <span class="math inline">\(|\mathbf b\rangle\)</span>, and every measured bit string corresponds back to a bin. When a value of <span class="math inline">\(x\)</span> is needed, we take the centre of the bin, <span class="math display">\[x_k=x_{\min}+\Big(k+\frac12\Big)w . \tag{7}\]</span></p>
+<p>For <span class="math inline">\(N=3\)</span> and the interval <span class="math inline">\([-4,4]\)</span>, <span class="math inline">\(w=1\)</span> and there are eight bins labelled <span class="math inline">\(000,001,\dots,111\)</span>. The value <span class="math inline">\(x=-0.37\)</span> lies in the bin <span class="math inline">\([-1,0)\)</span> with index <span class="math inline">\(k=\lfloor 3.63\rfloor=3\)</span>, and <span class="math inline">\(3=0\cdot4+1\cdot2+1\cdot1\)</span> is the bit string <span class="math inline">\(011\)</span>. The value belongs to the basis state <span class="math inline">\(|011\rangle\)</span>, and a measurement that returns <span class="math inline">\(011\)</span> is read as the bin centre <span class="math inline">\(x_3=-0.5\)</span>. The discretisation loses the position of <span class="math inline">\(x\)</span> inside its bin, an error of at most <span class="math inline">\(w/2\)</span>. Each added qubit doubles the number of bins and halves the width <span class="math inline">\(w\)</span>, so the resolution improves exponentially with the number of qubits.</p>
+<p>The code implements equations (5) to (7) and runs the example in both directions.</p>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> x_to_index(x, N, xmin, xmax):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> np.floor((np.asarray(x) <span class="op">-</span> xmin) <span class="op">/</span> (xmax <span class="op">-</span> xmin) <span class="op">*</span> <span class="dv">2</span> <span class="op">**</span> N).astype(<span class="bu">int</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.clip(k, <span class="dv">0</span>, <span class="dv">2</span> <span class="op">**</span> N <span class="op">-</span> <span class="dv">1</span>)                    <span class="co"># x = xmax goes into the last bin</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> index_to_bits(k, N):</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [(<span class="bu">int</span>(k) <span class="op">&gt;&gt;</span> (N <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> q)) <span class="op">&amp;</span> <span class="dv">1</span> <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bits_to_index(bits):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> <span class="bu">len</span>(bits)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>(b <span class="op">*</span> <span class="dv">2</span> <span class="op">**</span> (N <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> q) <span class="cf">for</span> q, b <span class="kw">in</span> <span class="bu">enumerate</span>(bits))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bin_centre(k, N, xmin, xmax):</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> xmin <span class="op">+</span> (np.asarray(k) <span class="op">+</span> <span class="fl">0.5</span>) <span class="op">*</span> (xmax <span class="op">-</span> xmin) <span class="op">/</span> <span class="dv">2</span> <span class="op">**</span> N</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>x_example <span class="op">=</span> <span class="op">-</span><span class="fl">0.37</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>k_example <span class="op">=</span> <span class="bu">int</span>(x_to_index(x_example, <span class="dv">3</span>, <span class="op">-</span><span class="fl">4.0</span>, <span class="fl">4.0</span>))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>b_example <span class="op">=</span> index_to_bits(k_example, <span class="dv">3</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> k_example <span class="op">==</span> <span class="dv">3</span> <span class="kw">and</span> b_example <span class="op">==</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>] <span class="kw">and</span> bits_to_index(b_example) <span class="op">==</span> <span class="dv">3</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"x = </span><span class="sc">{</span>x_example<span class="sc">}</span><span class="ss"> -&gt; bin k = </span><span class="sc">{</span>k_example<span class="sc">}</span><span class="ss"> -&gt; bit string </span><span class="sc">{</span><span class="st">''</span><span class="sc">.</span>join(<span class="bu">map</span>(<span class="bu">str</span>, b_example))<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f" -&gt; bin centre x_k = </span><span class="sc">{</span>bin_centre(k_example, <span class="dv">3</span>, <span class="op">-</span><span class="fl">4.0</span>, <span class="fl">4.0</span>)<span class="sc">:+.2f}</span><span class="ss">"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> N_ <span class="kw">in</span> (<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>):</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"N = </span><span class="sc">{</span>N_<span class="sc">:2d}</span><span class="ss">: </span><span class="sc">{</span><span class="dv">2</span><span class="op">**</span>N_<span class="sc">:5d}</span><span class="ss"> bins of width </span><span class="sc">{</span><span class="dv">8</span> <span class="op">/</span> <span class="dv">2</span><span class="op">**</span>N_<span class="sc">:.4f}</span><span class="ss"> on [-4, 4]"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> bits_to_index(index_to_bits(k, <span class="dv">3</span>)) <span class="op">==</span> k</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>x = -0.37 -&gt; bin k = 3 -&gt; bit string 011 -&gt; bin centre x_k = -0.50
+N =  3:     8 bins of width 1.0000 on [-4, 4]
+N =  4:    16 bins of width 0.5000 on [-4, 4]
+N =  5:    32 bins of width 0.2500 on [-4, 4]
+N =  6:    64 bins of width 0.1250 on [-4, 4]
+N =  8:   256 bins of width 0.0312 on [-4, 4]
+N = 10:  1024 bins of width 0.0078 on [-4, 4]</code></pre>
+</div>
+</div>
+<p>The sketch draws the encoding for <span class="math inline">\(N=3\)</span>, a smooth distribution <span class="math inline">\(p(x)\)</span> with its probabilities in the eight bins labelled by their bit strings, where every value in bin 3 belongs to the basis state <span class="math inline">\(|011\rangle\)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-072-born-machine_files/figure-html/d43e7a35-1-sketch_binning.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">binning of a continuous variable</figcaption><p></p>
+</figure>
+</div>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">10.0</span>, <span class="fl">3.6</span>), gridspec_kw<span class="op">=</span>{<span class="st">"width_ratios"</span>: [<span class="fl">1.25</span>, <span class="dv">1</span>]})</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axs[<span class="dv">0</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>N3, xa, xb <span class="op">=</span> <span class="dv">3</span>, <span class="op">-</span><span class="fl">4.0</span>, <span class="fl">4.0</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>edges3 <span class="op">=</span> np.linspace(xa, xb, <span class="dv">2</span> <span class="op">**</span> N3 <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>gauss <span class="op">=</span> <span class="kw">lambda</span> x: np.exp(<span class="op">-</span>x <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">3</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>P3 <span class="op">=</span> np.diff(<span class="fl">0.5</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> erf(edges3 <span class="op">/</span> np.sqrt(<span class="fl">1.5</span>))))           <span class="co"># bin probabilities of a Gaussian with variance 3/2</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    hl <span class="op">=</span> (k <span class="op">==</span> <span class="dv">3</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(Rectangle((edges3[k], <span class="dv">0</span>), <span class="dv">1</span>, P3[k] <span class="op">/</span> P3.<span class="bu">max</span>(), facecolor<span class="op">=</span>COL[<span class="st">"hi"</span>] <span class="cf">if</span> hl <span class="cf">else</span> COL[<span class="st">"data"</span>],</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                           alpha<span class="op">=</span><span class="fl">0.55</span> <span class="cf">if</span> hl <span class="cf">else</span> <span class="fl">0.45</span>, edgecolor<span class="op">=</span>COL[<span class="st">"hi"</span>] <span class="cf">if</span> hl <span class="cf">else</span> <span class="st">"0.4"</span>, lw<span class="op">=</span><span class="fl">1.4</span> <span class="cf">if</span> hl <span class="cf">else</span> <span class="fl">0.6</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    ax.text(edges3[k] <span class="op">+</span> <span class="fl">0.5</span>, <span class="op">-</span><span class="fl">0.04</span>, <span class="bu">format</span>(k, <span class="st">"03b"</span>), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>, fontsize<span class="op">=</span><span class="dv">11</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>COL[<span class="st">"hi"</span>] <span class="cf">if</span> hl <span class="cf">else</span> <span class="st">"0.3"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span> <span class="cf">if</span> hl <span class="cf">else</span> <span class="st">"normal"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> np.linspace(xa, xb, <span class="dv">300</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>ax.plot(xx, gauss(xx), color<span class="op">=</span><span class="st">"black"</span>, lw<span class="op">=</span><span class="fl">1.6</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">1.2</span>, <span class="fl">0.85</span>, <span class="vs">r"$p(x)$"</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="vs">r"$x\in$ bin 3 $\leftrightarrow|011\rangle$"</span>, xy<span class="op">=</span>(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.8</span>), xytext<span class="op">=</span>(<span class="op">-</span><span class="fl">3.3</span>, <span class="fl">1.2</span>),</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>COL[<span class="st">"hi"</span>], fontsize<span class="op">=</span><span class="dv">11</span>, arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span>COL[<span class="st">"hi"</span>]))</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(xa <span class="op">-</span> <span class="fl">0.3</span>, xb <span class="op">+</span> <span class="fl">0.6</span>)<span class="op">;</span> ax.set_ylim(<span class="op">-</span><span class="fl">0.32</span>, <span class="fl">1.35</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"0.2"</span>, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>ax.text(xa, <span class="op">-</span><span class="fl">0.2</span>, <span class="vs">r"$x_{\min}$"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>)<span class="op">;</span> ax.text(xb, <span class="op">-</span><span class="fl">0.2</span>, <span class="vs">r"$x_{\max}$"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"top"</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>ax.text(xb <span class="op">+</span> <span class="fl">0.45</span>, <span class="fl">0.0</span>, <span class="vs">r"$x$"</span>, va<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.02</span>, <span class="fl">0.97</span>, <span class="st">"(a)"</span>, transform<span class="op">=</span>ax.transAxes, va<span class="op">=</span><span class="st">"top"</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axs[<span class="dv">1</span>]</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>ys <span class="op">=</span> [<span class="fl">2.0</span>, <span class="fl">1.2</span>, <span class="op">-</span><span class="fl">0.2</span>]</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> y, lab <span class="kw">in</span> <span class="bu">zip</span>(ys, [<span class="vs">r"$|0\rangle$"</span>, <span class="vs">r"$|0\rangle$"</span>, <span class="vs">r"$|0\rangle$"</span>]):</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    ax.text(<span class="fl">0.0</span>, y, lab, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    ax.plot([<span class="fl">0.35</span>, <span class="fl">1.2</span>], [y, y], color<span class="op">=</span><span class="st">"0.2"</span>)<span class="op">;</span> ax.plot([<span class="fl">3.2</span>, <span class="fl">4.0</span>], [y, y], color<span class="op">=</span><span class="st">"0.2"</span>)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(Rectangle((<span class="fl">4.0</span>, y <span class="op">-</span> <span class="fl">0.25</span>), <span class="fl">0.65</span>, <span class="fl">0.5</span>, facecolor<span class="op">=</span><span class="st">"white"</span>, edgecolor<span class="op">=</span><span class="st">"0.2"</span>))</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(Arc((<span class="fl">4.325</span>, y <span class="op">-</span> <span class="fl">0.12</span>), <span class="fl">0.45</span>, <span class="fl">0.4</span>, theta1<span class="op">=</span><span class="dv">0</span>, theta2<span class="op">=</span><span class="dv">180</span>, color<span class="op">=</span><span class="st">"0.2"</span>))</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(<span class="fl">4.5</span>, y <span class="op">+</span> <span class="fl">0.18</span>), xytext<span class="op">=</span>(<span class="fl">4.325</span>, y <span class="op">-</span> <span class="fl">0.12</span>), arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-"</span>, color<span class="op">=</span><span class="st">"0.2"</span>))</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(<span class="fl">5.4</span>, y), xytext<span class="op">=</span>(<span class="fl">4.65</span>, y), arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>, color<span class="op">=</span><span class="st">"0.2"</span>))</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.0</span>, <span class="fl">0.55</span>, <span class="vs">r"$\vdots$"</span>, ha<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)<span class="op">;</span> ax.text(<span class="fl">4.3</span>, <span class="fl">0.55</span>, <span class="vs">r"$\vdots$"</span>, ha<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>ax.add_patch(FancyBboxPatch((<span class="fl">1.2</span>, <span class="op">-</span><span class="fl">0.6</span>), <span class="fl">2.0</span>, <span class="fl">3.0</span>, boxstyle<span class="op">=</span><span class="st">"round,pad=0.05"</span>, facecolor<span class="op">=</span><span class="st">"#deebf7"</span>, edgecolor<span class="op">=</span><span class="st">"#3182bd"</span>, lw<span class="op">=</span><span class="fl">1.3</span>))</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">2.2</span>, <span class="fl">0.9</span>, <span class="vs">r"$\hat V(\theta)$"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">13</span>, color<span class="op">=</span><span class="st">"#08519c"</span>)</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">5.55</span>, <span class="fl">0.9</span>, <span class="st">"samples</span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> <span class="vs">r"$\mathbf</span><span class="sc">{b}</span><span class="vs">\sim q_{\theta}(\mathbf</span><span class="sc">{b}</span><span class="vs">)$"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="op">-</span><span class="fl">0.4</span>, <span class="fl">7.6</span>)<span class="op">;</span> ax.set_ylim(<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.7</span>)<span class="op">;</span> ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.0</span>, <span class="fl">0.97</span>, <span class="st">"(b)"</span>, transform<span class="op">=</span>ax.transAxes, va<span class="op">=</span><span class="st">"top"</span>)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab072_binning"</span>)<span class="op">;</span> plt.close(fig)        <span class="co"># file kept for notes and slides, the sketch above is shown here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="the-target-distribution-and-the-data-set" class="level2">
+<h2 class="anchored" data-anchor-id="the-target-distribution-and-the-data-set">5. The target distribution and the data set</h2>
+<p>The target is a mixture of two Gaussian peaks on <span class="math inline">\(x\in[-4,4]\)</span>, <span class="math display">\[p(x)\propto\sum_{j=1}^{2}w_j\,\exp\!\Big[-\frac{(x-\mu_j)^2}{2\sigma^2}\Big], \tag{8}\]</span> with weights <span class="math inline">\(w_1=0.4\)</span> and <span class="math inline">\(w_2=0.6\)</span>, centres <span class="math inline">\(\mu_{1,2}=\mp1.6\)</span> and the common width <span class="math inline">\(\sigma=0.6\)</span>. On <span class="math inline">\(N=6\)</span> qubits the interval is cut into 64 bins of width <span class="math inline">\(w=0.125\)</span>. The exact bin probability <span class="math inline">\(p(\mathbf b)\)</span> is the integral of <span class="math inline">\(p(x)\)</span> over bin <span class="math inline">\(k\)</span>, which follows from the error function. We know <span class="math inline">\(p(\mathbf b)\)</span> only because we chose the target. A learner sees the data set, <span class="math inline">\(|\mathcal D|=3000\)</span> values of <span class="math inline">\(x\)</span> drawn from equation (8), each converted to a bit string with equation (5). The data define the empirical distribution <span class="math display">\[\tilde p(\mathbf b)=\frac{n(\mathbf b)}{|\mathcal D|}, \tag{9}\]</span> where <span class="math inline">\(n(\mathbf b)\)</span> counts how often the bit string <span class="math inline">\(\mathbf b\)</span> occurs in the data set. The tilde marks an estimate obtained from samples. The model is trained on <span class="math inline">\(\tilde p\)</span>, and the exact <span class="math inline">\(p\)</span> serves only to judge how well the trained model generalises beyond the finite data set.</p>
+<p>The two peaks make the bits strongly correlated. The left peak sits around bin 19, bit string <span class="math inline">\(010011\)</span>, and the right peak around bin 44, bit string <span class="math inline">\(101100\)</span>, so a value near the left peak has <span class="math inline">\(b_0=0\)</span>, <span class="math inline">\(b_1=1\)</span>, <span class="math inline">\(b_2=0\)</span>, whereas a value near the right peak has the opposite bits.</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">2</span> <span class="op">**</span> N</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>XMIN, XMAX <span class="op">=</span> <span class="op">-</span><span class="fl">4.0</span>, <span class="fl">4.0</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>W_MIX, MU_MIX, SIG_MIX <span class="op">=</span> np.array([<span class="fl">0.4</span>, <span class="fl">0.6</span>]), np.array([<span class="op">-</span><span class="fl">1.6</span>, <span class="fl">1.6</span>]), <span class="fl">0.6</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>edges <span class="op">=</span> np.linspace(XMIN, XMAX, K <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>xk <span class="op">=</span> bin_centre(np.arange(K), N, XMIN, XMAX)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mixture_cdf(x):</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>(w <span class="op">*</span> <span class="fl">0.5</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> erf((x <span class="op">-</span> m) <span class="op">/</span> (np.sqrt(<span class="dv">2</span>) <span class="op">*</span> SIG_MIX))) <span class="cf">for</span> w, m <span class="kw">in</span> <span class="bu">zip</span>(W_MIX, MU_MIX))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>p_exact <span class="op">=</span> np.diff(mixture_cdf(edges))<span class="op">;</span> p_exact <span class="op">/=</span> p_exact.<span class="bu">sum</span>()     <span class="co"># exact bin probabilities p(b)</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">72</span>)                                       <span class="co"># seed of the data set</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>D_SIZE <span class="op">=</span> <span class="dv">3000</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>comp <span class="op">=</span> rng.choice(<span class="dv">2</span>, size<span class="op">=</span><span class="dv">2</span> <span class="op">*</span> D_SIZE, p<span class="op">=</span>W_MIX)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>x_draw <span class="op">=</span> rng.normal(MU_MIX[comp], SIG_MIX)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>x_data <span class="op">=</span> x_draw[(x_draw <span class="op">&gt;=</span> XMIN) <span class="op">&amp;</span> (x_draw <span class="op">&lt;=</span> XMAX)][:D_SIZE]</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>k_data <span class="op">=</span> x_to_index(x_data, N, XMIN, XMAX)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>p_data <span class="op">=</span> np.bincount(k_data, minlength<span class="op">=</span>K) <span class="op">/</span> D_SIZE                     <span class="co"># empirical distribution (9)</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>BITS <span class="op">=</span> bit_table(N)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">len</span>(x_data) <span class="op">==</span> D_SIZE <span class="kw">and</span> <span class="bu">abs</span>(p_data.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> <span class="kw">lambda</span> a, b: <span class="fl">0.5</span> <span class="op">*</span> <span class="bu">float</span>(np.<span class="bu">abs</span>(np.asarray(a) <span class="op">-</span> np.asarray(b)).<span class="bu">sum</span>())</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"first five data values:"</span>, np.<span class="bu">round</span>(x_data[:<span class="dv">5</span>], <span class="dv">3</span>))</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"as bit strings        :"</span>, [<span class="st">""</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, BITS[k])) <span class="cf">for</span> k <span class="kw">in</span> k_data[:<span class="dv">5</span>]])</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"bins never seen in the data: </span><span class="sc">{</span><span class="bu">int</span>((p_data <span class="op">==</span> <span class="dv">0</span>).<span class="bu">sum</span>())<span class="sc">}</span><span class="ss"> of </span><span class="sc">{</span>K<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"peak bins of p: </span><span class="sc">{</span><span class="bu">int</span>(np.argmax(p_exact[:<span class="dv">32</span>]))<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span><span class="st">''</span><span class="sc">.</span>join(<span class="bu">map</span>(<span class="bu">str</span>, BITS[np.argmax(p_exact[:<span class="dv">32</span>])]))<span class="sc">}</span><span class="ss">,"</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f" </span><span class="sc">{</span><span class="dv">32</span> <span class="op">+</span> <span class="bu">int</span>(np.argmax(p_exact[<span class="dv">32</span>:]))<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span><span class="st">''</span><span class="sc">.</span>join(<span class="bu">map</span>(<span class="bu">str</span>, BITS[<span class="dv">32</span> <span class="op">+</span> np.argmax(p_exact[<span class="dv">32</span>:])]))<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"DataSize"</span>] <span class="op">=</span> <span class="bu">str</span>(D_SIZE)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"TVDataTarget"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>tv(p_data, p_exact)<span class="sc">:.3f}</span><span class="ss">"</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"EmptyBins"</span>] <span class="op">=</span> <span class="bu">str</span>(<span class="bu">int</span>((p_data <span class="op">==</span> <span class="dv">0</span>).<span class="bu">sum</span>()))</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">4.8</span>, <span class="fl">3.2</span>))</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>ax.bar(xk, p_data, width<span class="op">=</span><span class="fl">0.125</span>, color<span class="op">=</span>COL[<span class="st">"data"</span>], edgecolor<span class="op">=</span><span class="st">"white"</span>, lw<span class="op">=</span><span class="fl">0.3</span>, label<span class="op">=</span><span class="vs">r"data $\tilde p(\mathbf</span><span class="sc">{b}</span><span class="vs">)$"</span>)</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>ax.step(np.r_[edges[<span class="dv">0</span>], edges[<span class="dv">1</span>:]], np.r_[p_exact[<span class="dv">0</span>], p_exact], where<span class="op">=</span><span class="st">"pre"</span>, color<span class="op">=</span>COL[<span class="st">"target"</span>], lw<span class="op">=</span><span class="fl">1.3</span>, label<span class="op">=</span><span class="vs">r"target $p(\mathbf</span><span class="sc">{b}</span><span class="vs">)$"</span>)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"bin centre $x_k$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"probability"</span>)<span class="op">;</span> ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab072_target"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>first five data values: [ 1.12  -1.803 -2.064 -1.169  2.307]
+as bit strings        : ['101000', '010001', '001111', '010110', '110010']
+bins never seen in the data: 6 of 64
+peak bins of p: 19 = 010011, 44 = 101100</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-072-born-machine_files/figure-html/cell-6-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The bars are the empirical distribution of the 3000 data values, and the line is the exact bin probability. The histogram follows the two peaks with visible fluctuations of a few counts per bin, and some bins in the tails received no data value at all. The total variation distance between the two distributions, defined in Section 7, is 0.065. It sets the scale of the statistical error that the finite data set carries.</p>
+</section>
+<section id="the-born-machine" class="level2">
+<h2 class="anchored" data-anchor-id="the-born-machine">6. The Born machine</h2>
+<p>A circuit <span class="math inline">\(\hat V(\boldsymbol\theta)\)</span> with gate angles <span class="math inline">\(\boldsymbol\theta\)</span> acts on the register prepared in <span class="math inline">\(|0\rangle^{\otimes N}\)</span> and produces the state <span class="math inline">\(|\psi(\boldsymbol\theta)\rangle=\hat V(\boldsymbol\theta)|0\rangle^{\otimes N}\)</span>. A measurement of every qubit in the computational basis returns the bit string <span class="math inline">\(\mathbf b\)</span> with the Born-rule probability <span class="math display">\[q_{\boldsymbol\theta}(\mathbf b)=\big|\langle\mathbf b|\hat V(\boldsymbol\theta)|0\rangle^{\otimes N}\big|^2 . \tag{10}\]</span> These probabilities are non-negative and sum to one for every <span class="math inline">\(\boldsymbol\theta\)</span>, because the state is normalised, so equation (10) is a family of distributions over the <span class="math inline">\(2^N\)</span> bit strings. A model whose probabilities are squared amplitudes is called a Born machine. The idea was introduced with matrix product states as the source of the amplitudes [1] and compared with Boltzmann machines in Ref. [2]. With a parametrised circuit as the source, the model is the quantum circuit Born machine [3, 4], whose sampling hardness and training were studied in Ref. [5].</p>
+<p>The sketch shows the Born machine, a circuit <span class="math inline">\(\hat V(\boldsymbol\theta)\)</span> acting on <span class="math inline">\(|0\rangle^{\otimes N}\)</span> and followed by a measurement of every qubit, which returns one bit string <span class="math inline">\(\mathbf b\)</span> per run.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-072-born-machine_files/figure-html/c67e294e-1-sketch_born_machine.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">quantum circuit Born machine</figcaption><p></p>
+</figure>
+</div>
+<p>Sampling needs no further computation, since one run of the circuit followed by a measurement of all qubits draws one bit string from <span class="math inline">\(q_{\boldsymbol\theta}\)</span> and, through equation (7), one value of <span class="math inline">\(x\)</span>. The probabilities themselves are not directly accessible on a device. An experiment estimates <span class="math inline">\(q_{\boldsymbol\theta}(\mathbf b)\)</span> only as a frequency over many runs, <span class="math inline">\(\tilde q(\mathbf b)=n(\mathbf b)/M\)</span> for <span class="math inline">\(M\)</span> shots, and a bit string of small probability may not appear at all. A simulation, by contrast, stores all <span class="math inline">\(2^N\)</span> amplitudes and gives the exact <span class="math inline">\(q_{\boldsymbol\theta}\)</span>.</p>
+<p>The circuit is the same object that prepares trial states in the variational quantum eigensolver (VQE). In VQE the measured bit strings serve only to estimate an energy, and the goal is the state that minimises it. In a Born machine the distribution of the bit strings is the goal, and the samples themselves are the output.</p>
+<p>In the circuit used throughout, a rotation block applies <span class="math inline">\(\hat R_z(\phi_q)\hat R_y(\vartheta_q)\)</span> to every qubit <span class="math inline">\(q\)</span>, and an entangling layer is the chain of <span class="math inline">\(\widehat{\mathrm{CZ}}\)</span> gates on the pairs <span class="math inline">\((0,1),(1,2),\dots,(N-2,N-1)\)</span>. The circuit with <span class="math inline">\(L\)</span> layers is <span class="math display">\[\hat V(\boldsymbol\theta)=\hat B_L\,\widehat{\mathrm{CZ}}_{\rm chain}\cdots\hat B_1\,\widehat{\mathrm{CZ}}_{\rm chain}\,\hat B_0,\qquad \hat B_\ell=\bigotimes_{q=0}^{N-1}\hat R_z(\phi_{\ell q})\,\hat R_y(\vartheta_{\ell q}), \tag{11}\]</span> with <span class="math inline">\(n=2N(L+1)\)</span> angles. The array <code>theta</code> has the shape <span class="math inline">\((L_{\max}+1,N,2)\)</span>, and a mask switches off the layers beyond <span class="math inline">\(L\)</span>, so that circuits of every depth <span class="math inline">\(0\le L\le L_{\max}\)</span> share one compiled function. At <span class="math inline">\(L=0\)</span> only the block <span class="math inline">\(\hat B_0\)</span> remains, the product circuit of Section 8. We check that <span class="math inline">\(q_{\boldsymbol\theta}\)</span> sums to one and draw a record of bit strings from a random circuit.</p>
+<div class="cell" data-execution_count="6">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>L_MAX <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>CZ_SIGNS <span class="op">=</span> jnp.asarray(cz_chain_signs(N), dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rotation_block(psi, angles):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># angles[q] = (vartheta_q, phi_q): R_z(phi) R_y(vartheta) on qubit q</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N):</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        psi <span class="op">=</span> apply_1q(psi, rot(Z, angles[q, <span class="dv">1</span>]) <span class="op">@</span> rot(Y, angles[q, <span class="dv">0</span>]), q)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> psi</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> born_state(theta, mask):</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># equation (11); mask[l] = 1 keeps layer l + 1, mask[l] = 0 removes its CZ chain and its rotations</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> jnp.zeros((<span class="dv">2</span>,) <span class="op">*</span> N, dtype<span class="op">=</span>CDTYPE).at[(<span class="dv">0</span>,) <span class="op">*</span> N].<span class="bu">set</span>(<span class="fl">1.0</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> rotation_block(psi, theta[<span class="dv">0</span>])</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> layer(psi, inputs):</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        angles, m <span class="op">=</span> inputs</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        psi <span class="op">=</span> (psi.reshape(<span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> jnp.where(m <span class="op">&gt;</span> <span class="dv">0</span>, CZ_SIGNS, <span class="fl">1.0</span>)).reshape((<span class="dv">2</span>,) <span class="op">*</span> N)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> rotation_block(psi, angles <span class="op">*</span> m), <span class="va">None</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    psi, _ <span class="op">=</span> lax.scan(layer, psi, (theta[<span class="dv">1</span>:], mask))</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> psi.reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> born_probs(theta, mask):</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.<span class="bu">abs</span>(born_state(theta, mask)) <span class="op">**</span> <span class="dv">2</span>            <span class="co"># equation (10)</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> depth_mask(L):</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.asarray((np.arange(L_MAX) <span class="op">&lt;</span> L).astype(<span class="bu">float</span>))</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="at">@partial</span>(jax.jit, static_argnums<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample_bits(key, q, shots):</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># shots measurements of all qubits: bin indices drawn with probabilities q, by inverting the cumulative sum</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> jax.random.uniform(key, (shots,)) <span class="op">*</span> jnp.<span class="bu">sum</span>(q)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.minimum(jnp.searchsorted(jnp.cumsum(q), u), q.shape[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> counts_to_freq(idx, size<span class="op">=</span>K):</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.bincount(idx, length<span class="op">=</span>size) <span class="op">/</span> idx.shape[<span class="dv">0</span>]</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>theta_rand <span class="op">=</span> jax.random.uniform(jax.random.PRNGKey(<span class="dv">7202</span>), (L_MAX <span class="op">+</span> <span class="dv">1</span>, N, <span class="dv">2</span>), minval<span class="op">=</span><span class="dv">0</span>, maxval<span class="op">=</span><span class="dv">2</span> <span class="op">*</span> np.pi)</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>q_rand <span class="op">=</span> born_probs(theta_rand, depth_mask(<span class="dv">2</span>))</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(<span class="bu">float</span>(q_rand.<span class="bu">sum</span>()) <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>shots_demo <span class="op">=</span> sample_bits(jax.random.PRNGKey(<span class="dv">7203</span>), q_rand, <span class="dv">5</span>)</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"q sums to"</span>, <span class="bu">float</span>(q_rand.<span class="bu">sum</span>()), <span class="st">"| five measured bit strings:"</span>,</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>      [<span class="st">""</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, BITS[<span class="bu">int</span>(i)])) <span class="cf">for</span> i <span class="kw">in</span> shots_demo], <span class="st">"-&gt; x ="</span>, np.<span class="bu">round</span>(xk[np.asarray(shots_demo)], <span class="dv">3</span>))</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>idx_big <span class="op">=</span> sample_bits(jax.random.PRNGKey(<span class="dv">7204</span>), q_rand, <span class="dv">200_000</span>)</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"total variation between q and the frequencies of 200000 shots: </span><span class="sc">{</span>tv(counts_to_freq(idx_big), q_rand)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>q sums to 1.0000000000000007 | five measured bit strings: ['101011', '001011', '100100', '100100', '101100'] -&gt; x = [ 1.438 -2.562  0.562  0.562  1.562]
+total variation between q and the frequencies of 200000 shots: 0.0078</code></pre>
+</div>
+</div>
+<p>The frequencies of 200 000 shots agree with the exact probabilities up to the statistical error of the record, which confirms that <code>sample_bits</code> draws from <span class="math inline">\(q_{\boldsymbol\theta}\)</span>.</p>
+</section>
+<section id="the-loss-function" class="level2">
+<h2 class="anchored" data-anchor-id="the-loss-function">7. The loss function</h2>
+<p>Training needs a number that measures how far <span class="math inline">\(q_{\boldsymbol\theta}\)</span> is from the data. The Kullback–Leibler (KL) divergence [6] of <span class="math inline">\(q\)</span> from <span class="math inline">\(p\)</span> is <span class="math display">\[D_{\rm KL}(p\,\|\,q_{\boldsymbol\theta})=\sum_{\mathbf b}p(\mathbf b)\,\ln\frac{p(\mathbf b)}{q_{\boldsymbol\theta}(\mathbf b)} , \tag{12}\]</span> with the convention <span class="math inline">\(0\ln0=0\)</span>, and it is measured in nats because of the natural logarithm. It is non-negative and vanishes only for <span class="math inline">\(q_{\boldsymbol\theta}=p\)</span>. It is asymmetric in its arguments and therefore not a distance in the mathematical sense. The weight <span class="math inline">\(p(\mathbf b)\)</span> makes it most sensitive to the bit strings that are frequent in the data.</p>
+<p>When <span class="math inline">\(p\)</span> is replaced by the empirical distribution (9), the KL divergence becomes the negative log-likelihood of the data, the standard loss of statistics. Splitting the logarithm gives <span class="math display">\[D_{\rm KL}(\tilde p\,\|\,q_{\boldsymbol\theta})=\sum_{\mathbf b}\tilde p(\mathbf b)\ln\tilde p(\mathbf b)-\sum_{\mathbf b}\tilde p(\mathbf b)\ln q_{\boldsymbol\theta}(\mathbf b) . \tag{13}\]</span> The first sum is minus the Shannon entropy <span class="math inline">\(H(\tilde p)\)</span> of the data, in nats, which does not depend on <span class="math inline">\(\boldsymbol\theta\)</span>. In the second sum each bit string occurs with the weight <span class="math inline">\(n(\mathbf b)/|\mathcal D|\)</span>, so the sum over bit strings is a sum over the data points, <span class="math display">\[-\sum_{\mathbf b}\tilde p(\mathbf b)\ln q_{\boldsymbol\theta}(\mathbf b)=-\frac1{|\mathcal D|}\sum_{i=1}^{|\mathcal D|}\ln q_{\boldsymbol\theta}\big(\mathbf b^{(i)}\big)\equiv\mathcal L_{\rm NLL}(\boldsymbol\theta), \tag{14}\]</span> and therefore <span class="math display">\[D_{\rm KL}(\tilde p\,\|\,q_{\boldsymbol\theta})=\mathcal L_{\rm NLL}(\boldsymbol\theta)-H(\tilde p). \tag{15}\]</span> Minimising the KL divergence to the data and maximising the likelihood of the data are the same task with the same gradient.</p>
+<p>The loss (14) contains <span class="math inline">\(\ln q_{\boldsymbol\theta}(\mathbf b)\)</span> for every bit string in the data. If the model gives a data bit string a vanishing probability, the loss diverges, so the training must start from a model that covers all bit strings. We start from angles close to <span class="math inline">\(\vartheta_q=\pi/2\)</span>, for which each qubit is near <span class="math inline">\(|+\rangle\)</span> and <span class="math inline">\(q_{\boldsymbol\theta}\)</span> is close to the uniform distribution <span class="math inline">\(1/64\)</span>. On a device the loss is harder to use, because it needs the probability of each data bit string, which can only be estimated from shot frequencies. A zero frequency, common for small probabilities, makes the estimate of <span class="math inline">\(\ln q\)</span> infinite.</p>
+<p>We judge a trained model by the KL divergence (12) from the exact target, <span class="math inline">\(D_{\rm KL}(p\,\|\,q_{\boldsymbol\theta})\)</span>, which tests generalisation beyond the data, and by the total variation distance <span class="math display">\[d_{\rm TV}(p,q)=\frac12\sum_{\mathbf b}\big|p(\mathbf b)-q(\mathbf b)\big| \tag{16}\]</span> which is the largest difference between the probabilities that the two distributions assign to any set of bit strings. It lies between 0 and 1 and stays finite when <span class="math inline">\(q\)</span> vanishes on some bit strings.</p>
+<p>The gradient of the loss is computed by automatic differentiation of the simulator with <code>jax.grad</code>. On a device the gradient comes from the parameter-shift rule. It gives the derivative of each probability <span class="math inline">\(q_{\boldsymbol\theta}(\mathbf b)\)</span> from two circuits whose angle <span class="math inline">\(\theta_j\)</span> is shifted by <span class="math inline">\(\pm\pi/2\)</span>, because <span class="math inline">\(q_{\boldsymbol\theta}(\mathbf b)\)</span> is the expectation value of the projector <span class="math inline">\(|\mathbf b\rangle\langle\mathbf b|\)</span>. The probabilities of both circuits are estimated from shots. The angles are updated with the Adam optimiser [7], implemented in a few lines, and <code>lax.scan</code> runs the whole training loop inside one compiled function.</p>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>P_DATA <span class="op">=</span> jnp.asarray(p_data)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> kl_div(p, q):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># equation (12) in nats; terms with p = 0 contribute zero</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    p, q <span class="op">=</span> jnp.asarray(p), jnp.asarray(q)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.<span class="bu">sum</span>(jnp.where(p <span class="op">&gt;</span> <span class="dv">0</span>, p <span class="op">*</span> (jnp.log(jnp.where(p <span class="op">&gt;</span> <span class="dv">0</span>, p, <span class="fl">1.0</span>)) <span class="op">-</span> jnp.log(q <span class="op">+</span> <span class="fl">1e-300</span>)), <span class="fl">0.0</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nll(q, k_samples):</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>jnp.mean(jnp.log(q[k_samples]))               <span class="co"># equation (14)</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> kl_loss(theta, mask):</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> kl_div(P_DATA, born_probs(theta, mask))</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> adam(loss, theta0, steps, lr):</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adam with the standard moment decay rates 0.9 and 0.999; returns the final angles and the loss history</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    value_and_grad <span class="op">=</span> jax.value_and_grad(loss)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> step(carry, i):</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        th, m, v <span class="op">=</span> carry</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        l, g <span class="op">=</span> value_and_grad(th)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> <span class="fl">0.9</span> <span class="op">*</span> m <span class="op">+</span> <span class="fl">0.1</span> <span class="op">*</span> g</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> <span class="fl">0.999</span> <span class="op">*</span> v <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> g <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        th <span class="op">=</span> th <span class="op">-</span> lr <span class="op">*</span> (m <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.9</span> <span class="op">**</span> (i <span class="op">+</span> <span class="dv">1</span>))) <span class="op">/</span> (jnp.sqrt(v <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.999</span> <span class="op">**</span> (i <span class="op">+</span> <span class="dv">1</span>))) <span class="op">+</span> <span class="fl">1e-8</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (th, m, v), l</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    (th, _, _), hist <span class="op">=</span> lax.scan(step, (theta0, jnp.zeros_like(theta0), jnp.zeros_like(theta0)), jnp.arange(steps))</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> th, hist</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># equation (15): KL to the data = negative log-likelihood - entropy of the data</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>q_check <span class="op">=</span> born_probs(theta_rand, depth_mask(<span class="dv">2</span>))</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>S_data <span class="op">=</span> <span class="op">-</span><span class="bu">float</span>(jnp.<span class="bu">sum</span>(jnp.where(P_DATA <span class="op">&gt;</span> <span class="dv">0</span>, P_DATA <span class="op">*</span> jnp.log(jnp.where(P_DATA <span class="op">&gt;</span> <span class="dv">0</span>, P_DATA, <span class="fl">1.0</span>)), <span class="fl">0.0</span>)))</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(<span class="bu">float</span>(kl_div(P_DATA, q_check)) <span class="op">-</span> (<span class="bu">float</span>(nll(q_check, jnp.asarray(k_data))) <span class="op">-</span> S_data)) <span class="op">&lt;</span> <span class="fl">1e-10</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"random circuit: KL to the data = </span><span class="sc">{</span><span class="bu">float</span>(kl_div(P_DATA, q_check))<span class="sc">:.4f}</span><span class="ss"> = NLL </span><span class="sc">{</span><span class="bu">float</span>(nll(q_check, jnp.asarray(k_data)))<span class="sc">:.4f}</span><span class="ss">"</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f" - entropy of the data </span><span class="sc">{</span>S_data<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>random circuit: KL to the data = 1.7221 = NLL 5.3552 - entropy of the data 3.6331</code></pre>
+</div>
+</div>
+<p>The check confirms equation (15) on a random circuit to numerical precision.</p>
+</section>
+<section id="the-product-circuit" class="level2">
+<h2 class="anchored" data-anchor-id="the-product-circuit">8. The product circuit</h2>
+<p>Without entangling gates, <span class="math inline">\(L=0\)</span> in equation (11), the circuit is a product of one-qubit gates and prepares a product state. Each qubit <span class="math inline">\(q\)</span> ends in its own state <span class="math inline">\(\cos(\vartheta_q/2)|0\rangle+e^{i\phi_q}\sin(\vartheta_q/2)|1\rangle\)</span> up to a global phase, and the amplitude of a bit string is a product of one-qubit amplitudes. The Born probability then factorises, <span class="math display">\[q_{\boldsymbol\theta}(\mathbf b)=\prod_{q=0}^{N-1}q_q(b_q),\qquad q_q(0)=\cos^2\frac{\vartheta_q}2,\quad q_q(1)=\sin^2\frac{\vartheta_q}2 , \tag{17}\]</span> so every bit is an independent biased coin, and the phases <span class="math inline">\(\phi_q\)</span> have no effect on the outcomes. A product circuit cannot represent any correlation between bits.</p>
+<p>The sketch contrasts the product circuit, whose bits are independent biased coins, with a circuit whose <span class="math inline">\(\widehat{\mathrm{CZ}}\)</span> gates correlate the bits.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-072-born-machine_files/figure-html/0202fac9-1-sketch_product_vs_entangled.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">product circuit versus circuit with entanglers</figcaption><p></p>
+</figure>
+</div>
+<p>The best product model of a given distribution follows from equation (12). With <span class="math inline">\(q\)</span> of the form (17), the logarithm of <span class="math inline">\(q\)</span> splits into a sum over qubits, and <span class="math display">\[D_{\rm KL}\Big(p\,\Big\|\,\prod_q q_q\Big)=-H(p)-\sum_{q=0}^{N-1}\sum_{b_q\in\{0,1\}}p_q(b_q)\ln q_q(b_q), \tag{18}\]</span> where <span class="math inline">\(p_q(b_q)\)</span> is the marginal probability that bit <span class="math inline">\(q\)</span> takes the value <span class="math inline">\(b_q\)</span> under <span class="math inline">\(p\)</span>. Each inner sum is smallest for <span class="math inline">\(q_q=p_q\)</span>, by the non-negativity of the KL divergence between the two one-bit distributions. The best product model is therefore the product of the marginals of the data, and no training of the angles can go below the value of equation (18) at <span class="math inline">\(q_q=p_q\)</span>.</p>
+<p>For the two-peak target the marginals mix the bits of the two peaks. The product of marginals spreads probability over many bit strings that combine the leading bits of one peak with the trailing bits of the other, which puts probability into bins between and outside the peaks. We first verify the factorisation (17) for random angles and then train the product circuit with the KL divergence to the data.</p>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>theta_prod <span class="op">=</span> jax.random.uniform(jax.random.PRNGKey(<span class="dv">7205</span>), (L_MAX <span class="op">+</span> <span class="dv">1</span>, N, <span class="dv">2</span>), minval<span class="op">=</span><span class="dv">0</span>, maxval<span class="op">=</span><span class="dv">2</span> <span class="op">*</span> np.pi)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>q_prod <span class="op">=</span> np.asarray(born_probs(theta_prod, depth_mask(<span class="dv">0</span>)))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>marg <span class="op">=</span> np.array([[np.cos(theta_prod[<span class="dv">0</span>, q, <span class="dv">0</span>] <span class="op">/</span> <span class="dv">2</span>) <span class="op">**</span> <span class="dv">2</span>, np.sin(theta_prod[<span class="dv">0</span>, q, <span class="dv">0</span>] <span class="op">/</span> <span class="dv">2</span>) <span class="op">**</span> <span class="dv">2</span>] <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>q_fact <span class="op">=</span> np.prod(marg[np.arange(N), BITS], axis<span class="op">=</span><span class="dv">1</span>)                   <span class="co"># equation (17)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(q_prod, q_fact, atol<span class="op">=</span><span class="fl">1e-12</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>m1 <span class="op">=</span> (p_data[:, <span class="va">None</span>] <span class="op">*</span> BITS).<span class="bu">sum</span>(<span class="dv">0</span>)                                  <span class="co"># marginals P(b_q = 1) of the data</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>q_marg <span class="op">=</span> np.prod(np.where(BITS <span class="op">==</span> <span class="dv">1</span>, m1, <span class="dv">1</span> <span class="op">-</span> m1), axis<span class="op">=</span><span class="dv">1</span>)             <span class="co"># best product model</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>kl_bound <span class="op">=</span> <span class="bu">float</span>(kl_div(p_data, q_marg))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"factorisation (19) holds for random angles"</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"data marginals P(b_q = 1):"</span>, np.<span class="bu">round</span>(m1, <span class="dv">3</span>))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"lower bound of the product circuit, KL(p_data || product of marginals) = </span><span class="sc">{</span>kl_bound<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"KLProductBound"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>kl_bound<span class="sc">:.3f}</span><span class="ss">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>factorisation (19) holds for random angles
+data marginals P(b_q = 1): [0.601 0.457 0.524 0.503 0.496 0.492]
+lower bound of the product circuit, KL(p_data || product of marginals) = 0.5002</code></pre>
+</div>
+</div>
+</section>
+<section id="layered-circuits-with-entanglers" class="level2">
+<h2 class="anchored" data-anchor-id="layered-circuits-with-entanglers">9. Layered circuits with entanglers</h2>
+<p>Entangling gates between the rotation blocks make the amplitudes, and therefore the bits, correlated. We train circuits (11) of depth <span class="math inline">\(L=0,1,\dots,5\)</span>, with <span class="math inline">\(n=12,24,\dots,72\)</span> angles, each from three random starts with <span class="math inline">\(600\)</span> Adam steps and the learning rate <span class="math inline">\(0.05\)</span>. The starting angles are <span class="math inline">\(\vartheta=\pi/2\)</span> and <span class="math inline">\(\phi=0\)</span> plus uniform noise of amplitude <span class="math inline">\(0.3\)</span>, so every start lies near the uniform distribution. The mask lets one compiled function, vectorised with <code>jax.vmap</code>, train all eighteen circuits at once. For each depth we record the KL divergence to the data, which is the training loss, and the KL divergence to the exact target, which tests generalisation.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>SEEDS, STEPS, LR <span class="op">=</span> <span class="dv">3</span>, <span class="dv">600</span>, <span class="fl">0.05</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>depths <span class="op">=</span> np.repeat(np.arange(L_MAX <span class="op">+</span> <span class="dv">1</span>), SEEDS)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>masks <span class="op">=</span> jnp.asarray((np.arange(L_MAX)[<span class="va">None</span>, :] <span class="op">&lt;</span> depths[:, <span class="va">None</span>]).astype(<span class="bu">float</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>theta0 <span class="op">=</span> jax.random.uniform(jax.random.PRNGKey(<span class="dv">7206</span>), (<span class="bu">len</span>(depths), L_MAX <span class="op">+</span> <span class="dv">1</span>, N, <span class="dv">2</span>), minval<span class="op">=-</span><span class="fl">0.3</span>, maxval<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>theta0 <span class="op">=</span> theta0.at[..., <span class="dv">0</span>].add(np.pi <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>t_train <span class="op">=</span> time.perf_counter()</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>train_all <span class="op">=</span> jax.jit(jax.vmap(<span class="kw">lambda</span> th, m: adam(<span class="kw">lambda</span> x: kl_loss(x, m), th, STEPS, LR)))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>theta_tr, hist_tr <span class="op">=</span> train_all(theta0, masks)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>hist_tr <span class="op">=</span> np.asarray(hist_tr)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>q_tr <span class="op">=</span> np.asarray(jax.jit(jax.vmap(born_probs))(theta_tr, masks))</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"training of </span><span class="sc">{</span><span class="bu">len</span>(depths)<span class="sc">}</span><span class="ss"> circuits: </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> t_train<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>kl_train <span class="op">=</span> hist_tr[:, <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>kl_target <span class="op">=</span> np.array([<span class="bu">float</span>(kl_div(p_exact, q)) <span class="cf">for</span> q <span class="kw">in</span> q_tr])</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>tv_target <span class="op">=</span> np.array([tv(p_exact, q) <span class="cf">for</span> q <span class="kw">in</span> q_tr])</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>best <span class="op">=</span> {L: <span class="bu">int</span>(np.where(depths <span class="op">==</span> L)[<span class="dv">0</span>][np.argmin(kl_train[depths <span class="op">==</span> L])]) <span class="cf">for</span> L <span class="kw">in</span> <span class="bu">range</span>(L_MAX <span class="op">+</span> <span class="dv">1</span>)}</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" L   n  | KL(data||q) best  | KL(p||q) of best | TV(p,q) of best"</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L <span class="kw">in</span> <span class="bu">range</span>(L_MAX <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> best[L]</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">  </span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> N <span class="op">*</span> (L <span class="op">+</span> <span class="dv">1</span>)<span class="sc">:3d}</span><span class="ss"> |     </span><span class="sc">{</span>kl_train[i]<span class="sc">:.4f}</span><span class="ss">        |      </span><span class="sc">{</span>kl_target[i]<span class="sc">:.4f}</span><span class="ss">      |     </span><span class="sc">{</span>tv_target[i]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(kl_train[best[<span class="dv">0</span>]] <span class="op">-</span> kl_bound) <span class="op">&lt;</span> <span class="fl">1e-4</span>          <span class="co"># the product circuit reaches the product-of-marginals bound</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>WORDS <span class="op">=</span> [<span class="st">"Zero"</span>, <span class="st">"One"</span>, <span class="st">"Two"</span>, <span class="st">"Three"</span>, <span class="st">"Four"</span>, <span class="st">"Five"</span>]</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L <span class="kw">in</span> <span class="bu">range</span>(L_MAX <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    NUMBERS[<span class="ss">f"KLDataL</span><span class="sc">{</span>WORDS[L]<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>kl_train[best[L]]<span class="sc">:.4f}</span><span class="ss">"</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    NUMBERS[<span class="ss">f"KLTargetL</span><span class="sc">{</span>WORDS[L]<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>kl_target[best[L]]<span class="sc">:.4f}</span><span class="ss">"</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    NUMBERS[<span class="ss">f"TVTargetL</span><span class="sc">{</span>WORDS[L]<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>tv_target[best[L]]<span class="sc">:.3f}</span><span class="ss">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>training of 18 circuits: 9.3 s
+ L   n  | KL(data||q) best  | KL(p||q) of best | TV(p,q) of best
+ 0   12 |     0.5002        |      0.4823      |     0.414
+ 1   24 |     0.0847        |      0.0669      |     0.114
+ 2   36 |     0.0193        |      0.0141      |     0.056
+ 3   48 |     0.0035        |      0.0137      |     0.055
+ 4   60 |     0.0029        |      0.0130      |     0.064
+ 5   72 |     0.0003        |      0.0151      |     0.063</code></pre>
+</div>
+</div>
+<p>The product circuit converges from all three starts to the bound of equation (18), so its remaining error is the missing correlation between the bits. One entangling layer lowers the KL divergence from 0.5 to below 0.1, and every further layer lowers the training loss again. The figure shows the training curves of the best start at each depth and the final divergences against depth.</p>
+<div class="cell" data-execution_count="10">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">10.0</span>, <span class="fl">3.6</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> plt.get_cmap(<span class="st">"viridis"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L <span class="kw">in</span> <span class="bu">range</span>(L_MAX <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].semilogy(hist_tr[best[L]], color<span class="op">=</span>cmap(L <span class="op">/</span> (L_MAX <span class="op">+</span> <span class="fl">0.5</span>)), lw<span class="op">=</span><span class="fl">1.3</span>, label<span class="op">=</span><span class="ss">f"$L=</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylim(<span class="fl">1e-4</span>, <span class="dv">3</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].axhline(kl_bound, color<span class="op">=</span><span class="st">"0.4"</span>, ls<span class="op">=</span><span class="st">":"</span>, lw<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_xlabel(<span class="st">"Adam step"</span>)<span class="op">;</span> axs[<span class="dv">0</span>].set_ylabel(<span class="vs">r"$D_{\rm KL}(\tilde p\,\|\,q_{\theta})$"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">10</span>, ncol<span class="op">=</span><span class="dv">3</span>, loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>Ls <span class="op">=</span> np.arange(L_MAX <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].semilogy(Ls, [kl_train[best[L]] <span class="cf">for</span> L <span class="kw">in</span> Ls], <span class="st">"o-"</span>, color<span class="op">=</span>COL[<span class="st">"model"</span>], label<span class="op">=</span><span class="vs">r"to the data, $D_{\rm KL}(\tilde p\,\|\,q_{\theta})$"</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].semilogy(Ls, [kl_target[best[L]] <span class="cf">for</span> L <span class="kw">in</span> Ls], <span class="st">"s--"</span>, color<span class="op">=</span>COL[<span class="st">"target"</span>], label<span class="op">=</span><span class="vs">r"to the target, $D_{\rm KL}(p\,\|\,q_{\theta})$"</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xlabel(<span class="vs">r"number of entangling layers $L$"</span>)<span class="op">;</span> axs[<span class="dv">1</span>].set_ylabel(<span class="st">"KL divergence (nats)"</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_ylim(top<span class="op">=</span><span class="dv">3</span>)<span class="op">;</span> axs[<span class="dv">1</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">10</span>, loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, lab <span class="kw">in</span> <span class="bu">zip</span>(axs, <span class="st">"ab"</span>):</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    a.text(<span class="fl">0.03</span>, <span class="fl">0.92</span>, <span class="ss">f"(</span><span class="sc">{</span>lab<span class="sc">}</span><span class="ss">)"</span>, transform<span class="op">=</span>a.transAxes)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab072_depth"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-072-born-machine_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Panel (a) shows the loss against the Adam step for the best start at each depth, and the dotted line marks the product bound (18), which the <span class="math inline">\(L=0\)</span> curve reaches. Panel (b) shows the final KL divergence against the number of entangling layers, measured against the data (circles) and against the exact target (squares). Both fall quickly up to <span class="math inline">\(L=2\)</span>. Beyond it the loss on the data keeps decreasing by an order of magnitude, while the divergence from the target stays near <span class="math inline">\(0.014\)</span>. The deeper circuits start to reproduce the statistical fluctuations of the 3000 data values, including empty bins, and these fluctuations are not part of <span class="math inline">\(p\)</span>. Fitting these fluctuations is called overfitting, and the divergence from a target that the training never sees detects it. If this picture holds, the saturation level is set by the size of the data set and drops for a larger one. We test this with a second data set of 30 000 values drawn from the same target, and train the circuits with <span class="math inline">\(L=2\)</span>, 3 and 5 from the first of their three starts. In practice <span class="math inline">\(p\)</span> is unknown, and a part of the data set held back from training plays the role of the target.</p>
+<div class="cell" data-execution_count="11">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rng_big <span class="op">=</span> np.random.default_rng(<span class="dv">7272</span>)                                   <span class="co"># seed of the larger data set</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>D_BIG <span class="op">=</span> <span class="dv">30_000</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>comp_b <span class="op">=</span> rng_big.choice(<span class="dv">2</span>, size<span class="op">=</span><span class="dv">2</span> <span class="op">*</span> D_BIG, p<span class="op">=</span>W_MIX)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>x_big <span class="op">=</span> rng_big.normal(MU_MIX[comp_b], SIG_MIX)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>x_big <span class="op">=</span> x_big[(x_big <span class="op">&gt;=</span> XMIN) <span class="op">&amp;</span> (x_big <span class="op">&lt;=</span> XMAX)][:D_BIG]</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>p_big <span class="op">=</span> jnp.asarray(np.bincount(x_to_index(x_big, N, XMIN, XMAX), minlength<span class="op">=</span>K) <span class="op">/</span> D_BIG)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>sel <span class="op">=</span> np.array([SEEDS <span class="op">*</span> L <span class="cf">for</span> L <span class="kw">in</span> (<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>)])                          <span class="co"># first start of each depth</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>train_big <span class="op">=</span> jax.jit(jax.vmap(<span class="kw">lambda</span> th, m: adam(<span class="kw">lambda</span> x: kl_div(p_big, born_probs(x, m)), th, STEPS, LR)))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>th_big, hist_big <span class="op">=</span> train_big(theta0[sel], masks[sel])</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>q_big <span class="op">=</span> np.asarray(jax.jit(jax.vmap(born_probs))(th_big, masks[sel]))</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TV(data, p): 3000 values </span><span class="sc">{</span>tv(p_data, p_exact)<span class="sc">:.3f}</span><span class="ss">, 30000 values </span><span class="sc">{</span>tv(np.asarray(p_big), p_exact)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" L | KL(p||q), 3000 values | KL(p||q), 30000 values   (same starting angles)"</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>kl_big <span class="op">=</span> {}</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L, i, q <span class="kw">in</span> <span class="bu">zip</span>((<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>), sel, q_big):</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    kl_big[L] <span class="op">=</span> <span class="bu">float</span>(kl_div(p_exact, q))</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss"> |        </span><span class="sc">{</span>kl_target[i]<span class="sc">:.4f}</span><span class="ss">         |        </span><span class="sc">{</span>kl_big[L]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    NUMBERS[<span class="ss">f"KLTargetBigL</span><span class="sc">{</span>WORDS[L]<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>kl_big[L]<span class="sc">:.4f}</span><span class="ss">"</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"TVDataBigTarget"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>tv(np.asarray(p_big), p_exact)<span class="sc">:.3f}</span><span class="ss">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>TV(data, p): 3000 values 0.065, 30000 values 0.015
+ L | KL(p||q), 3000 values | KL(p||q), 30000 values   (same starting angles)
+ 2 |        0.0173         |        0.0117
+ 3 |        0.0160         |        0.0019
+ 5 |        0.0147         |        0.0014</code></pre>
+</div>
+</div>
+<p>With ten times more data the empirical distribution lies closer to the target, at the total variation distance 0.015 instead of 0.065. From the same starting angles, the divergence of the trained circuits from the target then drops from about 0.016 to about 0.002 at <span class="math inline">\(L=3\)</span> and <span class="math inline">\(L=5\)</span>. The <span class="math inline">\(L=2\)</span> circuit improves less, because its error comes mostly from the limited circuit. The saturation in panel (b) therefore comes from the finite data set.</p>
+<p>The next figure compares the distributions themselves, the product model with the layered models at <span class="math inline">\(L=1\)</span> and <span class="math inline">\(L=3\)</span>.</p>
+<div class="cell" data-execution_count="12">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="fl">10.0</span>, <span class="fl">3.6</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, L, lab <span class="kw">in</span> <span class="bu">zip</span>(axs, (<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="st">"abc"</span>):</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    a.bar(xk, p_data, width<span class="op">=</span><span class="fl">0.125</span>, color<span class="op">=</span>COL[<span class="st">"data"</span>], alpha<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="vs">r"data $\tilde p$"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    a.step(np.r_[edges[<span class="dv">0</span>], edges[<span class="dv">1</span>:]], np.r_[p_exact[<span class="dv">0</span>], p_exact], where<span class="op">=</span><span class="st">"pre"</span>, color<span class="op">=</span>COL[<span class="st">"target"</span>], lw<span class="op">=</span><span class="fl">1.0</span>, label<span class="op">=</span><span class="vs">r"target $p$"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    a.plot(xk, q_tr[best[L]], <span class="st">"--"</span> <span class="cf">if</span> L <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">"-"</span>, color<span class="op">=</span>COL[<span class="st">"prod"</span>] <span class="cf">if</span> L <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> COL[<span class="st">"model"</span>], lw<span class="op">=</span><span class="fl">1.8</span>, label<span class="op">=</span><span class="vs">r"model $q_{\theta}$"</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    a.set_ylim(<span class="dv">0</span>, <span class="fl">0.062</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    a.text(<span class="fl">0.03</span>, <span class="fl">0.92</span>, <span class="ss">f"(</span><span class="sc">{</span>lab<span class="sc">}</span><span class="ss">) $L=</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">$"</span>, transform<span class="op">=</span>a.transAxes)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    a.set_xlabel(<span class="vs">r"$x_k$"</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="st">"probability"</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>fig.tight_layout(rect<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.9</span>))</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>fig.legend(<span class="op">*</span>axs[<span class="dv">1</span>].get_legend_handles_labels(), frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">11</span>, ncol<span class="op">=</span><span class="dv">3</span>, loc<span class="op">=</span><span class="st">"upper center"</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">1.0</span>))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab072_models"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-072-born-machine_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Panel (a) shows the trained product model (grey dashed line), the product of the marginals described in Section 8. It spreads probability over the whole interval with a weak preference for the right half and misses both peaks. With one entangling layer, panel (b), both peaks appear in the right places with roughly the right weights, while their shapes are still distorted. At <span class="math inline">\(L=3\)</span>, panel (c), the model follows the target closely in the peaks and in the tails.</p>
+</section>
+<section id="evaluation-from-samples" class="level2">
+<h2 class="anchored" data-anchor-id="evaluation-from-samples">10. Evaluation from samples</h2>
+<p>A trained circuit on a device is used and tested through its samples. We measure the <span class="math inline">\(L=3\)</span> model <span class="math inline">\(M=10^4\)</span> times, convert the bit strings to bin frequencies <span class="math inline">\(\tilde q(\mathbf b)\)</span> and values of <span class="math inline">\(x\)</span>, and compare them with the target. The total variation distance (16) can be computed from the frequencies directly. The KL divergence (12) from the target requires <span class="math inline">\(\ln\tilde q(\mathbf b)\)</span> in every bin where <span class="math inline">\(p(\mathbf b)&gt;0\)</span> and is infinite as soon as one such bin received no shot, so a sampled model is judged by the total variation distance.</p>
+<div class="cell" data-execution_count="13">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>L_EVAL, M_EVAL <span class="op">=</span> <span class="dv">3</span>, <span class="dv">10_000</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>q_eval <span class="op">=</span> jnp.asarray(q_tr[best[L_EVAL]])</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>idx_eval <span class="op">=</span> sample_bits(jax.random.PRNGKey(<span class="dv">7207</span>), q_eval, M_EVAL)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>q_freq <span class="op">=</span> np.asarray(counts_to_freq(idx_eval))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>x_gen <span class="op">=</span> np.asarray(xk[np.asarray(idx_eval)])            <span class="co"># generated values of x at the bin centres</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>tv_exact, tv_sampled <span class="op">=</span> tv(p_exact, q_eval), tv(p_exact, q_freq)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>empty <span class="op">=</span> <span class="bu">int</span>(np.<span class="bu">sum</span>((q_freq <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span> (p_exact <span class="op">&gt;</span> <span class="dv">0</span>)))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"L = </span><span class="sc">{</span>L_EVAL<span class="sc">}</span><span class="ss">: TV(p, q) exact = </span><span class="sc">{</span>tv_exact<span class="sc">:.3f}</span><span class="ss">, from </span><span class="sc">{</span>M_EVAL<span class="sc">}</span><span class="ss"> shots = </span><span class="sc">{</span>tv_sampled<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"bins with p &gt; 0 and no shot: </span><span class="sc">{</span>empty<span class="sc">}</span><span class="ss"> -&gt; KL(p || q~) from the shots is infinite"</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"mean and standard deviation of x: data </span><span class="sc">{</span>x_data<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss"> </span><span class="sc">{</span>x_data<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss"> | generated </span><span class="sc">{</span>x_gen<span class="sc">.</span>mean()<span class="sc">:+.3f}</span><span class="ss"> </span><span class="sc">{</span>x_gen<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">"</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f" | target </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(p_exact <span class="op">*</span> xk)<span class="sc">:+.3f}</span><span class="ss"> </span><span class="sc">{</span>np<span class="sc">.</span>sqrt(np.<span class="bu">sum</span>(p_exact <span class="op">*</span> xk<span class="op">**</span><span class="dv">2</span>) <span class="op">-</span> np.<span class="bu">sum</span>(p_exact <span class="op">*</span> xk)<span class="op">**</span><span class="dv">2</span>)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"fraction of generated x &gt; 0: </span><span class="sc">{</span>np<span class="sc">.</span>mean(x_gen <span class="op">&gt;</span> <span class="dv">0</span>)<span class="sc">:.3f}</span><span class="ss">  (weight of the right peak 0.6)"</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"EvalShots"</span>] <span class="op">=</span> <span class="bu">str</span>(M_EVAL)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"TVEvalExact"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>tv_exact<span class="sc">:.3f}</span><span class="ss">"</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"TVEvalSampled"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>tv_sampled<span class="sc">:.3f}</span><span class="ss">"</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"EvalEmptyBins"</span>] <span class="op">=</span> <span class="bu">str</span>(empty)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">4.8</span>, <span class="fl">3.2</span>))</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>ax.bar(xk, q_freq, width<span class="op">=</span><span class="fl">0.125</span>, facecolor<span class="op">=</span><span class="st">"none"</span>, edgecolor<span class="op">=</span>COL[<span class="st">"samples"</span>], lw<span class="op">=</span><span class="fl">0.9</span>, label<span class="op">=</span><span class="vs">r"$\tilde q(\mathbf</span><span class="sc">{b}</span><span class="vs">)$, $10^4$ shots"</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>ax.step(np.r_[edges[<span class="dv">0</span>], edges[<span class="dv">1</span>:]], np.r_[p_exact[<span class="dv">0</span>], p_exact], where<span class="op">=</span><span class="st">"pre"</span>, color<span class="op">=</span>COL[<span class="st">"target"</span>], lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="vs">r"target $p(\mathbf</span><span class="sc">{b}</span><span class="vs">)$"</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"bin centre $x_k$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"probability"</span>)<span class="op">;</span> ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab072_samples"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>L = 3: TV(p, q) exact = 0.055, from 10000 shots = 0.051
+bins with p &gt; 0 and no shot: 2 -&gt; KL(p || q~) from the shots is infinite
+mean and standard deviation of x: data +0.343 1.684 | generated +0.376 1.680 | target +0.320 1.679
+fraction of generated x &gt; 0: 0.607  (weight of the right peak 0.6)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-072-born-machine_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The bars are the frequencies of the bit strings measured on the trained <span class="math inline">\(L=3\)</span> circuit, and the line is the exact target. The sampled histogram reproduces the two peaks, their relative weight and their widths. Its total variation distance from the target is close to that of the exact model probabilities, so <span class="math inline">\(10^4\)</span> shots suffice to judge the model at this level of accuracy.</p>
+<p>The core route ends here.</p>
+</section>
+<section id="an-example-from-the-literature" class="level2">
+<h2 class="anchored" data-anchor-id="an-example-from-the-literature">11. An example from the literature</h2>
+<p>The circuits of Section 9 train every gate angle, including the angles of rotations placed between entangling layers. Deep circuits of this kind become hard to train, because their gradients become very small as the number of qubits grows [8]. One remedy fixes the entangling part of each layer and trains only single-qubit rotations. The quantum scrambling Born machine [9] follows this design. Each of its layers applies trainable rotations of every qubit around a fixed, non-trainable entangling unitary that spreads correlations over the whole register. Ref. [9] considers three choices of this unitary, a Haar-random unitary, a finite-depth brickwork circuit of random two-qubit gates, and evolution for a fixed time under a spin-chain Hamiltonian with nearest-neighbour couplings. Once the fixed unitary creates entanglement close to that of a random state, the trained model reaches a similar accuracy for all three, and only one-qubit angles need to be optimised on a device. A variant treats the couplings and fields of the spin-chain Hamiltonian as trainable parameters as well. Some of the circuits also contain ancilla qubits, which take part in the evolution but are not measured. Ignoring their outcomes sums the Born probabilities over their bits <span class="math inline">\(\mathbf a\)</span>, <span class="math inline">\(q(\mathbf b)=\sum_{\mathbf a}|\langle\mathbf b,\mathbf a|\psi\rangle|^2\)</span>, so the measured qubits follow a mixture of Born distributions, given by their reduced density matrix. Such mixtures, which require extra qubits, can represent distributions that a pure state of the measured qubits alone cannot.</p>
+<p>The sketch shows a register split into measured system qubits and unmeasured ancillas, whose outcomes are summed over to give a mixture of Born distributions.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-072-born-machine_files/figure-html/ec2f1578-2-sketch_ancilla_mixture.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">ancilla qubits traced out</figcaption><p></p>
+</figure>
+</div>
+<p>The figure below is a published result of Ref. [9], shown without change and not produced by our simulation. The circuit has ten qubits. Two registers of four qubits encode two continuous variables <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> on a grid of <span class="math inline">\(16\times16\)</span> bins, and the remaining two qubits are ancillas that are traced out. The target is a mixture of four Gaussian peaks. Panel (a) shows the target distribution, panel (b) the distribution learned by the variant with trainable Hamiltonian parameters. Panel (c) shows slices through the peak positions (the dashed lines in panels (a) and (b)), with the target in black and the learned model in red. All four peaks are reproduced with their weights.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-072-born-machine_files/figure-html/ec2f1578-1-fig_lab072_qsbm_published.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Published result of Ref. [9], not our simulation: target and learned two-dimensional distribution with four peaks</figcaption><p></p>
+</figure>
+</div>
+<p><em>Published result of Ref. [9], reproduced without change. It is not produced by our simulation.</em></p>
+<div class="cell" data-execution_count="14">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> <span class="bu">dict</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    experiment<span class="op">=</span><span class="st">"quantum circuit Born machine on N = 6 qubits, exact state vectors, simulated shots"</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    target<span class="op">=</span><span class="bu">dict</span>(weights<span class="op">=</span>W_MIX.tolist(), centres<span class="op">=</span>MU_MIX.tolist(), width<span class="op">=</span>SIG_MIX, xmin<span class="op">=</span>XMIN, xmax<span class="op">=</span>XMAX, bins<span class="op">=</span>K),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span>D_SIZE, seed<span class="op">=</span><span class="dv">72</span>, tv_to_target<span class="op">=</span>tv(p_data, p_exact), empty_bins<span class="op">=</span><span class="bu">int</span>((p_data <span class="op">==</span> <span class="dv">0</span>).<span class="bu">sum</span>())),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    kl_training<span class="op">=</span><span class="bu">dict</span>(steps<span class="op">=</span>STEPS, learning_rate<span class="op">=</span>LR, starts_per_depth<span class="op">=</span>SEEDS, product_bound<span class="op">=</span>kl_bound,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                     per_depth<span class="op">=</span>{<span class="bu">int</span>(L): <span class="bu">dict</span>(params<span class="op">=</span><span class="dv">2</span> <span class="op">*</span> N <span class="op">*</span> (L <span class="op">+</span> <span class="dv">1</span>), kl_data<span class="op">=</span><span class="bu">float</span>(kl_train[best[L]]),</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                                             kl_target<span class="op">=</span><span class="bu">float</span>(kl_target[best[L]]), tv_target<span class="op">=</span><span class="bu">float</span>(tv_target[best[L]]))</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>                                <span class="cf">for</span> L <span class="kw">in</span> <span class="bu">range</span>(L_MAX <span class="op">+</span> <span class="dv">1</span>)}),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    evaluation<span class="op">=</span><span class="bu">dict</span>(depth<span class="op">=</span>L_EVAL, shots<span class="op">=</span>M_EVAL, tv_exact<span class="op">=</span>tv_exact, tv_sampled<span class="op">=</span>tv_sampled, empty_bins<span class="op">=</span>empty),</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    larger_data_set<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span>D_BIG, seed<span class="op">=</span><span class="dv">7272</span>, tv_to_target<span class="op">=</span>tv(np.asarray(p_big), p_exact),</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                         kl_target_same_start<span class="op">=</span>{<span class="bu">int</span>(L): v <span class="cf">for</span> L, v <span class="kw">in</span> kl_big.items()},</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                         kl_target_3000_same_start<span class="op">=</span>{<span class="bu">int</span>(L): <span class="bu">float</span>(kl_target[SEEDS <span class="op">*</span> L]) <span class="cf">for</span> L <span class="kw">in</span> (<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>)}),</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    runtime_seconds<span class="op">=</span>time.perf_counter() <span class="op">-</span> started)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>(RES <span class="op">/</span> <span class="st">"lab072_results.json"</span>).write_text(json.dumps(summary, indent<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>NUMBERS[<span class="st">"Runtime"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>summary[<span class="st">'runtime_seconds'</span>]<span class="sc">:.0f}</span><span class="ss">"</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(FIG <span class="op">/</span> <span class="st">"nb_numbers_lab072.tex"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, v <span class="kw">in</span> NUMBERS.items():</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        f.write(<span class="ss">f"</span><span class="ch">\\</span><span class="ss">newcommand</span><span class="ch">{{\\</span><span class="ss">labseventytwo</span><span class="sc">{</span>k<span class="sc">}</span><span class="ch">}}{{</span><span class="sc">{</span>v<span class="sc">.</span>strip()<span class="sc">}</span><span class="ch">}}\n</span><span class="ss">"</span>)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"numbers:"</span>, NUMBERS)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"runtime </span><span class="sc">{</span>summary[<span class="st">'runtime_seconds'</span>]<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>numbers: {'DataSize': '3000', 'TVDataTarget': '0.065', 'EmptyBins': '6', 'KLProductBound': '0.500', 'KLDataLZero': '0.5002', 'KLTargetLZero': '0.4823', 'TVTargetLZero': '0.414', 'KLDataLOne': '0.0847', 'KLTargetLOne': '0.0669', 'TVTargetLOne': '0.114', 'KLDataLTwo': '0.0193', 'KLTargetLTwo': '0.0141', 'TVTargetLTwo': '0.056', 'KLDataLThree': '0.0035', 'KLTargetLThree': '0.0137', 'TVTargetLThree': '0.055', 'KLDataLFour': '0.0029', 'KLTargetLFour': '0.0130', 'TVTargetLFour': '0.064', 'KLDataLFive': '0.0003', 'KLTargetLFive': '0.0151', 'TVTargetLFive': '0.063', 'KLTargetBigLTwo': '0.0117', 'KLTargetBigLThree': '0.0019', 'KLTargetBigLFive': '0.0014', 'TVDataBigTarget': '0.015', 'EvalShots': '10000', 'TVEvalExact': '0.055', 'TVEvalSampled': '0.051', 'EvalEmptyBins': '2', 'Runtime': '36'}
+runtime 36.1 s</code></pre>
+</div>
+</div>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">12. Exercises</h2>
+<ol type="1">
+<li>Encode the values <span class="math inline">\(x=3.9\)</span>, <span class="math inline">\(x=-4\)</span> and <span class="math inline">\(x=4\)</span> with <span class="math inline">\(N=4\)</span> qubits on <span class="math inline">\([-4,4]\)</span> and write their bit strings and bin centres.</li>
+<li>Show that the empirical distribution <span class="math inline">\(\tilde p\)</span> minimises <span class="math inline">\(D_{\rm KL}(\tilde p\,\|\,q)\)</span> over all distributions <span class="math inline">\(q\)</span>, and explain why a model that reaches it is not the goal of training.</li>
+<li>Derive equation (18) and compute the product bound for a distribution with probability <span class="math inline">\(1/2\)</span> on <span class="math inline">\(000\dots0\)</span> and <span class="math inline">\(1/2\)</span> on <span class="math inline">\(111\dots1\)</span>.</li>
+<li>Replace the <span class="math inline">\(\widehat{\mathrm{CZ}}\)</span> chain by <span class="math inline">\(\hat R_{zz}(\pi/2)\)</span> gates on the same pairs and compare the KL divergence at <span class="math inline">\(L=1\)</span> and <span class="math inline">\(L=3\)</span>.</li>
+<li>Repeat the training of Section 9 with <span class="math inline">\(|\mathcal D|=300\)</span> and <span class="math inline">\(|\mathcal D|=30\,000\)</span> data values, and follow how the saturation of <span class="math inline">\(D_{\rm KL}(p\,\|\,q_{\boldsymbol\theta})\)</span> with depth changes.</li>
+<li>Find the number of shots <span class="math inline">\(M\)</span> for which every bin with <span class="math inline">\(p(\mathbf b)\ge10^{-3}\)</span> receives at least one shot with probability 0.95, and explain what this means for estimating <span class="math inline">\(D_{\rm KL}(p\,\|\,q_{\boldsymbol\theta})\)</span> from samples.</li>
+<li>Count the circuits needed for one parameter-shift gradient of the <span class="math inline">\(L=3\)</span> circuit, and estimate the shots needed to resolve the probability of a bin with <span class="math inline">\(q_{\boldsymbol\theta}(\mathbf b)\approx10^{-2}\)</span> to a relative error of 10 per cent.</li>
+</ol>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">13. Summary</h2>
+<p>A Born machine models a probability distribution over bit strings by the squared amplitudes of a state prepared by a parametrised circuit, and a measurement of all qubits draws one sample from it. Continuous data enter through a discretisation into <span class="math inline">\(2^N\)</span> bins. The bin indices, written in binary with qubit 0 as the most significant bit, are the measured bit strings, and each added qubit halves the bin width. Training minimises the KL divergence to the data, which equals the negative log-likelihood up to the entropy of the data and needs the model probabilities. On a device these probabilities are estimated from shots, and the gradient follows from the parameter-shift rule. A circuit without entangling gates gives independent bits and cannot go below the KL divergence of the product of the marginals, which fails for a two-peak target. Entangling layers create the correlations, and a few layers reproduce the target to within the statistical error of the data set, beyond which deeper circuits fit the fluctuations of the data.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>[1] Z.-Y. Han, J. Wang, H. Fan, L. Wang, and P. Zhang, Unsupervised generative modeling using matrix product states, Phys. Rev.&nbsp;X <strong>8</strong>, 031012 (2018), <a href="https://doi.org/10.1103/PhysRevX.8.031012">doi:10.1103/PhysRevX.8.031012</a>.</p>
+<p>[2] S. Cheng, J. Chen, and L. Wang, Information perspective to probabilistic modeling: Boltzmann machines versus Born machines, Entropy <strong>20</strong>, 583 (2018), <a href="https://doi.org/10.3390/e20080583">doi:10.3390/e20080583</a>.</p>
+<p>[3] J.-G. Liu and L. Wang, Differentiable learning of quantum circuit Born machines, Phys. Rev.&nbsp;A <strong>98</strong>, 062324 (2018), <a href="https://doi.org/10.1103/PhysRevA.98.062324">doi:10.1103/PhysRevA.98.062324</a>.</p>
+<p>[4] M. Benedetti, D. Garcia-Pintos, O. Perdomo, V. Leyton-Ortega, Y. Nam, and A. Perdomo-Ortiz, A generative modeling approach for benchmarking and training shallow quantum circuits, npj Quantum Inf. <strong>5</strong>, 45 (2019), <a href="https://doi.org/10.1038/s41534-019-0157-8">doi:10.1038/s41534-019-0157-8</a>.</p>
+<p>[5] B. Coyle, D. Mills, V. Danos, and E. Kashefi, The Born supremacy: quantum advantage and training of an Ising Born machine, npj Quantum Inf. <strong>6</strong>, 60 (2020), <a href="https://doi.org/10.1038/s41534-020-00288-9">doi:10.1038/s41534-020-00288-9</a>.</p>
+<p>[6] S. Kullback and R. A. Leibler, On information and sufficiency, Ann. Math. Statist. <strong>22</strong>, 79 (1951), <a href="https://doi.org/10.1214/aoms/1177729694">doi:10.1214/aoms/1177729694</a>.</p>
+<p>[7] D. P. Kingma and J. Ba, Adam: A method for stochastic optimization, <a href="https://arxiv.org/abs/1412.6980">arXiv:1412.6980</a> (2014).</p>
+<p>[8] J. R. McClean, S. Boixo, V. N. Smelyanskiy, R. Babbush, and H. Neven, Barren plateaus in quantum neural network training landscapes, Nat. Commun. <strong>9</strong>, 4812 (2018), <a href="https://doi.org/10.1038/s41467-018-07090-4">doi:10.1038/s41467-018-07090-4</a>.</p>
+<p>[9] M. Płodzień, Quantum scrambling Born machine, Phys. Rev.&nbsp;A <strong>114</strong>, 012464 (2026), <a href="https://doi.org/10.1103/qccv-flmq">doi:10.1103/qccv-flmq</a>.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 071: Barren plateaus</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" class="pagination-link">
+        <span class="nav-page-text">Lab 073: QUBO and QAOA</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>
