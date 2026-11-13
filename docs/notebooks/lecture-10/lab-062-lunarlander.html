@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Lab 062: Landing with discrete engine commands</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" rel="next">
+<link href="../../notebooks/lecture-10/lab-061-cartpole.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-07.html">
+ <span class="dropdown-text">7 · Time Series: Dynamical Systems, Chaos and Embedding</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-08.html">
+ <span class="dropdown-text">8 · Forecasting Models: Linear, Neural and Physics-Informed</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-09.html">
+ <span class="dropdown-text">9 · Reservoir Computing</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-10.html">
+ <span class="dropdown-text">10 · Reinforcement Learning for Quantum State Preparation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-11.html">
+ <span class="dropdown-text">11 · Quantum Information for Newcomers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-12.html">
+ <span class="dropdown-text">12 · Parametrised Quantum Circuits as Variational Ansätze</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-13.html">
+ <span class="dropdown-text">13 · Learning Quantum States and Hamiltonians</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lab 062: Landing with discrete engine commands</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-021-xy-without-labels.html" class="sidebar-item-text sidebar-link">Lab 021: The 2D XY model without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-022-gauge-without-labels.html" class="sidebar-item-text sidebar-link">Lab 022: Ising gauge theory without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-023-sk-without-labels.html" class="sidebar-item-text sidebar-link">Lab 023: The SK spin glass without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-030-physics-2d-xy.html" class="sidebar-item-text sidebar-link">Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-07.html" class="sidebar-item-text sidebar-link">7 · Time Series: Dynamical Systems, Chaos and Embedding</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-033-signal-characterisation.html" class="sidebar-item-text sidebar-link">Lab 033: Signal characterisation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-08.html" class="sidebar-item-text sidebar-link">8 · Forecasting Models: Linear, Neural and Physics-Informed</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-034-linear-models-nvar.html" class="sidebar-item-text sidebar-link">Lab 034: Forecasting with linear models and NVAR</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-035-koopman.html" class="sidebar-item-text sidebar-link">Lab 035: Lifting and the Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="sidebar-item-text sidebar-link">Lab 036: Recurrent neural networks and reservoirs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-037-mlp-forecaster.html" class="sidebar-item-text sidebar-link">Lab 037: MLP forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-038-rnn-forecaster.html" class="sidebar-item-text sidebar-link">Lab 038: RNN forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-039-lstm-forecaster.html" class="sidebar-item-text sidebar-link">Lab 039: LSTM forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-041-pinn.html" class="sidebar-item-text sidebar-link">Lab 041: Physics-informed neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-042-neural-ode.html" class="sidebar-item-text sidebar-link">Lab 042: Neural ordinary differential equations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-043-pendulum-friction.html" class="sidebar-item-text sidebar-link">Lab 043: Pendulum with unknown friction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-044-predator-prey.html" class="sidebar-item-text sidebar-link">Lab 044: Predator–prey with unknown interaction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-045-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Lab 045: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-01-rossler-oscillators.html" class="sidebar-item-text sidebar-link">Exercise 01: Rössler system and superimposed oscillators</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="sidebar-item-text sidebar-link">Exercise 02: Stock market returns</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-03-koopman.html" class="sidebar-item-text sidebar-link">Exercise 03: Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-04-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Exercise 04: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-09.html" class="sidebar-item-text sidebar-link">9 · Reservoir Computing</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-046-echo-state-networks.html" class="sidebar-item-text sidebar-link">Lab 046: Echo state networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-047-quantum-reservoir-computing.html" class="sidebar-item-text sidebar-link">Lab 047: Quantum reservoir computing</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-049-reservoir-climate.html" class="sidebar-item-text sidebar-link">Lab 049: Weather and climate of an echo state network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-050-cellular-automaton-reservoir.html" class="sidebar-item-text sidebar-link">Lab 050: Cellular automaton reservoir</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-10.html" class="sidebar-item-text sidebar-link">10 · Reinforcement Learning for Quantum State Preparation</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-063-bellman-from-experience.html" class="sidebar-item-text sidebar-link">Lab 063: Bellman equations from sampled experience</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-061-cartpole.html" class="sidebar-item-text sidebar-link">Lab 061: Balancing a pole on a cart</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-062-lunarlander.html" class="sidebar-item-text sidebar-link active">Lab 062: Landing with discrete engine commands</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" class="sidebar-item-text sidebar-link">Lab 057: GHZ, W and Dicke target states</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" class="sidebar-item-text sidebar-link">Lab 058: Finite-budget GHZ compilation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-059-continuous-angles.html" class="sidebar-item-text sidebar-link">Lab 059: Continuous angles with REINFORCE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-060-cavity-checks.html" class="sidebar-item-text sidebar-link">Lab 060: Cavity feedback checks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056a-pendulum-planning.html" class="sidebar-item-text sidebar-link">Lab 056a: Pendulum swing-up by planning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-052-quantum-circuit-compilation.html" class="sidebar-item-text sidebar-link">Lab 052: Quantum circuit compilation (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-055-continuous-state-compilation.html" class="sidebar-item-text sidebar-link">Lab 055: Compilation with continuous angles (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-054-quantum-state-preparation.html" class="sidebar-item-text sidebar-link">Lab 054: Preparation with Hamiltonian evolutions (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-053-fock-state-cavity.html" class="sidebar-item-text sidebar-link">Lab 053: One photon in a leaky cavity (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056-pendulum-swing-up.html" class="sidebar-item-text sidebar-link">Lab 056: Pendulum swing-up with Q-learning (full study)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-11.html" class="sidebar-item-text sidebar-link">11 · Quantum Information for Newcomers</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-064-one-qubit.html" class="sidebar-item-text sidebar-link">Lab 064: One qubit, measurements and gates as rotations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-065-two-spin-register.html" class="sidebar-item-text sidebar-link">Lab 065: The two-spin register</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066-density-matrices-noise.html" class="sidebar-item-text sidebar-link">Lab 066: Density matrices, measurement and noise</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066a-allows-and-forbids.html" class="sidebar-item-text sidebar-link">Lab 066a: What quantum information allows and forbids</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-067-atom-light-qubit.html" class="sidebar-item-text sidebar-link">Lab 067: An atom in laser light as a qubit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-068-interacting-qubits-gates.html" class="sidebar-item-text sidebar-link">Lab 068: Interactions and two-qubit gates</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-12.html" class="sidebar-item-text sidebar-link">12 · Parametrised Quantum Circuits as Variational Ansätze</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" class="sidebar-item-text sidebar-link">Lab 069: Parametrised circuits and their gradients</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069a-spsa-adam.html" class="sidebar-item-text sidebar-link">Lab 069a: SPSA and Adam with few circuit runs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" class="sidebar-item-text sidebar-link">Lab 070: VQE and the choice of ansatz</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070a-xxz-phase-diagram.html" class="sidebar-item-text sidebar-link">Lab 070a: VQE phase diagram of the XXZ chain in a field</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070b-quantum-autoencoder.html" class="sidebar-item-text sidebar-link">Lab 070b: Quantum autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070c-qcnn.html" class="sidebar-item-text sidebar-link">Lab 070c: Quantum convolutional neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070d-qgrnn.html" class="sidebar-item-text sidebar-link">Lab 070d: Quantum graph recurrent neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070e-xyz-three-ansatze.html" class="sidebar-item-text sidebar-link">Lab 070e: VQE for the XYZ chain, three ansätze</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070f-circuit-autoencoder.html" class="sidebar-item-text sidebar-link">Lab 070f: Quantum circuit autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071a-random-states.html" class="sidebar-item-text sidebar-link">Lab 071a: Random states and typicality</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" class="sidebar-item-text sidebar-link">Lab 071: Barren plateaus</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-072-born-machine.html" class="sidebar-item-text sidebar-link">Lab 072: Modelling probabilities with a quantum circuit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073a-data-reuploading.html" class="sidebar-item-text sidebar-link">Lab 073a: Data re-uploading classifier</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073b-quantum-kernels.html" class="sidebar-item-text sidebar-link">Lab 073b: Quantum kernels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" class="sidebar-item-text sidebar-link">Lab 073: QUBO and QAOA (at home)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-13.html" class="sidebar-item-text sidebar-link">13 · Learning Quantum States and Hamiltonians</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-074-state-tomography.html" class="sidebar-item-text sidebar-link">Lab 074: Quantum state tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-075-classical-shadows.html" class="sidebar-item-text sidebar-link">Lab 075: Classical shadows</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-076-nn-tomography.html" class="sidebar-item-text sidebar-link">Lab 076: Neural-network tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-077-hamiltonian-learning.html" class="sidebar-item-text sidebar-link">Lab 077: Hamiltonian learning</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lab-062.-lunarlander-actions-shaped-rewards-and-saved-agents" id="toc-lab-062.-lunarlander-actions-shaped-rewards-and-saved-agents" class="nav-link active" data-scroll-target="#lab-062.-lunarlander-actions-shaped-rewards-and-saved-agents">Lab 062. LunarLander actions, shaped rewards and saved agents</a>
+  <ul class="collapse">
+  <li><a href="#observation-actions-and-reward" id="toc-observation-actions-and-reward" class="nav-link" data-scroll-target="#observation-actions-and-reward">Observation, actions and reward</a></li>
+  <li><a href="#dqn-values-and-ppo-probabilities" id="toc-dqn-values-and-ppo-probabilities" class="nav-link" data-scroll-target="#dqn-values-and-ppo-probabilities">DQN values and PPO probabilities</a></li>
+  <li><a href="#a-one-step-td-target" id="toc-a-one-step-td-target" class="nav-link" data-scroll-target="#a-one-step-td-target">A one-step TD target</a></li>
+  <li><a href="#student-calculations" id="toc-student-calculations" class="nav-link" data-scroll-target="#student-calculations">Student calculations</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-10/lab-062-lunarlander.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Lab 062: Landing with discrete engine commands</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-10/lab-062-lunarlander.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<section id="lab-062.-lunarlander-actions-shaped-rewards-and-saved-agents" class="level1">
+<h1>Lab 062. LunarLander actions, shaped rewards and saved agents</h1>
+<p>We guide a lander toward a pad while reducing its speed and tilt. The task makes action values and policy probabilities visible in the same environment before we apply RL to quantum circuits.</p>
+<p>We use the discrete-action LunarLander-v3 environment. Install rendering and Box2D dependencies if necessary with <code>pip install "gymnasium[box2d]" torch matplotlib</code>. Run from the course Notebooks directory. The short route inspects transitions and evaluates saved DQN and PPO actors. It performs no new long training. Saved weights are in <code>results/dqn_lunar_lander.pt</code> and <code>results/ppo_actor.pt</code>. If those files are absent, the random-policy and reward calculations still run. Complete training studies remain in the two LunarLander notebooks in <code>appendix/</code>.</p>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os,json,time</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>os.environ.setdefault(<span class="st">'SDL_VIDEODRIVER'</span>,<span class="st">'dummy'</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>os.environ.setdefault(<span class="st">'SDL_AUDIODRIVER'</span>,<span class="st">'dummy'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gymnasium <span class="im">as</span> gym</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>torch.set_num_threads(<span class="dv">2</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>ROOT<span class="op">=</span>Path.cwd()<span class="op">;</span> OUT<span class="op">=</span>ROOT<span class="op">/</span><span class="st">'classroom_results'</span><span class="op">;</span>OUT.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>FIG<span class="op">=</span>ROOT<span class="op">/</span><span class="st">'figures'</span><span class="op">;</span>FIG.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>started<span class="op">=</span>time.perf_counter()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Gymnasium'</span>,gym.__version__,<span class="st">'; PyTorch'</span>,torch.__version__)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_plot(fig,name):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ext <span class="kw">in</span> [<span class="st">'pdf'</span>,<span class="st">'png'</span>]:fig.savefig(FIG<span class="op">/</span>(name<span class="op">+</span><span class="st">'.'</span><span class="op">+</span>ext),bbox_inches<span class="op">=</span><span class="st">'tight'</span>,dpi<span class="op">=</span><span class="dv">160</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ENV<span class="op">=</span><span class="st">'LunarLander-v3'</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>env<span class="op">=</span>gym.make(ENV,render_mode<span class="op">=</span><span class="st">'rgb_array'</span>,continuous<span class="op">=</span><span class="va">False</span>,enable_wind<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>initial,_<span class="op">=</span>env.reset(seed<span class="op">=</span><span class="dv">620</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> screenshot_step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    screenshot_observation,_,te,tr,_<span class="op">=</span>env.step(<span class="dv">0</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="kw">not</span>(te <span class="kw">or</span> tr)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>initial_frame<span class="op">=</span>env.render()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>plt.imsave(FIG<span class="op">/</span><span class="st">'lunarlander_environment.png'</span>,initial_frame)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Observation [x,y,vx,vy,angle,angular_velocity,left_contact,right_contact]:'</span>,initial)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Actions'</span>,env.action_space,<span class="st">'; time limit'</span>,env.spec.max_episode_steps)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Screenshot observation after 60 no-engine steps:'</span>,screenshot_observation)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>fig,ax<span class="op">=</span>plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">3</span>))<span class="op">;</span>ax.imshow(initial_frame)<span class="op">;</span>ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">'body and tilt'</span>,xy<span class="op">=</span>(<span class="dv">333</span>,<span class="dv">80</span>),xytext<span class="op">=</span>(<span class="dv">425</span>,<span class="dv">65</span>),color<span class="op">=</span><span class="st">'white'</span>,fontsize<span class="op">=</span><span class="dv">9</span>,arrowprops<span class="op">=</span>{<span class="st">'arrowstyle'</span>:<span class="st">'-&gt;'</span>,<span class="st">'color'</span>:<span class="st">'white'</span>})</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">'legs'</span>,xy<span class="op">=</span>(<span class="dv">352</span>,<span class="dv">92</span>),xytext<span class="op">=</span>(<span class="dv">440</span>,<span class="dv">155</span>),color<span class="op">=</span><span class="st">'white'</span>,fontsize<span class="op">=</span><span class="dv">9</span>,arrowprops<span class="op">=</span>{<span class="st">'arrowstyle'</span>:<span class="st">'-&gt;'</span>,<span class="st">'color'</span>:<span class="st">'white'</span>})</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">'landing pad'</span>,xy<span class="op">=</span>(<span class="dv">300</span>,<span class="dv">292</span>),xytext<span class="op">=</span>(<span class="dv">395</span>,<span class="dv">225</span>),color<span class="op">=</span><span class="st">'white'</span>,fontsize<span class="op">=</span><span class="dv">9</span>,arrowprops<span class="op">=</span>{<span class="st">'arrowstyle'</span>:<span class="st">'-&gt;'</span>,<span class="st">'color'</span>:<span class="st">'white'</span>})</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>fig.savefig(FIG<span class="op">/</span><span class="st">'lunarlander_environment.png'</span>,bbox_inches<span class="op">=</span><span class="st">'tight'</span>,dpi<span class="op">=</span><span class="dv">160</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'LunarLander after 60 no-engine steps'</span>)<span class="op">;</span>plt.show()<span class="op">;</span>env.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gymnasium 1.4.0 ; PyTorch 2.9.0+cpu
+Observation [x,y,vx,vy,angle,angular_velocity,left_contact,right_contact]: [ 0.0018095   1.4222236   0.183268    0.50237274 -0.00208996 -0.04151292
+  0.          0.        ]
+Actions Discrete(4) ; time limit 1000
+Screenshot observation after 60 no-engine steps: [ 0.11042251  1.0030582   0.18308596 -1.0976478  -0.12477437 -0.04086387
+  0.          0.        ]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-062-lunarlander_files/figure-html/cell-2-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="observation-actions-and-reward" class="level2">
+<h2 class="anchored" data-anchor-id="observation-actions-and-reward">Observation, actions and reward</h2>
+<p>The policy receives eight numbers. Position <span class="math inline">\((x,y)\)</span> is measured relative to the pad in the environment’s normalised coordinates. Linear velocities are scaled environment observations. The angle and angular-velocity feature describe tilt and rotation. Two binary flags report leg contact. The rendered image supplies an illustration for the reader and is not the network input.</p>
+<p>The four actions are 0, no engine; 1, left orientation engine; 2, main engine; 3, right orientation engine. Side engines alter orientation and horizontal motion. Their names describe the firing engine, and the resulting displacement can point the other way.</p>
+<p>For a nonterminal transition, the reward is the change of the environment’s shaping potential minus engine charges. Define <span class="math display">\[\Phi(s)=-100\sqrt{x^2+y^2}-100\sqrt{v_x^2+v_y^2}-100|\theta|+10c_L+10c_R.\]</span> The charge is 0.3 for firing the main engine and 0.03 for a side engine. The terminal step replaces this calculation by -100 for a crash or leaving the horizontal bounds, or +100 when the lander comes to rest and the physics body sleeps. The wrapper also imposes a 1000-step limit. We report that truncation separately. These statements follow the installed environment source. See the <a href="https://gymnasium.farama.org/environments/box2d/lunar_lander/">environment specification</a>.</p>
+<p>This shaping is part of the task definition. With discounting, a plain difference of potentials is not automatically a policy-invariant shaping increment. The notes derive that distinction.</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> potential(s):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span><span class="dv">100</span><span class="op">*</span>np.hypot(s[<span class="dv">0</span>],s[<span class="dv">1</span>])<span class="op">-</span><span class="dv">100</span><span class="op">*</span>np.hypot(s[<span class="dv">2</span>],s[<span class="dv">3</span>])<span class="op">-</span><span class="dv">100</span><span class="op">*</span><span class="bu">abs</span>(s[<span class="dv">4</span>])<span class="op">+</span><span class="dv">10</span><span class="op">*</span>s[<span class="dv">6</span>]<span class="op">+</span><span class="dv">10</span><span class="op">*</span>s[<span class="dv">7</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>e<span class="op">=</span>gym.make(ENV,continuous<span class="op">=</span><span class="va">False</span>,enable_wind<span class="op">=</span><span class="va">False</span>)<span class="op">;</span>s,_<span class="op">=</span>e.reset(seed<span class="op">=</span><span class="dv">621</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>reward_checks<span class="op">=</span>[]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> action <span class="kw">in</span> [<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>]:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    sn,r,te,tr,_<span class="op">=</span>e.step(action)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    predicted<span class="op">=</span>potential(sn)<span class="op">-</span>potential(s)<span class="op">-</span>(<span class="fl">.3</span> <span class="cf">if</span> action<span class="op">==</span><span class="dv">2</span> <span class="cf">else</span> <span class="fl">.03</span> <span class="cf">if</span> action <span class="kw">in</span> [<span class="dv">1</span>,<span class="dv">3</span>] <span class="cf">else</span> <span class="fl">0.</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'action'</span>,action,<span class="st">'change of shaping'</span>,<span class="bu">round</span>(potential(sn)<span class="op">-</span>potential(s),<span class="dv">4</span>),<span class="st">'reward'</span>,<span class="bu">round</span>(r,<span class="dv">4</span>),<span class="st">'terminal'</span>,te)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> te:<span class="cf">assert</span> np.isclose(r,predicted,atol<span class="op">=</span><span class="fl">2e-5</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    reward_checks.append({<span class="st">'action'</span>:action,<span class="st">'reward'</span>:<span class="bu">float</span>(r),<span class="st">'nonterminal_prediction'</span>:<span class="bu">float</span>(predicted),<span class="st">'terminated'</span>:<span class="bu">bool</span>(te)})</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    s<span class="op">=</span>sn</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> te <span class="kw">or</span> tr:<span class="cf">break</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>e.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>action 0 change of shaping 0.2207 reward 0.2207 terminal False
+action 2 change of shaping -3.1865 reward -3.4865 terminal False
+action 1 change of shaping -0.6145 reward -0.6445 terminal False
+action 3 change of shaping 0.7446 reward 0.7146 terminal False</code></pre>
+</div>
+</div>
+</section>
+<section id="dqn-values-and-ppo-probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="dqn-values-and-ppo-probabilities">DQN values and PPO probabilities</h2>
+<p>DQN maps the eight observations to four estimates of discounted return. Its greedy controller chooses the largest output. PPO uses an actor that outputs four logits, converted to action probabilities, and a critic that estimates the policy’s state value during training. The saved PPO actor alone is sufficient for acting.</p>
+<p>PPO training reuses a batch through a clipped probability-ratio surrogate. The ratio compares a proposed policy’s probability of the sampled action with the collecting policy’s probability at the same state. Its advantage estimate comes from the critic. Clipping modifies the incentive in that surrogate and supplies no hard bound on the actual policy change. The full derivation is in the notes, and the complete training implementation remains in the appendix notebook.</p>
+<p>The two checkpoints came from different training budgets, discounts and update procedures. The DQN network was trained for 200,000 environment steps with <span class="math inline">\(\gamma=0.99\)</span>, a replay buffer of 100,000 transitions and a soft target-network update with <span class="math inline">\(\tau=0.005\)</span>. The PPO actor was trained for 1,998,848 steps with <span class="math inline">\(\gamma=0.999\)</span>. Both studies are in <code>appendix/</code>. We use the same fresh reset seeds, environment options and wrapper limit. Each agent acts deterministically for this evaluation. The PPO actor samples its actions during training and here takes its most probable action, as in the appendix evaluation.</p>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dqn<span class="op">=</span>nn.Sequential(nn.Linear(<span class="dv">8</span>,<span class="dv">256</span>),nn.ReLU(),nn.Linear(<span class="dv">256</span>,<span class="dv">256</span>),nn.ReLU(),nn.Linear(<span class="dv">256</span>,<span class="dv">4</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>actor<span class="op">=</span>nn.Sequential(nn.Linear(<span class="dv">8</span>,<span class="dv">64</span>),nn.Tanh(),nn.Linear(<span class="dv">64</span>,<span class="dv">64</span>),nn.Tanh(),nn.Linear(<span class="dv">64</span>,<span class="dv">4</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>{}</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name,model,<span class="bu">file</span> <span class="kw">in</span> [(<span class="st">'recorded DQN'</span>,dqn,<span class="st">'dqn_lunar_lander.pt'</span>),(<span class="st">'recorded PPO actor'</span>,actor,<span class="st">'ppo_actor.pt'</span>)]:</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span>ROOT<span class="op">/</span><span class="st">'results'</span><span class="op">/</span><span class="bu">file</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> path.exists():model.load_state_dict(torch.load(path,map_location<span class="op">=</span><span class="st">'cpu'</span>,weights_only<span class="op">=</span><span class="va">True</span>))<span class="op">;</span>model.<span class="bu">eval</span>()<span class="op">;</span>models[name]<span class="op">=</span>model</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>probe<span class="op">=</span>torch.as_tensor(initial,dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">'recorded DQN'</span> <span class="kw">in</span> models:<span class="bu">print</span>(<span class="st">'DQN action values'</span>,dqn(probe).numpy())</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">'recorded PPO actor'</span> <span class="kw">in</span> models:<span class="bu">print</span>(<span class="st">'PPO probabilities'</span>,torch.softmax(actor(probe),<span class="op">-</span><span class="dv">1</span>).numpy())</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rollout(policy,seed,record<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    e<span class="op">=</span>gym.make(ENV,continuous<span class="op">=</span><span class="va">False</span>,enable_wind<span class="op">=</span><span class="va">False</span>,render_mode<span class="op">=</span><span class="st">'rgb_array'</span> <span class="cf">if</span> record <span class="cf">else</span> <span class="va">None</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    s,_<span class="op">=</span>e.reset(seed<span class="op">=</span>seed)<span class="op">;</span>states<span class="op">=</span>[]<span class="op">;</span>actions<span class="op">=</span>[]<span class="op">;</span>rewards<span class="op">=</span>[]<span class="op">;</span>frames<span class="op">=</span>[]<span class="op">;</span>te<span class="op">=</span>tr<span class="op">=</span><span class="va">False</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="kw">not</span>(te <span class="kw">or</span> tr):</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> record:frames.append(e.render())</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        a<span class="op">=</span><span class="bu">int</span>(policy(s))<span class="op">;</span>states.append(np.array(s))<span class="op">;</span>actions.append(a)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        s,r,te,tr,_<span class="op">=</span>e.step(a)<span class="op">;</span>rewards.append(<span class="bu">float</span>(r))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> record:frames.append(e.render())</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    e.close()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">dict</span>(states<span class="op">=</span>np.array(states),actions<span class="op">=</span>np.array(actions),rewards<span class="op">=</span>np.array(rewards),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>                frames<span class="op">=</span>frames,terminated<span class="op">=</span><span class="bu">bool</span>(te),truncated<span class="op">=</span><span class="bu">bool</span>(tr),terminal_reward<span class="op">=</span><span class="bu">float</span>(rewards[<span class="op">-</span><span class="dv">1</span>]))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greedy(model):</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> action(s):</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():<span class="cf">return</span> <span class="bu">int</span>(model(torch.as_tensor(s,dtype<span class="op">=</span>torch.float32)).argmax())</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> action</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>rng<span class="op">=</span>np.random.default_rng(<span class="dv">622</span>)<span class="op">;</span>policies<span class="op">=</span>{<span class="st">'random'</span>:<span class="kw">lambda</span> s:rng.integers(<span class="dv">4</span>)}</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>policies.update({name:greedy(model) <span class="cf">for</span> name,model <span class="kw">in</span> models.items()})</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>seeds<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">6200</span>,<span class="dv">6220</span>))<span class="op">;</span>evaluation<span class="op">=</span>{}</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name,policy <span class="kw">in</span> policies.items():</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    runs<span class="op">=</span>[rollout(policy,seed) <span class="cf">for</span> seed <span class="kw">in</span> seeds]<span class="op">;</span>returns<span class="op">=</span>[<span class="bu">float</span>(t[<span class="st">'rewards'</span>].<span class="bu">sum</span>()) <span class="cf">for</span> t <span class="kw">in</span> runs]</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    evaluation[name]<span class="op">=</span>{<span class="st">'returns'</span>:returns,<span class="st">'mean'</span>:<span class="bu">float</span>(np.mean(returns)),</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'SE'</span>:<span class="bu">float</span>(np.std(returns,ddof<span class="op">=</span><span class="dv">1</span>)<span class="op">/</span>np.sqrt(<span class="bu">len</span>(returns))),</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'terminated'</span>:[t[<span class="st">'terminated'</span>] <span class="cf">for</span> t <span class="kw">in</span> runs],</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'truncated'</span>:[t[<span class="st">'truncated'</span>] <span class="cf">for</span> t <span class="kw">in</span> runs],</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'terminal_rewards'</span>:[t[<span class="st">'terminal_reward'</span>] <span class="cf">for</span> t <span class="kw">in</span> runs],</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'terminal_rest_events'</span>:<span class="bu">sum</span>(t[<span class="st">'terminated'</span>] <span class="kw">and</span> t[<span class="st">'terminal_reward'</span>]<span class="op">==</span><span class="dv">100</span> <span class="cf">for</span> t <span class="kw">in</span> runs),</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'reached_time_limit'</span>:<span class="bu">sum</span>(t[<span class="st">'truncated'</span>] <span class="cf">for</span> t <span class="kw">in</span> runs)}</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name,evaluation[name])</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>fig,axes<span class="op">=</span>plt.subplots(<span class="dv">1</span>,<span class="bu">len</span>(policies),figsize<span class="op">=</span>(<span class="dv">4</span><span class="op">*</span><span class="bu">len</span>(policies),<span class="fl">2.7</span>),squeeze<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax,(name,policy) <span class="kw">in</span> <span class="bu">zip</span>(axes[<span class="dv">0</span>],policies.items()):</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span>rollout(policy,<span class="dv">6200</span>,record<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    ax.imshow(trace[<span class="st">'frames'</span>][<span class="op">-</span><span class="dv">1</span>])<span class="op">;</span>ax.set_title(name<span class="op">+</span><span class="st">'; return '</span><span class="op">+</span><span class="bu">str</span>(<span class="bu">round</span>(trace[<span class="st">'rewards'</span>].<span class="bu">sum</span>())))<span class="op">;</span>ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>save_plot(fig,<span class="st">'fig_lunarlander_behaviour'</span>)<span class="op">;</span>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>DQN action values [71.15642 70.80931 67.56871 70.75798]
+PPO probabilities [2.6862311e-01 6.6734242e-01 1.9423362e-05 6.4015001e-02]
+random {'returns': [-186.4309794214584, -156.35043662966444, -257.94707154025696, -491.2284665493075, -117.57363573935244, -126.82626557592546, -2.4530460791624478, -79.0033414727309, -157.61813629005258, -70.34393321937313, -76.58530488476289, -382.0845499364873, -83.62659241238597, -457.691880508122, -218.98555142900443, -68.12320601218602, -129.9590130717666, -125.10160271731853, -83.35327154197616, -52.238543642752575], 'mean': -166.17624143370233, 'SE': 30.08067943189941, 'terminated': [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True], 'truncated': [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False], 'terminal_rewards': [-100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0, -100.0], 'terminal_rest_events': 0, 'reached_time_limit': 0}
+recorded DQN {'returns': [278.9596196668453, 162.74094900017275, 307.4788786738191, 286.59810479363784, 285.466000014764, 294.5655420559726, 283.94578198668415, 285.41004580815064, 297.39784858845826, 285.979868980745, 304.6520985159744, 50.22804113042929, 253.42166468480877, 80.33358911060486, 300.6231861571812, 267.80877932500226, 270.0286298821084, 180.69407287116329, 308.06520827351403, 267.1579763609529], 'mean': 252.57779429404945, 'SE': 16.67007490102573, 'terminated': [True, False, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, False, True, True], 'truncated': [False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False], 'terminal_rewards': [100.0, 0.01200193507592573, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, -100.0, 100.0, -100.0, 100.0, 100.0, 100.0, 0.14577378795111606, 100.0, 100.0], 'terminal_rest_events': 16, 'reached_time_limit': 2}
+recorded PPO actor {'returns': [230.38757730282052, 207.13073108195726, -4.808319761039371, 103.9266572535009, 231.40054764307436, 242.21727976746635, 223.5583497838908, 119.90193246577668, 257.31592183416717, 202.3032721622424, 253.17730883825192, 139.3194865758548, 218.4935350280099, 260.4087106374068, 246.5342455139844, 110.64833761338298, 219.24377658813347, 247.89907976123004, 251.84325065237468, 239.81031792655438], 'mean': 200.03559993345203, 'SE': 15.624519330952335, 'terminated': [True, True, True, False, True, True, True, False, True, True, True, False, True, True, True, False, True, True, True, True], 'truncated': [False, False, False, True, False, False, False, True, False, False, False, True, False, False, False, True, False, False, False, False], 'terminal_rewards': [100.0, 100.0, -100.0, -0.39254161528971276, 100.0, 100.0, 100.0, 10.024803007657543, 100.0, 100.0, 100.0, -0.017629752787405195, 100.0, 100.0, 100.0, -0.5024619119860858, 100.0, 100.0, 100.0, 100.0], 'terminal_rest_events': 15, 'reached_time_limit': 4}</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-062-lunarlander_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The environment documentation counts an episode with a return of at least 200 as solved. Over the 20 fresh seeds the random policy averages <span class="math inline">\(-166.2\pm30.1\)</span>, and every episode ends in a crash with the terminal reward <span class="math inline">\(-100\)</span>. The saved DQN averages <span class="math inline">\(252.6\pm16.7\)</span>. It ends 16 episodes at rest with the terminal reward <span class="math inline">\(+100\)</span>, crashes in 2 and reaches the 1000-step limit in 2, and 16 of its returns are at least 200. The saved PPO actor averages <span class="math inline">\(200.0\pm15.6\)</span>, with 15 rest events, 1 crash and 4 truncations, and 15 returns of at least 200. The two means differ by about 2.3 combined standard errors, and the agents differ in budget and training procedure, so these numbers compare two saved agents and rank no algorithms. The appendix studies report 242.3 for DQN and 229.1 for PPO over 50 other evaluation episodes, and those published values remain tied to their runs.</p>
+</section>
+<section id="a-one-step-td-target" class="level2">
+<h2 class="anchored" data-anchor-id="a-one-step-td-target">A one-step TD target</h2>
+<p>For a transition <span class="math inline">\((s,a,r,s')\)</span>, the chosen DQN output is a return estimate. A one-step target adds observed reward and an estimated continuation. We inspect that calculation with the saved network. This diagnostic uses one network on both sides and performs no training. The full DQN study supplies replay memory and a separate target network.</p>
+<p>Physical termination has zero continuation. At a wrapper cutoff the choice depends on the objective. A continuing task retains its continuation estimate, and a finite-budget task terminates at exhaustion. The appendix studies keep their recorded cutoff convention.</p>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'recorded DQN'</span> <span class="kw">in</span> models:</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    e<span class="op">=</span>gym.make(ENV,continuous<span class="op">=</span><span class="va">False</span>,enable_wind<span class="op">=</span><span class="va">False</span>)<span class="op">;</span>s,_<span class="op">=</span>e.reset(seed<span class="op">=</span><span class="dv">623</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():q<span class="op">=</span>dqn(torch.as_tensor(s,dtype<span class="op">=</span>torch.float32))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    a<span class="op">=</span><span class="bu">int</span>(q.argmax())<span class="op">;</span>sn,r,te,tr,_<span class="op">=</span>e.step(a)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():continuation<span class="op">=</span><span class="bu">float</span>(dqn(torch.as_tensor(sn,dtype<span class="op">=</span>torch.float32)).<span class="bu">max</span>())</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    target<span class="op">=</span>r<span class="op">+</span><span class="fl">.99</span><span class="op">*</span>(<span class="kw">not</span> te)<span class="op">*</span>continuation</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Chosen action'</span>,a,<span class="st">'current estimate'</span>,<span class="bu">float</span>(q[a]),<span class="st">'reward'</span>,r,<span class="st">'continuation estimate'</span>,continuation,<span class="st">'TD target'</span>,target)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    e.close()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>summary<span class="op">=</span>{<span class="st">'environment'</span>:ENV,<span class="st">'gymnasium'</span>:gym.__version__,<span class="st">'initial_observation'</span>:initial.tolist(),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">'screenshot_steps'</span>:<span class="dv">60</span>,<span class="st">'screenshot_observation'</span>:screenshot_observation.tolist(),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>         <span class="st">'new_training'</span>:<span class="va">False</span>,<span class="st">'evaluation_seeds'</span>:seeds,<span class="st">'evaluation'</span>:evaluation,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">'reward_checks'</span>:reward_checks,<span class="st">'runtime_seconds'</span>:time.perf_counter()<span class="op">-</span>started}</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>(OUT<span class="op">/</span><span class="st">'lab062_results.json'</span>).write_text(json.dumps(summary,indent<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Core route complete. The full DQN and PPO training studies remain in appendix/.'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chosen action 1 current estimate 99.47148132324219 reward -0.570070760382065 continuation estimate 101.17943572998047 TD target 99.5975706122986
+Core route complete. The full DQN and PPO training studies remain in appendix/.</code></pre>
+</div>
+</div>
+</section>
+<section id="student-calculations" class="level2">
+<h2 class="anchored" data-anchor-id="student-calculations">Student calculations</h2>
+<p>Match every observation to a physical property in the screenshot. Explain why engine names and desired movement directions differ. Reconstruct a nonterminal reward from its potential change and engine charge. Distinguish a return above a chosen threshold from the terminal rest event. Compare action values with action probabilities and identify which one is a learned return estimate. Explain why equal evaluation seeds do not make different training budgets a controlled algorithm comparison.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-10/lab-061-cartpole.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 061: Balancing a pole on a cart</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" class="pagination-link">
+        <span class="nav-page-text">Lab 057: GHZ, W and Dicke target states</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

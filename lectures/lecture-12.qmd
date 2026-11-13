@@ -1,0 +1,105 @@
+---
+title: "12 · Parametrised Quantum Circuits as Variational Ansätze"
+code-tools: false
+toc: false
+---
+
+A parametrised quantum circuit prepares a trial state on a quantum register, and a classical computer tunes its gate angles from measured bit strings. We first use such circuits as variational ansätze for ground states: gradients come from the parameter-shift rule (or, with fewer circuit runs, from SPSA), and the variational quantum eigensolver with hardware-efficient and Hamiltonian-variational circuits is followed through its energy and entanglement during training on the transverse-field Ising chain. The same circuits then learn from quantum data: quantum autoencoders compress ground states and flag phase boundaries, a quantum convolutional network classifies a symmetry-protected topological phase, a quantum graph recurrent network learns an unknown Hamiltonian, and a circuit autoencoder compresses quantum channels through their Choi states. As probability models, quantum circuit Born machines learn distributions of bit strings. As classifiers, quantum kernels feed a support-vector machine and data re-uploading turns one or a few qubits into a universal classifier, with entanglement carrying information between qubits. Random states, typicality and barren plateaus finally set the limits of which circuits can be trained.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-12.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-12.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-12.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 069: Parametrised circuits and their gradients](../notebooks/lecture-12/lab-069-circuits-gradients.ipynb)
+
+A circuit as a quantum trial state, the energy from bit strings, the parameter-shift rule against automatic differentiation and the cost of a gradient on a device (classroom route); mean field and other classical approximations in an optional appendix.
+:::
+
+::: {.nb-item}
+[Lab 069a: SPSA and Adam with few circuit runs](../notebooks/lecture-12/lab-069a-spsa-adam.ipynb)
+
+Simultaneous-perturbation gradients from two circuit runs against the parameter-shift rule with two runs per angle, Adam on SPSA gradients, and the number of circuit runs each needs to reach the same energy in a shot-noise VQE.
+:::
+
+::: {.nb-item}
+[Lab 070: VQE and the choice of ansatz](../notebooks/lecture-12/lab-070-vqe-ansatz.ipynb)
+
+Hardware-efficient and Hamiltonian-variational circuits for the transverse-field Ising chain, energy and mid-chain entanglement entropy during training, and the eight-spin phase diagram against exact results.
+:::
+
+::: {.nb-item}
+[Lab 070a: VQE phase diagram of the XXZ chain in a field](../notebooks/lecture-12/lab-070a-xxz-phase-diagram.ipynb)
+
+Exact and variational maps of energy, order parameters, entanglement entropy and fidelity over the anisotropy and transverse field (at home; runs several minutes, or redraws the saved scan).
+:::
+
+::: {.nb-item}
+[Lab 070b: Quantum autoencoder](../notebooks/lecture-12/lab-070b-quantum-autoencoder.ipynb)
+
+Compressing ground states into fewer qubits, the trash Hamming distance as a local cost and its fidelity bound, Schmidt rank and compressibility, and phase boundaries flagged by the trash infidelity.
+:::
+
+::: {.nb-item}
+[Lab 070c: Quantum convolutional neural network](../notebooks/lecture-12/lab-070c-qcnn.ipynb)
+
+The cluster-Ising chain and its symmetry-protected topological phase, string order, and a QCNN with shared kernels and pooling that classifies the phase from 40 labelled ground states.
+:::
+
+::: {.nb-item}
+[Lab 070d: Quantum graph recurrent neural network](../notebooks/lecture-12/lab-070d-qgrnn.ipynb)
+
+Learning the couplings of an unknown Ising Hamiltonian on a graph from time-evolved states, with Trotter layers as the model and the SWAP test as the fidelity estimate.
+:::
+
+::: {.nb-item}
+[Lab 070e: VQE for the XYZ chain, three ansätze](../notebooks/lecture-12/lab-070e-xyz-three-ansatze.ipynb)
+
+A hardware-efficient circuit and two Hamiltonian-variational circuits on the XYZ chain, and why a mirror-symmetric ansatz cannot reach a mirror-odd ground state (at home).
+:::
+
+::: {.nb-item}
+[Lab 070f: Quantum circuit autoencoder](../notebooks/lecture-12/lab-070f-circuit-autoencoder.ipynb)
+
+Compressing quantum channels instead of states, through their Choi states, with the Choi fidelity as the figure of merit.
+:::
+
+::: {.nb-item}
+[Lab 071a: Random states and typicality](../notebooks/lecture-12/lab-071a-random-states.ipynb)
+
+Haar-random states, concentration on the high-dimensional sphere and Lévy's lemma, the Page value of entanglement, and why typical states make gradients vanish (read before Lab 071).
+:::
+
+::: {.nb-item}
+[Lab 071: Barren plateaus](../notebooks/lecture-12/lab-071-barren-plateaus.ipynb)
+
+Gradient variances over random angles for global and local costs and for structured circuits, and the number of shots needed to resolve a gradient.
+:::
+
+::: {.nb-item}
+[Lab 072: Modelling probabilities with a quantum circuit](../notebooks/lecture-12/lab-072-born-machine.ipynb)
+
+Continuous data binned into bit strings, the Born-rule model, the Kullback–Leibler divergence as negative log-likelihood, product against entangling circuits, ancilla qubits, depth and evaluation from samples.
+:::
+
+::: {.nb-item}
+[Lab 073a: Data re-uploading classifier](../notebooks/lecture-12/lab-073a-data-reuploading.ipynb)
+
+One qubit as a classifier, label states for several classes, the circuit output as a Fourier series, multi-qubit classifiers and how entanglement carries information to the read-out qubit (optional cells switched by RUN_OPTIONAL).
+:::
+
+::: {.nb-item}
+[Lab 073b: Quantum kernels](../notebooks/lecture-12/lab-073b-quantum-kernels.ipynb)
+
+Data-encoding states as features, the quantum kernel in a support-vector machine, kernel entries estimated from shots, kernel alignment and exponential concentration of deep kernels.
+:::
+
+::: {.nb-item}
+[Lab 073: QUBO and QAOA (at home)](../notebooks/lecture-12/lab-073-qubo-qaoa.ipynb)
+
+Binary optimisation as an Ising Hamiltonian diagonal in the computational basis, MaxCut, the QAOA circuit, its training and the sampled bit strings; not covered in the lecture slides.
+:::

@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Lab 069a: SPSA and Adam with few circuit runs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" rel="next">
+<link href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-07.html">
+ <span class="dropdown-text">7 · Time Series: Dynamical Systems, Chaos and Embedding</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-08.html">
+ <span class="dropdown-text">8 · Forecasting Models: Linear, Neural and Physics-Informed</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-09.html">
+ <span class="dropdown-text">9 · Reservoir Computing</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-10.html">
+ <span class="dropdown-text">10 · Reinforcement Learning for Quantum State Preparation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-11.html">
+ <span class="dropdown-text">11 · Quantum Information for Newcomers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-12.html">
+ <span class="dropdown-text">12 · Parametrised Quantum Circuits as Variational Ansätze</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-13.html">
+ <span class="dropdown-text">13 · Learning Quantum States and Hamiltonians</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lab 069a: SPSA and Adam with few circuit runs</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-021-xy-without-labels.html" class="sidebar-item-text sidebar-link">Lab 021: The 2D XY model without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-022-gauge-without-labels.html" class="sidebar-item-text sidebar-link">Lab 022: Ising gauge theory without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-023-sk-without-labels.html" class="sidebar-item-text sidebar-link">Lab 023: The SK spin glass without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-030-physics-2d-xy.html" class="sidebar-item-text sidebar-link">Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-07.html" class="sidebar-item-text sidebar-link">7 · Time Series: Dynamical Systems, Chaos and Embedding</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-033-signal-characterisation.html" class="sidebar-item-text sidebar-link">Lab 033: Signal characterisation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-08.html" class="sidebar-item-text sidebar-link">8 · Forecasting Models: Linear, Neural and Physics-Informed</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-034-linear-models-nvar.html" class="sidebar-item-text sidebar-link">Lab 034: Forecasting with linear models and NVAR</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-035-koopman.html" class="sidebar-item-text sidebar-link">Lab 035: Lifting and the Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="sidebar-item-text sidebar-link">Lab 036: Recurrent neural networks and reservoirs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-037-mlp-forecaster.html" class="sidebar-item-text sidebar-link">Lab 037: MLP forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-038-rnn-forecaster.html" class="sidebar-item-text sidebar-link">Lab 038: RNN forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-039-lstm-forecaster.html" class="sidebar-item-text sidebar-link">Lab 039: LSTM forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-041-pinn.html" class="sidebar-item-text sidebar-link">Lab 041: Physics-informed neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-042-neural-ode.html" class="sidebar-item-text sidebar-link">Lab 042: Neural ordinary differential equations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-043-pendulum-friction.html" class="sidebar-item-text sidebar-link">Lab 043: Pendulum with unknown friction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-044-predator-prey.html" class="sidebar-item-text sidebar-link">Lab 044: Predator–prey with unknown interaction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-045-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Lab 045: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-01-rossler-oscillators.html" class="sidebar-item-text sidebar-link">Exercise 01: Rössler system and superimposed oscillators</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="sidebar-item-text sidebar-link">Exercise 02: Stock market returns</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-03-koopman.html" class="sidebar-item-text sidebar-link">Exercise 03: Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-04-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Exercise 04: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-09.html" class="sidebar-item-text sidebar-link">9 · Reservoir Computing</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-046-echo-state-networks.html" class="sidebar-item-text sidebar-link">Lab 046: Echo state networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-047-quantum-reservoir-computing.html" class="sidebar-item-text sidebar-link">Lab 047: Quantum reservoir computing</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-049-reservoir-climate.html" class="sidebar-item-text sidebar-link">Lab 049: Weather and climate of an echo state network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-050-cellular-automaton-reservoir.html" class="sidebar-item-text sidebar-link">Lab 050: Cellular automaton reservoir</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-10.html" class="sidebar-item-text sidebar-link">10 · Reinforcement Learning for Quantum State Preparation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-063-bellman-from-experience.html" class="sidebar-item-text sidebar-link">Lab 063: Bellman equations from sampled experience</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-061-cartpole.html" class="sidebar-item-text sidebar-link">Lab 061: Balancing a pole on a cart</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-062-lunarlander.html" class="sidebar-item-text sidebar-link">Lab 062: Landing with discrete engine commands</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" class="sidebar-item-text sidebar-link">Lab 057: GHZ, W and Dicke target states</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" class="sidebar-item-text sidebar-link">Lab 058: Finite-budget GHZ compilation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-059-continuous-angles.html" class="sidebar-item-text sidebar-link">Lab 059: Continuous angles with REINFORCE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-060-cavity-checks.html" class="sidebar-item-text sidebar-link">Lab 060: Cavity feedback checks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056a-pendulum-planning.html" class="sidebar-item-text sidebar-link">Lab 056a: Pendulum swing-up by planning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-052-quantum-circuit-compilation.html" class="sidebar-item-text sidebar-link">Lab 052: Quantum circuit compilation (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-055-continuous-state-compilation.html" class="sidebar-item-text sidebar-link">Lab 055: Compilation with continuous angles (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-054-quantum-state-preparation.html" class="sidebar-item-text sidebar-link">Lab 054: Preparation with Hamiltonian evolutions (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-053-fock-state-cavity.html" class="sidebar-item-text sidebar-link">Lab 053: One photon in a leaky cavity (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056-pendulum-swing-up.html" class="sidebar-item-text sidebar-link">Lab 056: Pendulum swing-up with Q-learning (full study)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-11.html" class="sidebar-item-text sidebar-link">11 · Quantum Information for Newcomers</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-064-one-qubit.html" class="sidebar-item-text sidebar-link">Lab 064: One qubit, measurements and gates as rotations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-065-two-spin-register.html" class="sidebar-item-text sidebar-link">Lab 065: The two-spin register</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066-density-matrices-noise.html" class="sidebar-item-text sidebar-link">Lab 066: Density matrices, measurement and noise</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066a-allows-and-forbids.html" class="sidebar-item-text sidebar-link">Lab 066a: What quantum information allows and forbids</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-067-atom-light-qubit.html" class="sidebar-item-text sidebar-link">Lab 067: An atom in laser light as a qubit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-068-interacting-qubits-gates.html" class="sidebar-item-text sidebar-link">Lab 068: Interactions and two-qubit gates</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-12.html" class="sidebar-item-text sidebar-link">12 · Parametrised Quantum Circuits as Variational Ansätze</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" class="sidebar-item-text sidebar-link">Lab 069: Parametrised circuits and their gradients</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069a-spsa-adam.html" class="sidebar-item-text sidebar-link active">Lab 069a: SPSA and Adam with few circuit runs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" class="sidebar-item-text sidebar-link">Lab 070: VQE and the choice of ansatz</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070a-xxz-phase-diagram.html" class="sidebar-item-text sidebar-link">Lab 070a: VQE phase diagram of the XXZ chain in a field</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070b-quantum-autoencoder.html" class="sidebar-item-text sidebar-link">Lab 070b: Quantum autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070c-qcnn.html" class="sidebar-item-text sidebar-link">Lab 070c: Quantum convolutional neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070d-qgrnn.html" class="sidebar-item-text sidebar-link">Lab 070d: Quantum graph recurrent neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070e-xyz-three-ansatze.html" class="sidebar-item-text sidebar-link">Lab 070e: VQE for the XYZ chain, three ansätze</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070f-circuit-autoencoder.html" class="sidebar-item-text sidebar-link">Lab 070f: Quantum circuit autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071a-random-states.html" class="sidebar-item-text sidebar-link">Lab 071a: Random states and typicality</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" class="sidebar-item-text sidebar-link">Lab 071: Barren plateaus</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-072-born-machine.html" class="sidebar-item-text sidebar-link">Lab 072: Modelling probabilities with a quantum circuit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073a-data-reuploading.html" class="sidebar-item-text sidebar-link">Lab 073a: Data re-uploading classifier</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073b-quantum-kernels.html" class="sidebar-item-text sidebar-link">Lab 073b: Quantum kernels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" class="sidebar-item-text sidebar-link">Lab 073: QUBO and QAOA (at home)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-13.html" class="sidebar-item-text sidebar-link">13 · Learning Quantum States and Hamiltonians</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-074-state-tomography.html" class="sidebar-item-text sidebar-link">Lab 074: Quantum state tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-075-classical-shadows.html" class="sidebar-item-text sidebar-link">Lab 075: Classical shadows</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-076-nn-tomography.html" class="sidebar-item-text sidebar-link">Lab 076: Neural-network tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-077-hamiltonian-learning.html" class="sidebar-item-text sidebar-link">Lab 077: Hamiltonian learning</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lab-069a.-spsa-and-adam-for-gradients-from-few-circuit-runs" id="toc-lab-069a.-spsa-and-adam-for-gradients-from-few-circuit-runs" class="nav-link active" data-scroll-target="#lab-069a.-spsa-and-adam-for-gradients-from-few-circuit-runs">Lab 069a. SPSA and Adam for gradients from few circuit runs</a>
+  <ul class="collapse">
+  <li><a href="#double-precision-arithmetic" id="toc-double-precision-arithmetic" class="nav-link" data-scroll-target="#double-precision-arithmetic">1. Double-precision arithmetic</a></li>
+  <li><a href="#the-ising-chain-and-the-hardware-efficient-circuit" id="toc-the-ising-chain-and-the-hardware-efficient-circuit" class="nav-link" data-scroll-target="#the-ising-chain-and-the-hardware-efficient-circuit">2. The Ising chain and the hardware-efficient circuit</a></li>
+  <li><a href="#energies-from-a-finite-number-of-shots-and-the-cost-of-a-circuit-run" id="toc-energies-from-a-finite-number-of-shots-and-the-cost-of-a-circuit-run" class="nav-link" data-scroll-target="#energies-from-a-finite-number-of-shots-and-the-cost-of-a-circuit-run">3. Energies from a finite number of shots and the cost of a circuit run</a></li>
+  <li><a href="#the-parameter-shift-gradient-and-its-cost" id="toc-the-parameter-shift-gradient-and-its-cost" class="nav-link" data-scroll-target="#the-parameter-shift-gradient-and-its-cost">4. The parameter-shift gradient and its cost</a></li>
+  <li><a href="#the-spsa-estimate-of-the-gradient" id="toc-the-spsa-estimate-of-the-gradient" class="nav-link" data-scroll-target="#the-spsa-estimate-of-the-gradient">5. The SPSA estimate of the gradient</a></li>
+  <li><a href="#spsa-with-spalls-gain-sequences" id="toc-spsa-with-spalls-gain-sequences" class="nav-link" data-scroll-target="#spsa-with-spalls-gain-sequences">6. SPSA with Spall’s gain sequences</a></li>
+  <li><a href="#adam-fed-with-spsa-gradients" id="toc-adam-fed-with-spsa-gradients" class="nav-link" data-scroll-target="#adam-fed-with-spsa-gradients">7. Adam fed with SPSA gradients</a></li>
+  <li><a href="#configurations-per-update-and-the-number-of-angles" id="toc-configurations-per-update-and-the-number-of-angles" class="nav-link" data-scroll-target="#configurations-per-update-and-the-number-of-angles">8. Configurations per update and the number of angles</a></li>
+  <li><a href="#circuit-runs-needed-to-reach-a-tolerance" id="toc-circuit-runs-needed-to-reach-a-tolerance" class="nav-link" data-scroll-target="#circuit-runs-needed-to-reach-a-tolerance">9. Circuit runs needed to reach a tolerance</a></li>
+  <li><a href="#the-perturbation-size-of-spsa-at-home" id="toc-the-perturbation-size-of-spsa-at-home" class="nav-link" data-scroll-target="#the-perturbation-size-of-spsa-at-home">10. The perturbation size of SPSA (at home)</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">11. Exercises</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">12. Summary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-069a-spsa-adam.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Lab 069a: SPSA and Adam with few circuit runs</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-069a-spsa-adam.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<section id="lab-069a.-spsa-and-adam-for-gradients-from-few-circuit-runs" class="level1">
+<h1>Lab 069a. SPSA and Adam for gradients from few circuit runs</h1>
+<p>A variational circuit is trained by gradient descent on its energy, and on a quantum device every energy is an average over a finite number of measured bit strings. The parameter-shift rule gives the exact derivative with respect to one angle from two runs of the circuit, with that angle shifted by <span class="math inline">\(\pm\pi/2\)</span> and all other angles fixed. A circuit with <span class="math inline">\(n\)</span> angles therefore needs <span class="math inline">\(2n\)</span> runs for one gradient, and for tens or hundreds of angles the number of circuit runs limits the training. Simultaneous-perturbation stochastic approximation (SPSA), introduced by Spall [1], shifts all angles at once along a random direction and estimates every component of the gradient from only two runs, whatever the number of angles. The estimate is noisy and slightly biased, so training needs more updates. SPSA has been used to train hardware-efficient circuits on superconducting qubits [2].</p>
+<p>We are given the six-qubit transverse-field Ising chain at its critical point, a hardware-efficient circuit with <span class="math inline">\(n=60\)</span> angles, and measurements of all qubits in the <span class="math inline">\(z\)</span> basis or in the <span class="math inline">\(x\)</span> basis, each repeated a finite number of times. We compute the parameter-shift gradient and its cost, derive the SPSA estimate and test its mean, bias and variance. We then write SPSA with Spall’s gain sequences [3] and Adam [4] fed with SPSA gradients, and count the circuit runs each optimiser needs to bring the energy within a fixed distance of the exact ground-state energy.</p>
+<p>Sections 1 to 9 form the core route, which runs in about ten minutes on a laptop CPU, most of it in the training runs of Section 9. Section 10, for work at home, scans the perturbation size of SPSA and takes about two minutes more.</p>
+<p>Quantities called exact come from the state vector, which a simulation knows and a device does not. Quantities called estimated come from simulated measurement records with fixed random seeds, in the form a device would return them. The optimisers use only estimated energies, and the exact energy is recorded alongside to judge the result.</p>
+<section id="double-precision-arithmetic" class="level2">
+<h2 class="anchored" data-anchor-id="double-precision-arithmetic">1. Double-precision arithmetic</h2>
+<p>We work in double precision, <code>float64</code> and <code>complex128</code>. JAX applies the gates, differentiates the energy and draws random numbers on the CPU, NumPy diagonalises the Hamiltonian, and Matplotlib draws the figures. The cells run in order.</p>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"JAX_PLATFORMS"</span>] <span class="op">=</span> <span class="st">"cpu"</span>   <span class="co"># small calculations; the CPU avoids GPU memory allocation</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json, time</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>jax.config.update(<span class="st">"jax_enable_x64"</span>, <span class="va">True</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>CDTYPE <span class="op">=</span> jnp.complex128</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>TOL <span class="op">=</span> <span class="fl">1e-12</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>FIG <span class="op">=</span> Path(<span class="st">"figures"</span>)<span class="op">;</span> FIG.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>RES <span class="op">=</span> Path(<span class="st">"classroom_results"</span>)<span class="op">;</span> RES.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"font.size"</span>: <span class="dv">11</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">11</span>, <span class="st">"xtick.labelsize"</span>: <span class="dv">11</span>, <span class="st">"ytick.labelsize"</span>: <span class="dv">11</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"legend.fontsize"</span>: <span class="dv">10</span>, <span class="st">"figure.figsize"</span>: (<span class="fl">4.8</span>, <span class="fl">3.2</span>), <span class="st">"savefig.bbox"</span>: <span class="st">"tight"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"pdf.fonttype"</span>: <span class="dv">42</span>, <span class="st">"ps.fonttype"</span>: <span class="dv">42</span>})</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># course palette: parameter shift blue, SPSA with Adam orange, SPSA with gains green, exact black</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>COL <span class="op">=</span> <span class="bu">dict</span>(ps<span class="op">=</span><span class="st">"#005CA7"</span>, sa<span class="op">=</span><span class="st">"#D35A05"</span>, sp<span class="op">=</span><span class="st">"#1B7F36"</span>, exact<span class="op">=</span><span class="st">"black"</span>, grey<span class="op">=</span><span class="st">"#5A6270"</span>, light<span class="op">=</span><span class="st">"#9AA0A6"</span>, navy<span class="op">=</span><span class="st">"#002B5C"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save(fig, name):</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.pdf"</span>)<span class="op">;</span> fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.png"</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>started <span class="op">=</span> time.perf_counter()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>NUMBERS <span class="op">=</span> {}</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sci(x, digits<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LaTeX form of a number in scientific notation for the macro file, e.g. 1.1\times10^{5} (used in math mode)</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    m, e <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.</span>{digits}e<span class="sc">}</span><span class="ss">"</span>.split(<span class="st">"e"</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>m<span class="sc">}</span><span class="ch">\\</span><span class="ss">times10^</span><span class="ch">{{</span><span class="sc">{</span><span class="bu">int</span>(e)<span class="sc">}</span><span class="ch">}}</span><span class="ss">"</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> jax.random.PRNGKey(<span class="dv">691</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"JAX"</span>, jax.__version__, <span class="st">"devices"</span>, jax.devices())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAX 0.11.0 devices [CpuDevice(id=0)]</code></pre>
+</div>
+</div>
+</section>
+<section id="the-ising-chain-and-the-hardware-efficient-circuit" class="level2">
+<h2 class="anchored" data-anchor-id="the-ising-chain-and-the-hardware-efficient-circuit">2. The Ising chain and the hardware-efficient circuit</h2>
+<p>The running model is the open transverse-field Ising chain of <span class="math inline">\(N=6\)</span> spins, <span class="math display">\[\hat{\mathcal H}=-J\sum_{i=0}^{N-2}\hat Z_i\hat Z_{i+1}-h\sum_{i=0}^{N-1}\hat X_i , \tag{1}\]</span> at the critical point <span class="math inline">\(h=J=1\)</span>. The first term favours neighbouring spins aligned along <span class="math inline">\(z\)</span>, the second term turns every spin towards <span class="math inline">\(+x\)</span>, and the two terms do not commute. The Hamiltonian is a <span class="math inline">\(64\times64\)</span> matrix, so its ground-state energy <span class="math inline">\(E_0\)</span>, the first excited level <span class="math inline">\(E_1\)</span> and the gap <span class="math inline">\(\Delta E=E_1-E_0\)</span> follow from exact diagonalisation.</p>
+<p>The trial state is prepared by the hardware-efficient ansatz (HEA). Starting from <span class="math inline">\(|0\dots0\rangle\)</span>, each of its <span class="math inline">\(L\)</span> layers applies <span class="math inline">\(\hat R_y(\theta)\)</span> and then <span class="math inline">\(\hat R_z(\theta)\)</span> with independent angles on every qubit, followed by controlled-<span class="math inline">\(\hat Z\)</span> gates <span class="math inline">\(\widehat{\mathrm{CZ}}\)</span> on the neighbouring pairs <span class="math inline">\((0,1),\dots,(N-2,N-1)\)</span>. A final rotation block ends the circuit, so the number of angles is <span class="math display">\[n=2N(L+1) , \tag{2}\]</span> and <span class="math inline">\(L=4\)</span> gives <span class="math inline">\(n=60\)</span>. The rotations are <span class="math inline">\(\hat R_P(\theta)=e^{-i\theta\hat P/2}=\cos\frac\theta2\,\hat I-i\sin\frac\theta2\,\hat P\)</span> for <span class="math inline">\(\hat P=\hat Y,\hat Z\)</span>. The sketch shows the circuit for four qubits.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-069a-spsa-adam_files/figure-html/46bc9028-1-sketch_hea.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">sketch_hea</figcaption><p></p>
+</figure>
+</div>
+<p><em>Hardware-efficient ansatz on four qubits, with <span class="math inline">\(\hat R_y\hat R_z\)</span> rotation blocks, a <span class="math inline">\(\widehat{\mathrm{CZ}}\)</span> chain in every layer and a final rotation block.</em></p>
+<p>The simulator stores the state as a tensor with one index of size two per qubit. A rotation block multiplies every index by its own <span class="math inline">\(2\times2\)</span> matrix in one tensor contraction, and the <span class="math inline">\(\widehat{\mathrm{CZ}}\)</span> chain multiplies the amplitude of the bit string <span class="math inline">\(\mathbf b=b_0b_1\dots b_{N-1}\)</span> by <span class="math inline">\((-1)^{\sum_qb_qb_{q+1}}\)</span>. We check the circuit once against the same gates written as <span class="math inline">\(64\times64\)</span> Kronecker products.</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>N, L, J, h <span class="op">=</span> <span class="dv">6</span>, <span class="dv">4</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> N <span class="op">*</span> (L <span class="op">+</span> <span class="dv">1</span>)                                   <span class="co"># equation (2)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>PAULI <span class="op">=</span> {<span class="st">"I"</span>: np.eye(<span class="dv">2</span>), <span class="st">"X"</span>: np.array([[<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>]]), <span class="st">"Z"</span>: np.diag([<span class="fl">1.0</span>, <span class="op">-</span><span class="fl">1.0</span>])}</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pauli_string(factors):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Kronecker product over qubits 0..N-1 (qubit 0 leftmost); factors = {qubit: "X" or "Z"}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> np.eye(<span class="dv">1</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N):</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> np.kron(out, PAULI[factors.get(q, <span class="st">"I"</span>)])</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>H_dense <span class="op">=</span> (<span class="bu">sum</span>(<span class="op">-</span>J <span class="op">*</span> pauli_string({i: <span class="st">"Z"</span>, i <span class="op">+</span> <span class="dv">1</span>: <span class="st">"Z"</span>}) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>           <span class="op">+</span> <span class="bu">sum</span>(<span class="op">-</span>h <span class="op">*</span> pauli_string({i: <span class="st">"X"</span>}) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N)))          <span class="co"># equation (1)</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>evals, evecs <span class="op">=</span> np.linalg.eigh(H_dense)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>E0, E1 <span class="op">=</span> <span class="bu">float</span>(evals[<span class="dv">0</span>]), <span class="bu">float</span>(evals[<span class="dv">1</span>])<span class="op">;</span> gap <span class="op">=</span> E1 <span class="op">-</span> E0</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>psi_ground <span class="op">=</span> evecs[:, <span class="dv">0</span>]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>I2 <span class="op">=</span> jnp.eye(<span class="dv">2</span>, dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> jnp.array([[<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>]], dtype<span class="op">=</span>CDTYPE)<span class="op">;</span> Y <span class="op">=</span> jnp.array([[<span class="dv">0</span>, <span class="op">-</span><span class="ot">1j</span>], [<span class="ot">1j</span>, <span class="dv">0</span>]], dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> jnp.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]], dtype<span class="op">=</span>CDTYPE)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>HAD <span class="op">=</span> (X <span class="op">+</span> Z) <span class="op">/</span> jnp.sqrt(<span class="fl">2.0</span>)                                            <span class="co"># Hadamard gate</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rotation(P, theta):</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.cos(theta <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> I2 <span class="op">-</span> <span class="ot">1j</span> <span class="op">*</span> jnp.sin(theta <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> P       <span class="co"># exp(-i theta P / 2)</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>bits <span class="op">=</span> np.indices((<span class="dv">2</span>,) <span class="op">*</span> N)                                              <span class="co"># bits[q] = b_q on every basis state</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>CZ_SIGN <span class="op">=</span> jnp.asarray((<span class="op">-</span><span class="fl">1.0</span>) <span class="op">**</span> <span class="bu">sum</span>(bits[q] <span class="op">*</span> bits[q <span class="op">+</span> <span class="dv">1</span>] <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N <span class="op">-</span> <span class="dv">1</span>)))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>CONTRACT <span class="op">=</span> <span class="st">"aA,bB,cC,dD,eE,fF,ABCDEF-&gt;abcdef"</span>                            <span class="co"># one 2x2 matrix on each of the six qubits</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_all(mats, psi):</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.einsum(CONTRACT, <span class="op">*</span>mats, psi, optimize<span class="op">=</span><span class="st">"greedy"</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rotation_block(psi, angles):</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># angles[q] = (R_y angle, R_z angle) of qubit q; R_y acts first</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> apply_all([rotation(Z, angles[q, <span class="dv">1</span>]) <span class="op">@</span> rotation(Y, angles[q, <span class="dv">0</span>]) <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N)], psi)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hea_state(theta):</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    th <span class="op">=</span> theta.reshape(L <span class="op">+</span> <span class="dv">1</span>, N, <span class="dv">2</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> jnp.zeros((<span class="dv">2</span>,) <span class="op">*</span> N, dtype<span class="op">=</span>CDTYPE).at[(<span class="dv">0</span>,) <span class="op">*</span> N].<span class="bu">set</span>(<span class="fl">1.0</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> layer <span class="kw">in</span> <span class="bu">range</span>(L):</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        psi <span class="op">=</span> rotation_block(psi, th[layer]) <span class="op">*</span> CZ_SIGN</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rotation_block(psi, th[L])</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> born_probabilities(theta):</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Born distributions of the z setting and of the x setting (Hadamard on every qubit before the z measurement)</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> hea_state(theta)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.<span class="bu">abs</span>(psi.reshape(<span class="op">-</span><span class="dv">1</span>)) <span class="op">**</span> <span class="dv">2</span>, jnp.<span class="bu">abs</span>(apply_all([HAD] <span class="op">*</span> N, psi).reshape(<span class="op">-</span><span class="dv">1</span>)) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>zsign <span class="op">=</span> jnp.asarray((<span class="op">-</span><span class="fl">1.0</span>) <span class="op">**</span> bits)</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>E_Z_VALUES <span class="op">=</span> (<span class="op">-</span>J <span class="op">*</span> <span class="bu">sum</span>(zsign[i] <span class="op">*</span> zsign[i <span class="op">+</span> <span class="dv">1</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N <span class="op">-</span> <span class="dv">1</span>))).reshape(<span class="op">-</span><span class="dv">1</span>)   <span class="co"># e_Z(b)</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>E_X_VALUES <span class="op">=</span> (<span class="op">-</span>h <span class="op">*</span> zsign.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)).reshape(<span class="op">-</span><span class="dv">1</span>)                                    <span class="co"># e_X(b)</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> energy(theta):</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># exact energy: each setting contributes the average of its bit-string values over its Born distribution</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    pz, px <span class="op">=</span> born_probabilities(theta)</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pz <span class="op">@</span> E_Z_VALUES <span class="op">+</span> px <span class="op">@</span> E_X_VALUES</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co"># check against the circuit written as 64 x 64 Kronecker products, gate by gate</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>theta_r <span class="op">=</span> jax.random.uniform(k, (n,), minval<span class="op">=-</span>jnp.pi, maxval<span class="op">=</span>jnp.pi)         <span class="co"># random angles used in Sections 4 and 5</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> kron_all(mats):</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> mats[<span class="dv">0</span>]</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m_ <span class="kw">in</span> mats[<span class="dv">1</span>:]:</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> np.kron(out, m_)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>psi_k <span class="op">=</span> np.zeros(<span class="dv">2</span> <span class="op">**</span> N, <span class="bu">complex</span>)<span class="op">;</span> psi_k[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>th <span class="op">=</span> np.asarray(theta_r).reshape(L <span class="op">+</span> <span class="dv">1</span>, N, <span class="dv">2</span>)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> <span class="bu">range</span>(L <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>    psi_k <span class="op">=</span> kron_all([np.asarray(rotation(Z, th[layer, q, <span class="dv">1</span>]) <span class="op">@</span> rotation(Y, th[layer, q, <span class="dv">0</span>])) <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N)]) <span class="op">@</span> psi_k</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> layer <span class="op">&lt;</span> L:</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>        psi_k <span class="op">=</span> np.asarray(CZ_SIGN).reshape(<span class="op">-</span><span class="dv">1</span>) <span class="op">*</span> psi_k</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(psi_k, np.asarray(hea_state(theta_r)).reshape(<span class="op">-</span><span class="dv">1</span>), atol<span class="op">=</span>TOL)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(<span class="bu">float</span>(energy(theta_r)) <span class="op">-</span> np.real(psi_k.conj() <span class="op">@</span> H_dense <span class="op">@</span> psi_k)) <span class="op">&lt;</span> <span class="fl">1e-10</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"N = </span><span class="sc">{</span>N<span class="sc">}</span><span class="ss">, L = </span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">, n = </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss"> angles;  E0 = </span><span class="sc">{</span>E0<span class="sc">:.6f}</span><span class="ss">, E1 = </span><span class="sc">{</span>E1<span class="sc">:.6f}</span><span class="ss">, gap = </span><span class="sc">{</span>gap<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"random angles: E = </span><span class="sc">{</span><span class="bu">float</span>(energy(theta_r))<span class="sc">:.6f}</span><span class="ss"> (einsum circuit) = </span><span class="sc">{</span>np<span class="sc">.</span>real(psi_k.conj() <span class="op">@</span> H_dense <span class="op">@</span> psi_k)<span class="sc">:.6f}</span><span class="ss"> (Kronecker products)"</span>)</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(N<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>N<span class="sc">}</span><span class="ss">"</span>, L<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>L<span class="sc">}</span><span class="ss">"</span>, NParams<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span>, EZero<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>E0<span class="sc">:.4f}</span><span class="ss">"</span>, Gap<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>gap<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>N = 6, L = 4, n = 60 angles;  E0 = -7.296230, E1 = -6.814083, gap = 0.4821
+random angles: E = 0.896729 (einsum circuit) = 0.896729 (Kronecker products)</code></pre>
+</div>
+</div>
+</section>
+<section id="energies-from-a-finite-number-of-shots-and-the-cost-of-a-circuit-run" class="level2">
+<h2 class="anchored" data-anchor-id="energies-from-a-finite-number-of-shots-and-the-cost-of-a-circuit-run">3. Energies from a finite number of shots and the cost of a circuit run</h2>
+<p>The Hamiltonian (1) is measured in two settings. In the <span class="math inline">\(z\)</span> setting every qubit is measured in the computational basis and the bit string <span class="math inline">\(\mathbf b\)</span> gives the value <span class="math inline">\(e_Z(\mathbf b)=-J\sum_i(-1)^{b_i+b_{i+1}}\)</span> of the first term. In the <span class="math inline">\(x\)</span> setting a Hadamard gate <span class="math inline">\(\hat H\)</span> precedes the measurement of every qubit, since <span class="math inline">\(\hat H\hat X\hat H=\hat Z\)</span>, and the bit string gives <span class="math inline">\(e_X(\mathbf b)=-h\sum_i(-1)^{b_i}\)</span>. (The letter <span class="math inline">\(\hat H\)</span> denotes the Hadamard gate, and <span class="math inline">\(\hat{\mathcal H}\)</span> the Hamiltonian.) With <span class="math inline">\(M\)</span> shots in each of the <span class="math inline">\(G=2\)</span> settings the energy is estimated by the sample means <span class="math display">\[\tilde E(\boldsymbol\theta)=\frac1M\sum_{s=1}^Me_Z(\mathbf b^{(s)})+\frac1M\sum_{s=1}^Me_X(\mathbf b'^{(s)}) , \tag{3}\]</span> where <span class="math inline">\(\mathbf b^{(s)}\)</span> and <span class="math inline">\(\mathbf b'^{(s)}\)</span> are drawn from the Born distributions of the two settings. Its standard error is <span class="math display">\[\sigma_{\tilde E}=\sqrt{\frac{\sigma_Z^2+\sigma_X^2}{M}} , \tag{4}\]</span> where <span class="math inline">\(\sigma_g^2\)</span> is the variance of <span class="math inline">\(e_g(\mathbf b)\)</span> over the Born distribution of setting <span class="math inline">\(g\)</span>, the variance of a single shot.</p>
+<p>We call one set of angles, prepared and measured in all settings, a <em>circuit configuration</em>. It consumes <span class="math display">\[S=G\,M \tag{5}\]</span> shots. On a device the number of configurations counts how often the control electronics must be reprogrammed and the circuit re-run, and <span class="math inline">\(S\)</span> times this number counts the total measurement time. All costs below are given in configurations, with the shots following from equation (5). We use <span class="math inline">\(M=1000\)</span> shots per setting, so <span class="math inline">\(S=2000\)</span>.</p>
+<p>We draw bit strings by inverse-transform sampling, in which a uniform random number selects the first basis state whose cumulative probability exceeds it. We repeat the estimate 2000 times at the random angles and check that the estimates scatter around the exact energy with the standard error (4).</p>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>G_SETTINGS, M_SHOTS <span class="op">=</span> <span class="dv">2</span>, <span class="dv">1000</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>S_SHOTS <span class="op">=</span> G_SETTINGS <span class="op">*</span> M_SHOTS                                           <span class="co"># equation (5)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample_mean(key, p, values, shots):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mean of `values` over `shots` basis states drawn from the Born distribution p</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    cdf <span class="op">=</span> jnp.cumsum(p)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> jax.random.uniform(key, (shots,)) <span class="op">*</span> cdf[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> jnp.minimum(jnp.searchsorted(cdf, u, method<span class="op">=</span><span class="st">"compare_all"</span>), p.size <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> values[idx].mean()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> energy_estimate(key, theta, shots<span class="op">=</span>M_SHOTS):</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># equation (3): one circuit configuration, `shots` bit strings in each of the two settings</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    pz, px <span class="op">=</span> born_probabilities(theta)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    kz, kx <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sample_mean(kz, pz, E_Z_VALUES, shots) <span class="op">+</span> sample_mean(kx, px, E_X_VALUES, shots)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> shot_variances(theta):</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    pz, px <span class="op">=</span> born_probabilities(theta)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [<span class="bu">float</span>(p <span class="op">@</span> e <span class="op">**</span> <span class="dv">2</span> <span class="op">-</span> (p <span class="op">@</span> e) <span class="op">**</span> <span class="dv">2</span>) <span class="cf">for</span> p, e <span class="kw">in</span> ((pz, E_Z_VALUES), (px, E_X_VALUES))]</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>repeats <span class="op">=</span> jax.jit(jax.vmap(energy_estimate, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>)))(jax.random.split(k, <span class="dv">2000</span>), theta_r)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>sZ2, sX2 <span class="op">=</span> shot_variances(theta_r)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>se_pred <span class="op">=</span> np.sqrt((sZ2 <span class="op">+</span> sX2) <span class="op">/</span> M_SHOTS)                                 <span class="co"># equation (4)</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>E_r <span class="op">=</span> <span class="bu">float</span>(energy(theta_r))</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(<span class="bu">float</span>(repeats.mean()) <span class="op">-</span> E_r) <span class="op">&lt;</span> <span class="dv">4</span> <span class="op">*</span> se_pred <span class="op">/</span> np.sqrt(<span class="dv">2000</span>)    <span class="co"># no bias</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(<span class="bu">float</span>(repeats.std()) <span class="op">/</span> se_pred <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> <span class="fl">0.1</span>                     <span class="co"># spread as in equation (4)</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"exact E = </span><span class="sc">{</span>E_r<span class="sc">:.4f}</span><span class="ss">;  mean of 2000 estimates = </span><span class="sc">{</span><span class="bu">float</span>(repeats.mean())<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"spread of the estimates = </span><span class="sc">{</span><span class="bu">float</span>(repeats.std())<span class="sc">:.4f}</span><span class="ss">;  equation (4) = </span><span class="sc">{</span>se_pred<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"one circuit configuration = </span><span class="sc">{</span>G_SETTINGS<span class="sc">}</span><span class="ss"> settings x </span><span class="sc">{</span>M_SHOTS<span class="sc">}</span><span class="ss"> shots = </span><span class="sc">{</span>S_SHOTS<span class="sc">}</span><span class="ss"> shots"</span>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(Settings<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>G_SETTINGS<span class="sc">}</span><span class="ss">"</span>, ShotsPerSetting<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>M_SHOTS<span class="sc">}</span><span class="ss">"</span>, ShotsPerConfig<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>S_SHOTS<span class="sc">}</span><span class="ss">"</span>, SERand<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>se_pred<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>exact E = 0.8967;  mean of 2000 estimates = 0.8976
+spread of the estimates = 0.1021;  equation (4) = 0.0990
+one circuit configuration = 2 settings x 1000 shots = 2000 shots</code></pre>
+</div>
+</div>
+</section>
+<section id="the-parameter-shift-gradient-and-its-cost" class="level2">
+<h2 class="anchored" data-anchor-id="the-parameter-shift-gradient-and-its-cost">4. The parameter-shift gradient and its cost</h2>
+<p>Every angle <span class="math inline">\(\theta_k\)</span> enters one rotation <span class="math inline">\(e^{-i\theta_k\hat P_k/2}\)</span> with <span class="math inline">\(\hat P_k^2=\hat I\)</span>, and along this angle alone the energy is a shifted cosine, <span class="math inline">\(E(\theta_k)=a+b\cos(\theta_k-c)\)</span>. Two energies at angles shifted by <span class="math inline">\(\pm\pi/2\)</span> give its exact derivative, the parameter-shift rule [5,6] <span class="math display">\[\frac{\partial E}{\partial\theta_k}=\frac{E(\boldsymbol\theta+\tfrac\pi2\mathbf e_k)-E(\boldsymbol\theta-\tfrac\pi2\mathbf e_k)}{2} , \tag{6}\]</span> where <span class="math inline">\(\mathbf e_k\)</span> is the unit vector along angle <span class="math inline">\(k\)</span>. For every component the circuit runs twice, at <span class="math inline">\(\theta_k+\pi/2\)</span> and at <span class="math inline">\(\theta_k-\pi/2\)</span>, with all other angles fixed. One gradient therefore costs <span class="math display">\[2n\ \text{configurations}=2nS\ \text{shots} . \tag{7}\]</span> On a device both energies in equation (6) are estimates (3), and the standard error of one component is <span class="math inline">\(\sigma_{\tilde E}/\sqrt2\)</span>. We check equation (6) with exact energies against automatic differentiation (<code>jax.grad</code>) and print the cost of one gradient of the 60-angle circuit.</p>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SHIFTS <span class="op">=</span> (jnp.pi <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> jnp.eye(n)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> parameter_shift_exact(theta):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> jax.vmap(energy)(jnp.concatenate([theta <span class="op">+</span> SHIFTS, theta <span class="op">-</span> SHIFTS]))   <span class="co"># 2n circuit configurations</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (e[:n] <span class="op">-</span> e[n:]) <span class="op">/</span> <span class="dv">2</span>                                                  <span class="co"># equation (6)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> parameter_shift_estimate(key, theta, shots<span class="op">=</span>M_SHOTS):</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    configs <span class="op">=</span> jnp.concatenate([theta <span class="op">+</span> SHIFTS, theta <span class="op">-</span> SHIFTS])</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> jax.vmap(energy_estimate, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="va">None</span>))(jax.random.split(key, <span class="dv">2</span> <span class="op">*</span> n), configs, shots)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (e[:n] <span class="op">-</span> e[n:]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>g_exact <span class="op">=</span> np.asarray(jax.jit(jax.grad(energy))(theta_r))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>g_ps <span class="op">=</span> np.asarray(jax.jit(parameter_shift_exact)(theta_r))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">max</span>(np.<span class="bu">abs</span>(g_ps <span class="op">-</span> g_exact)) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"parameter shift vs jax.grad, largest difference over </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss"> components: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">max</span>(np.<span class="bu">abs</span>(g_ps <span class="op">-</span> g_exact))<span class="sc">:.1e}</span><span class="ss">"</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"one parameter-shift gradient: 2n = </span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> n<span class="sc">}</span><span class="ss"> configurations = </span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> n <span class="op">*</span> S_SHOTS<span class="sc">:,}</span><span class="ss"> shots"</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(PSPerStep<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> n<span class="sc">}</span><span class="ss">"</span>, PSShotsPerStep<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> n <span class="op">*</span> S_SHOTS<span class="sc">}</span><span class="ss">"</span>, PSShotsPerStepSci<span class="op">=</span>sci(<span class="dv">2</span> <span class="op">*</span> n <span class="op">*</span> S_SHOTS))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>parameter shift vs jax.grad, largest difference over 60 components: 7.8e-16
+one parameter-shift gradient: 2n = 120 configurations = 240,000 shots</code></pre>
+</div>
+</div>
+</section>
+<section id="the-spsa-estimate-of-the-gradient" class="level2">
+<h2 class="anchored" data-anchor-id="the-spsa-estimate-of-the-gradient">5. The SPSA estimate of the gradient</h2>
+<p>SPSA [1] draws a random vector <span class="math inline">\(\boldsymbol\Delta=(\Delta_1,\dots,\Delta_n)\)</span> whose entries are independent and equal to <span class="math inline">\(+1\)</span> or <span class="math inline">\(-1\)</span> with probability <span class="math inline">\(1/2\)</span> each, the Rademacher distribution. Averages over this distribution, written <span class="math inline">\(\langle\cdot\rangle_{\boldsymbol\Delta}\)</span>, obey <span class="math display">\[\langle\Delta_k\rangle_{\boldsymbol\Delta}=0,\qquad\langle\Delta_k\Delta_j\rangle_{\boldsymbol\Delta}=\delta_{kj},\qquad\Delta_k^2=1 . \tag{8}\]</span> All angles are shifted at once by <span class="math inline">\(\pm c\boldsymbol\Delta\)</span> with a perturbation size <span class="math inline">\(c&gt;0\)</span>, and the two configurations are measured. A Taylor expansion of the energy around <span class="math inline">\(\boldsymbol\theta\)</span>, in which the even orders cancel in the difference, gives the slope along <span class="math inline">\(\boldsymbol\Delta\)</span>, <span class="math display">\[\frac{E(\boldsymbol\theta+c\boldsymbol\Delta)-E(\boldsymbol\theta-c\boldsymbol\Delta)}{2c}=\sum_j\Delta_j\,\partial_jE+\frac{c^2}{6}\sum_{j,l,m}\Delta_j\Delta_l\Delta_m\,\partial_j\partial_l\partial_mE+O(c^4) , \tag{9}\]</span> with <span class="math inline">\(\partial_j=\partial/\partial\theta_j\)</span>. SPSA multiplies this single number by <span class="math inline">\(1/\Delta_k=\Delta_k\)</span> and uses it as the estimate of every component, <span class="math display">\[\tilde g_k=\frac{\tilde E(\boldsymbol\theta+c\boldsymbol\Delta)-\tilde E(\boldsymbol\theta-c\boldsymbol\Delta)}{2c}\,\Delta_k ,\qquad k=1,\dots,n . \tag{10}\]</span> The whole gradient costs <span class="math display">\[2\ \text{configurations}=2S\ \text{shots} , \tag{11}\]</span> for any number of angles. The sketch compares the configurations of equations (7) and (11).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-069a-spsa-adam_files/figure-html/ff531c7d-1-sketch_spsa_vs_shift.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">sketch_spsa_vs_shift</figcaption><p></p>
+</figure>
+</div>
+<p><em>(a) The parameter-shift rule needs a pair of configurations for every angle. (b) SPSA shifts all angles along one random sign vector and needs one pair of configurations for the whole gradient.</em></p>
+<p>Averaging equation (10) with exact energies over <span class="math inline">\(\boldsymbol\Delta\)</span> and using equation (8) gives <span class="math display">\[\langle\tilde g_k\rangle_{\boldsymbol\Delta}=\sum_j\langle\Delta_k\Delta_j\rangle_{\boldsymbol\Delta}\,\partial_jE+O(c^2)=\partial_kE+O(c^2) . \tag{12}\]</span> The mean therefore equals the gradient up to a bias of order <span class="math inline">\(c^2\)</span> from the third derivatives in equation (9), and shot noise, which has zero mean, adds no bias. The leading term of a single estimate is <span class="math inline">\(\partial_kE+\sum_{j\ne k}\Delta_k\Delta_j\,\partial_jE\)</span>, a sum of uncorrelated random signs, and the two energy estimates contribute the shot noise of equation (4), so <span class="math display">\[\mathrm{Var}(\tilde g_k)=\sum_{j\ne k}(\partial_jE)^2+\frac{\sigma_{\tilde E}^2}{2c^2} . \tag{13}\]</span> The first term grows with the number of angles and the second with <span class="math inline">\(1/c^2\)</span>, whereas the bias grows with <span class="math inline">\(c^2\)</span>.</p>
+<p>We test these three statements at the random angles <span class="math inline">\(\boldsymbol\theta_r\)</span>. Panel (a) shows the difference between the left-hand side of equation (9) and the exact slope <span class="math inline">\(\sum_j\Delta_j\partial_jE\)</span> for one fixed <span class="math inline">\(\boldsymbol\Delta\)</span>, which should fall as <span class="math inline">\(c^2\)</span>. Panel (b) averages <span class="math inline">\(K\)</span> estimates (10) from exact energies and shows the relative distance of the average from the exact gradient, which should fall as <span class="math inline">\(K^{-1/2}\)</span> towards the small bias. The printed numbers compare the variance of 4000 estimates with equation (13), once with exact energies and once with <span class="math inline">\(M=1000\)</span> shots.</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rademacher(key, size):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">2.0</span> <span class="op">*</span> jax.random.bernoulli(key, <span class="fl">0.5</span>, (size,)) <span class="op">-</span> <span class="fl">1.0</span>             <span class="co"># entries +1 or -1, probability 1/2 each</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> spsa_exact(key, theta, c):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> rademacher(key, theta.size)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (energy(theta <span class="op">+</span> c <span class="op">*</span> D) <span class="op">-</span> energy(theta <span class="op">-</span> c <span class="op">*</span> D)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> c) <span class="op">*</span> D   <span class="co"># equation (10) with exact energies</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> spsa_estimate(key, theta, c, shots<span class="op">=</span>M_SHOTS):</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    kd, kp, km <span class="op">=</span> jax.random.split(key, <span class="dv">3</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> rademacher(kd, theta.size)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    e_plus, e_minus <span class="op">=</span> energy_estimate(kp, theta <span class="op">+</span> c <span class="op">*</span> D, shots), energy_estimate(km, theta <span class="op">-</span> c <span class="op">*</span> D, shots)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (e_plus <span class="op">-</span> e_minus) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> c) <span class="op">*</span> D                                  <span class="co"># equation (10), two configurations</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># (a) bias of the slope along one fixed Delta, equation (9)</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>D_fixed <span class="op">=</span> rademacher(k, n)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>slope_exact <span class="op">=</span> <span class="bu">float</span>(D_fixed <span class="op">@</span> g_exact)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>c_grid <span class="op">=</span> np.logspace(<span class="op">-</span><span class="fl">2.5</span>, <span class="dv">0</span>, <span class="dv">11</span>)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>slope_err <span class="op">=</span> np.array([<span class="bu">abs</span>(<span class="bu">float</span>((energy(theta_r <span class="op">+</span> c <span class="op">*</span> D_fixed) <span class="op">-</span> energy(theta_r <span class="op">-</span> c <span class="op">*</span> D_fixed)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> c)) <span class="op">-</span> slope_exact)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">for</span> c <span class="kw">in</span> c_grid])</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>fit_slope <span class="op">=</span> np.polyfit(np.log(c_grid[:<span class="dv">7</span>]), np.log(slope_err[:<span class="dv">7</span>]), <span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(fit_slope <span class="op">-</span> <span class="dv">2</span>) <span class="op">&lt;</span> <span class="fl">0.1</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co"># (b) average of K estimates with exact energies, c = 0.1</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>C_TEST, K_MAX <span class="op">=</span> <span class="fl">0.02</span>, <span class="dv">4000</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>g_many <span class="op">=</span> np.asarray(jax.jit(jax.vmap(spsa_exact, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>)))(jax.random.split(k, K_MAX), theta_r, C_TEST))</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>K_grid <span class="op">=</span> np.unique(np.logspace(<span class="dv">0</span>, np.log10(K_MAX), <span class="dv">25</span>).astype(<span class="bu">int</span>))</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>running <span class="op">=</span> np.cumsum(g_many, axis<span class="op">=</span><span class="dv">0</span>)[K_grid <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> K_grid[:, <span class="va">None</span>]</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>rel_dist <span class="op">=</span> np.linalg.norm(running <span class="op">-</span> g_exact, axis<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.linalg.norm(g_exact)</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of single estimates against equation (13), exact energies and M = 1000 shots</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>var_pred_exact <span class="op">=</span> np.<span class="bu">sum</span>(g_exact <span class="op">**</span> <span class="dv">2</span>) <span class="op">-</span> g_exact <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>var_meas_exact <span class="op">=</span> g_many.var(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>C_SHOT <span class="op">=</span> <span class="fl">0.02</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>g_shots <span class="op">=</span> np.asarray(jax.jit(jax.vmap(spsa_estimate, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>)))(jax.random.split(k, K_MAX), theta_r, C_SHOT))</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>var_pred_shots <span class="op">=</span> var_pred_exact <span class="op">+</span> se_pred <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> C_SHOT <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>var_meas_shots <span class="op">=</span> g_shots.var(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>ratio_exact <span class="op">=</span> <span class="bu">float</span>(np.mean(var_meas_exact <span class="op">/</span> var_pred_exact))<span class="op">;</span> ratio_shots <span class="op">=</span> <span class="bu">float</span>(np.mean(var_meas_shots <span class="op">/</span> var_pred_shots))</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co"># the same test with exact energies at the larger perturbation c = 0.1, where c*sqrt(n) is close to one</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>g_large_c <span class="op">=</span> np.asarray(jax.jit(jax.vmap(spsa_exact, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>)))(jax.random.split(k, K_MAX), theta_r, <span class="fl">0.1</span>))</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>ratio_large_c <span class="op">=</span> <span class="bu">float</span>(np.mean(g_large_c.var(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">/</span> var_pred_exact))</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(ratio_exact <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> <span class="fl">0.1</span> <span class="kw">and</span> <span class="bu">abs</span>(ratio_shots <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> <span class="fl">0.1</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> rel_dist[<span class="op">-</span><span class="dv">1</span>] <span class="op">&lt;</span> <span class="dv">3</span> <span class="op">*</span> np.sqrt(np.mean(var_pred_exact) <span class="op">*</span> n <span class="op">/</span> K_MAX) <span class="op">/</span> np.linalg.norm(g_exact)</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">3.6</span>))</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>ax1.loglog(c_grid, slope_err, <span class="st">"o"</span>, color<span class="op">=</span>COL[<span class="st">"sa"</span>], ms<span class="op">=</span><span class="dv">7</span>, label<span class="op">=</span><span class="st">"SPSA slope, equation (9)"</span>)</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>ax1.loglog(c_grid, slope_err[<span class="dv">0</span>] <span class="op">*</span> (c_grid <span class="op">/</span> c_grid[<span class="dv">0</span>]) <span class="op">**</span> <span class="dv">2</span>, <span class="st">"--"</span>, color<span class="op">=</span>COL[<span class="st">"exact"</span>], lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="vs">r"$\propto c^2$"</span>)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="vs">r"perturbation size $c$"</span>)<span class="op">;</span> ax1.set_ylabel(<span class="st">"error of the slope"</span>)</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>ax1.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)<span class="op">;</span> ax1.text(<span class="fl">0.04</span>, <span class="fl">0.9</span>, <span class="st">"(a)"</span>, transform<span class="op">=</span>ax1.transAxes, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>ax2.loglog(K_grid, rel_dist, <span class="st">"o"</span>, color<span class="op">=</span>COL[<span class="st">"sa"</span>], ms<span class="op">=</span><span class="dv">6</span>, label<span class="op">=</span><span class="ss">f"average of $K$ estimates, $c=</span><span class="sc">{</span>C_TEST<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>ax2.loglog(K_grid, rel_dist[<span class="dv">0</span>] <span class="op">/</span> np.sqrt(K_grid), <span class="st">"--"</span>, color<span class="op">=</span>COL[<span class="st">"exact"</span>], lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="vs">r"$\propto K^{-1/2}$"</span>)</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="vs">r"number of estimates $K$"</span>)<span class="op">;</span> ax2.set_ylabel(<span class="st">"relative distance from gradient"</span>)</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)<span class="op">;</span> ax2.text(<span class="fl">0.9</span>, <span class="fl">0.9</span>, <span class="st">"(b)"</span>, transform<span class="op">=</span>ax2.transAxes, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab069a_spsa_estimator"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(a) fitted power of c in the slope error: </span><span class="sc">{</span>fit_slope<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(b) relative distance after 1 estimate: </span><span class="sc">{</span>rel_dist[<span class="dv">0</span>]<span class="sc">:.2f}</span><span class="ss">, after </span><span class="sc">{</span>K_MAX<span class="sc">}</span><span class="ss"> estimates: </span><span class="sc">{</span>rel_dist[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"variance of single estimates / equation (13), averaged over the </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss"> components: "</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"exact energies </span><span class="sc">{</span>ratio_exact<span class="sc">:.3f}</span><span class="ss">, M = </span><span class="sc">{</span>M_SHOTS<span class="sc">}</span><span class="ss"> shots and c = </span><span class="sc">{</span>C_SHOT<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>ratio_shots<span class="sc">:.3f}</span><span class="ss">, exact energies at c = 0.1: </span><span class="sc">{</span>ratio_large_c<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"|grad E|^2 = </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(g_exact <span class="op">**</span> <span class="dv">2</span>)<span class="sc">:.3f}</span><span class="ss">;  shot-noise term sigma^2/(2c^2) = </span><span class="sc">{</span>se_pred <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> C_SHOT <span class="op">**</span> <span class="dv">2</span>)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(SlopePower<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>fit_slope<span class="sc">:.2f}</span><span class="ss">"</span>, VarRatioExact<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>ratio_exact<span class="sc">:.2f}</span><span class="ss">"</span>, VarRatioShots<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>ratio_shots<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>               VarRatioLargeC<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>ratio_large_c<span class="sc">:.2f}</span><span class="ss">"</span>, RelDistOne<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>rel_dist[<span class="dv">0</span>]<span class="sc">:.1f}</span><span class="ss">"</span>, RelDistMany<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>rel_dist[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.2f}</span><span class="ss">"</span>, KMax<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>K_MAX<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-069a-spsa-adam_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(a) fitted power of c in the slope error: 1.98
+(b) relative distance after 1 estimate: 17.96, after 4000 estimates: 0.119
+variance of single estimates / equation (13), averaged over the 60 components: exact energies 1.012, M = 1000 shots and c = 0.02: 1.005, exact energies at c = 0.1: 0.861
+|grad E|^2 = 16.051;  shot-noise term sigma^2/(2c^2) = 12.241</code></pre>
+</div>
+</div>
+<p>The slope error falls as <span class="math inline">\(c^2\)</span>, as equation (9) predicts. A single SPSA estimate lies far from the gradient, on average <span class="math inline">\(\sqrt{n-1}\)</span> times the length of the gradient according to the first term of equation (13), and the average of <span class="math inline">\(K\)</span> estimates approaches the gradient as <span class="math inline">\(K^{-1/2}\)</span>. The measured variances agree with equation (13), with exact energies and with <span class="math inline">\(M=1000\)</span> shots. At <span class="math inline">\(c=0.02\)</span> the shot-noise term is comparable to <span class="math inline">\(|\nabla E|^2\)</span> at these angles, and it grows as <span class="math inline">\(1/c^2\)</span> for smaller <span class="math inline">\(c\)</span>. The expansion (9) assumes that the whole displacement <span class="math inline">\(c\boldsymbol\Delta\)</span>, of length <span class="math inline">\(c\sqrt n\)</span>, is small compared with the period <span class="math inline">\(2\pi\)</span> of the cosines. For <span class="math inline">\(n=60\)</span> this length is close to one already at <span class="math inline">\(c=0.1\)</span>, where the measured variance falls below equation (13).</p>
+</section>
+<section id="spsa-with-spalls-gain-sequences" class="level2">
+<h2 class="anchored" data-anchor-id="spsa-with-spalls-gain-sequences">6. SPSA with Spall’s gain sequences</h2>
+<p>SPSA moves the angles against the estimate (10) with a step size <span class="math inline">\(a_t\)</span> and a perturbation size <span class="math inline">\(c_t\)</span> that both decrease with the update number <span class="math inline">\(t\)</span>. Ref. [1] proves convergence to a local minimum when both sequences decrease to zero at suitable rates, and Ref. [3] recommends <span class="math display">\[a_t=\frac{a}{(t+1+A)^{\alpha}},\qquad c_t=\frac{c}{(t+1)^{\gamma}},\qquad\alpha=0.602,\quad\gamma=0.101 , \tag{14}\]</span> where <span class="math inline">\(a\)</span>, <span class="math inline">\(c\)</span> and <span class="math inline">\(A\)</span> are chosen constants. The stability constant <span class="math inline">\(A\)</span> is about one tenth of the planned number of updates and keeps the first steps small. The constant <span class="math inline">\(c\)</span> is chosen large enough that the energy difference of the two configurations exceeds the shot noise <span class="math inline">\(\sigma_{\tilde E}\)</span>, and <span class="math inline">\(a\)</span> sets the size of the first steps.</p>
+<ol type="1">
+<li>Draw <span class="math inline">\(\boldsymbol\Delta\)</span> with independent entries <span class="math inline">\(\pm1\)</span>.</li>
+<li>Set <span class="math inline">\(a_t\)</span> and <span class="math inline">\(c_t\)</span> by equation (14).</li>
+<li>Measure the configurations <span class="math inline">\(\boldsymbol\theta+c_t\boldsymbol\Delta\)</span> and <span class="math inline">\(\boldsymbol\theta-c_t\boldsymbol\Delta\)</span>, which gives <span class="math inline">\(\tilde E_+\)</span> and <span class="math inline">\(\tilde E_-\)</span>.</li>
+<li>Form <span class="math inline">\(\tilde g_k=(\tilde E_+-\tilde E_-)\,\Delta_k/(2c_t)\)</span> for all <span class="math inline">\(k\)</span>.</li>
+<li>Update <span class="math inline">\(\boldsymbol\theta\leftarrow\boldsymbol\theta-a_t\tilde{\mathbf g}\)</span>.</li>
+</ol>
+<p>We run <span class="math inline">\(T\)</span> such updates inside a compiled <code>jax.lax.scan</code>, and every <code>CHUNK</code> updates we record the exact energy <span class="math inline">\(E(\boldsymbol\theta)\)</span> from the state vector. The optimiser never sees it.</p>
+<div class="cell" data-execution_count="6">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>CHUNK <span class="op">=</span> <span class="dv">20</span>                                                     <span class="co"># updates between two records of the exact energy</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_spsa_gains(key, theta0, steps, a, c, A):</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> update(carry, t):</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        theta, key <span class="op">=</span> carry</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        a_t, c_t <span class="op">=</span> a <span class="op">/</span> (t <span class="op">+</span> <span class="dv">1</span> <span class="op">+</span> A) <span class="op">**</span> <span class="fl">0.602</span>, c <span class="op">/</span> (t <span class="op">+</span> <span class="dv">1</span>) <span class="op">**</span> <span class="fl">0.101</span>          <span class="co"># equation (14)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (theta <span class="op">-</span> a_t <span class="op">*</span> spsa_estimate(k, theta, c_t), key), <span class="va">None</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> chunk(carry, t0):</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        carry, _ <span class="op">=</span> jax.lax.scan(update, carry, t0 <span class="op">+</span> jnp.arange(CHUNK))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> carry, energy(carry[<span class="dv">0</span>])                                     <span class="co"># exact energy, for the record only</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    _, record <span class="op">=</span> jax.lax.scan(chunk, (theta0, key), CHUNK <span class="op">*</span> jnp.arange(steps <span class="op">//</span> CHUNK))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> record</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="adam-fed-with-spsa-gradients" class="level2">
+<h2 class="anchored" data-anchor-id="adam-fed-with-spsa-gradients">7. Adam fed with SPSA gradients</h2>
+<p>Adam [4] keeps, for every angle, running averages of the gradient and of its square, <span class="math display">\[m_k\leftarrow\beta_1m_k+(1-\beta_1)\,\tilde g_k,\qquad v_k\leftarrow\beta_2v_k+(1-\beta_2)\,\tilde g_k^2 , \tag{15}\]</span> and moves each angle by <span class="math display">\[\theta_k\leftarrow\theta_k-\eta\,\frac{\hat m_k}{\sqrt{\hat v_k}+\epsilon},\qquad\hat m_k=\frac{m_k}{1-\beta_1^{t+1}},\quad\hat v_k=\frac{v_k}{1-\beta_2^{t+1}} , \tag{16}\]</span> with the standard constants <span class="math inline">\(\beta_1=0.9\)</span>, <span class="math inline">\(\beta_2=0.999\)</span> and <span class="math inline">\(\epsilon=10^{-8}\)</span> of Ref. [4] and a step size <span class="math inline">\(\eta\)</span>. The hats on <span class="math inline">\(m\)</span> and <span class="math inline">\(v\)</span> mark the correction of the averages for their start at zero. Adam accepts any gradient estimate. With the parameter-shift gradient (6) every update costs <span class="math inline">\(2n\)</span> configurations, and with the SPSA estimate (10) it costs two.</p>
+<p>The SPSA estimate of one component changes sign from update to update with the random <span class="math inline">\(\Delta_k\)</span>. These flips cancel in the average <span class="math inline">\(m_k\)</span>, which follows the mean gradient (12), while <span class="math inline">\(v_k\)</span> measures the size of the noisy estimates. The step of every angle therefore stays close to <span class="math inline">\(\eta\)</span> although a single estimate is large, and Adam runs with fixed <span class="math inline">\(\eta\)</span> and fixed <span class="math inline">\(c\)</span> in place of the sequences (14). The Adam function accepts any gradient estimate, so the same code runs with the parameter-shift gradient and with SPSA.</p>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>B1, B2, EPS <span class="op">=</span> <span class="fl">0.9</span>, <span class="fl">0.999</span>, <span class="fl">1e-8</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> adam_step(theta, m, v, g, t, lr):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> B1 <span class="op">*</span> m <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> B1) <span class="op">*</span> g                                  <span class="co"># equation (15)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> B2 <span class="op">*</span> v <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> B2) <span class="op">*</span> g <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    m_hat, v_hat <span class="op">=</span> m <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> B1 <span class="op">**</span> (t <span class="op">+</span> <span class="dv">1</span>)), v <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> B2 <span class="op">**</span> (t <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> theta <span class="op">-</span> lr <span class="op">*</span> m_hat <span class="op">/</span> (jnp.sqrt(v_hat) <span class="op">+</span> EPS), m, v   <span class="co"># equation (16)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_adam(key, theta0, steps, lr, gradient, chunk):</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># gradient(key, theta) returns one gradient estimate; the exact energy is recorded every `chunk` updates</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> update(carry, t):</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        theta, m, v, key <span class="op">=</span> carry</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        theta, m, v <span class="op">=</span> adam_step(theta, m, v, gradient(k, theta), t, lr)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (theta, m, v, key), <span class="va">None</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> block(carry, t0):</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        carry, _ <span class="op">=</span> jax.lax.scan(update, carry, t0 <span class="op">+</span> jnp.arange(chunk))</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> carry, energy(carry[<span class="dv">0</span>])</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    zeros <span class="op">=</span> jnp.zeros_like(theta0)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    _, record <span class="op">=</span> jax.lax.scan(block, (theta0, zeros, zeros, key), chunk <span class="op">*</span> jnp.arange(steps <span class="op">//</span> chunk))</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> record</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_shift_adam(key, theta0, steps, lr):</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> run_adam(key, theta0, steps, lr, parameter_shift_estimate, <span class="dv">1</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_spsa_adam(key, theta0, steps, lr, c):</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> run_adam(key, theta0, steps, lr, <span class="kw">lambda</span> k, th: spsa_estimate(k, th, c), CHUNK)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="configurations-per-update-and-the-number-of-angles" class="level2">
+<h2 class="anchored" data-anchor-id="configurations-per-update-and-the-number-of-angles">8. Configurations per update and the number of angles</h2>
+<p>Equations (7) and (11) fix the cost of one update. The table lists it for the six-qubit hardware-efficient circuit with <span class="math inline">\(L=1,\dots,6\)</span> layers. The parameter-shift cost grows linearly with the number of angles, while the SPSA cost stays at two configurations. A training run that needs <span class="math inline">\(U\)</span> updates costs <span class="math inline">\(U\)</span> times the entry of the table, so SPSA is cheaper whenever it needs fewer than <span class="math inline">\(n\)</span> times as many updates as the parameter-shift rule.</p>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" L    n   shift: configs   shots/update   SPSA: configs   shots/update"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> L_ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    n_ <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> N <span class="op">*</span> (L_ <span class="op">+</span> <span class="dv">1</span>)                                                   <span class="co"># equation (2)</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    rows.append((L_, n_, <span class="dv">2</span> <span class="op">*</span> n_, <span class="dv">2</span> <span class="op">*</span> n_ <span class="op">*</span> S_SHOTS, <span class="dv">2</span>, <span class="dv">2</span> <span class="op">*</span> S_SHOTS))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>L_<span class="sc">:2d}</span><span class="ss">  </span><span class="sc">{</span>n_<span class="sc">:3d}</span><span class="ss">   </span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> n_<span class="sc">:14d}</span><span class="ss">   </span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> n_ <span class="op">*</span> S_SHOTS<span class="sc">:</span><span class="dv">12</span><span class="sc">,</span>d<span class="sc">}</span><span class="ss">   </span><span class="sc">{</span><span class="dv">2</span><span class="sc">:13d}</span><span class="ss">   </span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> S_SHOTS<span class="sc">:</span><span class="dv">12</span><span class="sc">,</span>d<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(FIG <span class="op">/</span> <span class="st">"tab_lab069a_cost.tex"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"</span><span class="ch">\\</span><span class="st">begin</span><span class="sc">{tabular}</span><span class="st">{@</span><span class="sc">{}</span><span class="st">rrrrrr@</span><span class="sc">{}</span><span class="st">}</span><span class="ch">\n\\</span><span class="st">toprule</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"&amp; &amp; </span><span class="ch">\\</span><span class="st">multicolumn</span><span class="sc">{2}{c}</span><span class="st">{parameter shift} &amp; </span><span class="ch">\\</span><span class="st">multicolumn</span><span class="sc">{2}{c}{SPSA}</span><span class="ch">\\\\\n</span><span class="st">"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"$L$ &amp; $n$ &amp; configurations &amp; shots &amp; configurations &amp; shots</span><span class="ch">\\\\\n\\</span><span class="st">midrule</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> rows:</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        f.write(<span class="ss">f"</span><span class="sc">{</span>r[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> &amp; </span><span class="sc">{</span>r[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> &amp; </span><span class="sc">{</span>r[<span class="dv">2</span>]<span class="sc">}</span><span class="ss"> &amp; </span><span class="sc">{</span>r[<span class="dv">3</span>]<span class="sc">:,}</span><span class="ss"> &amp; </span><span class="sc">{</span>r[<span class="dv">4</span>]<span class="sc">}</span><span class="ss"> &amp; </span><span class="sc">{</span>r[<span class="dv">5</span>]<span class="sc">:,}</span><span class="ch">\\\\\n</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">,"</span>))</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    f.write(<span class="st">"</span><span class="ch">\\</span><span class="st">bottomrule</span><span class="ch">\n\\</span><span class="st">end</span><span class="sc">{tabular}</span><span class="ch">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> L    n   shift: configs   shots/update   SPSA: configs   shots/update
+ 1   24               48         96,000               2          4,000
+ 2   36               72        144,000               2          4,000
+ 3   48               96        192,000               2          4,000
+ 4   60              120        240,000               2          4,000
+ 5   72              144        288,000               2          4,000
+ 6   84              168        336,000               2          4,000</code></pre>
+</div>
+</div>
+</section>
+<section id="circuit-runs-needed-to-reach-a-tolerance" class="level2">
+<h2 class="anchored" data-anchor-id="circuit-runs-needed-to-reach-a-tolerance">9. Circuit runs needed to reach a tolerance</h2>
+<p>We train the circuit with three optimisers that see only estimated energies with <span class="math inline">\(M=1000\)</span> shots per setting.</p>
+<ul>
+<li><ol type="a">
+<li>Adam with the parameter-shift gradient (6), <span class="math inline">\(2n=120\)</span> configurations per update,</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>Adam with the SPSA estimate (10) at fixed <span class="math inline">\(c\)</span>, two configurations per update,</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li>SPSA with the gain sequences (14), two configurations per update.</li>
+</ol></li>
+</ul>
+<p>All runs start from the same angles, drawn uniformly from <span class="math inline">\([-0.1,0.1]\)</span>, close to the product state <span class="math inline">\(|0\dots0\rangle\)</span> with energy <span class="math inline">\(-J(N-1)=-5\)</span>. Each optimiser receives the same budget of about <span class="math inline">\(10^5\)</span> configurations, which is 840 updates for (a) and 50 000 updates for (b) and (c). Five independent seeds of the measurement records and of the random directions show the spread. The step sizes were chosen by a short scan for each optimiser on separate seeds, and the stability constant of (c) is one tenth of its number of updates.</p>
+<p>The quality of the result is measured by the exact energy error <span class="math inline">\(E-E_0\)</span>. Its tolerance follows from the bound <span class="math inline">\(E-E_0\ge\Delta E\,(1-F)\)</span>, which holds because every unit of weight outside the ground state raises the energy by at least the gap. The energy error <span class="math inline">\(E-E_0\le\Delta E/2\)</span> guarantees a fidelity <span class="math inline">\(F\ge1/2\)</span> with the exact ground state, and <span class="math inline">\(E-E_0\le\Delta E/5\)</span> guarantees <span class="math inline">\(F\ge0.8\)</span>. We count the configurations, and the corresponding shots, after which each run first falls below these two tolerances.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>LR_PS <span class="op">=</span> <span class="fl">0.05</span>                         <span class="co"># (a) Adam step size with parameter-shift gradients</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>LR_SA, C_SA <span class="op">=</span> <span class="fl">0.005</span>, <span class="fl">0.1</span>        <span class="co"># (b) Adam step size and fixed perturbation size with SPSA gradients</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>A_SP, C_SP <span class="op">=</span> <span class="fl">0.4</span>, <span class="fl">0.3</span>          <span class="co"># (c) constants a and c of equation (14)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>SEEDS <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>STEPS_PS, STEPS_SPSA <span class="op">=</span> <span class="dv">840</span>, <span class="dv">50_000</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>A_STAB <span class="op">=</span> <span class="fl">0.1</span> <span class="op">*</span> STEPS_SPSA                    <span class="co"># stability constant A of equation (14)</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>key, k <span class="op">=</span> jax.random.split(key)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>theta0 <span class="op">=</span> jax.random.uniform(k, (n,), minval<span class="op">=-</span><span class="fl">0.1</span>, maxval<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>seed_keys <span class="op">=</span> jnp.stack([jax.random.PRNGKey(<span class="dv">1000</span> <span class="op">+</span> s) <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(SEEDS)])</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>rec_ps <span class="op">=</span> np.asarray(jax.jit(jax.vmap(run_shift_adam, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>)), static_argnums<span class="op">=</span><span class="dv">2</span>)(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    seed_keys, theta0, STEPS_PS, LR_PS)) <span class="op">-</span> E0</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>t_ps <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>rec_sa <span class="op">=</span> np.asarray(jax.jit(jax.vmap(run_spsa_adam, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>)), static_argnums<span class="op">=</span><span class="dv">2</span>)(</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    seed_keys, theta0, STEPS_SPSA, LR_SA, C_SA)) <span class="op">-</span> E0</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>t_sa <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0 <span class="op">-</span> t_ps</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>rec_sp <span class="op">=</span> np.asarray(jax.jit(jax.vmap(run_spsa_gains, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>)), static_argnums<span class="op">=</span><span class="dv">2</span>)(</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    seed_keys, theta0, STEPS_SPSA, A_SP, C_SP, A_STAB)) <span class="op">-</span> E0</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>t_sp <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0 <span class="op">-</span> t_ps <span class="op">-</span> t_sa</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co"># configurations executed at each record of the exact energy</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>x_ps <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> n <span class="op">*</span> np.arange(<span class="dv">1</span>, STEPS_PS <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>x_spsa <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> CHUNK <span class="op">*</span> np.arange(<span class="dv">1</span>, STEPS_SPSA <span class="op">//</span> CHUNK <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(rec_ps <span class="op">&gt;</span> <span class="op">-</span><span class="fl">1e-9</span>) <span class="kw">and</span> np.<span class="bu">all</span>(rec_sa <span class="op">&gt;</span> <span class="op">-</span><span class="fl">1e-9</span>) <span class="kw">and</span> np.<span class="bu">all</span>(rec_sp <span class="op">&gt;</span> <span class="op">-</span><span class="fl">1e-9</span>)     <span class="co"># variational bound</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"wall time: (a) </span><span class="sc">{</span>t_ps<span class="sc">:.0f}</span><span class="ss"> s, (b) </span><span class="sc">{</span>t_sa<span class="sc">:.0f}</span><span class="ss"> s, (c) </span><span class="sc">{</span>t_sp<span class="sc">:.0f}</span><span class="ss"> s"</span>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"budget: (a) </span><span class="sc">{</span>x_ps[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:,}</span><span class="ss"> configurations, (b) and (c) </span><span class="sc">{</span>x_spsa[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:,}</span><span class="ss"> configurations"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>wall time: (a) 112 s, (b) 234 s, (c) 197 s
+budget: (a) 100,800 configurations, (b) and (c) 100,000 configurations</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>TOLS <span class="op">=</span> {<span class="st">"half"</span>: gap <span class="op">/</span> <span class="dv">2</span>, <span class="st">"fifth"</span>: gap <span class="op">/</span> <span class="dv">5</span>}</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>METHODS <span class="op">=</span> {<span class="st">"PS"</span>: (<span class="st">"(a) parameter shift + Adam"</span>, rec_ps, x_ps, COL[<span class="st">"ps"</span>]),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">"SA"</span>: (<span class="st">"(b) SPSA + Adam"</span>, rec_sa, x_spsa, COL[<span class="st">"sa"</span>]),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>           <span class="st">"SP"</span>: (<span class="st">"(c) SPSA, Spall gains"</span>, rec_sp, x_spsa, COL[<span class="st">"sp"</span>])}</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> configs_to(rec, x, tol):</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># configurations after which each run first has E - E0 &lt;= tol (None if never within the budget)</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> []</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> rec:</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        hit <span class="op">=</span> np.nonzero(r <span class="op">&lt;=</span> tol)[<span class="dv">0</span>]</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        out.append(<span class="bu">int</span>(x[hit[<span class="dv">0</span>]]) <span class="cf">if</span> hit.size <span class="cf">else</span> <span class="va">None</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.4</span>, <span class="fl">4.0</span>))</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, (label, rec, x, col) <span class="kw">in</span> METHODS.items():</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    ax.fill_between(x, rec.<span class="bu">min</span>(axis<span class="op">=</span><span class="dv">0</span>), rec.<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">0</span>), color<span class="op">=</span>col, alpha<span class="op">=</span><span class="fl">0.18</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, np.median(rec, axis<span class="op">=</span><span class="dv">0</span>), color<span class="op">=</span>col, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>label)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> tol, ls <span class="kw">in</span> ((TOLS[<span class="st">"half"</span>], <span class="st">"--"</span>), (TOLS[<span class="st">"fifth"</span>], <span class="st">":"</span>)):</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    ax.axhline(tol, color<span class="op">=</span>COL[<span class="st">"exact"</span>], ls<span class="op">=</span>ls, lw<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">1.3e2</span>, TOLS[<span class="st">"half"</span>] <span class="op">*</span> <span class="fl">1.08</span>, <span class="vs">r"$\Delta E/2$"</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">1.3e2</span>, TOLS[<span class="st">"fifth"</span>] <span class="op">*</span> <span class="fl">1.08</span>, <span class="vs">r"$\Delta E/5$"</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)<span class="op">;</span> ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="fl">1e2</span>, <span class="fl">1.1e5</span>)<span class="op">;</span> ax.set_ylim(<span class="fl">3e-2</span>, <span class="dv">4</span>)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"circuit configurations executed"</span>)<span class="op">;</span> ax.set_ylabel(<span class="vs">r"energy error $E-E_0$"</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab069a_comparison"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>summary_rows <span class="op">=</span> {}</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:30s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'configs to dE/2 (5 seeds)'</span><span class="sc">:40s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'configs to dE/5 (5 seeds)'</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, (label, rec, x, col) <span class="kw">in</span> METHODS.items():</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    half, fifth <span class="op">=</span> configs_to(rec, x, TOLS[<span class="st">"half"</span>]), configs_to(rec, x, TOLS[<span class="st">"fifth"</span>])</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    summary_rows[name] <span class="op">=</span> <span class="bu">dict</span>(half<span class="op">=</span>half, fifth<span class="op">=</span>fifth, final<span class="op">=</span>rec[:, <span class="op">-</span><span class="dv">1</span>].tolist())</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">:30s}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">str</span>(half)<span class="sc">:40s}</span><span class="ss"> </span><span class="sc">{</span>fifth<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, row <span class="kw">in</span> summary_rows.items():</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    per <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> n <span class="cf">if</span> name <span class="op">==</span> <span class="st">"PS"</span> <span class="cf">else</span> <span class="dv">2</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> tag <span class="kw">in</span> (<span class="st">"half"</span>, <span class="st">"fifth"</span>):</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>        hits <span class="op">=</span> [v <span class="cf">for</span> v <span class="kw">in</span> row[tag] <span class="cf">if</span> v <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>]</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(hits) <span class="op">==</span> SEEDS:</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>            med <span class="op">=</span> <span class="bu">int</span>(np.median(hits))</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>            NUMBERS[<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">Configs</span><span class="sc">{</span>tag<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>med<span class="sc">:,}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">,"</span>)</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>            NUMBERS[<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">Steps</span><span class="sc">{</span>tag<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>med <span class="op">//</span> per<span class="sc">:,}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">,"</span>)</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>            NUMBERS[<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">Shots</span><span class="sc">{</span>tag<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> sci(med <span class="op">*</span> S_SHOTS)</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>            NUMBERS[<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">Range</span><span class="sc">{</span>tag<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span><span class="bu">min</span>(hits)<span class="sc">:,}</span><span class="ss">--</span><span class="sc">{</span><span class="bu">max</span>(hits)<span class="sc">:,}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">,"</span>)</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>tag<span class="sc">}</span><span class="ss">: median </span><span class="sc">{</span>med<span class="sc">:,}</span><span class="ss"> configurations = </span><span class="sc">{</span>med <span class="op">//</span> per<span class="sc">:,}</span><span class="ss"> updates = </span><span class="sc">{</span>med <span class="op">*</span> S_SHOTS<span class="sc">:.2e}</span><span class="ss"> shots, "</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>                  <span class="ss">f"range </span><span class="sc">{</span><span class="bu">min</span>(hits)<span class="sc">:,}</span><span class="ss"> to </span><span class="sc">{</span><span class="bu">max</span>(hits)<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>            NUMBERS[<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">Reached</span><span class="sc">{</span>tag<span class="sc">.</span>capitalize()<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(hits)<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>tag<span class="sc">}</span><span class="ss">: reached by </span><span class="sc">{</span><span class="bu">len</span>(hits)<span class="sc">}</span><span class="ss"> of </span><span class="sc">{</span>SEEDS<span class="sc">}</span><span class="ss"> seeds within the budget"</span>)</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: final E - E0, median </span><span class="sc">{</span>np<span class="sc">.</span>median(row[<span class="st">'final'</span>])<span class="sc">:.3f}</span><span class="ss">, range </span><span class="sc">{</span><span class="bu">min</span>(row[<span class="st">'final'</span>])<span class="sc">:.3f}</span><span class="ss"> to </span><span class="sc">{</span><span class="bu">max</span>(row[<span class="st">'final'</span>])<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>    NUMBERS[<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">Final"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>median(row[<span class="st">'final'</span>])<span class="sc">:.2f}</span><span class="ss">"</span></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>NUMBERS.update(Seeds<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>SEEDS<span class="sc">}</span><span class="ss">"</span>, TolHalf<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>TOLS[<span class="st">'half'</span>]<span class="sc">:.2f}</span><span class="ss">"</span>, TolFifth<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>TOLS[<span class="st">'fifth'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>,</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>               BudgetPS<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>x_ps[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:,}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">,"</span>), BudgetSPSA<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>x_spsa[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:,}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">,"</span>),</span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>               StepsPS<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>STEPS_PS<span class="sc">}</span><span class="ss">"</span>, StepsSPSA<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>STEPS_SPSA<span class="sc">:,}</span><span class="ss">"</span>.replace(<span class="st">","</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">,"</span>),</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>               LrPS<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>LR_PS<span class="sc">}</span><span class="ss">"</span>, LrSA<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>LR_SA<span class="sc">}</span><span class="ss">"</span>, CSA<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>C_SA<span class="sc">}</span><span class="ss">"</span>, ASP<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>A_SP<span class="sc">}</span><span class="ss">"</span>, CSP<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>C_SP<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-069a-spsa-adam_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                               configs to dE/2 (5 seeds)                configs to dE/5 (5 seeds)
+(a) parameter shift + Adam     [4680, 3720, 4800, 3840, 4080]           [32880, 25440, 33840, 71880, 34200]
+(b) SPSA + Adam                [2520, 2520, 2400, 2440, 2880]           [78120, 30280, 56680, 37600, 45920]
+(c) SPSA, Spall gains          [3000, 3280, 3520, 3120, 3760]           [None, None, None, None, None]
+PS half: median 4,080 configurations = 34 updates = 8.16e+06 shots, range 3,720 to 4,800
+PS fifth: median 33,840 configurations = 282 updates = 6.77e+07 shots, range 25,440 to 71,880
+PS: final E - E0, median 0.050, range 0.039 to 0.054
+SA half: median 2,520 configurations = 1,260 updates = 5.04e+06 shots, range 2,400 to 2,880
+SA fifth: median 45,920 configurations = 22,960 updates = 9.18e+07 shots, range 30,280 to 78,120
+SA: final E - E0, median 0.086, range 0.063 to 0.104
+SP half: median 3,280 configurations = 1,640 updates = 6.56e+06 shots, range 3,000 to 3,760
+SP fifth: reached by 0 of 5 seeds within the budget
+SP: final E - E0, median 0.110, range 0.104 to 0.121</code></pre>
+</div>
+</div>
+<p>All three optimisers reach <span class="math inline">\(\Delta E/2\)</span> within a few thousand configurations, and the two SPSA optimisers get there first. The median run of Adam with SPSA gradients crosses <span class="math inline">\(\Delta E/2\)</span> after about 2500 configurations, SPSA with Spall’s gains after about 3300, and Adam with the parameter-shift rule after about 4100. The parameter-shift rule needs only 34 updates for this, whereas SPSA with Adam needs about 1300. SPSA is nevertheless cheaper here, since each of its updates costs two configurations and each parameter-shift update costs 120. The printed table gives the values for every seed.</p>
+<p>Adam with the parameter-shift rule reaches the stricter tolerance <span class="math inline">\(\Delta E/5\)</span> first, after a median of about <span class="math inline">\(3.4\times10^4\)</span> configurations, and Adam with SPSA gradients after about <span class="math inline">\(4.6\times10^4\)</span>. SPSA with Spall’s gains does not reach it within <span class="math inline">\(10^5\)</span> configurations in any of the five runs. Near the minimum the gradient is small while the shot-noise term of equation (13) stays, so the SPSA updates become noisier relative to the descent and their low cost no longer compensates. At the end of the budget the parameter-shift runs have the lowest energy error, and the spread between seeds is large for both Adam variants, from about <span class="math inline">\(2.5\times10^4\)</span> to <span class="math inline">\(7\times10^4\)</span> configurations at <span class="math inline">\(\Delta E/5\)</span>. In shots, every configuration costs <span class="math inline">\(S=2000\)</span>, so <span class="math inline">\(\Delta E/2\)</span> needs about <span class="math inline">\(5\times10^6\)</span> shots with SPSA and Adam and <span class="math inline">\(8\times10^6\)</span> with the parameter-shift rule. The core route ends here.</p>
+</section>
+<section id="the-perturbation-size-of-spsa-at-home" class="level2">
+<h2 class="anchored" data-anchor-id="the-perturbation-size-of-spsa-at-home">10. The perturbation size of SPSA (at home)</h2>
+<p>Equation (13) predicts that a small perturbation size <span class="math inline">\(c\)</span> amplifies the shot noise of an SPSA estimate as <span class="math inline">\(1/c^2\)</span>, while equation (12) predicts a bias that grows as <span class="math inline">\(c^2\)</span>. We repeat optimiser (b) with three values of <span class="math inline">\(c\)</span>, two seeds and half the budget, which takes about two minutes.</p>
+<div class="cell" data-execution_count="11">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>RUN_OPTIONAL <span class="op">=</span> <span class="va">True</span>                          <span class="co"># set to False to skip this section</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> RUN_OPTIONAL:</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    C_SCAN, SEEDS_SCAN, STEPS_SCAN <span class="op">=</span> (<span class="fl">0.03</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>), <span class="dv">2</span>, <span class="dv">25_000</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    x_scan <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> CHUNK <span class="op">*</span> np.arange(<span class="dv">1</span>, STEPS_SCAN <span class="op">//</span> CHUNK <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    scan_keys <span class="op">=</span> jnp.stack([jax.random.PRNGKey(<span class="dv">2000</span> <span class="op">+</span> s) <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(SEEDS_SCAN)])</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    run_b <span class="op">=</span> jax.jit(jax.vmap(run_spsa_adam, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>)), static_argnums<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    scan <span class="op">=</span> {c: np.asarray(run_b(scan_keys, theta0, STEPS_SCAN, LR_SA, c)) <span class="op">-</span> E0 <span class="cf">for</span> c <span class="kw">in</span> C_SCAN}</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.4</span>, <span class="fl">4.0</span>))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c, col <span class="kw">in</span> <span class="bu">zip</span>(C_SCAN, (COL[<span class="st">"light"</span>], COL[<span class="st">"sa"</span>], COL[<span class="st">"navy"</span>])):</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        ax.plot(x_scan, np.median(scan[c], axis<span class="op">=</span><span class="dv">0</span>), color<span class="op">=</span>col, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="ss">f"$c=</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    ax.axhline(TOLS[<span class="st">"half"</span>], color<span class="op">=</span>COL[<span class="st">"exact"</span>], ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.2</span>)<span class="op">;</span> ax.axhline(TOLS[<span class="st">"fifth"</span>], color<span class="op">=</span>COL[<span class="st">"exact"</span>], ls<span class="op">=</span><span class="st">":"</span>, lw<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">"log"</span>)<span class="op">;</span> ax.set_yscale(<span class="st">"log"</span>)<span class="op">;</span> ax.set_xlim(<span class="fl">1e2</span>, <span class="fl">6e4</span>)<span class="op">;</span> ax.set_ylim(<span class="fl">3e-2</span>, <span class="dv">4</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"circuit configurations executed"</span>)<span class="op">;</span> ax.set_ylabel(<span class="vs">r"energy error $E-E_0$"</span>)<span class="op">;</span> ax.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    save(fig, <span class="st">"fig_lab069a_c_scan"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> C_SCAN:</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"c = </span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">: final E - E0 (median of </span><span class="sc">{</span>SEEDS_SCAN<span class="sc">}</span><span class="ss">) = </span><span class="sc">{</span>np<span class="sc">.</span>median(scan[c][:, <span class="op">-</span><span class="dv">1</span>])<span class="sc">:.3f}</span><span class="ss">, "</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"configurations to dE/2: </span><span class="sc">{</span>configs_to(scan[c], x_scan, TOLS[<span class="st">'half'</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"optional section: </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-069a-spsa-adam_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>c = 0.03: final E - E0 (median of 2) = 0.245, configurations to dE/2: [10120, 5960]
+c = 0.1: final E - E0 (median of 2) = 0.110, configurations to dE/2: [2480, 2360]
+c = 0.3: final E - E0 (median of 2) = 0.229, configurations to dE/2: [3240, 2400]
+optional section: 94 s</code></pre>
+</div>
+</div>
+<p>The perturbation size controls how fast SPSA with Adam descends. With <span class="math inline">\(c=0.03\)</span> the shot-noise term of equation (13) is large, and the runs need several thousand configurations more to reach <span class="math inline">\(\Delta E/2\)</span>. With <span class="math inline">\(c=0.3\)</span> the runs reach <span class="math inline">\(\Delta E/2\)</span> about as fast as with <span class="math inline">\(c=0.1\)</span> but end at a larger energy error, since the displacement <span class="math inline">\(c\sqrt n\)</span> is then larger than one and the expansion (9) no longer holds. The value <span class="math inline">\(c=0.1\)</span> used in Section 9 lies between the two regimes.</p>
+<p>Finally we store the numbers as LaTeX macros and a JSON summary and print the runtime.</p>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">11. Exercises</h2>
+<ol type="1">
+<li>Use equation (8) to show that <span class="math inline">\(\langle\Delta_k\Delta_j\Delta_l\Delta_m\rangle_{\boldsymbol\Delta}\)</span> is one when the four indices form equal pairs and zero otherwise. Insert this into the third-order term of equation (9) and show that the bias in equation (12) equals <span class="math inline">\(\frac{c^2}{6}\big[\partial_k^3E+3\sum_{j\ne k}\partial_k\partial_j^2E\big]\)</span>.</li>
+<li>Replace the Rademacher distribution by Gaussian entries <span class="math inline">\(\Delta_k\)</span> of unit variance and use <span class="math inline">\(1/\Delta_k\)</span> in equation (10). Estimate the variance of <span class="math inline">\(\tilde g_k\)</span> numerically and explain the result.</li>
+<li>Average <span class="math inline">\(K=4\)</span> SPSA estimates per update in optimiser (b), at a cost of <span class="math inline">\(2K\)</span> configurations, and compare the number of configurations needed to reach <span class="math inline">\(\Delta E/2\)</span> with Section 9.</li>
+<li>Repeat the comparison of Section 9 with <span class="math inline">\(L=2\)</span> layers (<span class="math inline">\(n=36\)</span>) and explain how the configurations needed by the parameter-shift rule and by SPSA change.</li>
+<li>Use the measured variance of the SPSA estimate at <span class="math inline">\(c=0.15\)</span> to find the number of shots per setting <span class="math inline">\(M\)</span> at which the shot-noise term of equation (13) equals <span class="math inline">\(|\nabla E|^2\)</span> at the random angles.</li>
+</ol>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">12. Summary</h2>
+<p>On a device the cost of a gradient is counted in circuit runs. The parameter-shift rule runs the circuit twice for every angle, at <span class="math inline">\(\theta_k\pm\pi/2\)</span> with all other angles fixed, so one gradient costs <span class="math inline">\(2n\)</span> circuit configurations and <span class="math inline">\(2nS\)</span> shots. SPSA shifts all angles at once along a random sign vector <span class="math inline">\(\boldsymbol\Delta\)</span> and estimates every component from the same two configurations, so one update costs two configurations and <span class="math inline">\(2S\)</span> shots for any <span class="math inline">\(n\)</span>. Averaged over <span class="math inline">\(\boldsymbol\Delta\)</span>, the SPSA estimate equals the gradient up to a bias of order <span class="math inline">\(c^2\)</span>. A single estimate has a variance equal to the squared gradient without its own component plus the shot noise enhanced by <span class="math inline">\(1/c^2\)</span>. Adam accepts SPSA estimates without change, averages out their random signs and runs with a fixed step and a fixed perturbation size. For the six-qubit Ising chain with a 60-angle hardware-efficient circuit, SPSA reaches a moderate energy error with fewer circuit configurations than the parameter-shift rule, although it needs many more updates. Close to the minimum its noise dominates, and the parameter-shift rule reaches a small energy error with fewer configurations. SPSA with Spall’s gain sequences descends as fast as SPSA with Adam at first and then slows down.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>[1] J. C. Spall, Multivariate stochastic approximation using a simultaneous perturbation gradient approximation, IEEE Trans. Autom. Control <strong>37</strong>, 332 (1992), doi:<a href="https://doi.org/10.1109/9.119632">10.1109/9.119632</a>.</p>
+<p>[2] A. Kandala, A. Mezzacapo, K. Temme, M. Takita, M. Brink, J. M. Chow and J. M. Gambetta, Hardware-efficient variational quantum eigensolver for small molecules and quantum magnets, Nature <strong>549</strong>, 242 (2017), doi:<a href="https://doi.org/10.1038/nature23879">10.1038/nature23879</a>.</p>
+<p>[3] J. C. Spall, Implementation of the simultaneous perturbation algorithm for stochastic optimization, IEEE Trans. Aerosp. Electron. Syst. <strong>34</strong>, 817 (1998), doi:<a href="https://doi.org/10.1109/7.705889">10.1109/7.705889</a>.</p>
+<p>[4] D. P. Kingma and J. Ba, Adam: a method for stochastic optimization, arXiv:1412.6980 (2014), <a href="https://arxiv.org/abs/1412.6980">arxiv.org/abs/1412.6980</a>.</p>
+<p>[5] K. Mitarai, M. Negoro, M. Kitagawa and K. Fujii, Quantum circuit learning, Phys. Rev.&nbsp;A <strong>98</strong>, 032309 (2018), doi:<a href="https://doi.org/10.1103/PhysRevA.98.032309">10.1103/PhysRevA.98.032309</a>.</p>
+<p>[6] M. Schuld, V. Bergholm, C. Gogolin, J. Izaac and N. Killoran, Evaluating analytic gradients on quantum hardware, Phys. Rev.&nbsp;A <strong>99</strong>, 032331 (2019), doi:<a href="https://doi.org/10.1103/PhysRevA.99.032331">10.1103/PhysRevA.99.032331</a>.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 069: Parametrised circuits and their gradients</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" class="pagination-link">
+        <span class="nav-page-text">Lab 070: VQE and the choice of ansatz</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

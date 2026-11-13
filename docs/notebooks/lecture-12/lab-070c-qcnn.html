@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Lab 070c: Quantum convolutional neural network</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-12/lab-070d-qgrnn.html" rel="next">
+<link href="../../notebooks/lecture-12/lab-070b-quantum-autoencoder.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-07.html">
+ <span class="dropdown-text">7 · Time Series: Dynamical Systems, Chaos and Embedding</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-08.html">
+ <span class="dropdown-text">8 · Forecasting Models: Linear, Neural and Physics-Informed</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-09.html">
+ <span class="dropdown-text">9 · Reservoir Computing</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-10.html">
+ <span class="dropdown-text">10 · Reinforcement Learning for Quantum State Preparation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-11.html">
+ <span class="dropdown-text">11 · Quantum Information for Newcomers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-12.html">
+ <span class="dropdown-text">12 · Parametrised Quantum Circuits as Variational Ansätze</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-13.html">
+ <span class="dropdown-text">13 · Learning Quantum States and Hamiltonians</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lab 070c: Quantum convolutional neural network</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-021-xy-without-labels.html" class="sidebar-item-text sidebar-link">Lab 021: The 2D XY model without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-022-gauge-without-labels.html" class="sidebar-item-text sidebar-link">Lab 022: Ising gauge theory without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-023-sk-without-labels.html" class="sidebar-item-text sidebar-link">Lab 023: The SK spin glass without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-030-physics-2d-xy.html" class="sidebar-item-text sidebar-link">Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-07.html" class="sidebar-item-text sidebar-link">7 · Time Series: Dynamical Systems, Chaos and Embedding</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-033-signal-characterisation.html" class="sidebar-item-text sidebar-link">Lab 033: Signal characterisation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-08.html" class="sidebar-item-text sidebar-link">8 · Forecasting Models: Linear, Neural and Physics-Informed</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-034-linear-models-nvar.html" class="sidebar-item-text sidebar-link">Lab 034: Forecasting with linear models and NVAR</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-035-koopman.html" class="sidebar-item-text sidebar-link">Lab 035: Lifting and the Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="sidebar-item-text sidebar-link">Lab 036: Recurrent neural networks and reservoirs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-037-mlp-forecaster.html" class="sidebar-item-text sidebar-link">Lab 037: MLP forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-038-rnn-forecaster.html" class="sidebar-item-text sidebar-link">Lab 038: RNN forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-039-lstm-forecaster.html" class="sidebar-item-text sidebar-link">Lab 039: LSTM forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-041-pinn.html" class="sidebar-item-text sidebar-link">Lab 041: Physics-informed neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-042-neural-ode.html" class="sidebar-item-text sidebar-link">Lab 042: Neural ordinary differential equations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-043-pendulum-friction.html" class="sidebar-item-text sidebar-link">Lab 043: Pendulum with unknown friction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-044-predator-prey.html" class="sidebar-item-text sidebar-link">Lab 044: Predator–prey with unknown interaction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-045-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Lab 045: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-01-rossler-oscillators.html" class="sidebar-item-text sidebar-link">Exercise 01: Rössler system and superimposed oscillators</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="sidebar-item-text sidebar-link">Exercise 02: Stock market returns</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-03-koopman.html" class="sidebar-item-text sidebar-link">Exercise 03: Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-04-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Exercise 04: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-09.html" class="sidebar-item-text sidebar-link">9 · Reservoir Computing</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-046-echo-state-networks.html" class="sidebar-item-text sidebar-link">Lab 046: Echo state networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-047-quantum-reservoir-computing.html" class="sidebar-item-text sidebar-link">Lab 047: Quantum reservoir computing</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-049-reservoir-climate.html" class="sidebar-item-text sidebar-link">Lab 049: Weather and climate of an echo state network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-050-cellular-automaton-reservoir.html" class="sidebar-item-text sidebar-link">Lab 050: Cellular automaton reservoir</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-10.html" class="sidebar-item-text sidebar-link">10 · Reinforcement Learning for Quantum State Preparation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-063-bellman-from-experience.html" class="sidebar-item-text sidebar-link">Lab 063: Bellman equations from sampled experience</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-061-cartpole.html" class="sidebar-item-text sidebar-link">Lab 061: Balancing a pole on a cart</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-062-lunarlander.html" class="sidebar-item-text sidebar-link">Lab 062: Landing with discrete engine commands</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" class="sidebar-item-text sidebar-link">Lab 057: GHZ, W and Dicke target states</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" class="sidebar-item-text sidebar-link">Lab 058: Finite-budget GHZ compilation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-059-continuous-angles.html" class="sidebar-item-text sidebar-link">Lab 059: Continuous angles with REINFORCE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-060-cavity-checks.html" class="sidebar-item-text sidebar-link">Lab 060: Cavity feedback checks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056a-pendulum-planning.html" class="sidebar-item-text sidebar-link">Lab 056a: Pendulum swing-up by planning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-052-quantum-circuit-compilation.html" class="sidebar-item-text sidebar-link">Lab 052: Quantum circuit compilation (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-055-continuous-state-compilation.html" class="sidebar-item-text sidebar-link">Lab 055: Compilation with continuous angles (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-054-quantum-state-preparation.html" class="sidebar-item-text sidebar-link">Lab 054: Preparation with Hamiltonian evolutions (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-053-fock-state-cavity.html" class="sidebar-item-text sidebar-link">Lab 053: One photon in a leaky cavity (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056-pendulum-swing-up.html" class="sidebar-item-text sidebar-link">Lab 056: Pendulum swing-up with Q-learning (full study)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-11.html" class="sidebar-item-text sidebar-link">11 · Quantum Information for Newcomers</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-064-one-qubit.html" class="sidebar-item-text sidebar-link">Lab 064: One qubit, measurements and gates as rotations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-065-two-spin-register.html" class="sidebar-item-text sidebar-link">Lab 065: The two-spin register</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066-density-matrices-noise.html" class="sidebar-item-text sidebar-link">Lab 066: Density matrices, measurement and noise</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066a-allows-and-forbids.html" class="sidebar-item-text sidebar-link">Lab 066a: What quantum information allows and forbids</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-067-atom-light-qubit.html" class="sidebar-item-text sidebar-link">Lab 067: An atom in laser light as a qubit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-068-interacting-qubits-gates.html" class="sidebar-item-text sidebar-link">Lab 068: Interactions and two-qubit gates</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-12.html" class="sidebar-item-text sidebar-link">12 · Parametrised Quantum Circuits as Variational Ansätze</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" class="sidebar-item-text sidebar-link">Lab 069: Parametrised circuits and their gradients</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069a-spsa-adam.html" class="sidebar-item-text sidebar-link">Lab 069a: SPSA and Adam with few circuit runs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" class="sidebar-item-text sidebar-link">Lab 070: VQE and the choice of ansatz</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070a-xxz-phase-diagram.html" class="sidebar-item-text sidebar-link">Lab 070a: VQE phase diagram of the XXZ chain in a field</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070b-quantum-autoencoder.html" class="sidebar-item-text sidebar-link">Lab 070b: Quantum autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070c-qcnn.html" class="sidebar-item-text sidebar-link active">Lab 070c: Quantum convolutional neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070d-qgrnn.html" class="sidebar-item-text sidebar-link">Lab 070d: Quantum graph recurrent neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070e-xyz-three-ansatze.html" class="sidebar-item-text sidebar-link">Lab 070e: VQE for the XYZ chain, three ansätze</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070f-circuit-autoencoder.html" class="sidebar-item-text sidebar-link">Lab 070f: Quantum circuit autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071a-random-states.html" class="sidebar-item-text sidebar-link">Lab 071a: Random states and typicality</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" class="sidebar-item-text sidebar-link">Lab 071: Barren plateaus</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-072-born-machine.html" class="sidebar-item-text sidebar-link">Lab 072: Modelling probabilities with a quantum circuit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073a-data-reuploading.html" class="sidebar-item-text sidebar-link">Lab 073a: Data re-uploading classifier</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073b-quantum-kernels.html" class="sidebar-item-text sidebar-link">Lab 073b: Quantum kernels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" class="sidebar-item-text sidebar-link">Lab 073: QUBO and QAOA (at home)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-13.html" class="sidebar-item-text sidebar-link">13 · Learning Quantum States and Hamiltonians</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-074-state-tomography.html" class="sidebar-item-text sidebar-link">Lab 074: Quantum state tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-075-classical-shadows.html" class="sidebar-item-text sidebar-link">Lab 075: Classical shadows</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-076-nn-tomography.html" class="sidebar-item-text sidebar-link">Lab 076: Neural-network tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-077-hamiltonian-learning.html" class="sidebar-item-text sidebar-link">Lab 077: Hamiltonian learning</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lab-070c.-a-quantum-convolutional-neural-network-that-recognises-a-topological-phase" id="toc-lab-070c.-a-quantum-convolutional-neural-network-that-recognises-a-topological-phase" class="nav-link active" data-scroll-target="#lab-070c.-a-quantum-convolutional-neural-network-that-recognises-a-topological-phase">Lab 070c. A quantum convolutional neural network that recognises a topological phase</a>
+  <ul class="collapse">
+  <li><a href="#double-precision-arithmetic" id="toc-double-precision-arithmetic" class="nav-link" data-scroll-target="#double-precision-arithmetic">1. Double-precision arithmetic</a></li>
+  <li><a href="#from-a-convolutional-network-to-a-quantum-circuit" id="toc-from-a-convolutional-network-to-a-quantum-circuit" class="nav-link" data-scroll-target="#from-a-convolutional-network-to-a-quantum-circuit">2. From a convolutional network to a quantum circuit</a></li>
+  <li><a href="#the-cluster-ising-chain-and-its-topological-phase" id="toc-the-cluster-ising-chain-and-its-topological-phase" class="nav-link" data-scroll-target="#the-cluster-ising-chain-and-its-topological-phase">3. The cluster-Ising chain and its topological phase</a></li>
+  <li><a href="#labels-from-the-exact-string-order-parameter" id="toc-labels-from-the-exact-string-order-parameter" class="nav-link" data-scroll-target="#labels-from-the-exact-string-order-parameter">4. Labels from the exact string order parameter</a></li>
+  <li><a href="#the-qcnn-circuit" id="toc-the-qcnn-circuit" class="nav-link" data-scroll-target="#the-qcnn-circuit">5. The QCNN circuit</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">6. Training</a></li>
+  <li><a href="#the-predicted-phase-diagram" id="toc-the-predicted-phase-diagram" class="nav-link" data-scroll-target="#the-predicted-phase-diagram">7. The predicted phase diagram</a></li>
+  <li><a href="#why-the-qcnn-trains-and-what-ref.-1-showed" id="toc-why-the-qcnn-trains-and-what-ref.-1-showed" class="nav-link" data-scroll-target="#why-the-qcnn-trains-and-what-ref.-1-showed">8. Why the QCNN trains, and what Ref. [1] showed</a></li>
+  <li><a href="#optional.-a-second-determination-of-the-boundary" id="toc-optional.-a-second-determination-of-the-boundary" class="nav-link" data-scroll-target="#optional.-a-second-determination-of-the-boundary">9. Optional. A second determination of the boundary</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">10. Exercises</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">11. Summary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-070c-qcnn.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Lab 070c: Quantum convolutional neural network</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-070c-qcnn.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<section id="lab-070c.-a-quantum-convolutional-neural-network-that-recognises-a-topological-phase" class="level1">
+<h1>Lab 070c. A quantum convolutional neural network that recognises a topological phase</h1>
+<p>A quantum simulator prepares the ground state of a spin chain at some values of its couplings, and we want to know in which phase of matter this state lies. Reading out the full state would need tomography, whose cost grows exponentially with the number of qubits, and for a symmetry-protected topological (SPT) phase no local measurement can tell the phases apart. A quantum convolutional neural network (QCNN) [1] answers the question directly on the device. It is a short circuit that acts on the quantum state itself, halves the number of qubits in every layer and finally measures one qubit, whose outcome is the class. The autoencoder notebook found phase boundaries without labels. The QCNN is its supervised counterpart, trained on states whose phase is known.</p>
+<p><strong>Task.</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Input</td>
+<td>ground state <span class="math inline">\(\lvert\psi(h_1,h_2)\rangle\)</span> of the cluster-Ising chain with <span class="math inline">\(N=8\)</span> qubits, prepared on the device</td>
+</tr>
+<tr class="even">
+<td>Output</td>
+<td>one measured qubit, <span class="math inline">\(p=P(1)\)</span> is the predicted probability of the SPT phase, class SPT when <span class="math inline">\(p&gt;1/2\)</span></td>
+</tr>
+<tr class="odd">
+<td>Training data</td>
+<td><span class="math inline">\(M=40\)</span> ground states at random points <span class="math inline">\((h_1,h_2)\)</span>, labelled by the exact string order parameter</td>
+</tr>
+<tr class="even">
+<td>Trained</td>
+<td>the shared convolution, pooling and final unitaries, 57 angles in total</td>
+</tr>
+<tr class="odd">
+<td>Success</td>
+<td>accuracy of the predicted phase diagram on a grid of 528 points against the exact boundary</td>
+</tr>
+</tbody>
+</table>
+<p>All results are exact state-vector simulations, and on a device <span class="math inline">\(p\)</span> would be estimated as the fraction of shots that return 1. Sections 1 to 8 form the classroom route and run in under a minute on a laptop CPU. Section 9 is an optional check of the exact boundary by a second method and takes less than one more minute. Section 10 lists exercises for home.</p>
+<section id="double-precision-arithmetic" class="level2">
+<h2 class="anchored" data-anchor-id="double-precision-arithmetic">1. Double-precision arithmetic</h2>
+<p>We work in double precision on the CPU. JAX evaluates the circuit and its gradient, NumPy and SciPy compute the exact ground states, and Matplotlib draws the figures. Every random seed is fixed.</p>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"JAX_PLATFORMS"</span>] <span class="op">=</span> <span class="st">"cpu"</span>          <span class="co"># small calculations, never the GPU</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"OPENBLAS_NUM_THREADS"</span>] <span class="op">=</span> <span class="st">"1"</span>     <span class="co"># small matrices, avoids thread contention with JAX</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json, time</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.sparse <span class="im">as</span> sp</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.sparse.linalg <span class="im">as</span> sla</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.scipy.linalg <span class="im">import</span> expm</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>jax.config.update(<span class="st">"jax_enable_x64"</span>, <span class="va">True</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>TOL <span class="op">=</span> <span class="fl">1e-10</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>FIG <span class="op">=</span> Path(<span class="st">"figures"</span>)<span class="op">;</span> FIG.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>RES <span class="op">=</span> Path(<span class="st">"classroom_results"</span>)<span class="op">;</span> RES.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>NAVY, BLUE, ORANGE, GRAY, GREEN <span class="op">=</span> <span class="st">"#002B5C"</span>, <span class="st">"#3E8FD0"</span>, <span class="st">"#D35A05"</span>, <span class="st">"#5A6270"</span>, <span class="st">"#1B7F36"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"font.size"</span>: <span class="dv">13</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">13</span>, <span class="st">"xtick.labelsize"</span>: <span class="dv">12</span>, <span class="st">"ytick.labelsize"</span>: <span class="dv">12</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"legend.fontsize"</span>: <span class="fl">11.5</span>, <span class="st">"figure.figsize"</span>: (<span class="fl">4.8</span>, <span class="fl">3.2</span>), <span class="st">"axes.spines.top"</span>: <span class="va">False</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"axes.spines.right"</span>: <span class="va">False</span>, <span class="st">"savefig.bbox"</span>: <span class="st">"tight"</span>, <span class="st">"pdf.fonttype"</span>: <span class="dv">42</span>, <span class="st">"ps.fonttype"</span>: <span class="dv">42</span>})</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save(fig, name):</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.pdf"</span>)<span class="op">;</span> fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>started <span class="op">=</span> time.perf_counter()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>RESULTS <span class="op">=</span> {}</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"JAX"</span>, jax.__version__, <span class="st">"| devices:"</span>, jax.devices())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAX 0.11.0 | devices: [CpuDevice(id=0)]</code></pre>
+</div>
+</div>
+</section>
+<section id="from-a-convolutional-network-to-a-quantum-circuit" class="level2">
+<h2 class="anchored" data-anchor-id="from-a-convolutional-network-to-a-quantum-circuit">2. From a convolutional network to a quantum circuit</h2>
+<p>A classical convolutional neural network (CNN) classifies an image in three kinds of layers. A convolution layer slides one small filter, a few weights that combine neighbouring pixels, over the whole image, so the same local feature is detected at every position and the number of weights does not depend on the image size. A pooling layer coarse-grains the resulting feature map, for instance by keeping one value out of every two neighbours, which halves the map. After several rounds of convolution and pooling the map is small, and a fully connected layer turns the few remaining numbers into class probabilities.</p>
+<p>The QCNN keeps this structure, with three changes forced by quantum mechanics. Its input is a quantum state of <span class="math inline">\(N\)</span> qubits, a vector of <span class="math inline">\(2^N\)</span> amplitudes that we cannot read out, and every layer acts on it as a quantum operation.</p>
+<ol type="1">
+<li><strong>Convolution.</strong> One two-qubit unitary <span class="math inline">\(\hat U_\ell\)</span> acts on all neighbouring pairs, first on the pairs <span class="math inline">\((q_0,q_1),(q_2,q_3),\dots\)</span> and then on the shifted pairs <span class="math inline">\((q_1,q_2),\dots,(q_{N-1},q_0)\)</span>. The same unitary at every position plays the role of the shared filter weights.</li>
+<li><strong>Pooling.</strong> In every pair one qubit is measured, and its partner is rotated by <span class="math inline">\(\hat V^{(0)}_\ell\)</span> or <span class="math inline">\(\hat V^{(1)}_\ell\)</span> depending on the outcome. The measured qubit is not used again, so the register halves. The measurement is the only nonlinear step, the counterpart of the activation function.</li>
+<li><strong>Fully connected layer and readout.</strong> When two qubits remain, a general two-qubit unitary <span class="math inline">\(\hat F\)</span> acts on them, and one of them is measured. The probability <span class="math inline">\(p\)</span> of the outcome 1 is the network output.</li>
+</ol>
+<p>A general two-qubit unitary has 15 real parameters and a single-qubit unitary has 3. With one shared unitary per layer, each convolution-pooling unit carries <span class="math inline">\(15+6=21\)</span> angles, and <span class="math inline">\(N=2^L\)</span> qubits need <span class="math inline">\(L-1\)</span> such units plus the final 15 angles. The number of parameters, <span class="math display">\[n=21(\log_2N-1)+15 , \tag{1}\]</span> grows only logarithmically with <span class="math inline">\(N\)</span>. For <span class="math inline">\(N=8\)</span> it is <span class="math inline">\(n=57\)</span>. The sketch below shows the circuit for <span class="math inline">\(N=8\)</span>, with the matching CNN layer above each block.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-070c-qcnn_files/figure-html/lab070c-03-1-sketch_qcnn.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">QCNN circuit</figcaption><p></p>
+</figure>
+</div>
+<p>The input state enters on the left. The dashed gates close the ring, so every qubit has two neighbours. After the first pooling the even qubits are gone and the convolution acts on <span class="math inline">\(q_1,q_3,q_5,q_7\)</span>, after the second pooling only <span class="math inline">\(q_3\)</span> and <span class="math inline">\(q_7\)</span> remain, and <span class="math inline">\(q_7\)</span> is measured at the end.</p>
+</section>
+<section id="the-cluster-ising-chain-and-its-topological-phase" class="level2">
+<h2 class="anchored" data-anchor-id="the-cluster-ising-chain-and-its-topological-phase">3. The cluster-Ising chain and its topological phase</h2>
+<p>We classify ground states of the cluster-Ising chain studied in Ref. [1]. On a ring of <span class="math inline">\(N\)</span> qubits, with <span class="math inline">\(\hat X_i,\hat Z_i\)</span> the Pauli operators of qubit <span class="math inline">\(i\)</span> and indices taken modulo <span class="math inline">\(N\)</span>, <span class="math display">\[\hat{\mathcal H}=-J\sum_{i=0}^{N-1}\hat Z_{i-1}\hat X_i\hat Z_{i+1}-h_1\sum_{i=0}^{N-1}\hat X_i-h_2\sum_{i=0}^{N-1}\hat X_i\hat X_{i+1} , \tag{2}\]</span> with <span class="math inline">\(J=1\)</span>. Each of the three terms prefers a different ground state.</p>
+<ul>
+<li><strong>Cluster term.</strong> The three-qubit operators <span class="math inline">\(\hat K_i=\hat Z_{i-1}\hat X_i\hat Z_{i+1}\)</span> commute with each other and square to the identity. Their common eigenstate with all <span class="math inline">\(\hat K_i=+1\)</span> is the cluster state <span class="math inline">\(\lvert C\rangle\)</span>, the ground state at <span class="math inline">\(h_1=h_2=0\)</span>. It is highly entangled, and every single qubit in it is completely random, <span class="math inline">\(\langle\hat X_i\rangle=\langle\hat Z_i\rangle=0\)</span>.</li>
+<li><strong>Field <span class="math inline">\(h_1\)</span>.</strong> For <span class="math inline">\(h_1\gg J\)</span> the ground state approaches the product state <span class="math inline">\(\lvert+\rangle^{\otimes N}\)</span>, a paramagnet with all spins along <span class="math inline">\(x\)</span>.</li>
+<li><strong>Coupling <span class="math inline">\(h_2\)</span>.</strong> For <span class="math inline">\(h_2\ll -J\)</span> neighbouring spins point in opposite <span class="math inline">\(x\)</span> directions, an antiferromagnet. For <span class="math inline">\(h_2&gt;0\)</span> the coupling aligns them and, together with the field, produces again the paramagnet.</li>
+</ul>
+<p>The Hamiltonian has two symmetries, the spin flips <span class="math inline">\(\hat X_{\rm even}=\prod_{i\ {\rm even}}\hat X_i\)</span> and <span class="math inline">\(\hat X_{\rm odd}=\prod_{i\ {\rm odd}}\hat X_i\)</span>. Both commute with every term of (2), because each <span class="math inline">\(\hat K_i\)</span> contains two <span class="math inline">\(\hat Z\)</span> operators on qubits of equal parity and each flip changes the sign of both. The group generated by the two flips is called <span class="math inline">\(\mathbb Z_2\times\mathbb Z_2\)</span>.</p>
+<p>The phase around the cluster state is a symmetry-protected topological (SPT) phase. Its ground state is unique and gapped, no symmetry is broken, and all single-qubit expectation values look like those of a featureless state, so no local order parameter distinguishes it from the paramagnet. Yet the two cannot be connected by any path of gapped, symmetric Hamiltonians, and the difference is hidden in a non-local correlation. The product of the stabilisers <span class="math inline">\(\hat K_1\hat K_3\cdots\hat K_{2m-1}\)</span> collapses, because the inner <span class="math inline">\(\hat Z\)</span> factors square to the identity, to the string operator <span class="math display">\[\hat S=\hat Z_0\,\hat X_1\hat X_3\cdots\hat X_{2m-1}\,\hat Z_{2m} . \tag{3}\]</span> We take <span class="math inline">\(2m=N/2\)</span>, half of the ring. The string order parameter <span class="math inline">\(S=\langle\hat S\rangle\)</span> equals 1 in the cluster state, because <span class="math inline">\(\hat S\)</span> is a product of stabilisers with eigenvalue <span class="math inline">\(+1\)</span>. It vanishes in <span class="math inline">\(\lvert+\rangle^{\otimes N}\)</span>, where the two end operators <span class="math inline">\(\hat Z_0\)</span> and <span class="math inline">\(\hat Z_{2m}\)</span> average to zero. In a long chain <span class="math inline">\(S\)</span> stays finite throughout the SPT phase and decays to zero outside it [2]. A long string is a hard observable to measure accurately near a transition, where its value is small and the shot noise of a <span class="math inline">\(\pm1\)</span> outcome is largest, and this is where Ref. [1] found the QCNN useful.</p>
+<p>The next cell builds (2) and (3) as sparse matrices and computes exact ground states by diagonalisation. It checks the symmetries, the cluster state and the two limits of <span class="math inline">\(S\)</span>.</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>I2 <span class="op">=</span> sp.identity(<span class="dv">2</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"csr"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> sp.csr_matrix([[<span class="fl">0.</span>, <span class="fl">1.</span>], [<span class="fl">1.</span>, <span class="fl">0.</span>]])<span class="op">;</span> Z <span class="op">=</span> sp.csr_matrix([[<span class="fl">1.</span>, <span class="fl">0.</span>], [<span class="fl">0.</span>, <span class="op">-</span><span class="fl">1.</span>]])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> op_on(n, ops):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Kronecker product with ops[q] on qubit q and the identity elsewhere; qubit 0 is the leftmost factor</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> sp.identity(<span class="dv">1</span>, <span class="bu">format</span><span class="op">=</span><span class="st">"csr"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> sp.kron(out, ops.get(q, I2), <span class="bu">format</span><span class="op">=</span><span class="st">"csr"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hamiltonian_terms(n):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the three sums of equation (2) on a ring of n qubits</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    zxz <span class="op">=</span> <span class="bu">sum</span>(op_on(n, {(i <span class="op">-</span> <span class="dv">1</span>) <span class="op">%</span> n: Z, i: X, (i <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> n: Z}) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    xs <span class="op">=</span> <span class="bu">sum</span>(op_on(n, {i: X}) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    xx <span class="op">=</span> <span class="bu">sum</span>(op_on(n, {i: X, (i <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> n: X}) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n))</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> zxz, xs, xx</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> string_operator(n):</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># equation (3): Z_0 X_1 X_3 ... X_{n/2-1} Z_{n/2}</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    ops <span class="op">=</span> {<span class="dv">0</span>: Z, n <span class="op">//</span> <span class="dv">2</span>: Z}<span class="op">;</span> ops.update({q: X <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n <span class="op">//</span> <span class="dv">2</span>, <span class="dv">2</span>)})</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> op_on(n, ops)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ground_state(terms, h1, h2, J<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    H <span class="op">=</span> <span class="op">-</span>J <span class="op">*</span> terms[<span class="dv">0</span>] <span class="op">-</span> h1 <span class="op">*</span> terms[<span class="dv">1</span>] <span class="op">-</span> h2 <span class="op">*</span> terms[<span class="dv">2</span>]</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> H.shape[<span class="dv">0</span>] <span class="op">&lt;=</span> <span class="dv">256</span>:</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        psi <span class="op">=</span> np.linalg.eigh(H.toarray())[<span class="dv">1</span>][:, <span class="dv">0</span>]</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        psi <span class="op">=</span> sla.eigsh(H, k<span class="op">=</span><span class="dv">1</span>, which<span class="op">=</span><span class="st">"SA"</span>, tol<span class="op">=</span><span class="fl">1e-12</span>)[<span class="dv">1</span>][:, <span class="dv">0</span>]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> psi <span class="op">*</span> np.sign(psi[np.argmax(np.<span class="bu">abs</span>(psi))])</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>T8, S8 <span class="op">=</span> hamiltonian_terms(N), string_operator(N)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>X_even, X_odd <span class="op">=</span> op_on(N, {q: X <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, N, <span class="dv">2</span>)}), op_on(N, {q: X <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, N, <span class="dv">2</span>)})</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> T8:</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">abs</span>(t <span class="op">@</span> X_even <span class="op">-</span> X_even <span class="op">@</span> t).<span class="bu">max</span>() <span class="op">&lt;</span> TOL <span class="kw">and</span> <span class="bu">abs</span>(t <span class="op">@</span> X_odd <span class="op">-</span> X_odd <span class="op">@</span> t).<span class="bu">max</span>() <span class="op">&lt;</span> TOL</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>cluster <span class="op">=</span> ground_state(T8, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N):</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> op_on(N, {(i <span class="op">-</span> <span class="dv">1</span>) <span class="op">%</span> N: Z, i: X, (i <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> N: Z})</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">abs</span>(cluster <span class="op">@</span> (K <span class="op">@</span> cluster) <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL                     <span class="co"># every stabiliser equals +1</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">abs</span>(cluster <span class="op">@</span> (op_on(N, {i: Z}) <span class="op">@</span> cluster)) <span class="op">&lt;</span> TOL <span class="kw">and</span> <span class="bu">abs</span>(cluster <span class="op">@</span> (op_on(N, {i: X}) <span class="op">@</span> cluster)) <span class="op">&lt;</span> TOL</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>plus <span class="op">=</span> np.ones(<span class="dv">2</span> <span class="op">**</span> N) <span class="op">/</span> <span class="dv">2</span> <span class="op">**</span> (N <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(cluster <span class="op">@</span> (S8 <span class="op">@</span> cluster) <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL <span class="kw">and</span> <span class="bu">abs</span>(plus <span class="op">@</span> (S8 <span class="op">@</span> plus)) <span class="op">&lt;</span> TOL</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"S in the cluster state:"</span>, <span class="bu">round</span>(cluster <span class="op">@</span> (S8 <span class="op">@</span> cluster), <span class="dv">12</span>), <span class="st">"| S in |+...+&gt;:"</span>, <span class="bu">round</span>(plus <span class="op">@</span> (S8 <span class="op">@</span> plus), <span class="dv">12</span>))</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> h1, h2 <span class="kw">in</span> [(<span class="fl">0.5</span>, <span class="fl">0.0</span>), (<span class="fl">0.5</span>, <span class="fl">1.5</span>), (<span class="fl">0.5</span>, <span class="op">-</span><span class="fl">1.5</span>)]:</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> ground_state(T8, h1, h2)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"h1 = </span><span class="sc">{</span>h1<span class="sc">}</span><span class="ss">, h2 = </span><span class="sc">{</span>h2<span class="sc">:+.1f}</span><span class="ss">:  S = </span><span class="sc">{</span>v <span class="op">@</span> (S8 <span class="op">@</span> v)<span class="sc">:.3f}</span><span class="ss">,  &lt;X_0&gt; = </span><span class="sc">{</span>v <span class="op">@</span> (op_on(N, {<span class="dv">0</span>: X}) <span class="op">@</span> v)<span class="sc">:+.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>S in the cluster state: 1.0 | S in |+...+&gt;: 0.0
+h1 = 0.5, h2 = +0.0:  S = 0.917,  &lt;X_0&gt; = +0.291
+h1 = 0.5, h2 = +1.5:  S = 0.070,  &lt;X_0&gt; = +0.974
+h1 = 0.5, h2 = -1.5:  S = 0.164,  &lt;X_0&gt; = +0.017</code></pre>
+</div>
+</div>
+<p>The cluster state has <span class="math inline">\(S=1\)</span> and vanishing single-qubit expectation values, as derived above. Inside the SPT region, at <span class="math inline">\((h_1,h_2)=(0.5,0)\)</span>, the string order is still large, while in the paramagnet and the antiferromagnet it is small. The magnetisation <span class="math inline">\(\langle\hat X_0\rangle\)</span> of the SPT state lies between its values in the paramagnet and in the antiferromagnet, so this local quantity changes gradually across the diagram and does not single out the SPT phase.</p>
+</section>
+<section id="labels-from-the-exact-string-order-parameter" class="level2">
+<h2 class="anchored" data-anchor-id="labels-from-the-exact-string-order-parameter">4. Labels from the exact string order parameter</h2>
+<p>The label of a training state is a property of the point <span class="math inline">\((h_1,h_2)\)</span>, its phase. We take it from the best reference we can compute exactly, the string order parameter <span class="math inline">\(S_{12}\)</span> of the ground state of a ring with 12 sites, and call a point SPT when <span class="math inline">\(S_{12}&gt;1/2\)</span>. The longer ring gives a sharper boundary than the 8-qubit chain fed to the QCNN, and Section 9 confirms its position by an independent method. Ref. [1] located the boundary in the infinite chain by the density-matrix renormalisation group (DMRG) and found the SPT phase ending at <span class="math inline">\(h_2/J=0.423\)</span> along the line <span class="math inline">\(h_1/J=0.5\)</span>.</p>
+<p>The grid of test points has 16 values <span class="math inline">\(h_1\in[0.05,1.55]\)</span> and 33 values <span class="math inline">\(h_2\in[-1.6,1.6]\)</span>. We leave out <span class="math inline">\(h_1=0\)</span>, where at <span class="math inline">\(h_2&gt;1\)</span> the two ferromagnetic states are exactly degenerate and the ground state is not unique. The cell computes the 8-qubit ground states, their string order <span class="math inline">\(S_8\)</span> and the reference <span class="math inline">\(S_{12}\)</span> on the whole grid.</p>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>H1_GRID <span class="op">=</span> np.<span class="bu">round</span>(np.arange(<span class="fl">0.05</span>, <span class="fl">1.6</span>, <span class="fl">0.1</span>), <span class="dv">3</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>H2_GRID <span class="op">=</span> np.<span class="bu">round</span>(np.linspace(<span class="op">-</span><span class="fl">1.6</span>, <span class="fl">1.6</span>, <span class="dv">33</span>), <span class="dv">3</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>GRID <span class="op">=</span> [(a, b) <span class="cf">for</span> b <span class="kw">in</span> H2_GRID <span class="cf">for</span> a <span class="kw">in</span> H1_GRID]            <span class="co"># row = h2, column = h1</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>T12, S12 <span class="op">=</span> hamiltonian_terms(<span class="dv">12</span>), string_operator(<span class="dv">12</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>G8 <span class="op">=</span> np.array([ground_state(T8, a, b) <span class="cf">for</span> a, b <span class="kw">in</span> GRID])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>sop8 <span class="op">=</span> np.einsum(<span class="st">"ij,ij-&gt;i"</span>, G8, (S8 <span class="op">@</span> G8.T).T).reshape(<span class="bu">len</span>(H2_GRID), <span class="bu">len</span>(H1_GRID))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>sop12 <span class="op">=</span> np.array([(<span class="kw">lambda</span> v: v <span class="op">@</span> (S12 <span class="op">@</span> v))(ground_state(T12, a, b)) <span class="cf">for</span> a, b <span class="kw">in</span> GRID]).reshape(<span class="bu">len</span>(H2_GRID), <span class="bu">len</span>(H1_GRID))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>LABELS <span class="op">=</span> (sop12 <span class="op">&gt;</span> <span class="fl">0.5</span>).astype(<span class="bu">float</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"grid_points"</span>] <span class="op">=</span> <span class="bu">len</span>(GRID)<span class="op">;</span> RESULTS[<span class="st">"spt_fraction"</span>] <span class="op">=</span> <span class="bu">float</span>(LABELS.mean())</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(GRID)<span class="sc">}</span><span class="ss"> grid points in </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s; fraction labelled SPT: </span><span class="sc">{</span>LABELS<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>EXT <span class="op">=</span> [H1_GRID[<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.05</span>, H1_GRID[<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.05</span>, H2_GRID[<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.05</span>, H2_GRID[<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.05</span>]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">9.4</span>, <span class="fl">3.6</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, data, title <span class="kw">in</span> <span class="bu">zip</span>(axs, (sop8, sop12), (<span class="vs">r"$S_8$, ring of 8"</span>, <span class="vs">r"$S_</span><span class="sc">{12}</span><span class="vs">$, ring of 12"</span>)):</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.imshow(data, origin<span class="op">=</span><span class="st">"lower"</span>, extent<span class="op">=</span>EXT, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"cividis"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    ax.contour(H1_GRID, H2_GRID, sop12, levels<span class="op">=</span>[<span class="fl">0.5</span>], colors<span class="op">=</span><span class="st">"white"</span>, linewidths<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title)<span class="op">;</span> ax.set_xlabel(<span class="vs">r"$h_1/J$"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].text(<span class="fl">0.15</span>, <span class="fl">0.0</span>, <span class="st">"SPT"</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].text(<span class="fl">0.55</span>, <span class="fl">1.15</span>, <span class="st">"paramagnet"</span>, color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)<span class="op">;</span> axs[<span class="dv">1</span>].text(<span class="fl">0.1</span>, <span class="op">-</span><span class="fl">1.45</span>, <span class="st">"antiferromagnet"</span>, color<span class="op">=</span><span class="st">"white"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylabel(<span class="vs">r"$h_2/J$"</span>)<span class="op">;</span> fig.colorbar(im, ax<span class="op">=</span>axs, pad<span class="op">=</span><span class="fl">0.02</span>, label<span class="op">=</span><span class="st">"string order $S$"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070c_reference"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>528 grid points in 10.3 s; fraction labelled SPT: 0.396</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070c-qcnn_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Both maps show a bright band of large string order around the cluster point, bounded above by the paramagnet and below by the antiferromagnet. The white line, <span class="math inline">\(S_{12}=1/2\)</span>, is our reference boundary. It crosses <span class="math inline">\(h_2=0\)</span> near <span class="math inline">\(h_1=J\)</span>, the transition of the exactly solvable line <span class="math inline">\(h_2=0\)</span> [1], and at <span class="math inline">\(h_1=0.5\)</span> it lies close to the DMRG value <span class="math inline">\(0.423\)</span>. The 8-qubit string order changes more gradually across the same line, as expected for a shorter chain. The lower boundary bends downwards for larger <span class="math inline">\(h_1\)</span>, so the SPT band continues to the right edge of the map.</p>
+</section>
+<section id="the-qcnn-circuit" class="level2">
+<h2 class="anchored" data-anchor-id="the-qcnn-circuit">5. The QCNN circuit</h2>
+<p>We now write the circuit of Section 2. A two-qubit unitary is parametrised by 15 angles <span class="math inline">\(c_k\)</span> as the exponential of the 15 two-qubit Pauli strings <span class="math inline">\(\hat P_k\)</span> other than the identity, <span class="math display">\[\hat U(\boldsymbol c)=\exp\Big(-i\sum_{k=1}^{15}c_k\hat P_k\Big) , \tag{4}\]</span> which reaches every two-qubit unitary up to a global phase. A single-qubit unitary uses the three Pauli matrices in the same way.</p>
+<p>Pooling measures qubit <span class="math inline">\(a\)</span> and rotates its partner <span class="math inline">\(b\)</span> according to the outcome. The same result follows from the controlled unitary <span class="math display">\[\hat C=\lvert0\rangle\langle0\rvert_a\otimes\hat V^{(0)}_b+\lvert1\rangle\langle1\rvert_a\otimes\hat V^{(1)}_b \tag{5}\]</span> followed by ignoring qubit <span class="math inline">\(a\)</span>, because a measurement of <span class="math inline">\(a\)</span> that is never looked at again gives the same reduced state of the other qubits as no measurement at all. This principle of deferred measurement lets us simulate the whole QCNN as one unitary on the state vector. The cell below checks it on a random two-qubit state, comparing the state of <span class="math inline">\(b\)</span> after a measurement and a conditioned rotation with the state of <span class="math inline">\(b\)</span> after <span class="math inline">\(\hat C\)</span>.</p>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>P1 <span class="op">=</span> [np.eye(<span class="dv">2</span>), np.array([[<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>]]), np.array([[<span class="dv">0</span>, <span class="op">-</span><span class="ot">1j</span>], [<span class="ot">1j</span>, <span class="dv">0</span>]]), np.diag([<span class="fl">1.</span>, <span class="op">-</span><span class="fl">1.</span>])]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>PAULI2 <span class="op">=</span> jnp.array(np.array([np.kron(a, b) <span class="cf">for</span> a <span class="kw">in</span> P1 <span class="cf">for</span> b <span class="kw">in</span> P1][<span class="dv">1</span>:]))   <span class="co"># the 15 strings of equation (4)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>PAULI1 <span class="op">=</span> jnp.array(np.array(P1[<span class="dv">1</span>:]))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> two_qubit_unitary(c):</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> expm(<span class="op">-</span><span class="ot">1j</span> <span class="op">*</span> jnp.tensordot(c, PAULI2, <span class="dv">1</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> one_qubit_unitary(c):</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> expm(<span class="op">-</span><span class="ot">1j</span> <span class="op">*</span> jnp.tensordot(c, PAULI1, <span class="dv">1</span>))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pooling_unitary(c):</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># equation (5), measured qubit first</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    V0, V1 <span class="op">=</span> one_qubit_unitary(c[:<span class="dv">3</span>]), one_qubit_unitary(c[<span class="dv">3</span>:])</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.kron(jnp.diag(jnp.array([<span class="fl">1.</span>, <span class="fl">0.</span>])), V0) <span class="op">+</span> jnp.kron(jnp.diag(jnp.array([<span class="fl">0.</span>, <span class="fl">1.</span>])), V1)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_2q(psi, U, q, r):</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># psi is a tensor with one index per qubit; U acts on qubits (q, r)</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> jnp.tensordot(U.reshape(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>), psi, axes<span class="op">=</span>([<span class="dv">2</span>, <span class="dv">3</span>], [q, r]))</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.moveaxis(psi, [<span class="dv">0</span>, <span class="dv">1</span>], [q, r])</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">1</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> rng.normal(size<span class="op">=</span><span class="dv">6</span>)<span class="op">;</span> V0, V1 <span class="op">=</span> np.asarray(one_qubit_unitary(c[:<span class="dv">3</span>])), np.asarray(one_qubit_unitary(c[<span class="dv">3</span>:]))</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>U4 <span class="op">=</span> np.asarray(two_qubit_unitary(rng.normal(size<span class="op">=</span><span class="dv">15</span>)))</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(U4.conj().T <span class="op">@</span> U4, np.eye(<span class="dv">4</span>), atol<span class="op">=</span>TOL)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>phi <span class="op">=</span> rng.normal(size<span class="op">=</span><span class="dv">4</span>) <span class="op">+</span> <span class="ot">1j</span> <span class="op">*</span> rng.normal(size<span class="op">=</span><span class="dv">4</span>)<span class="op">;</span> phi <span class="op">/=</span> np.linalg.norm(phi)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>amp <span class="op">=</span> phi.reshape(<span class="dv">2</span>, <span class="dv">2</span>)                                        <span class="co"># amp[a, b]</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>rho_measured <span class="op">=</span> <span class="bu">sum</span>(np.outer(V <span class="op">@</span> amp[k], (V <span class="op">@</span> amp[k]).conj()) <span class="cf">for</span> k, V <span class="kw">in</span> ((<span class="dv">0</span>, V0), (<span class="dv">1</span>, V1)))</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> (np.asarray(pooling_unitary(c)) <span class="op">@</span> phi).reshape(<span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>rho_controlled <span class="op">=</span> out.T <span class="op">@</span> out.conj()                            <span class="co"># trace over the control qubit a</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(rho_measured, rho_controlled, atol<span class="op">=</span>TOL)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"measure-and-rotate equals the controlled unitary:"</span>, np.allclose(rho_measured, rho_controlled, atol<span class="op">=</span>TOL))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>measure-and-rotate equals the controlled unitary: True</code></pre>
+</div>
+</div>
+<p>The QCNN function applies the layers in the order of the sketch. The list <code>active</code> holds the qubits still in play. In each convolution-pooling unit the shared unitary acts on the even and then on the odd pairs of <code>active</code>, the pooling gate (5) acts on each pair with the first qubit as control, and the list keeps every second qubit. The output is the probability of reading 1 on the last qubit after <span class="math inline">\(\hat F\)</span>.</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>N_PAR <span class="op">=</span> <span class="dv">21</span> <span class="op">*</span> (<span class="bu">int</span>(np.log2(N)) <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> <span class="dv">15</span>                       <span class="co"># equation (1)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> qcnn_output(theta, psi, n<span class="op">=</span>N):</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> psi.reshape((<span class="dv">2</span>,) <span class="op">*</span> n).astype(jnp.complex128)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    active, i <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(n)), <span class="dv">0</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="bu">len</span>(active) <span class="op">&gt;</span> <span class="dv">2</span>:</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        U <span class="op">=</span> two_qubit_unitary(theta[i:i <span class="op">+</span> <span class="dv">15</span>])<span class="op">;</span> i <span class="op">+=</span> <span class="dv">15</span>         <span class="co"># convolution, one shared unitary</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> <span class="bu">len</span>(active)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, m, <span class="dv">2</span>):</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>            psi <span class="op">=</span> apply_2q(psi, U, active[k], active[k <span class="op">+</span> <span class="dv">1</span>])</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, m, <span class="dv">2</span>):</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>            psi <span class="op">=</span> apply_2q(psi, U, active[k], active[(k <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> m])</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        C <span class="op">=</span> pooling_unitary(theta[i:i <span class="op">+</span> <span class="dv">6</span>])<span class="op">;</span> i <span class="op">+=</span> <span class="dv">6</span>             <span class="co"># pooling, control = first qubit of each pair</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, m, <span class="dv">2</span>):</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>            psi <span class="op">=</span> apply_2q(psi, C, active[k], active[k <span class="op">+</span> <span class="dv">1</span>])</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        active <span class="op">=</span> active[<span class="dv">1</span>::<span class="dv">2</span>]</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> apply_2q(psi, two_qubit_unitary(theta[i:i <span class="op">+</span> <span class="dv">15</span>]), active[<span class="dv">0</span>], active[<span class="dv">1</span>])   <span class="co"># fully connected</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.<span class="bu">sum</span>(jnp.take(jnp.<span class="bu">abs</span>(psi) <span class="op">**</span> <span class="dv">2</span>, <span class="dv">1</span>, axis<span class="op">=</span>active[<span class="dv">1</span>]))</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>qcnn_batch <span class="op">=</span> jax.jit(jax.vmap(qcnn_output, (<span class="va">None</span>, <span class="dv">0</span>)))</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">0.3</span> <span class="op">*</span> jax.random.normal(jax.random.PRNGKey(<span class="dv">0</span>), (N_PAR,))</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> np.asarray(qcnn_batch(theta, jnp.asarray(G8[:<span class="dv">5</span>])))</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> N_PAR <span class="op">==</span> <span class="dv">57</span> <span class="kw">and</span> np.<span class="bu">all</span>((p <span class="op">&gt;=</span> <span class="op">-</span>TOL) <span class="op">&amp;</span> (p <span class="op">&lt;=</span> <span class="dv">1</span> <span class="op">+</span> TOL))</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"parameters n = </span><span class="sc">{</span>N_PAR<span class="sc">}</span><span class="ss">; untrained outputs p for five ground states:"</span>, np.<span class="bu">round</span>(p, <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>parameters n = 57; untrained outputs p for five ground states: [0.685 0.685 0.685 0.684 0.684]</code></pre>
+</div>
+</div>
+<p>Before training, the outputs are close to each other for different ground states, because random small angles do not yet single out any feature of the input.</p>
+</section>
+<section id="training" class="level2">
+<h2 class="anchored" data-anchor-id="training">6. Training</h2>
+<p>The training set holds <span class="math inline">\(M=40\)</span> points <span class="math inline">\((h_1,h_2)\)</span> drawn uniformly from the rectangle of the grid, with labels <span class="math inline">\(y_\alpha=1\)</span> for SPT (<span class="math inline">\(S_{12}&gt;1/2\)</span>) and <span class="math inline">\(y_\alpha=0\)</span> otherwise. The training points do not coincide with the grid points used for testing. We minimise the mean squared error of Ref. [1], <span class="math display">\[\mathrm{MSE}(\boldsymbol\theta)=\frac1{2M}\sum_{\alpha=1}^M\big[y_\alpha-p_{\boldsymbol\theta}(\lvert\psi_\alpha\rangle)\big]^2 , \tag{6}\]</span> where <span class="math inline">\(p_{\boldsymbol\theta}\)</span> is the QCNN output for the 8-qubit ground state <span class="math inline">\(\lvert\psi_\alpha\rangle\)</span>. Gradients are exact, from automatic differentiation, and the optimiser is Adam [3] with step size <span class="math inline">\(0.05\)</span>. We train four random starts for 300 steps and keep the start with the lowest final loss. Every tenth step we record the accuracy on the 528 grid points.</p>
+<div class="cell" data-execution_count="6">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">7</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>PTS <span class="op">=</span> np.column_stack([rng.uniform(<span class="fl">0.05</span>, <span class="fl">1.6</span>, <span class="dv">40</span>), rng.uniform(<span class="op">-</span><span class="fl">1.6</span>, <span class="fl">1.6</span>, <span class="dv">40</span>)])</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>X_TR <span class="op">=</span> jnp.asarray(np.array([ground_state(T8, a, b) <span class="cf">for</span> a, b <span class="kw">in</span> PTS]))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>Y_TR <span class="op">=</span> np.array([<span class="bu">float</span>(v <span class="op">@</span> (S12 <span class="op">@</span> v) <span class="op">&gt;</span> <span class="fl">0.5</span>) <span class="cf">for</span> v <span class="kw">in</span> (ground_state(T12, a, b) <span class="cf">for</span> a, b <span class="kw">in</span> PTS)])</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>X_TE, Y_TE <span class="op">=</span> jnp.asarray(G8), LABELS.reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mse(theta, states, labels):                               <span class="co"># equation (6)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> jnp.mean((labels <span class="op">-</span> qcnn_batch(theta, states)) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>mse_and_grad <span class="op">=</span> jax.jit(jax.value_and_grad(mse))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>accuracy <span class="op">=</span> <span class="kw">lambda</span> th, Xs, ys: <span class="bu">float</span>(np.mean((np.asarray(qcnn_batch(th, Xs)) <span class="op">&gt;</span> <span class="fl">0.5</span>) <span class="op">==</span> (ys <span class="op">&gt;</span> <span class="fl">0.5</span>)))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(theta, steps<span class="op">=</span><span class="dv">300</span>, lr<span class="op">=</span><span class="fl">0.05</span>):</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adam with exact gradients</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    m, v, hist <span class="op">=</span> jnp.zeros_like(theta), jnp.zeros_like(theta), []</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, steps <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        L, g <span class="op">=</span> mse_and_grad(theta, X_TR, Y_TR)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> <span class="fl">0.9</span> <span class="op">*</span> m <span class="op">+</span> <span class="fl">0.1</span> <span class="op">*</span> g<span class="op">;</span> v <span class="op">=</span> <span class="fl">0.999</span> <span class="op">*</span> v <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> g <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        theta <span class="op">=</span> theta <span class="op">-</span> lr <span class="op">*</span> (m <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.9</span> <span class="op">**</span> t)) <span class="op">/</span> (jnp.sqrt(v <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.999</span> <span class="op">**</span> t)) <span class="op">+</span> <span class="fl">1e-8</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> t <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> t <span class="op">%</span> <span class="dv">10</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>            hist.append((t, <span class="bu">float</span>(L), accuracy(theta, X_TE, Y_TE)))</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> theta, <span class="bu">float</span>(mse(theta, X_TR, Y_TR)), np.array(hist)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>runs <span class="op">=</span> <span class="bu">sorted</span>((train(<span class="fl">0.3</span> <span class="op">*</span> jax.random.normal(jax.random.PRNGKey(s), (N_PAR,))) <span class="op">+</span> (s,) <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)), key<span class="op">=</span><span class="kw">lambda</span> r: r[<span class="dv">1</span>])</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>THETA, LOSS, HIST, SEED <span class="op">=</span> runs[<span class="dv">0</span>]</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"train_seconds"</span>] <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"final_mse"</span>] <span class="op">=</span> LOSS<span class="op">;</span> RESULTS[<span class="st">"train_accuracy"</span>] <span class="op">=</span> accuracy(THETA, X_TR, Y_TR)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"grid_accuracy_all_starts"</span>] <span class="op">=</span> [r[<span class="dv">2</span>][<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>] <span class="cf">for</span> r <span class="kw">in</span> runs]</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">int</span>(Y_TR.<span class="bu">sum</span>())<span class="sc">}</span><span class="ss"> of 40 training states labelled SPT; training took </span><span class="sc">{</span>RESULTS[<span class="st">'train_seconds'</span>]<span class="sc">:.0f}</span><span class="ss"> s"</span>)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"best start </span><span class="sc">{</span>SEED<span class="sc">}</span><span class="ss">: MSE = </span><span class="sc">{</span>LOSS<span class="sc">:.4f}</span><span class="ss">, training accuracy = </span><span class="sc">{</span>RESULTS[<span class="st">'train_accuracy'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"grid accuracy of the four starts:"</span>, np.<span class="bu">round</span>(RESULTS[<span class="st">"grid_accuracy_all_starts"</span>], <span class="dv">3</span>))</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.0</span>, <span class="fl">3.2</span>))</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>ax.semilogy(HIST[:, <span class="dv">0</span>], HIST[:, <span class="dv">1</span>], color<span class="op">=</span>NAVY, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"training MSE"</span>)</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Adam step"</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">"MSE"</span>, color<span class="op">=</span>NAVY)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> ax.twinx()<span class="op">;</span> ax2.spines[<span class="st">"top"</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>ax2.plot(HIST[:, <span class="dv">0</span>], HIST[:, <span class="dv">2</span>], color<span class="op">=</span>ORANGE, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"grid accuracy"</span>)</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"grid accuracy"</span>, color<span class="op">=</span>ORANGE)<span class="op">;</span> ax2.set_ylim(<span class="fl">0.4</span>, <span class="fl">1.0</span>)</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>h_a, l_a <span class="op">=</span> ax.get_legend_handles_labels()<span class="op">;</span> h_b, l_b <span class="op">=</span> ax2.get_legend_handles_labels()</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>ax.legend(h_a <span class="op">+</span> h_b, l_a <span class="op">+</span> l_b, loc<span class="op">=</span><span class="st">"center right"</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070c_training"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>14 of 40 training states labelled SPT; training took 10 s
+best start 3: MSE = 0.0308, training accuracy = 1.000
+grid accuracy of the four starts: [0.97  0.953 0.968 0.977]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070c-qcnn_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The loss falls within the first fifty steps and then levels off, and the grid accuracy follows it closely and saturates near 0.97. All four starts reach similar accuracies, so the result does not depend on a lucky initialisation. The loss stays above zero because the output <span class="math inline">\(p\)</span> does not reach the values 0 and 1. The classification only needs <span class="math inline">\(p\)</span> on the correct side of <span class="math inline">\(1/2\)</span>.</p>
+</section>
+<section id="the-predicted-phase-diagram" class="level2">
+<h2 class="anchored" data-anchor-id="the-predicted-phase-diagram">7. The predicted phase diagram</h2>
+<p>We apply the trained QCNN to all 528 grid states and compare the class <span class="math inline">\(p&gt;1/2\)</span> with the reference labels of Section 4. As a baseline without any learning we also classify the same 8-qubit states by the rule <span class="math inline">\(S_8&gt;1/2\)</span>, which uses the knowledge that the string operator (3) is the right observable.</p>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>P_GRID <span class="op">=</span> np.asarray(qcnn_batch(THETA, X_TE)).reshape(LABELS.shape)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ACC <span class="op">=</span> <span class="bu">float</span>(np.mean((P_GRID <span class="op">&gt;</span> <span class="fl">0.5</span>) <span class="op">==</span> (LABELS <span class="op">&gt;</span> <span class="fl">0.5</span>)))<span class="op">;</span> ACC_S8 <span class="op">=</span> <span class="bu">float</span>(np.mean((sop8 <span class="op">&gt;</span> <span class="fl">0.5</span>) <span class="op">==</span> (LABELS <span class="op">&gt;</span> <span class="fl">0.5</span>)))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"grid_accuracy"</span>] <span class="op">=</span> ACC<span class="op">;</span> RESULTS[<span class="st">"grid_accuracy_rule_S8"</span>] <span class="op">=</span> ACC_S8</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"QCNN accuracy on the grid: </span><span class="sc">{</span>ACC<span class="sc">:.3f}</span><span class="ss">  |  rule S_8 &gt; 1/2: </span><span class="sc">{</span>ACC_S8<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.4</span>, <span class="fl">4.0</span>))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(P_GRID, origin<span class="op">=</span><span class="st">"lower"</span>, extent<span class="op">=</span>EXT, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"cividis"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>ax.contour(H1_GRID, H2_GRID, sop12, levels<span class="op">=</span>[<span class="fl">0.5</span>], colors<span class="op">=</span><span class="st">"white"</span>, linewidths<span class="op">=</span><span class="fl">2.2</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>ax.contour(H1_GRID, H2_GRID, P_GRID, levels<span class="op">=</span>[<span class="fl">0.5</span>], colors<span class="op">=</span>ORANGE, linewidths<span class="op">=</span><span class="fl">2.2</span>, linestyles<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>ax.scatter(PTS[:, <span class="dv">0</span>], PTS[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">24</span>, c<span class="op">=</span>[<span class="st">"white"</span> <span class="cf">if</span> y <span class="cf">else</span> <span class="st">"black"</span> <span class="cf">for</span> y <span class="kw">in</span> Y_TR], edgecolors<span class="op">=</span>GRAY, linewidths<span class="op">=</span><span class="fl">0.8</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"$h_1/J$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="vs">r"$h_2/J$"</span>)<span class="op">;</span> fig.colorbar(im, ax<span class="op">=</span>ax, pad<span class="op">=</span><span class="fl">0.02</span>, label<span class="op">=</span><span class="vs">r"QCNN output $p$"</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070c_phase_map"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>h2_line <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">1.6</span>, <span class="fl">1.6</span>, <span class="dv">81</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>line8 <span class="op">=</span> np.array([ground_state(T8, <span class="fl">0.5</span>, b) <span class="cf">for</span> b <span class="kw">in</span> h2_line])</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>p_line <span class="op">=</span> np.asarray(qcnn_batch(THETA, jnp.asarray(line8)))</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>s8_line <span class="op">=</span> np.array([v <span class="op">@</span> (S8 <span class="op">@</span> v) <span class="cf">for</span> v <span class="kw">in</span> line8])</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>s12_line <span class="op">=</span> np.array([(<span class="kw">lambda</span> v: v <span class="op">@</span> (S12 <span class="op">@</span> v))(ground_state(T12, <span class="fl">0.5</span>, b)) <span class="cf">for</span> b <span class="kw">in</span> h2_line])</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> crossings(y, x<span class="op">=</span>h2_line):</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [<span class="bu">float</span>(x[i] <span class="op">+</span> (<span class="fl">0.5</span> <span class="op">-</span> y[i]) <span class="op">/</span> (y[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> y[i]) <span class="op">*</span> (x[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> x[i])) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(y) <span class="op">-</span> <span class="dv">1</span>) <span class="cf">if</span> (y[i] <span class="op">-</span> <span class="fl">0.5</span>) <span class="op">*</span> (y[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> <span class="fl">0.5</span>) <span class="op">&lt;</span> <span class="dv">0</span>]</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"line_h1_0.5"</span>] <span class="op">=</span> {<span class="st">"S12"</span>: crossings(s12_line), <span class="st">"S8"</span>: crossings(s8_line), <span class="st">"QCNN"</span>: crossings(p_line)}</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"h1 = 0.5, value 1/2 crossed at h2 ="</span>, {k: np.<span class="bu">round</span>(v, <span class="dv">3</span>).tolist() <span class="cf">for</span> k, v <span class="kw">in</span> RESULTS[<span class="st">"line_h1_0.5"</span>].items()}, <span class="st">"| DMRG [1]: 0.423"</span>)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.0</span>, <span class="fl">3.3</span>))</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>ax.plot(h2_line, s12_line, color<span class="op">=</span>NAVY, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="vs">r"exact $S_</span><span class="sc">{12}</span><span class="vs">$"</span>)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>ax.plot(h2_line, s8_line, color<span class="op">=</span>BLUE, lw<span class="op">=</span><span class="dv">2</span>, ls<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="vs">r"exact $S_8$"</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>ax.plot(h2_line, p_line, color<span class="op">=</span>ORANGE, lw<span class="op">=</span><span class="fl">2.2</span>, label<span class="op">=</span><span class="vs">r"QCNN $p$"</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="fl">0.5</span>, color<span class="op">=</span>GRAY, lw<span class="op">=</span><span class="dv">1</span>, ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span> ax.axvline(<span class="fl">0.423</span>, color<span class="op">=</span>GRAY, lw<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.47</span>, <span class="fl">0.9</span>, <span class="st">"DMRG"</span>, color<span class="op">=</span>GRAY, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"$h_2/J$ at $h_1/J=0.5$"</span>)<span class="op">;</span> ax.set_ylim(<span class="dv">0</span>, <span class="fl">1.02</span>)<span class="op">;</span> ax.legend(loc<span class="op">=</span><span class="st">"lower center"</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070c_line"</span>)<span class="op">;</span> plt.show()</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"classroom_seconds"</span>] <span class="op">=</span> time.perf_counter() <span class="op">-</span> started</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"classroom route (Sections 1 to 7): </span><span class="sc">{</span>RESULTS[<span class="st">'classroom_seconds'</span>]<span class="sc">:.0f}</span><span class="ss"> s"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>QCNN accuracy on the grid: 0.970  |  rule S_8 &gt; 1/2: 0.962</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070c-qcnn_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>h1 = 0.5, value 1/2 crossed at h2 = {'S12': [-1.023, 0.442], 'S8': [-1.061, 0.497], 'QCNN': [-0.947, 0.388]} | DMRG [1]: 0.423</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070c-qcnn_files/figure-html/cell-8-output-4.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>classroom route (Sections 1 to 7): 28 s</code></pre>
+</div>
+</div>
+<p>In the map the colour is the QCNN output <span class="math inline">\(p\)</span>, the white line is the reference boundary <span class="math inline">\(S_{12}=1/2\)</span> and the dashed orange line is the learned boundary <span class="math inline">\(p=1/2\)</span>. The dots are the training states, white for SPT and black otherwise. The learned boundary follows the reference along both edges of the SPT band, including the lower right part, where only a few training points lie. The misclassified grid points sit next to the boundary, where the 8-qubit states change gradually and even the exact string order of the 8-qubit chain disagrees with the 12-site reference.</p>
+<p>The cut at <span class="math inline">\(h_1=0.5\)</span> shows the same comparison as curves. The QCNN output rises and falls where the string order does, and its upper crossing of <span class="math inline">\(1/2\)</span> lies slightly below the DMRG value, closer to it than the crossing of the 8-qubit string order, which lies above. The QCNN therefore classifies these 8-qubit states as accurately as the string order parameter evaluated on the same states, although it was never told which observable to measure. It learned a suitable measurement from 40 labelled examples with 57 angles.</p>
+</section>
+<section id="why-the-qcnn-trains-and-what-ref.-1-showed" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-qcnn-trains-and-what-ref.-1-showed">8. Why the QCNN trains, and what Ref. [1] showed</h2>
+<p>The QCNN has depth <span class="math inline">\(O(\log N)\)</span>, because every unit halves the register, and its output is a single-qubit measurement. Pesah and co-workers proved that for this architecture the variance of the gradient decreases at most polynomially with <span class="math inline">\(N\)</span> [4]. A QCNN therefore has no barren plateau, unlike deep hardware-efficient circuits, whose gradients vanish exponentially. Each angle influences the measured qubit only through a short chain of layers, and the shared parameters keep their number at <span class="math inline">\(O(\log N)\)</span>, which also limits overfitting to a small training set.</p>
+<p>Cong, Choi and Lukin [1] constructed an exact QCNN for this phase and simulated chains of up to 135 spins with matrix product states. Near the transition their QCNN needed far fewer copies of the input state to decide the phase with 95% confidence than a measurement of string order parameters, and the advantage grew with the number of convolution-pooling units. A QCNN trained on 15 spins with labels only from the line <span class="math inline">\(h_2=0\)</span> reproduced the full two-dimensional phase diagram. The authors also interpreted the circuit physically. Run backwards, a QCNN has the structure of the multiscale entanglement renormalisation ansatz (MERA), a tensor network for many-body states, and its pooling layers act like the syndrome measurements and corrections of quantum error correction, which remove local perturbations of the cluster state at every scale. The same network trained as a decoder gave error-correcting codes adapted to a given noise model.</p>
+<p>The classroom route ends here.</p>
+</section>
+<section id="optional.-a-second-determination-of-the-boundary" class="level2">
+<h2 class="anchored" data-anchor-id="optional.-a-second-determination-of-the-boundary">9. Optional. A second determination of the boundary</h2>
+<p>A phase transition shows up as a sudden change of the ground state. The fidelity susceptibility measures this change, <span class="math inline">\(\chi_F=\big(1-\lvert\langle\psi(h_2)\vert\psi(h_2+\delta)\rangle\rvert\big)/(N\delta^2)\)</span> for a small step <span class="math inline">\(\delta\)</span>, and peaks at the transition without any reference to an order parameter. We compute it for the 12-site ring along <span class="math inline">\(h_2\)</span> at eight values of <span class="math inline">\(h_1\)</span> and compare the positions of its maxima with the line <span class="math inline">\(S_{12}=1/2\)</span>.</p>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>d, hs, peaks <span class="op">=</span> <span class="fl">1e-3</span>, np.<span class="bu">round</span>(np.arange(<span class="op">-</span><span class="fl">1.6</span>, <span class="fl">1.6001</span>, <span class="fl">0.05</span>), <span class="dv">3</span>), []</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a <span class="kw">in</span> H1_GRID[::<span class="dv">2</span>]:</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    chi <span class="op">=</span> np.array([(<span class="dv">1</span> <span class="op">-</span> <span class="bu">abs</span>(ground_state(T12, a, b) <span class="op">@</span> ground_state(T12, a, b <span class="op">+</span> d))) <span class="op">/</span> d <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">12</span> <span class="cf">for</span> b <span class="kw">in</span> hs])</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(hs) <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> chi[i] <span class="op">&gt;</span> chi[i <span class="op">-</span> <span class="dv">1</span>] <span class="kw">and</span> chi[i] <span class="op">&gt;</span> chi[i <span class="op">+</span> <span class="dv">1</span>]:</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>            den <span class="op">=</span> chi[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> chi[i] <span class="op">+</span> chi[i <span class="op">+</span> <span class="dv">1</span>]                  <span class="co"># parabola through three points</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>            peaks.append((a, hs[i] <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fl">0.05</span> <span class="op">*</span> (chi[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">-</span> chi[i <span class="op">+</span> <span class="dv">1</span>]) <span class="op">/</span> den))</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>peaks <span class="op">=</span> np.array(peaks)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"chi_peaks"</span>] <span class="op">=</span> peaks.tolist()</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> t0<span class="sc">:.0f}</span><span class="ss"> s; maxima (h1, h2):"</span>, <span class="st">"; "</span>.join(<span class="ss">f"(</span><span class="sc">{</span>a<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>b<span class="sc">:.2f}</span><span class="ss">)"</span> <span class="cf">for</span> a, b <span class="kw">in</span> peaks))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">5.4</span>, <span class="fl">4.0</span>))</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(sop12, origin<span class="op">=</span><span class="st">"lower"</span>, extent<span class="op">=</span>EXT, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"cividis"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>ax.contour(H1_GRID, H2_GRID, sop12, levels<span class="op">=</span>[<span class="fl">0.5</span>], colors<span class="op">=</span><span class="st">"white"</span>, linewidths<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>ax.plot(peaks[:, <span class="dv">0</span>], peaks[:, <span class="dv">1</span>], <span class="st">"D"</span>, color<span class="op">=</span>ORANGE, mec<span class="op">=</span><span class="st">"white"</span>, ms<span class="op">=</span><span class="dv">6</span>, label<span class="op">=</span><span class="vs">r"maxima of $\chi_F$"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"$h_1/J$"</span>)<span class="op">;</span> ax.set_ylabel(<span class="vs">r"$h_2/J$"</span>)<span class="op">;</span> ax.legend(loc<span class="op">=</span><span class="st">"upper right"</span>, frameon<span class="op">=</span><span class="va">False</span>, labelcolor<span class="op">=</span><span class="st">"white"</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>fig.colorbar(im, ax<span class="op">=</span>ax, pad<span class="op">=</span><span class="fl">0.02</span>, label<span class="op">=</span><span class="vs">r"$S_</span><span class="sc">{12}</span><span class="vs">$"</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070c_susceptibility"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>17 s; maxima (h1, h2): (0.05, -0.98); (0.05, 0.92); (0.25, -0.99); (0.25, 0.66); (0.45, -1.01); (0.45, 0.46); (0.65, -1.05); (0.65, 0.29); (0.85, -1.10); (0.85, 0.14); (1.05, -1.16); (1.05, 0.00); (1.25, -1.23); (1.25, -0.12); (1.45, -1.31); (1.45, -0.24)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070c-qcnn_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The maxima of the fidelity susceptibility lie on the line <span class="math inline">\(S_{12}=1/2\)</span> to within about 0.06 in <span class="math inline">\(h_2\)</span> along both boundaries. Two unrelated criteria, a threshold of the string order and the sharpest change of the ground state, thus give the same phase diagram for the 12-site ring, which supports its use as the reference for the labels.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"n_parameters"</span>] <span class="op">=</span> N_PAR</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"total_seconds"</span>] <span class="op">=</span> time.perf_counter() <span class="op">-</span> started</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>(RES <span class="op">/</span> <span class="st">"lab070c_results.json"</span>).write_text(json.dumps(RESULTS, indent<span class="op">=</span><span class="dv">2</span>, default<span class="op">=</span><span class="bu">float</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"whole notebook: </span><span class="sc">{</span>RESULTS[<span class="st">'total_seconds'</span>]<span class="sc">:.0f}</span><span class="ss"> s"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>whole notebook: 46 s</code></pre>
+</div>
+</div>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">10. Exercises</h2>
+<ol type="1">
+<li>Train only on 40 points of the line <span class="math inline">\(h_2=0\)</span>, with labels <span class="math inline">\(h_1&lt;J\)</span> for SPT, as Ref. [1] did, and draw the predicted map over the whole grid. Find which part of the phase diagram the network gets wrong and explain why with the training states it has seen.</li>
+<li>Shots. On a device <span class="math inline">\(p\)</span> is estimated as the fraction <span class="math inline">\(\tilde p\)</span> of <span class="math inline">\(S\)</span> shots that return 1. Sample <span class="math inline">\(\tilde p\)</span> with <span class="math inline">\(S=100\)</span> along the cut <span class="math inline">\(h_1=0.5\)</span> and count how many grid points change their class. Repeat with <span class="math inline">\(S=1000\)</span>.</li>
+<li>Replace the mean squared error (6) by the cross-entropy <span class="math inline">\(-\frac1M\sum_\alpha[y_\alpha\ln p_\alpha+(1-y_\alpha)\ln(1-p_\alpha)]\)</span> and compare the outputs <span class="math inline">\(p\)</span> deep inside the phases.</li>
+<li>Count the parameters of a QCNN for <span class="math inline">\(N=16\)</span> and <span class="math inline">\(N=64\)</span> from equation (1), and compare with a hardware-efficient circuit of depth <span class="math inline">\(L=N\)</span> that has <span class="math inline">\(2N(L+1)\)</span> angles.</li>
+<li>Give the convolution a separate unitary for the even and for the odd pairs. Count the parameters and check whether the grid accuracy changes.</li>
+</ol>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">11. Summary</h2>
+<p>A quantum convolutional neural network classifies a quantum state on the device that prepared it. Convolution layers apply one shared two-qubit unitary to all neighbouring pairs, pooling layers measure half of the qubits and rotate their partners according to the outcomes, and a final unitary with one measured qubit returns the class probability. Since every layer halves the register, the circuit has depth and parameter count of order <span class="math inline">\(\log N\)</span>. We trained such a network with 57 angles on 40 ground states of the 8-qubit cluster-Ising ring, labelled by the exact string order parameter of a 12-site ring. The trained network recognised the symmetry-protected topological phase on 97% of a grid of 528 points, as accurately as the string order parameter evaluated on the same states, and its errors lie next to the phase boundary. The reference boundary agrees with the maxima of the fidelity susceptibility and, at <span class="math inline">\(h_1=0.5\)</span>, with the DMRG value of Ref. [1]. All numbers are exact state-vector results, whereas a device would estimate <span class="math inline">\(p\)</span> from repeated measurements of one qubit.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>[1] I. Cong, S. Choi, and M. D. Lukin, Quantum convolutional neural networks, Nat. Phys. <strong>15</strong>, 1273 (2019), <a href="https://doi.org/10.1038/s41567-019-0648-8">doi:10.1038/s41567-019-0648-8</a>.</p>
+<p>[2] F. Pollmann and A. M. Turner, Detection of symmetry-protected topological phases in one dimension, Phys. Rev.&nbsp;B <strong>86</strong>, 125441 (2012), <a href="https://doi.org/10.1103/PhysRevB.86.125441">doi:10.1103/PhysRevB.86.125441</a>.</p>
+<p>[3] D. P. Kingma and J. Ba, Adam: a method for stochastic optimization, <a href="https://arxiv.org/abs/1412.6980">arXiv:1412.6980</a> (2014).</p>
+<p>[4] A. Pesah, M. Cerezo, S. Wang, T. Volkoff, A. T. Sornborger, and P. J. Coles, Absence of barren plateaus in quantum convolutional neural networks, Phys. Rev.&nbsp;X <strong>11</strong>, 041011 (2021), <a href="https://doi.org/10.1103/PhysRevX.11.041011">doi:10.1103/PhysRevX.11.041011</a>.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-12/lab-070b-quantum-autoencoder.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 070b: Quantum autoencoder</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-12/lab-070d-qgrnn.html" class="pagination-link">
+        <span class="nav-page-text">Lab 070d: Quantum graph recurrent neural network</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>

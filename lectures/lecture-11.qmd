@@ -1,0 +1,51 @@
+---
+title: "11 · Quantum Information for Newcomers"
+code-tools: false
+toc: false
+---
+
+The lecture has two parts. The first introduces quantum information theory, the rules that every qubit obeys whatever physical system carries it. One qubit is developed in the language of Pauli operators, with states, the Born rule, the Bloch sphere and every gate as the evolution operator of a Hamiltonian. A register of N qubits is stored as 2^N complex amplitudes in the computational basis, and its operators are Kronecker products, Pauli strings and sparse matrices. We follow bit strings and correlators in different bases, entanglement and the Schmidt decomposition, and the energy of a two-spin Hamiltonian estimated from measured bit strings. Density matrices, the partial trace, purity and entanglement entropy lead to general measurements, noise channels, the Lindblad equation and noise in quantum circuits, with fidelity and trace distance as distances between states. The first part closes with what quantum information allows and forbids, from the no-cloning theorem and the Holevo bound to Clifford circuits, random states, the partial-transpose test of entanglement and the quantum Fisher information. The second part turns to physical realisations of qubits. We start from an atom in classical laser light and derive how two of its levels become a qubit, through the Born–Oppenheimer and rotating-wave approximations, and compare it with a superconducting circuit, a spin-1/2 and photon polarisation. Interactions between qubits on different platforms give the native two-qubit gates, from which CZ and CNOT are compiled.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-11.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-11.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-11.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 064: One qubit, measurements and gates as rotations](../notebooks/lecture-11/lab-064-one-qubit.ipynb)
+
+A qubit as a two-level system, the Pauli algebra, evolution from the Schrödinger equation, the driven atom, every single-qubit gate as a rotation, measurement in the X and Y bases, and shot noise.
+:::
+
+::: {.nb-item}
+[Lab 065: The two-spin register](../notebooks/lecture-11/lab-065-two-spin-register.ipynb)
+
+Kronecker products and the ordering of the 2^N amplitudes, Pauli strings and gates on N qubits, two-qubit gates as rotations, the Bell state against a classical coin, the Schmidt decomposition, the register's Hamiltonian and energies from bit strings.
+:::
+
+::: {.nb-item}
+[Lab 066: Density matrices, measurement and noise](../notebooks/lecture-11/lab-066-density-matrices-noise.ipynb)
+
+Pure and mixed states, the partial trace, purity and entanglement entropy, back-action and general measurements, six error models, the Lindblad equation, noise in quantum circuits, fidelity and trace distance.
+:::
+
+::: {.nb-item}
+[Lab 066a: What quantum information allows and forbids](../notebooks/lecture-11/lab-066a-allows-and-forbids.ipynb)
+
+The no-cloning theorem, optimal one-copy discrimination of two states, the Holevo bound, controlled gates from CNOT and rotations, Clifford circuits followed by a bit update, concentration of random states and Clifford 2-designs, the Choi matrix of a channel, the partial-transpose test of mixed-state entanglement and the quantum Fisher information of GHZ states.
+:::
+
+::: {.nb-item}
+[Lab 067: An atom in laser light as a qubit](../notebooks/lecture-11/lab-067-atom-light-qubit.ipynb)
+
+The atomic Hamiltonian and Born–Oppenheimer, hydrogen orbitals and their dipole couplings, the rotating-wave approximation built step by step, the two-level block in Pauli language, Rabi oscillations, leakage, light shifts, spontaneous emission and laser pulses as gates.
+:::
+
+::: {.nb-item}
+[Lab 068: Interactions and two-qubit gates](../notebooks/lecture-11/lab-068-interacting-qubits-gates.ipynb)
+
+A register on a connectivity graph, the physical origin of qubit couplings on four platforms, the Rydberg interaction in Pauli language, compiling CZ and CNOT from an Ising coupling, a simulated Rydberg blockade gate and SWAP routing between distant qubits.
+:::

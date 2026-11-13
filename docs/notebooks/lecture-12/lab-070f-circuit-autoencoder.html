@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deep Learning in Classical and Quantum Physics - Lab 070f: Quantum circuit autoencoder</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../notebooks/lecture-12/lab-071a-random-states.html" rel="next">
+<link href="../../notebooks/lecture-12/lab-070e-xyz-three-ansatze.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/course_logo.svg" alt="Deep Learning in Classical and Quantum Physics" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning in Classical and Quantum Physics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../../index.html" aria-current="page">
+ <span class="menu-text">Start here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lectures" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lectures</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lectures">    
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-01.html">
+ <span class="dropdown-text">1 · From Artificial Intelligence to Neural Networks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-02.html">
+ <span class="dropdown-text">2 · Elements of Deep Learning</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-03.html">
+ <span class="dropdown-text">3 · MNIST: Training a Network by Hand</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-04.html">
+ <span class="dropdown-text">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-05.html">
+ <span class="dropdown-text">5 · Unsupervised Learning and Phase Diagrams without Labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-06.html">
+ <span class="dropdown-text">6 · Generative Models: Variational Autoencoders and Disentanglement</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-07.html">
+ <span class="dropdown-text">7 · Time Series: Dynamical Systems, Chaos and Embedding</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-08.html">
+ <span class="dropdown-text">8 · Forecasting Models: Linear, Neural and Physics-Informed</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-09.html">
+ <span class="dropdown-text">9 · Reservoir Computing</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-10.html">
+ <span class="dropdown-text">10 · Reinforcement Learning for Quantum State Preparation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-11.html">
+ <span class="dropdown-text">11 · Quantum Information for Newcomers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-12.html">
+ <span class="dropdown-text">12 · Parametrised Quantum Circuits as Variational Ansätze</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../lectures/lecture-13.html">
+ <span class="dropdown-text">13 · Learning Quantum States and Hamiltonians</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../resources.html">
+ <span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://chaos.if.uj.edu.pl/marcinplodzien/"><i class="bi bi-house" role="img" aria-label="Homepage">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Lab 070f: Quantum circuit autoencoder</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/course_logo.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">Start here</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-01.html" class="sidebar-item-text sidebar-link">1 · From Artificial Intelligence to Neural Networks</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-001-python-matplotlib-pandas.html" class="sidebar-item-text sidebar-link">Lab 001: Python, Matplotlib and Pandas</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-002-numpy.html" class="sidebar-item-text sidebar-link">Lab 002: NumPy, thinking in arrays</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003: PyTorch tensors, devices and layers</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003c-jax.html" class="sidebar-item-text sidebar-link">Lab 003c: JAX, arrays, randomness, compilation, differentiation and vectorisation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003a-trained-networks-pytorch.html" class="sidebar-item-text sidebar-link">Lab 003a: Working with trained networks in PyTorch</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003b-trained-networks-jax.html" class="sidebar-item-text sidebar-link">Lab 003b: Working with trained networks in JAX and Flax NNX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/lab-003d-framework-benchmark.html" class="sidebar-item-text sidebar-link">Lab 003d: NumPy, JAX, PyTorch and Keras on the same tasks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-01/nonlinearity-and-universal-approximation.html" class="sidebar-item-text sidebar-link">Non-linear activations and universal approximation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-02.html" class="sidebar-item-text sidebar-link">2 · Elements of Deep Learning</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-004-automatic-differentiation.html" class="sidebar-item-text sidebar-link">Lab 004: Automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-005-n-pendulum.html" class="sidebar-item-text sidebar-link">Lab 005: The N-link pendulum with SymPy and automatic differentiation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-006-uat-and-minimisers.html" class="sidebar-item-text sidebar-link">Lab 006: Universal approximation and the choice of minimiser</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-007-building-and-training.html" class="sidebar-item-text sidebar-link">Lab 007: Building and training neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-02/lab-008-analysing-networks.html" class="sidebar-item-text sidebar-link">Lab 008: Analysing a neural network</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-03.html" class="sidebar-item-text sidebar-link">3 · MNIST: Training a Network by Hand</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-03/lab-009-mnist.html" class="sidebar-item-text sidebar-link">Lab 009: MNIST, regression versus cross-entropy</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-04.html" class="sidebar-item-text sidebar-link">4 · CNNs, Class Activation Maps, Adversarial Examples and the 2D Ising Model</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-010-ising-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 010: Monte Carlo samples of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-011-cnn-tc.html" class="sidebar-item-text sidebar-link">Lab 011: Tc of the 2D Ising model from the confidence of a CNN</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/lab-012-onsager.html" class="sidebar-item-text sidebar-link">Lab 012: Onsager’s exact solution of the 2D Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-04/ising-2d-monte-carlo-and-cnn.html" class="sidebar-item-text sidebar-link">The 2D Ising model and a CNN</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-05.html" class="sidebar-item-text sidebar-link">5 · Unsupervised Learning and Phase Diagrams without Labels</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-016-pca-tsne-clustering.html" class="sidebar-item-text sidebar-link">Lab 016: PCA, t-SNE and clustering in JAX</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-017-autoencoders-anomaly-detection.html" class="sidebar-item-text sidebar-link">Lab 017: Autoencoders and anomaly detection</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-018-spin-models-monte-carlo.html" class="sidebar-item-text sidebar-link">Lab 018: Classical spin models in JAX, the 2D Ising and the J1–J2 model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-019-ising-without-labels.html" class="sidebar-item-text sidebar-link">Lab 019: The 2D Ising transition without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-020-j1j2-without-labels.html" class="sidebar-item-text sidebar-link">Lab 020: The J1–J2 phase diagram without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-021-xy-without-labels.html" class="sidebar-item-text sidebar-link">Lab 021: The 2D XY model without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-022-gauge-without-labels.html" class="sidebar-item-text sidebar-link">Lab 022: Ising gauge theory without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-023-sk-without-labels.html" class="sidebar-item-text sidebar-link">Lab 023: The SK spin glass without labels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-029-physics-j1j2.html" class="sidebar-item-text sidebar-link">Lab 029: Physics of the frustrated J1–J2 Ising model</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-030-physics-2d-xy.html" class="sidebar-item-text sidebar-link">Lab 030: Physics of the 2D XY model and the Berezinskii–Kosterlitz–Thouless transition</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-031-physics-ising-gauge.html" class="sidebar-item-text sidebar-link">Lab 031: Physics of the Ising lattice gauge theory</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-05/lab-032-physics-sk-spin-glass.html" class="sidebar-item-text sidebar-link">Lab 032: Physics of the Sherrington–Kirkpatrick spin glass</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-06.html" class="sidebar-item-text sidebar-link">6 · Generative Models: Variational Autoencoders and Disentanglement</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-024-vae-cvae.html" class="sidebar-item-text sidebar-link">Lab 024: Variational and conditional autoencoders</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-025-cvae-physics.html" class="sidebar-item-text sidebar-link">Lab 025: Synthetic spin configurations from a conditional VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-026-beta-vae.html" class="sidebar-item-text sidebar-link">Lab 026: Disentangled representations and the β-VAE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-028-trajectories.html" class="sidebar-item-text sidebar-link">Lab 028: Physical parameters from trajectories</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-06/lab-027-galaxy-morphology.html" class="sidebar-item-text sidebar-link">Lab 027: Galaxy morphology with a β-VAE</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-07.html" class="sidebar-item-text sidebar-link">7 · Time Series: Dynamical Systems, Chaos and Embedding</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-07/lab-033-signal-characterisation.html" class="sidebar-item-text sidebar-link">Lab 033: Signal characterisation</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-08.html" class="sidebar-item-text sidebar-link">8 · Forecasting Models: Linear, Neural and Physics-Informed</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-034-linear-models-nvar.html" class="sidebar-item-text sidebar-link">Lab 034: Forecasting with linear models and NVAR</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-035-koopman.html" class="sidebar-item-text sidebar-link">Lab 035: Lifting and the Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-036-recurrent-networks.html" class="sidebar-item-text sidebar-link">Lab 036: Recurrent neural networks and reservoirs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-037-mlp-forecaster.html" class="sidebar-item-text sidebar-link">Lab 037: MLP forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-038-rnn-forecaster.html" class="sidebar-item-text sidebar-link">Lab 038: RNN forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-039-lstm-forecaster.html" class="sidebar-item-text sidebar-link">Lab 039: LSTM forecaster</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-041-pinn.html" class="sidebar-item-text sidebar-link">Lab 041: Physics-informed neural networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-042-neural-ode.html" class="sidebar-item-text sidebar-link">Lab 042: Neural ordinary differential equations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-043-pendulum-friction.html" class="sidebar-item-text sidebar-link">Lab 043: Pendulum with unknown friction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-044-predator-prey.html" class="sidebar-item-text sidebar-link">Lab 044: Predator–prey with unknown interaction</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/lab-045-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Lab 045: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-01-rossler-oscillators.html" class="sidebar-item-text sidebar-link">Exercise 01: Rössler system and superimposed oscillators</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-02-stock-market-returns.html" class="sidebar-item-text sidebar-link">Exercise 02: Stock market returns</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-03-koopman.html" class="sidebar-item-text sidebar-link">Exercise 03: Koopman operator</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-08/exercise-04-schroedinger-pinn.html" class="sidebar-item-text sidebar-link">Exercise 04: Schrödinger equation with PINNs</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-09.html" class="sidebar-item-text sidebar-link">9 · Reservoir Computing</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-046-echo-state-networks.html" class="sidebar-item-text sidebar-link">Lab 046: Echo state networks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-047-quantum-reservoir-computing.html" class="sidebar-item-text sidebar-link">Lab 047: Quantum reservoir computing</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-049-reservoir-climate.html" class="sidebar-item-text sidebar-link">Lab 049: Weather and climate of an echo state network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-09/lab-050-cellular-automaton-reservoir.html" class="sidebar-item-text sidebar-link">Lab 050: Cellular automaton reservoir</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-10.html" class="sidebar-item-text sidebar-link">10 · Reinforcement Learning for Quantum State Preparation</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-063-bellman-from-experience.html" class="sidebar-item-text sidebar-link">Lab 063: Bellman equations from sampled experience</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-061-cartpole.html" class="sidebar-item-text sidebar-link">Lab 061: Balancing a pole on a cart</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-062-lunarlander.html" class="sidebar-item-text sidebar-link">Lab 062: Landing with discrete engine commands</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-057-ghz-w-dicke-target-states.html" class="sidebar-item-text sidebar-link">Lab 057: GHZ, W and Dicke target states</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-058-finite-budget-ghz.html" class="sidebar-item-text sidebar-link">Lab 058: Finite-budget GHZ compilation</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-059-continuous-angles.html" class="sidebar-item-text sidebar-link">Lab 059: Continuous angles with REINFORCE</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-060-cavity-checks.html" class="sidebar-item-text sidebar-link">Lab 060: Cavity feedback checks</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056a-pendulum-planning.html" class="sidebar-item-text sidebar-link">Lab 056a: Pendulum swing-up by planning</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-052-quantum-circuit-compilation.html" class="sidebar-item-text sidebar-link">Lab 052: Quantum circuit compilation (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-055-continuous-state-compilation.html" class="sidebar-item-text sidebar-link">Lab 055: Compilation with continuous angles (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-054-quantum-state-preparation.html" class="sidebar-item-text sidebar-link">Lab 054: Preparation with Hamiltonian evolutions (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-053-fock-state-cavity.html" class="sidebar-item-text sidebar-link">Lab 053: One photon in a leaky cavity (full study)</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-10/lab-056-pendulum-swing-up.html" class="sidebar-item-text sidebar-link">Lab 056: Pendulum swing-up with Q-learning (full study)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-11.html" class="sidebar-item-text sidebar-link">11 · Quantum Information for Newcomers</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-064-one-qubit.html" class="sidebar-item-text sidebar-link">Lab 064: One qubit, measurements and gates as rotations</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-065-two-spin-register.html" class="sidebar-item-text sidebar-link">Lab 065: The two-spin register</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066-density-matrices-noise.html" class="sidebar-item-text sidebar-link">Lab 066: Density matrices, measurement and noise</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-066a-allows-and-forbids.html" class="sidebar-item-text sidebar-link">Lab 066a: What quantum information allows and forbids</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-067-atom-light-qubit.html" class="sidebar-item-text sidebar-link">Lab 067: An atom in laser light as a qubit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-11/lab-068-interacting-qubits-gates.html" class="sidebar-item-text sidebar-link">Lab 068: Interactions and two-qubit gates</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-12.html" class="sidebar-item-text sidebar-link">12 · Parametrised Quantum Circuits as Variational Ansätze</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069-circuits-gradients.html" class="sidebar-item-text sidebar-link">Lab 069: Parametrised circuits and their gradients</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-069a-spsa-adam.html" class="sidebar-item-text sidebar-link">Lab 069a: SPSA and Adam with few circuit runs</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070-vqe-ansatz.html" class="sidebar-item-text sidebar-link">Lab 070: VQE and the choice of ansatz</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070a-xxz-phase-diagram.html" class="sidebar-item-text sidebar-link">Lab 070a: VQE phase diagram of the XXZ chain in a field</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070b-quantum-autoencoder.html" class="sidebar-item-text sidebar-link">Lab 070b: Quantum autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070c-qcnn.html" class="sidebar-item-text sidebar-link">Lab 070c: Quantum convolutional neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070d-qgrnn.html" class="sidebar-item-text sidebar-link">Lab 070d: Quantum graph recurrent neural network</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070e-xyz-three-ansatze.html" class="sidebar-item-text sidebar-link">Lab 070e: VQE for the XYZ chain, three ansätze</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-070f-circuit-autoencoder.html" class="sidebar-item-text sidebar-link active">Lab 070f: Quantum circuit autoencoder</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071a-random-states.html" class="sidebar-item-text sidebar-link">Lab 071a: Random states and typicality</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-071-barren-plateaus.html" class="sidebar-item-text sidebar-link">Lab 071: Barren plateaus</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-072-born-machine.html" class="sidebar-item-text sidebar-link">Lab 072: Modelling probabilities with a quantum circuit</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073a-data-reuploading.html" class="sidebar-item-text sidebar-link">Lab 073a: Data re-uploading classifier</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073b-quantum-kernels.html" class="sidebar-item-text sidebar-link">Lab 073b: Quantum kernels</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-12/lab-073-qubo-qaoa.html" class="sidebar-item-text sidebar-link">Lab 073: QUBO and QAOA (at home)</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../lectures/lecture-13.html" class="sidebar-item-text sidebar-link">13 · Learning Quantum States and Hamiltonians</a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-074-state-tomography.html" class="sidebar-item-text sidebar-link">Lab 074: Quantum state tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-075-classical-shadows.html" class="sidebar-item-text sidebar-link">Lab 075: Classical shadows</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-076-nn-tomography.html" class="sidebar-item-text sidebar-link">Lab 076: Neural-network tomography</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/lecture-13/lab-077-hamiltonian-learning.html" class="sidebar-item-text sidebar-link">Lab 077: Hamiltonian learning</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../resources.html" class="sidebar-item-text sidebar-link">Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lab-070f.-a-quantum-circuit-autoencoder" id="toc-lab-070f.-a-quantum-circuit-autoencoder" class="nav-link active" data-scroll-target="#lab-070f.-a-quantum-circuit-autoencoder">Lab 070f. A quantum circuit autoencoder</a>
+  <ul class="collapse">
+  <li><a href="#double-precision-arithmetic" id="toc-double-precision-arithmetic" class="nav-link" data-scroll-target="#double-precision-arithmetic">1. Double-precision arithmetic</a></li>
+  <li><a href="#circuits-and-channels" id="toc-circuits-and-channels" class="nav-link" data-scroll-target="#circuits-and-channels">2. Circuits and channels</a></li>
+  <li><a href="#the-choijamiołkowski-state" id="toc-the-choijamiołkowski-state" class="nav-link" data-scroll-target="#the-choijamiołkowski-state">3. The Choi–Jamiołkowski state</a></li>
+  <li><a href="#reading-the-channel-back-from-its-choi-state" id="toc-reading-the-channel-back-from-its-choi-state" class="nav-link" data-scroll-target="#reading-the-channel-back-from-its-choi-state">4. Reading the channel back from its Choi state</a></li>
+  <li><a href="#preparing-the-choi-state-of-a-circuit" id="toc-preparing-the-choi-state-of-a-circuit" class="nav-link" data-scroll-target="#preparing-the-choi-state-of-a-circuit">5. Preparing the Choi state of a circuit</a></li>
+  <li><a href="#comparing-two-circuits-by-their-choi-states" id="toc-comparing-two-circuits-by-their-choi-states" class="nav-link" data-scroll-target="#comparing-two-circuits-by-their-choi-states">6. Comparing two circuits by their Choi states</a></li>
+  <li><a href="#the-quantum-circuit-autoencoder" id="toc-the-quantum-circuit-autoencoder" class="nav-link" data-scroll-target="#the-quantum-circuit-autoencoder">7. The quantum circuit autoencoder</a></li>
+  <li><a href="#a-compressible-family-of-circuits" id="toc-a-compressible-family-of-circuits" class="nav-link" data-scroll-target="#a-compressible-family-of-circuits">8. A compressible family of circuits</a></li>
+  <li><a href="#training-the-encoders-on-the-trash-qubits" id="toc-training-the-encoders-on-the-trash-qubits" class="nav-link" data-scroll-target="#training-the-encoders-on-the-trash-qubits">9. Training the encoders on the trash qubits</a></li>
+  <li><a href="#a-channel-that-cannot-be-compressed" id="toc-a-channel-that-cannot-be-compressed" class="nav-link" data-scroll-target="#a-channel-that-cannot-be-compressed">10. A channel that cannot be compressed</a></li>
+  <li><a href="#scope-and-limitations-of-the-example" id="toc-scope-and-limitations-of-the-example" class="nav-link" data-scroll-target="#scope-and-limitations-of-the-example">11. Scope and limitations of the example</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">12. Exercises</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">13. Summary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-070f-circuit-autoencoder.ipynb" class="toc-action">View source</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">Lab 070f: Quantum circuit autoencoder</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://colab.research.google.com/github/MarcinPlodzien/deep-learning-for-classical-and-quantum-physics/blob/main/notebooks/lecture-12/lab-070f-circuit-autoencoder.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a></p>
+<section id="lab-070f.-a-quantum-circuit-autoencoder" class="level1">
+<h1>Lab 070f. A quantum circuit autoencoder</h1>
+<p>The quantum autoencoder compresses a family of quantum states into fewer qubits. Quantum information is also stored in circuits, for example in a set of circuits that load data into a register or in an imperfect device whose action we know only as a black box. The quantum circuit autoencoder (QCAE) of Ref. [1] compresses such a circuit. Two encoder circuits, <span class="math inline">\(\hat U\)</span> placed before and <span class="math inline">\(\hat V\)</span> placed after the unknown circuit, concentrate its whole action on a smaller number of qubits, and running the encoders backwards restores the original circuit.</p>
+<p>A circuit is a map from input states to output states, and a map is harder to handle than a state. The Choi–Jamiołkowski isomorphism [2, 3] turns every circuit, and more generally every quantum channel, into a quantum state on twice as many qubits. The tools developed for states then carry over to circuits, so two circuits are compared by the fidelity of their Choi states, and the eigenvalues of this state decide how far the circuit can be compressed, in the same way as the eigenvalues of the average density matrix did for the quantum autoencoder of states.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>The task of this notebook</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Input</strong></td>
+<td>an unknown channel <span class="math inline">\(\mathcal E\)</span> on <span class="math inline">\(N=3\)</span> qubits, available as a black box that we can run on any input, including one half of entangled pairs. Here <span class="math inline">\(\mathcal E\)</span> applies one of <span class="math inline">\(n_{\rm f}=6\)</span> circuits chosen at random.</td>
+</tr>
+<tr class="even">
+<td><strong>Output</strong></td>
+<td>encoder circuits <span class="math inline">\(\hat U\)</span>, <span class="math inline">\(\hat V\)</span> and a compressed channel <span class="math inline">\(\mathcal F\)</span> on <span class="math inline">\(N-k=1\)</span> qubit, from which <span class="math inline">\(\tilde{\mathcal E}=\hat V^\dagger\circ(\mathcal F\otimes{\rm id})\circ\hat U^\dagger\)</span> rebuilds the channel</td>
+</tr>
+<tr class="odd">
+<td><strong>Trained</strong></td>
+<td>the angles of <span class="math inline">\(\hat U(\boldsymbol\theta)\)</span> and <span class="math inline">\(\hat V(\boldsymbol\varphi)\)</span>, hardware-efficient circuits with 18 angles each</td>
+</tr>
+<tr class="even">
+<td><strong>Loss</strong></td>
+<td>measured on the <span class="math inline">\(k=2\)</span> trash qubits only, one minus the mean probability that a trash qubit and its partner pass a test for a Bell pair</td>
+</tr>
+<tr class="odd">
+<td><strong>Success</strong></td>
+<td>the fidelity of the Choi states of <span class="math inline">\(\tilde{\mathcal E}\)</span> and <span class="math inline">\(\mathcal E\)</span> close to 1. It can never exceed a bound set by the spectrum of the Choi state of <span class="math inline">\(\mathcal E\)</span>.</td>
+</tr>
+</tbody>
+</table>
+<p>Sections 2 to 6 build the Choi–Jamiołkowski isomorphism on one qubit and then on three qubits. Sections 7 to 10 define the circuit autoencoder, train it on a compressible channel and show a channel that cannot be compressed. All results are exact simulations of state vectors and density matrices, whereas on a device the loss would be estimated from measured bit strings. The whole notebook runs in well under a minute on a laptop CPU. Section 11 states the scope and limitations of the example, and Section 12 holds exercises for home.</p>
+<section id="double-precision-arithmetic" class="level2">
+<h2 class="anchored" data-anchor-id="double-precision-arithmetic">1. Double-precision arithmetic</h2>
+<p>We work in double precision on the CPU. NumPy builds channels, Choi states and fidelities, JAX computes the gradients of the training loss, and Matplotlib draws the figures. Every random seed is fixed.</p>
+<div class="cell" data-execution_count="1">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"JAX_PLATFORMS"</span>] <span class="op">=</span> <span class="st">"cpu"</span>          <span class="co"># small calculations, never the GPU</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json, time</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> product</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>jax.config.update(<span class="st">"jax_enable_x64"</span>, <span class="va">True</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>TOL <span class="op">=</span> <span class="fl">1e-10</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>FIG <span class="op">=</span> Path(<span class="st">"figures"</span>)<span class="op">;</span> FIG.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>RES <span class="op">=</span> Path(<span class="st">"classroom_results"</span>)<span class="op">;</span> RES.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>NAVY, BLUE, ORANGE, GRAY, GREEN <span class="op">=</span> <span class="st">"#002B5C"</span>, <span class="st">"#3E8FD0"</span>, <span class="st">"#D35A05"</span>, <span class="st">"#5A6270"</span>, <span class="st">"#1B7F36"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"font.size"</span>: <span class="dv">13</span>, <span class="st">"axes.labelsize"</span>: <span class="dv">13</span>, <span class="st">"xtick.labelsize"</span>: <span class="dv">12</span>, <span class="st">"ytick.labelsize"</span>: <span class="dv">12</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"legend.fontsize"</span>: <span class="fl">11.5</span>, <span class="st">"figure.figsize"</span>: (<span class="fl">4.8</span>, <span class="fl">3.2</span>), <span class="st">"axes.spines.top"</span>: <span class="va">False</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"axes.spines.right"</span>: <span class="va">False</span>, <span class="st">"savefig.bbox"</span>: <span class="st">"tight"</span>, <span class="st">"pdf.fonttype"</span>: <span class="dv">42</span>, <span class="st">"ps.fonttype"</span>: <span class="dv">42</span>})</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save(fig, name):</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.pdf"</span>)<span class="op">;</span> fig.savefig(FIG <span class="op">/</span> <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>started <span class="op">=</span> time.perf_counter()</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>RESULTS <span class="op">=</span> {}</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"JAX"</span>, jax.__version__, <span class="st">"| devices:"</span>, jax.devices())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAX 0.11.0 | devices: [CpuDevice(id=0)]</code></pre>
+</div>
+</div>
+</section>
+<section id="circuits-and-channels" class="level2">
+<h2 class="anchored" data-anchor-id="circuits-and-channels">2. Circuits and channels</h2>
+<p>A circuit made of gates acts on a pure state as a unitary matrix, <span class="math inline">\(|\psi\rangle\mapsto\hat U|\psi\rangle\)</span>, and on a density matrix as <span class="math inline">\(\hat\rho\mapsto\hat U\hat\rho\,\hat U^\dagger\)</span>. A noisy device, or a circuit chosen at random from a list, does more than a single unitary. Its general action is a <strong>quantum channel</strong> <span class="math inline">\(\mathcal E\)</span>, a linear map of density matrices that can always be written in the Kraus form <span class="math display">\[\mathcal E(\hat\rho)=\sum_{a}\hat K_a\,\hat\rho\,\hat K_a^\dagger ,\qquad \sum_a\hat K_a^\dagger\hat K_a=\hat I . \tag{1}\]</span> The condition on the Kraus operators <span class="math inline">\(\hat K_a\)</span> keeps the trace equal to one, and the form of (1) keeps the output positive. A unitary circuit is the special case of a single Kraus operator <span class="math inline">\(\hat K_1=\hat U\)</span>. A circuit <span class="math inline">\(\hat U_j\)</span> chosen with probability <span class="math inline">\(p_j\)</span> has the Kraus operators <span class="math inline">\(\sqrt{p_j}\,\hat U_j\)</span>.</p>
+<p>We use four channels on one qubit as running examples, from no change at all to complete loss of information.</p>
+<ul>
+<li>The <strong>identity</strong> <span class="math inline">\({\rm id}(\hat\rho)=\hat\rho\)</span>, a wire with nothing on it.</li>
+<li>The <strong>Hadamard gate</strong> <span class="math inline">\(\hat\rho\mapsto\hat H\hat\rho\hat H\)</span>, a unitary channel.</li>
+<li><strong>Dephasing</strong> <span class="math inline">\(\hat\rho\mapsto(1-p)\hat\rho+p\hat Z\hat\rho\hat Z\)</span>, which applies <span class="math inline">\(\hat Z\)</span> with probability <span class="math inline">\(p\)</span>. It keeps the populations of <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span> and shrinks the off-diagonal elements by <span class="math inline">\(1-2p\)</span>.</li>
+<li><strong>Complete depolarisation</strong> <span class="math inline">\(\hat\rho\mapsto\hat I/2\)</span>, which forgets the input. Its Kraus operators are <span class="math inline">\(\hat I/2\)</span>, <span class="math inline">\(\hat X/2\)</span>, <span class="math inline">\(\hat Y/2\)</span>, <span class="math inline">\(\hat Z/2\)</span>, since <span class="math inline">\(\frac14(\hat\rho+\hat X\hat\rho\hat X+\hat Y\hat\rho\hat Y+\hat Z\hat\rho\hat Z)=\frac12\hat I\,{\rm Tr}\,\hat\rho\)</span>.</li>
+</ul>
+<p>To compare or compress a channel we need its action on every input, because two channels can agree on a few inputs and differ on others. The Choi state of Section 3 collects this complete action in a single density matrix.</p>
+<div class="cell" data-execution_count="2">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>I2 <span class="op">=</span> np.eye(<span class="dv">2</span>, dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>]], dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="op">-</span><span class="ot">1j</span>], [<span class="ot">1j</span>, <span class="dv">0</span>]])</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> np.diag([<span class="fl">1.0</span> <span class="op">+</span> <span class="ot">0j</span>, <span class="op">-</span><span class="fl">1.0</span>])</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> (X <span class="op">+</span> Z) <span class="op">/</span> np.sqrt(<span class="dv">2</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>P_DEPH <span class="op">=</span> <span class="fl">0.2</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_channel(kraus, rho):</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Kraus form, equation (1)."""</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>(K <span class="op">@</span> rho <span class="op">@</span> K.conj().T <span class="cf">for</span> K <span class="kw">in</span> kraus)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>CHANNELS_1Q <span class="op">=</span> {</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"identity"</span>:     [I2],</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Hadamard"</span>:     [H],</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dephasing"</span>:    [np.sqrt(<span class="dv">1</span> <span class="op">-</span> P_DEPH) <span class="op">*</span> I2, np.sqrt(P_DEPH) <span class="op">*</span> Z],</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"depolarising"</span>: [I2 <span class="op">/</span> <span class="dv">2</span>, X <span class="op">/</span> <span class="dv">2</span>, Y <span class="op">/</span> <span class="dv">2</span>, Z <span class="op">/</span> <span class="dv">2</span>],</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">1</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_density_matrix(dim, r):</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> r.normal(size<span class="op">=</span>(dim, dim)) <span class="op">+</span> <span class="ot">1j</span> <span class="op">*</span> r.normal(size<span class="op">=</span>(dim, dim))</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    rho <span class="op">=</span> A <span class="op">@</span> A.conj().T</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rho <span class="op">/</span> np.trace(rho)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>rho_test <span class="op">=</span> random_density_matrix(<span class="dv">2</span>, rng)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, kraus <span class="kw">in</span> CHANNELS_1Q.items():</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.allclose(<span class="bu">sum</span>(K.conj().T <span class="op">@</span> K <span class="cf">for</span> K <span class="kw">in</span> kraus), I2)              <span class="co"># trace preservation</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> apply_channel(kraus, rho_test)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">abs</span>(np.trace(out) <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL <span class="kw">and</span> np.linalg.eigvalsh(out).<span class="bu">min</span>() <span class="op">&gt;</span> <span class="op">-</span>TOL</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(apply_channel(CHANNELS_1Q[<span class="st">"depolarising"</span>], rho_test), I2 <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>off_in, off_out <span class="op">=</span> rho_test[<span class="dv">0</span>, <span class="dv">1</span>], apply_channel(CHANNELS_1Q[<span class="st">"dephasing"</span>], rho_test)[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.isclose(off_out, (<span class="dv">1</span> <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> P_DEPH) <span class="op">*</span> off_in)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"all four channels are trace preserving and positive on a random input"</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"dephasing p = </span><span class="sc">{</span>P_DEPH<span class="sc">}</span><span class="ss">: off-diagonal element shrinks by </span><span class="sc">{</span><span class="bu">abs</span>(off_out <span class="op">/</span> off_in)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>all four channels are trace preserving and positive on a random input
+dephasing p = 0.2: off-diagonal element shrinks by 0.60</code></pre>
+</div>
+</div>
+</section>
+<section id="the-choijamiołkowski-state" class="level2">
+<h2 class="anchored" data-anchor-id="the-choijamiołkowski-state">3. The Choi–Jamiołkowski state</h2>
+<p>To capture the action on all inputs at once, we feed the channel one half of a maximally entangled state. For a register of dimension <span class="math inline">\(D\)</span> (<span class="math inline">\(D=2\)</span> for one qubit, <span class="math inline">\(D=2^N\)</span> for <span class="math inline">\(N\)</span> qubits) we take a second register of the same size, the <strong>reference</strong>, and prepare <span class="math display">\[|\Phi^+\rangle=\frac1{\sqrt D}\sum_{i=0}^{D-1}|i\rangle_S\otimes|i\rangle_R , \tag{2}\]</span> where <span class="math inline">\(S\)</span> labels the system, the register on which the channel acts, and <span class="math inline">\(\{|i\rangle\}\)</span> is the computational basis. For one qubit this is the Bell state <span class="math inline">\((|00\rangle+|11\rangle)/\sqrt2\)</span>. The channel acts on the system half while the reference is left untouched, and the resulting state of both registers is the <strong>Choi state</strong> <span class="math display">\[\hat J_{\mathcal E}=(\mathcal E\otimes{\rm id})\big(|\Phi^+\rangle\langle\Phi^+|\big)=\frac1D\sum_{i,j=0}^{D-1}\mathcal E\big(|i\rangle\langle j|\big)\otimes|i\rangle\langle j| . \tag{3}\]</span> The second form follows by inserting (2) and using the linearity of <span class="math inline">\(\mathcal E\)</span>. It shows that <span class="math inline">\(\hat J_{\mathcal E}\)</span> lists the images of all matrix units <span class="math inline">\(|i\rangle\langle j|\)</span>, and these images fix <span class="math inline">\(\mathcal E\)</span> on every input, since every <span class="math inline">\(\hat\rho=\sum_{ij}\rho_{ij}|i\rangle\langle j|\)</span> is a combination of them. The map <span class="math inline">\(\mathcal E\mapsto\hat J_{\mathcal E}\)</span> is the Choi–Jamiołkowski isomorphism [2, 3]. Because <span class="math inline">\(\mathcal E\)</span> maps density matrices to density matrices also when it acts on half of a larger system, <span class="math inline">\(\hat J_{\mathcal E}\)</span> is a density matrix of the <span class="math inline">\(2N\)</span> qubits, positive with unit trace. Tracing out the system gives <span class="math inline">\({\rm Tr}_S\,\hat J_{\mathcal E}=\hat I/D\)</span>, so the reference alone stays maximally mixed whatever the channel does.</p>
+<p>The spectrum of <span class="math inline">\(\hat J_{\mathcal E}\)</span> follows from the Kraus form (1), in which each Kraus operator turns the entangled state into a vector <span class="math inline">\(|K_a\rangle\!\rangle=(\hat K_a\otimes\hat I)|\Phi^+\rangle\)</span>, so <span class="math display">\[\hat J_{\mathcal E}=\sum_a|K_a\rangle\!\rangle\langle\!\langle K_a| . \tag{4}\]</span> The rank of <span class="math inline">\(\hat J_{\mathcal E}\)</span> is therefore the smallest number of Kraus operators needed for <span class="math inline">\(\mathcal E\)</span>, called the <strong>Kraus rank</strong>. A unitary circuit has one Kraus operator and a pure Choi state of rank one. A channel that injects more randomness needs more Kraus operators and has a more mixed Choi state. We compute the Choi states of the four one-qubit channels.</p>
+<div class="cell" data-execution_count="3">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> choi(kraus):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Choi state (3): system first, reference second, from the Kraus operators via (4)."""</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> kraus[<span class="dv">0</span>].shape[<span class="dv">0</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    phi <span class="op">=</span> np.eye(D).reshape(<span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(D)              <span class="co"># |Phi+&gt;, amplitude of |i&gt;_S|j&gt;_R at index i*D + j</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    vecs <span class="op">=</span> [np.kron(K, np.eye(D)) <span class="op">@</span> phi <span class="cf">for</span> K <span class="kw">in</span> kraus]   <span class="co"># |K_a&gt;&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>(np.outer(v, v.conj()) <span class="cf">for</span> v <span class="kw">in</span> vecs)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> choi_from_matrix_units(kraus):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Second form of (3), as a check."""</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> kraus[<span class="dv">0</span>].shape[<span class="dv">0</span>]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    J <span class="op">=</span> np.zeros((D <span class="op">*</span> D, D <span class="op">*</span> D), dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(D):</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(D):</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            Eij <span class="op">=</span> np.zeros((D, D))<span class="op">;</span> Eij[i, j] <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            J <span class="op">+=</span> np.kron(apply_channel(kraus, Eij), Eij) <span class="op">/</span> D</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> J</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> partial_trace_system(J, D):</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.einsum(<span class="st">"sasb-&gt;ab"</span>, J.reshape(D, D, D, D))</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>phi_bell <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>]) <span class="op">/</span> np.sqrt(<span class="dv">2</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>CHOI_1Q, TABLE <span class="op">=</span> {}, []</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, kraus <span class="kw">in</span> CHANNELS_1Q.items():</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    J <span class="op">=</span> choi(kraus)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.allclose(J, choi_from_matrix_units(kraus))</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.allclose(J, J.conj().T) <span class="kw">and</span> <span class="bu">abs</span>(np.trace(J) <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL <span class="kw">and</span> np.linalg.eigvalsh(J).<span class="bu">min</span>() <span class="op">&gt;</span> <span class="op">-</span>TOL</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> np.allclose(partial_trace_system(J, <span class="dv">2</span>), I2 <span class="op">/</span> <span class="dv">2</span>)            <span class="co"># reference stays maximally mixed</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    lam <span class="op">=</span> np.sort(np.linalg.eigvalsh(J))[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    lam <span class="op">=</span> np.where(np.<span class="bu">abs</span>(lam) <span class="op">&lt;</span> <span class="fl">1e-12</span>, <span class="fl">0.0</span>, lam)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    rank <span class="op">=</span> <span class="bu">int</span>(np.<span class="bu">sum</span>(lam <span class="op">&gt;</span> <span class="fl">1e-10</span>))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    stacked <span class="op">=</span> np.array([K.reshape(<span class="op">-</span><span class="dv">1</span>) <span class="cf">for</span> K <span class="kw">in</span> kraus])</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> rank <span class="op">==</span> np.linalg.matrix_rank(stacked)                      <span class="co"># Choi rank = Kraus rank</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    CHOI_1Q[name] <span class="op">=</span> J</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    TABLE.append((name, np.<span class="bu">round</span>(lam.real, <span class="dv">3</span>), rank, np.trace(J <span class="op">@</span> J).real))</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(CHOI_1Q[<span class="st">"identity"</span>], np.outer(phi_bell, phi_bell))  <span class="co"># the Bell state itself</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(CHOI_1Q[<span class="st">"depolarising"</span>], np.eye(<span class="dv">4</span>) <span class="op">/</span> <span class="dv">4</span>)             <span class="co"># maximally mixed</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(<span class="bu">sorted</span>(np.linalg.eigvalsh(CHOI_1Q[<span class="st">"dephasing"</span>])), [<span class="dv">0</span>, <span class="dv">0</span>, P_DEPH, <span class="dv">1</span> <span class="op">-</span> P_DEPH])</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'channel'</span><span class="sc">:&gt;13s}</span><span class="ss"> | </span><span class="sc">{</span><span class="st">'eigenvalues of J'</span><span class="sc">:&gt;24s}</span><span class="ss"> | rank | purity Tr J^2"</span>)</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, lam, rank, pur <span class="kw">in</span> TABLE:</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:&gt;13s}</span><span class="ss"> | </span><span class="sc">{</span><span class="bu">str</span>(lam)<span class="sc">:&gt;24s}</span><span class="ss"> | </span><span class="sc">{</span>rank<span class="sc">:4d}</span><span class="ss"> | </span><span class="sc">{</span>pur<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"choi_one_qubit"</span>] <span class="op">=</span> {name: {<span class="st">"eigenvalues"</span>: lam.tolist(), <span class="st">"rank"</span>: rank, <span class="st">"purity"</span>: pur} <span class="cf">for</span> name, lam, rank, pur <span class="kw">in</span> TABLE}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      channel |         eigenvalues of J | rank | purity Tr J^2
+     identity |            [1. 0. 0. 0.] |    1 | 1.000
+     Hadamard |            [1. 0. 0. 0.] |    1 | 1.000
+    dephasing |        [0.8 0.2 0.  0. ] |    2 | 0.680
+ depolarising |    [0.25 0.25 0.25 0.25] |    4 | 0.250</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="fl">11.0</span>, <span class="fl">3.1</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">"00"</span>, <span class="st">"01"</span>, <span class="st">"10"</span>, <span class="st">"11"</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (name, lam, rank, pur) <span class="kw">in</span> <span class="bu">zip</span>(axes, TABLE):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    J <span class="op">=</span> CHOI_1Q[name].real</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.imshow(J, cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="fl">0.5</span>, vmax<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks(<span class="bu">range</span>(<span class="dv">4</span>))<span class="op">;</span> ax.set_yticks(<span class="bu">range</span>(<span class="dv">4</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    ax.set_xticklabels(labels, fontsize<span class="op">=</span><span class="dv">10</span>)<span class="op">;</span> ax.set_yticklabels(labels <span class="cf">if</span> ax <span class="kw">is</span> axes[<span class="dv">0</span>] <span class="cf">else</span> [], fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ch">\n</span><span class="ss">rank </span><span class="sc">{</span>rank<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">abs</span>(J[i, j]) <span class="op">&gt;</span> <span class="fl">1e-12</span>:</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                ax.text(j, i, <span class="ss">f"</span><span class="sc">{</span>J[i, j]<span class="sc">:.2f}</span><span class="ss">"</span>.replace(<span class="st">"0."</span>, <span class="st">"."</span>), ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                        color<span class="op">=</span><span class="st">"white"</span> <span class="cf">if</span> <span class="bu">abs</span>(J[i, j]) <span class="op">&gt;</span> <span class="fl">0.3</span> <span class="cf">else</span> <span class="st">"black"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>cb <span class="op">=</span> fig.colorbar(im, ax<span class="op">=</span>axes, shrink<span class="op">=</span><span class="fl">0.8</span>, pad<span class="op">=</span><span class="fl">0.02</span>)<span class="op">;</span> cb.set_label(<span class="vs">r"Re $J$"</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070f_choi_onequbit"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070f-circuit-autoencoder_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Rows and columns are labelled by the system bit followed by the reference bit. The identity channel leaves the Bell state <span class="math inline">\((|00\rangle+|11\rangle)/\sqrt2\)</span>, whose density matrix has the four entries <span class="math inline">\(1/2\)</span> in the corners. The Hadamard gate gives another pure state, with entries of both signs, and it also has rank one. Dephasing keeps the diagonal and shrinks the corner coherences from <span class="math inline">\(1/2\)</span> to <span class="math inline">\((1-2p)/2=0.3\)</span>, so its Choi state mixes two pure states with weights <span class="math inline">\(1-p\)</span> and <span class="math inline">\(p\)</span>, rank two. The completely depolarising channel produces <span class="math inline">\(\hat I/4\)</span>, the maximally mixed state of two qubits, of rank four.</p>
+</section>
+<section id="reading-the-channel-back-from-its-choi-state" class="level2">
+<h2 class="anchored" data-anchor-id="reading-the-channel-back-from-its-choi-state">4. Reading the channel back from its Choi state</h2>
+<p>To find the output of the channel for an input <span class="math inline">\(\hat\rho\)</span> from its Choi state, we multiply the reference by the transpose <span class="math inline">\(\hat\rho^{T}\)</span> and trace out the reference, <span class="math display">\[\mathcal E(\hat\rho)=D\,{\rm Tr}_R\big[(\hat I\otimes\hat\rho^{T})\,\hat J_{\mathcal E}\big] . \tag{5}\]</span> The derivation uses the second form of (3). The reference factor of the term <span class="math inline">\((i,j)\)</span> gives <span class="math inline">\({\rm Tr}\big[\hat\rho^{T}|i\rangle\langle j|\big]=\langle j|\hat\rho^{T}|i\rangle=\rho_{ij}\)</span>, so <span class="math display">\[D\,{\rm Tr}_R\big[(\hat I\otimes\hat\rho^{T})\hat J_{\mathcal E}\big]=\sum_{i,j}\rho_{ij}\,\mathcal E\big(|i\rangle\langle j|\big)=\mathcal E\Big(\sum_{i,j}\rho_{ij}|i\rangle\langle j|\Big)=\mathcal E(\hat\rho) .\]</span> The map from channels to Choi states can therefore be inverted, and no information about <span class="math inline">\(\mathcal E\)</span> is lost. We check (5) on random inputs for the four channels.</p>
+<div class="cell" data-execution_count="5">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> channel_from_choi(J, rho):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Equation (5): D Tr_R[(I x rho^T) J]."""</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> rho.shape[<span class="dv">0</span>]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> D <span class="op">*</span> np.einsum(<span class="st">"ab,satb-&gt;st"</span>, rho, J.reshape(D, D, D, D))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>worst <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, kraus <span class="kw">in</span> CHANNELS_1Q.items():</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        rho <span class="op">=</span> random_density_matrix(<span class="dv">2</span>, rng)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        worst <span class="op">=</span> <span class="bu">max</span>(worst, np.<span class="bu">abs</span>(channel_from_choi(CHOI_1Q[name], rho) <span class="op">-</span> apply_channel(kraus, rho)).<span class="bu">max</span>())</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> worst <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"largest deviation between (5) and the Kraus form over 20 random inputs: </span><span class="sc">{</span>worst<span class="sc">:.1e}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>largest deviation between (5) and the Kraus form over 20 random inputs: 3.3e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="preparing-the-choi-state-of-a-circuit" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-the-choi-state-of-a-circuit">5. Preparing the Choi state of a circuit</h2>
+<p>On a device the Choi state of an <span class="math inline">\(N\)</span>-qubit circuit is prepared with <span class="math inline">\(N\)</span> Bell pairs. Qubit <span class="math inline">\(q\)</span> of the system is paired with qubit <span class="math inline">\(q\)</span> of the reference, each pair is put into <span class="math inline">\((|00\rangle+|11\rangle)/\sqrt2\)</span> by a Hadamard gate and a controlled-NOT gate, and the circuit then acts on the system half (panel (a) of the sketch). The product of the <span class="math inline">\(N\)</span> pairs is the state (2) with <span class="math inline">\(D=2^N\)</span>, because the sum over all bit strings <span class="math inline">\(i\)</span> of <span class="math inline">\(|i\rangle_S|i\rangle_R\)</span> factorises into one sum per qubit. Preparing <span class="math inline">\(\hat J_{\mathcal E}\)</span> thus needs <span class="math inline">\(2N\)</span> qubits, twice the size of the circuit. Panel (b) shows the register used later to train the autoencoder.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="lab-070f-circuit-autoencoder_files/figure-html/dfdf9897-1-sketch_choi.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">sketch</figcaption><p></p>
+</figure>
+</div>
+<p>We check the factorisation for <span class="math inline">\(N=3\)</span> and the Choi state of a unitary circuit. For a unitary <span class="math inline">\(\hat W\)</span> the state <span class="math inline">\((\hat W\otimes\hat I)|\Phi^+\rangle\)</span> has the amplitudes <span class="math inline">\(W_{ij}/\sqrt D\)</span>, the matrix of the circuit read as a vector.</p>
+<div class="cell" data-execution_count="6">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> <span class="dv">2</span> <span class="op">**</span> N</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>bell_pairs <span class="op">=</span> np.kron(np.kron(phi_bell, phi_bell), phi_bell)          <span class="co"># qubit order S0 R0 S1 R1 S2 R2</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>reordered <span class="op">=</span> bell_pairs.reshape([<span class="dv">2</span>] <span class="op">*</span> <span class="dv">6</span>).transpose(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>).reshape(<span class="op">-</span><span class="dv">1</span>)   <span class="co"># order S0 S1 S2 R0 R1 R2</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(reordered, np.eye(D).reshape(<span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(D))    <span class="co"># N Bell pairs = |Phi+&gt; of (2)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_unitary(dim, r):</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    Q, R <span class="op">=</span> np.linalg.qr(r.normal(size<span class="op">=</span>(dim, dim)) <span class="op">+</span> <span class="ot">1j</span> <span class="op">*</span> r.normal(size<span class="op">=</span>(dim, dim)))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Q <span class="op">*</span> (np.diag(R) <span class="op">/</span> np.<span class="bu">abs</span>(np.diag(R)))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>W_test <span class="op">=</span> random_unitary(D, rng)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>psi_choi <span class="op">=</span> np.kron(W_test, np.eye(D)) <span class="op">@</span> reordered                    <span class="co"># one half of each pair through the circuit</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(psi_choi, W_test.reshape(<span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(D))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>J_W <span class="op">=</span> np.outer(psi_choi, psi_choi.conj())</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(J_W, choi([W_test])) <span class="kw">and</span> <span class="bu">abs</span>(np.trace(J_W <span class="op">@</span> J_W) <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"N = </span><span class="sc">{</span>N<span class="sc">}</span><span class="ss">: three Bell pairs give |Phi+&gt; on </span><span class="sc">{</span><span class="dv">2</span> <span class="op">*</span> N<span class="sc">}</span><span class="ss"> qubits; the Choi state of a random circuit is pure (rank 1)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>N = 3: three Bell pairs give |Phi+&gt; on 6 qubits; the Choi state of a random circuit is pure (rank 1)</code></pre>
+</div>
+</div>
+</section>
+<section id="comparing-two-circuits-by-their-choi-states" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-two-circuits-by-their-choi-states">6. Comparing two circuits by their Choi states</h2>
+<p>Two channels are compared through their Choi states with the fidelity of density matrices, <span class="math display">\[F(\hat\rho,\hat\sigma)=\Big({\rm Tr}\sqrt{\sqrt{\hat\rho}\,\hat\sigma\sqrt{\hat\rho}}\Big)^2 , \tag{6}\]</span> which reduces to <span class="math inline">\(\langle\psi|\hat\sigma|\psi\rangle\)</span> when <span class="math inline">\(\hat\rho=|\psi\rangle\langle\psi|\)</span> is pure, the fidelity used for the quantum autoencoder of states. The <strong>Choi fidelity</strong> <span class="math inline">\(F(\hat J_{\mathcal E_1},\hat J_{\mathcal E_2})\)</span> equals one only for identical channels. For two unitary circuits both Choi states are pure and <span class="math inline">\(F=|{\rm Tr}(\hat W_1^\dagger\hat W_2)|^2/D^2\)</span>. For the identity and the dephasing channel it is <span class="math inline">\(\langle\Phi^+|\hat J_{\rm deph}|\Phi^+\rangle=1-p\)</span>.</p>
+<p>The Choi fidelity describes the channel on average over inputs, since for a channel <span class="math inline">\(\mathcal E\)</span> compared with a unitary <span class="math inline">\(\hat W\)</span> the fidelity <span class="math inline">\(\langle\psi|\hat W^\dagger\mathcal E(|\psi\rangle\langle\psi|)\hat W|\psi\rangle\)</span> averaged over all pure inputs equals <span class="math inline">\((DF+1)/(D+1)\)</span> with <span class="math inline">\(F\)</span> the Choi fidelity [4, 5]. A Choi fidelity close to one therefore guarantees a good output on average, while a single input can still have a lower fidelity. For one qubit the average over all pure states equals the average over the six eigenstates of <span class="math inline">\(\hat X\)</span>, <span class="math inline">\(\hat Y\)</span>, <span class="math inline">\(\hat Z\)</span>, because the quantity averaged is quadratic in <span class="math inline">\(|\psi\rangle\langle\psi|\)</span>, and we use this to check the formula for dephasing.</p>
+<div class="cell" data-execution_count="7">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> psd_sqrt(A):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    w, v <span class="op">=</span> np.linalg.eigh(A)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (v <span class="op">*</span> np.sqrt(np.clip(w, <span class="dv">0</span>, <span class="va">None</span>))) <span class="op">@</span> v.conj().T</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fidelity(A, B):</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Equation (6), computed as the squared sum of singular values of sqrt(A) sqrt(B)."""</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">float</span>(np.<span class="bu">sum</span>(np.linalg.svd(psd_sqrt(A) <span class="op">@</span> psd_sqrt(B), compute_uv<span class="op">=</span><span class="va">False</span>)) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>W2 <span class="op">=</span> random_unitary(D, rng)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(fidelity(choi([W_test]), choi([W2])) <span class="op">-</span> <span class="bu">abs</span>(np.trace(W_test.conj().T <span class="op">@</span> W2)) <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> D <span class="op">**</span> <span class="dv">2</span>) <span class="op">&lt;</span> <span class="fl">1e-10</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>F_id_deph <span class="op">=</span> fidelity(CHOI_1Q[<span class="st">"identity"</span>], CHOI_1Q[<span class="st">"dephasing"</span>])</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(F_id_deph <span class="op">-</span> (<span class="dv">1</span> <span class="op">-</span> P_DEPH)) <span class="op">&lt;</span> <span class="fl">1e-10</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>six_states <span class="op">=</span> [np.array(v, dtype<span class="op">=</span><span class="bu">complex</span>) <span class="op">/</span> np.linalg.norm(v) <span class="cf">for</span> v <span class="kw">in</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>              ([<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>], [<span class="dv">1</span>, <span class="ot">1j</span>], [<span class="dv">1</span>, <span class="op">-</span><span class="ot">1j</span>])]</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>F_avg <span class="op">=</span> np.mean([np.real(s.conj() <span class="op">@</span> apply_channel(CHANNELS_1Q[<span class="st">"dephasing"</span>], np.outer(s, s.conj())) <span class="op">@</span> s) <span class="cf">for</span> s <span class="kw">in</span> six_states])</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(F_avg <span class="op">-</span> (<span class="dv">2</span> <span class="op">*</span> F_id_deph <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">3</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Choi fidelity identity vs dephasing (p = </span><span class="sc">{</span>P_DEPH<span class="sc">}</span><span class="ss">): </span><span class="sc">{</span>F_id_deph<span class="sc">:.3f}</span><span class="ss"> = 1 - p"</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"average output fidelity over inputs: </span><span class="sc">{</span>F_avg<span class="sc">:.4f}</span><span class="ss"> = (2F + 1)/3; worst input (|+&gt;): </span><span class="sc">{</span><span class="dv">1</span> <span class="op">-</span> P_DEPH<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>RESULTS[<span class="st">"choi_fidelity_identity_dephasing"</span>] <span class="op">=</span> F_id_deph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Choi fidelity identity vs dephasing (p = 0.2): 0.800 = 1 - p
+average output fidelity over inputs: 0.8667 = (2F + 1)/3; worst input (|+&gt;): 0.800</code></pre>
+</div>
+</div>
+</section>
+<section id="the-quantum-circuit-autoencoder" class="level2">
+<h2 class="anchored" data-anchor-id="the-quantum-circuit-autoencoder">7. The quantum circuit autoencoder</h2>
+<p>We now compress a channel <span class="math inline">\(\mathcal E\)</span> on <span class="math inline">\(N\)</span> qubits into <span class="math inline">\(N-k\)</span> qubits. As for states, the last <span class="math inline">\(k\)</span> qubits are called trash qubits and the first <span class="math inline">\(N-k\)</span> latent qubits. Ref. [1] writes <span class="math inline">\(n\)</span> for our <span class="math inline">\(N\)</span> and <span class="math inline">\(m\)</span> for our <span class="math inline">\(N-k\)</span>. The compression uses two encoders, a unitary <span class="math inline">\(\hat U\)</span> applied before <span class="math inline">\(\mathcal E\)</span> and a unitary <span class="math inline">\(\hat V\)</span> applied after it, so the <strong>encoded channel</strong> is <span class="math inline">\(\Lambda=\hat V\circ\mathcal E\circ\hat U\)</span>, where <span class="math inline">\(\circ\)</span> means “then” read from right to left. The <strong>compressed channel</strong> <span class="math inline">\(\mathcal F\)</span> on the latent qubits keeps the part of <span class="math inline">\(\Lambda\)</span> that acts on them. It feeds the trash qubits with the maximally mixed state and discards them afterwards, <span class="math display">\[\mathcal F(\hat\sigma)={\rm Tr}_{\rm trash}\Big[\Lambda\big(\hat\sigma\otimes\hat I/2^k\big)\Big] . \tag{7}\]</span> In terms of Choi states, <span class="math inline">\(\hat J_{\mathcal F}\)</span> is <span class="math inline">\(\hat J_\Lambda\)</span> with the trash qubits and their reference partners traced out. To run the circuit again we decode by placing <span class="math inline">\(\mathcal F\)</span> next to an untouched trash register and undoing the encoders, <span class="math display">\[\tilde{\mathcal E}=\hat V^\dagger\circ(\mathcal F\otimes{\rm id}_{\rm trash})\circ\hat U^\dagger . \tag{8}\]</span> The reconstruction is <strong>lossless</strong>, <span class="math inline">\(\tilde{\mathcal E}=\mathcal E\)</span>, exactly when <span class="math inline">\(\Lambda=\mathcal F\otimes{\rm id}_{\rm trash}\)</span>, so that after the encoders the circuit acts only on the latent qubits and passes the trash qubits through unchanged (Proposition 1 of Ref. [1]). Then <span class="math inline">\(\tilde{\mathcal E}=\hat V^\dagger\circ\Lambda\circ\hat U^\dagger=\mathcal E\)</span>.</p>
+<p>The encoders act on the two halves of the Choi state separately. Since <span class="math inline">\((\hat U\otimes\hat I)|\Phi^+\rangle=(\hat I\otimes\hat U^{T})|\Phi^+\rangle\)</span>, <span class="math display">\[\hat J_{\hat V\circ\mathcal E\circ\hat U}=(\hat V\otimes\hat U^{T})\,\hat J_{\mathcal E}\,(\hat V\otimes\hat U^{T})^\dagger , \tag{9}\]</span> so <span class="math inline">\(\hat V\)</span> rotates the output half and <span class="math inline">\(\hat U^T\)</span> the input half. Equation (9) is a unitary change of basis, so the encoders leave the eigenvalues of the Choi state unchanged.</p>
+<p>A single unitary circuit <span class="math inline">\(\hat W\)</span> is trivial to compress, because the choice <span class="math inline">\(\hat U=\hat I\)</span>, <span class="math inline">\(\hat V=\hat W^\dagger\)</span> gives <span class="math inline">\(\Lambda={\rm id}\)</span>, which is of the lossless form with <span class="math inline">\(\mathcal F={\rm id}\)</span>, and (8) returns <span class="math inline">\(\hat W\)</span>. The information then sits in the encoders, as a single state could always be compressed by its own preparation circuit. The task becomes meaningful for a family of circuits <span class="math inline">\(\hat W_1,\dots,\hat W_{n_{\rm f}}\)</span> that must share one pair of encoders. We describe the family by the channel that applies one of them at random, <span class="math display">\[\mathcal E(\hat\rho)=\frac1{n_{\rm f}}\sum_{j=1}^{n_{\rm f}}\hat W_j\hat\rho\,\hat W_j^\dagger , \tag{10}\]</span> whose Choi state is the average of the pure Choi states of the members, the analogue of the average density matrix of a family of states.</p>
+<p>By (9), the decoded Choi state <span class="math inline">\(\hat J_{\tilde{\mathcal E}}\)</span> is a unitary rotation of <span class="math inline">\(\hat J_{\mathcal F}\otimes|\Phi^+\rangle\langle\Phi^+|_{\rm trash}\)</span>. The latent Choi state <span class="math inline">\(\hat J_{\mathcal F}\)</span> lives on <span class="math inline">\(2(N-k)\)</span> qubits and has rank at most <span class="math inline">\(d^2\)</span> with <span class="math inline">\(d=2^{N-k}\)</span>, and the trash factor is pure, so <span class="math inline">\(\hat J_{\tilde{\mathcal E}}\)</span> has rank at most <span class="math inline">\(d^2\)</span>. The fidelity of a state <span class="math inline">\(\hat\rho\)</span> with any state of rank <span class="math inline">\(r\)</span> is at most the sum of the <span class="math inline">\(r\)</span> largest eigenvalues of <span class="math inline">\(\hat\rho\)</span>, which gives Proposition 3 of Ref. [1], <span class="math display">\[F\big(\hat J_{\mathcal E},\hat J_{\tilde{\mathcal E}}\big)\le\sum_{i=1}^{d^2}\lambda_i , \tag{11}\]</span> with <span class="math inline">\(\lambda_1\ge\lambda_2\ge\dots\)</span> the eigenvalues of <span class="math inline">\(\hat J_{\mathcal E}\)</span>. A channel can be compressed well into <span class="math inline">\(N-k\)</span> qubits only if its Choi state carries almost all its weight on <span class="math inline">\(d^2=4^{N-k}\)</span> eigenvectors. The bound depends on <span class="math inline">\(\mathcal E\)</span> alone, since by (9) no choice of encoders changes the spectrum.</p>
+<p>We implement (7) to (9) and check them, including the trivial compression of a single circuit.</p>
+<div class="cell" data-execution_count="8">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>K_TRASH <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>DL, DC <span class="op">=</span> <span class="dv">2</span> <span class="op">**</span> (N <span class="op">-</span> K_TRASH), <span class="dv">2</span> <span class="op">**</span> K_TRASH            <span class="co"># latent and trash dimensions, D = DL * DC, d = DL</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> choi_mixture(Ws):</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Choi state of the random choice (10) among the unitaries Ws, via (4)."""</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    vecs <span class="op">=</span> np.asarray(Ws).reshape(<span class="bu">len</span>(Ws), <span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(D)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.einsum(<span class="st">"ja,jb-&gt;ab"</span>, vecs, vecs.conj()) <span class="op">/</span> <span class="bu">len</span>(Ws)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compressed_choi(U, V, Ws):</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Choi state of F, equation (7): trace the trash output and its reference partner out of J_Lambda."""</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> np.einsum(<span class="st">"ab,jbc,cd-&gt;jad"</span>, V, np.asarray(Ws), U)                  <span class="co"># members of Lambda = V o E o U</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    JL <span class="op">=</span> choi_mixture(G).reshape(DL, DC, DL, DC, DL, DC, DL, DC)            <span class="co"># (a, c, a~, c~ ; a', c', a~', c~')</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.einsum(<span class="st">"acbdecfd-&gt;abef"</span>, JL).reshape(DL <span class="op">*</span> DL, DL <span class="op">*</span> DL)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> reconstructed_choi(U, V, Ws):</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Choi state of E~, equation (8), using (9) with V^dagger on the output and (U^dagger)^T on the input half."""</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    JF <span class="op">=</span> compressed_choi(U, V, Ws).reshape(DL, DL, DL, DL)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    phi_trash <span class="op">=</span> np.einsum(<span class="st">"cd,gh-&gt;cdgh"</span>, np.eye(DC), np.eye(DC)) <span class="op">/</span> DC       <span class="co"># |Phi+&gt;&lt;Phi+| of the trash pairs</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    JP <span class="op">=</span> np.einsum(<span class="st">"abef,cdgh-&gt;acbdegfh"</span>, JF, phi_trash).reshape(D <span class="op">*</span> D, D <span class="op">*</span> D)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    M <span class="op">=</span> np.kron(V.conj().T, U.conj())</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> M <span class="op">@</span> JP <span class="op">@</span> M.conj().T</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co"># checks: (9), (7) against a direct calculation, and the trivial compression of one circuit</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>Ws_test <span class="op">=</span> [random_unitary(D, rng) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>)]</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>U_r, V_r <span class="op">=</span> random_unitary(D, rng), random_unitary(D, rng)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>M9 <span class="op">=</span> np.kron(V_r, U_r.T)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(choi_mixture([V_r <span class="op">@</span> W <span class="op">@</span> U_r <span class="cf">for</span> W <span class="kw">in</span> Ws_test]), M9 <span class="op">@</span> choi_mixture(Ws_test) <span class="op">@</span> M9.conj().T)</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> random_density_matrix(DL, rng)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>F_direct <span class="op">=</span> <span class="bu">sum</span>(np.einsum(<span class="st">"acbc-&gt;ab"</span>, (V_r <span class="op">@</span> W <span class="op">@</span> U_r <span class="op">@</span> np.kron(sigma, np.eye(DC) <span class="op">/</span> DC) <span class="op">@</span> (V_r <span class="op">@</span> W <span class="op">@</span> U_r).conj().T)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>                         .reshape(DL, DC, DL, DC)) <span class="cf">for</span> W <span class="kw">in</span> Ws_test) <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(channel_from_choi(compressed_choi(U_r, V_r, Ws_test), sigma), F_direct)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>J_rec <span class="op">=</span> reconstructed_choi(U_r, V_r, Ws_test)</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(np.trace(J_rec) <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> TOL <span class="kw">and</span> np.linalg.eigvalsh(J_rec).<span class="bu">min</span>() <span class="op">&gt;</span> <span class="op">-</span>TOL</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.linalg.matrix_rank(J_rec, tol<span class="op">=</span><span class="fl">1e-10</span>) <span class="op">&lt;=</span> DL <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>F_single <span class="op">=</span> fidelity(choi([W_test]), reconstructed_choi(np.eye(D), W_test.conj().T, [W_test]))</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(F_single <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> <span class="fl">1e-10</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"N = </span><span class="sc">{</span>N<span class="sc">}</span><span class="ss">, k = </span><span class="sc">{</span>K_TRASH<span class="sc">}</span><span class="ss">: latent dimension d = </span><span class="sc">{</span>DL<span class="sc">}</span><span class="ss">, at most d^2 = </span><span class="sc">{</span>DL <span class="op">**</span> <span class="dv">2</span><span class="sc">}</span><span class="ss"> eigenvalues survive"</span>)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"one random circuit, U = I, V = W^dagger: Choi fidelity </span><span class="sc">{</span>F_single<span class="sc">:.10f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>N = 3, k = 2: latent dimension d = 2, at most d^2 = 4 eigenvalues survive
+one random circuit, U = I, V = W^dagger: Choi fidelity 1.0000000000</code></pre>
+</div>
+</div>
+</section>
+<section id="a-compressible-family-of-circuits" class="level2">
+<h2 class="anchored" data-anchor-id="a-compressible-family-of-circuits">8. A compressible family of circuits</h2>
+<p>We build a family whose members do something nontrivial to only one qubit, hidden by a fixed scrambling circuit, <span class="math display">\[\hat W_j=\hat S\,\big(\hat R_j\otimes\hat I\otimes\hat I\big)\,\hat S^\dagger ,\qquad j=1,\dots,6 . \tag{12}\]</span> Each <span class="math inline">\(\hat R_j\)</span> is a random single-qubit unitary and <span class="math inline">\(\hat S\)</span> is a fixed three-qubit circuit with random angles, a hardware-efficient circuit of two layers defined in the next cell. Every <span class="math inline">\(\hat W_j\)</span> looks like a generic entangling three-qubit unitary, whereas in the basis rotated by <span class="math inline">\(\hat S\)</span> all six act on the first qubit only and leave the other two unchanged. The encoders <span class="math inline">\(\hat U=\hat S\)</span> and <span class="math inline">\(\hat V=\hat S^\dagger\)</span> undo the scrambling and give <span class="math inline">\(\Lambda=(\text{random choice of }\hat R_j)\otimes{\rm id}\)</span>, which is of the lossless form with one latent qubit.</p>
+<p>The Choi state of the channel (10) then has rank at most four, the Choi rank of a channel on one qubit, so the bound (11) with <span class="math inline">\(d^2=4\)</span> equals one. We compute the spectrum and check that the encoders built from <span class="math inline">\(\hat S\)</span> reconstruct the channel exactly. This analytic reference construction uses our knowledge of <span class="math inline">\(\hat S\)</span>, which the training in Section 9 does not have.</p>
+<p>The hardware-efficient circuit consists of <span class="math inline">\(L\)</span> layers, each a rotation <span class="math inline">\(\hat R_z(\theta)\hat R_y(\theta')\)</span> on every qubit followed by a chain of controlled-<span class="math inline">\(Z\)</span> gates, and a final rotation block, <span class="math inline">\(2N(L+1)=18\)</span> angles for <span class="math inline">\(N=3\)</span> and <span class="math inline">\(L=2\)</span>.</p>
+<div class="cell" data-execution_count="9">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>N_F <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ry(t):</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    c, s <span class="op">=</span> jnp.cos(t <span class="op">/</span> <span class="dv">2</span>), jnp.sin(t <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.array([[c, <span class="op">-</span>s], [s, c]], dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rz(t):</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.array([[jnp.exp(<span class="op">-</span><span class="ot">0.5j</span> <span class="op">*</span> t), <span class="dv">0</span>], [<span class="dv">0</span>, jnp.exp(<span class="ot">0.5j</span> <span class="op">*</span> t)]])</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bits(i):</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [(i <span class="op">&gt;&gt;</span> (N <span class="op">-</span> <span class="dv">1</span> <span class="op">-</span> q)) <span class="op">&amp;</span> <span class="dv">1</span> <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>CZ_CHAIN <span class="op">=</span> np.diag([(<span class="op">-</span><span class="fl">1.0</span>) <span class="op">**</span> <span class="bu">sum</span>(bits(i)[q] <span class="op">*</span> bits(i)[q <span class="op">+</span> <span class="dv">1</span>] <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(N <span class="op">-</span> <span class="dv">1</span>)) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(D)]).astype(<span class="bu">complex</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hea(theta):</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Hardware-efficient circuit, theta of shape (L+1, N, 2): Ry then Rz on each qubit, CZ chain between blocks."""</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    U <span class="op">=</span> jnp.eye(D, dtype<span class="op">=</span><span class="bu">complex</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l <span class="kw">in</span> <span class="bu">range</span>(L <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        layer <span class="op">=</span> rz(theta[l, <span class="dv">0</span>, <span class="dv">1</span>]) <span class="op">@</span> ry(theta[l, <span class="dv">0</span>, <span class="dv">0</span>])</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> q <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, N):</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>            layer <span class="op">=</span> jnp.kron(layer, rz(theta[l, q, <span class="dv">1</span>]) <span class="op">@</span> ry(theta[l, q, <span class="dv">0</span>]))</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        U <span class="op">=</span> layer <span class="op">@</span> U</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> l <span class="op">&lt;</span> L:</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>            U <span class="op">=</span> CZ_CHAIN <span class="op">@</span> U</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> U</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>rng_family <span class="op">=</span> np.random.default_rng(<span class="dv">7</span>)</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>theta_S <span class="op">=</span> rng_family.uniform(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span> np.pi, (L <span class="op">+</span> <span class="dv">1</span>, N, <span class="dv">2</span>))</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> np.array(hea(theta_S))                                            <span class="co"># the hidden scrambler</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_qubit_unitary(r):</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    a, b, c <span class="op">=</span> r.uniform(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span> np.pi, <span class="dv">3</span>)</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(rz(a) <span class="op">@</span> ry(b) <span class="op">@</span> rz(c))</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>R_list <span class="op">=</span> [random_qubit_unitary(rng_family) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N_F)]</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>W_family <span class="op">=</span> np.array([S <span class="op">@</span> np.kron(R, np.eye(DC)) <span class="op">@</span> S.conj().T <span class="cf">for</span> R <span class="kw">in</span> R_list])   <span class="co"># equation (12)</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>J_comp <span class="op">=</span> choi_mixture(W_family)</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>lam_comp <span class="op">=</span> np.sort(np.linalg.eigvalsh(J_comp))[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>rank_comp <span class="op">=</span> <span class="bu">int</span>(np.<span class="bu">sum</span>(lam_comp <span class="op">&gt;</span> <span class="fl">1e-10</span>))</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>bound_comp <span class="op">=</span> lam_comp[:DL <span class="op">**</span> <span class="dv">2</span>].<span class="bu">sum</span>()</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> rank_comp <span class="op">&lt;=</span> DL <span class="op">**</span> <span class="dv">2</span> <span class="kw">and</span> <span class="bu">abs</span>(bound_comp <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> <span class="fl">1e-10</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>F_hand <span class="op">=</span> fidelity(J_comp, reconstructed_choi(S, S.conj().T, W_family))</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(F_hand <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> <span class="fl">1e-8</span></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"largest eigenvalues of J_E:"</span>, np.<span class="bu">round</span>(lam_comp[:<span class="dv">6</span>], <span class="dv">4</span>))</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Choi rank = </span><span class="sc">{</span>rank_comp<span class="sc">}</span><span class="ss">, bound (11) = sum of the </span><span class="sc">{</span>DL <span class="op">**</span> <span class="dv">2</span><span class="sc">}</span><span class="ss"> largest = </span><span class="sc">{</span>bound_comp<span class="sc">:.6f}</span><span class="ss">"</span>)</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"encoders built from the known scrambler, U = S, V = S^dagger: Choi fidelity = </span><span class="sc">{</span>F_hand<span class="sc">:.10f}</span><span class="ss">"</span>)</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>RESULTS.update(lam_comp<span class="op">=</span>lam_comp[:<span class="dv">8</span>].tolist(), rank_comp<span class="op">=</span>rank_comp, bound_comp<span class="op">=</span>bound_comp, F_hand<span class="op">=</span>F_hand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>largest eigenvalues of J_E: [0.4609 0.3234 0.1751 0.0406 0.     0.    ]
+Choi rank = 4, bound (11) = sum of the 4 largest = 1.000000
+encoders built from the known scrambler, U = S, V = S^dagger: Choi fidelity = 1.0000000000</code></pre>
+</div>
+</div>
+</section>
+<section id="training-the-encoders-on-the-trash-qubits" class="level2">
+<h2 class="anchored" data-anchor-id="training-the-encoders-on-the-trash-qubits">9. Training the encoders on the trash qubits</h2>
+<p>Without knowledge of <span class="math inline">\(\hat S\)</span> we train hardware-efficient encoders <span class="math inline">\(\hat U(\boldsymbol\theta)={\rm HEA}(\boldsymbol\theta)\)</span> and <span class="math inline">\(\hat V(\boldsymbol\varphi)={\rm HEA}(\boldsymbol\varphi)^\dagger\)</span>, with 18 angles each. Computing the Choi fidelity (6) during training would require the full <span class="math inline">\(2N\)</span>-qubit Choi states of both channels side by side. The variational algorithm of Ref. [1], called varQCAE, avoids this and measures only the trash qubits, in the register of panel (b) of the sketch.</p>
+<ol type="1">
+<li>Prepare <span class="math inline">\(N\)</span> Bell pairs and apply <span class="math inline">\(\hat U\)</span>, the black box <span class="math inline">\(\mathcal E\)</span> and <span class="math inline">\(\hat V\)</span> to the system half. The register is then in the Choi state <span class="math inline">\(\hat J_\Lambda\)</span> of the encoded channel.</li>
+<li>Ignore the latent qubit and its reference partner. The latent input then looks maximally mixed, which is the input of (7).</li>
+<li>For every trash qubit <span class="math inline">\(c\)</span> test whether it still forms the Bell pair <span class="math inline">\(|\Phi^+\rangle\)</span> with its reference partner <span class="math inline">\(\tilde c\)</span>. On a device the test is a controlled-NOT from <span class="math inline">\(c\)</span> to <span class="math inline">\(\tilde c\)</span>, a Hadamard gate on <span class="math inline">\(c\)</span> and a measurement of both qubits, and the outcome <span class="math inline">\(00\)</span> means that the pair passed.</li>
+</ol>
+<p>The loss is one minus the pass probability averaged over the <span class="math inline">\(k\)</span> trash pairs, <span class="math display">\[\mathcal L(\boldsymbol\theta,\boldsymbol\varphi)=1-\frac1k\sum_{c\in{\rm trash}}\langle\Phi^+|\hat\rho_{c\tilde c}|\Phi^+\rangle , \tag{13}\]</span> where <span class="math inline">\(\hat\rho_{c\tilde c}\)</span> is the reduced state of the pair in <span class="math inline">\(\hat J_\Lambda\)</span>. Like the trash Hamming distance of the state autoencoder, it is a sum of terms that each involve two qubits, a local cost. For the random choice (10) the reduced state is the average over the members, so (13) is the average of the member losses.</p>
+<p>The loss vanishes if and only if the encoded channel is lossless. If every trash pair leaves as a perfect Bell pair, <span class="math inline">\(\Lambda\)</span> has passed each trash qubit through unchanged. A qubit in a pure maximally entangled state with its partner has no correlations with any third system, so nothing from the latent qubit has entered the trash qubits and nothing has left them. Hence <span class="math inline">\(\Lambda=\mathcal F\otimes{\rm id}_{\rm trash}\)</span>, and by Section 7 the reconstruction is exact (Proposition 1 of Ref. [1]). Training the trash pairs alone therefore trains the whole autoencoder. We implement (13) and check that it vanishes for the encoders built from <span class="math inline">\(\hat S\)</span>.</p>
+<div class="cell" data-execution_count="10">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>PHI2 <span class="op">=</span> jnp.array([<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">1.0</span>]) <span class="op">/</span> np.sqrt(<span class="dv">2</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trash_loss(params, Ws):</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Equation (13) for the random choice among the unitaries Ws, N = 3 and trash qubits 1, 2."""</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    th, ph <span class="op">=</span> params</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    U, V <span class="op">=</span> hea(th), hea(ph).conj().T</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> jnp.einsum(<span class="st">"ab,jbc,cd-&gt;jad"</span>, V, Ws, U) <span class="op">/</span> np.sqrt(D)             <span class="co"># Choi vectors of the members of Lambda</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    psi <span class="op">=</span> psi.reshape(<span class="op">-</span><span class="dv">1</span>, DL, DC, DL, DC)                                  <span class="co"># (a, c, a~, c~): system then reference</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    rho <span class="op">=</span> jnp.einsum(<span class="st">"jacbd,jaebf-&gt;jcdef"</span>, psi, psi.conj())                <span class="co"># trash qubits and their partners</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    rho <span class="op">=</span> rho.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>)                          <span class="co"># (c1, c2, c~1, c~2 ; primed)</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    pair1 <span class="op">=</span> jnp.einsum(<span class="st">"jxuyvzuwv-&gt;jxyzw"</span>, rho).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>)          <span class="co"># (c1, c~1)</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    pair2 <span class="op">=</span> jnp.einsum(<span class="st">"juxvyuzvw-&gt;jxyzw"</span>, rho).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>)          <span class="co"># (c2, c~2)</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    p1 <span class="op">=</span> jnp.einsum(<span class="st">"a,jab,b-&gt;j"</span>, PHI2, pair1, PHI2).real</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    p2 <span class="op">=</span> jnp.einsum(<span class="st">"a,jab,b-&gt;j"</span>, PHI2, pair2, PHI2).real</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">1.0</span> <span class="op">-</span> jnp.mean((p1 <span class="op">+</span> p2) <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>W_family_j <span class="op">=</span> jnp.asarray(W_family)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>loss_hand <span class="op">=</span> <span class="bu">float</span>(trash_loss((jnp.asarray(theta_S), jnp.asarray(theta_S)), W_family_j))</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(loss_hand) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"loss (13) for U = S, V = S^dagger: </span><span class="sc">{</span>loss_hand<span class="sc">:.1e}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>loss (13) for U = S, V = S^dagger: 4.4e-16</code></pre>
+</div>
+</div>
+<p>We train 16 starts with random angles in parallel, each for 400 steps of the Adam optimiser [6] with step size 0.05, and gradients from automatic differentiation. We use several starts because the loss of the encoders has local minima. After training we evaluate the Choi fidelity of the reconstruction, which the training never saw.</p>
+<div class="cell" data-execution_count="11">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>STARTS, STEPS, LR <span class="op">=</span> <span class="dv">16</span>, <span class="dv">400</span>, <span class="fl">0.05</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>value_and_grad <span class="op">=</span> jax.jit(jax.vmap(jax.value_and_grad(trash_loss), in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>)))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>k1, k2 <span class="op">=</span> jax.random.split(jax.random.PRNGKey(<span class="dv">0</span>))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>shape <span class="op">=</span> (STARTS, L <span class="op">+</span> <span class="dv">1</span>, N, <span class="dv">2</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>params0 <span class="op">=</span> (<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> jax.random.uniform(k1, shape), <span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> jax.random.uniform(k2, shape))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(Ws):</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Adam on all starts at once. Returns the loss history, snapshots of the angles and the first gradient size."""</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    Ws <span class="op">=</span> jnp.asarray(Ws)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> params0</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> jax.tree_util.tree_map(jnp.zeros_like, params)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> jax.tree_util.tree_map(jnp.zeros_like, params)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    losses, snaps, g0 <span class="op">=</span> [], {}, <span class="va">None</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, STEPS <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> t <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> t <span class="op">%</span> <span class="dv">10</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>            snaps[t <span class="op">-</span> <span class="dv">1</span>] <span class="op">=</span> jax.tree_util.tree_map(np.array, params)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        loss, g <span class="op">=</span> value_and_grad(params, Ws)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> g0 <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>            g0 <span class="op">=</span> <span class="bu">float</span>(<span class="bu">max</span>(jnp.<span class="bu">abs</span>(g[<span class="dv">0</span>]).<span class="bu">max</span>(), jnp.<span class="bu">abs</span>(g[<span class="dv">1</span>]).<span class="bu">max</span>()))</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        losses.append(np.array(loss))</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> jax.tree_util.tree_map(<span class="kw">lambda</span> m, g: <span class="fl">0.9</span> <span class="op">*</span> m <span class="op">+</span> <span class="fl">0.1</span> <span class="op">*</span> g, m, g)</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> jax.tree_util.tree_map(<span class="kw">lambda</span> v, g: <span class="fl">0.999</span> <span class="op">*</span> v <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> g <span class="op">*</span> g, v, g)</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        params <span class="op">=</span> jax.tree_util.tree_map(</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> p, m, v: p <span class="op">-</span> LR <span class="op">*</span> (m <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.9</span> <span class="op">**</span> t)) <span class="op">/</span> (jnp.sqrt(v <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> <span class="fl">0.999</span> <span class="op">**</span> t)) <span class="op">+</span> <span class="fl">1e-8</span>), params, m, v)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>    snaps[STEPS] <span class="op">=</span> jax.tree_util.tree_map(np.array, params)</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    losses.append(np.array(value_and_grad(params, Ws)[<span class="dv">0</span>]))</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(losses), snaps, g0</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> choi_fidelity_of(snap, s, Ws, J):</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    U <span class="op">=</span> np.array(hea(snap[<span class="dv">0</span>][s]))<span class="op">;</span> V <span class="op">=</span> np.array(hea(snap[<span class="dv">1</span>][s])).conj().T</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fidelity(J, reconstructed_choi(U, V, Ws))</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>loss_comp, snaps_comp, _ <span class="op">=</span> train(W_family)</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>best <span class="op">=</span> <span class="bu">int</span>(np.argmin(loss_comp[<span class="op">-</span><span class="dv">1</span>]))</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>steps_ck <span class="op">=</span> np.array(<span class="bu">sorted</span>(snaps_comp))</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>F_curve <span class="op">=</span> np.array([choi_fidelity_of(snaps_comp[t], best, W_family, J_comp) <span class="cf">for</span> t <span class="kw">in</span> steps_ck])</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>F_final <span class="op">=</span> np.array([choi_fidelity_of(snaps_comp[STEPS], s, W_family, J_comp) <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(STARTS)])</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">all</span>(F_final <span class="op">&lt;=</span> bound_comp <span class="op">+</span> <span class="fl">1e-8</span>)                               <span class="co"># bound (11) for every start</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>n_success <span class="op">=</span> <span class="bu">int</span>(np.<span class="bu">sum</span>(loss_comp[<span class="op">-</span><span class="dv">1</span>] <span class="op">&lt;</span> <span class="fl">1e-3</span>))</span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"training time: </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> t0<span class="sc">:.1f}</span><span class="ss"> s"</span>)</span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"starts with final loss below 1e-3: </span><span class="sc">{</span>n_success<span class="sc">}</span><span class="ss"> of </span><span class="sc">{</span>STARTS<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"final losses (sorted):"</span>, np.<span class="bu">round</span>(np.sort(loss_comp[<span class="op">-</span><span class="dv">1</span>]), <span class="dv">4</span>))</span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Choi fidelities after training (sorted):"</span>, np.<span class="bu">round</span>(np.sort(F_final), <span class="dv">4</span>))</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"best start: loss </span><span class="sc">{</span>loss_comp[<span class="op">-</span><span class="dv">1</span>, best]<span class="sc">:.1e}</span><span class="ss">, Choi fidelity </span><span class="sc">{</span>F_curve[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.6f}</span><span class="ss">, bound </span><span class="sc">{</span>bound_comp<span class="sc">:.6f}</span><span class="ss">"</span>)</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>RESULTS.update(n_success<span class="op">=</span>n_success, starts<span class="op">=</span>STARTS, steps<span class="op">=</span>STEPS, best_loss<span class="op">=</span><span class="bu">float</span>(loss_comp[<span class="op">-</span><span class="dv">1</span>, best]),</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>               best_choi_fidelity<span class="op">=</span><span class="bu">float</span>(F_curve[<span class="op">-</span><span class="dv">1</span>]), final_losses<span class="op">=</span>np.sort(loss_comp[<span class="op">-</span><span class="dv">1</span>]).tolist(),</span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>               final_choi_fidelities<span class="op">=</span>np.sort(F_final).tolist())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>training time: 3.2 s
+starts with final loss below 1e-3: 7 of 16
+final losses (sorted): [0.000e+00 0.000e+00 1.000e-04 2.000e-04 2.000e-04 2.000e-04 3.000e-04
+ 1.933e-01 1.934e-01 1.934e-01 1.940e-01 1.940e-01 1.940e-01 2.105e-01
+ 2.105e-01 2.105e-01]
+Choi fidelities after training (sorted): [0.3377 0.3377 0.3377 0.4585 0.4585 0.4585 0.4588 0.4589 0.4589 0.9997
+ 0.9997 0.9998 0.9998 0.9999 1.     1.    ]
+best start: loss 1.5e-05, Choi fidelity 0.999982, bound 1.000000</code></pre>
+</div>
+</div>
+</section>
+<section id="a-channel-that-cannot-be-compressed" class="level2">
+<h2 class="anchored" data-anchor-id="a-channel-that-cannot-be-compressed">10. A channel that cannot be compressed</h2>
+<p>The completely depolarising channel on three qubits, <span class="math inline">\(\mathcal E(\hat\rho)=\hat I/8\)</span>, forgets its input. It is the random choice (10) among all 64 products of Pauli matrices <span class="math inline">\(\hat I,\hat X,\hat Y,\hat Z\)</span> on the three qubits, so its Choi state follows from the same code. By (3) it equals <span class="math inline">\(\hat I/64\)</span>, all 64 eigenvalues are equal, and the bound (11) is <span class="math inline">\(4/64=1/16\)</span>. No pair of encoders can exceed this bound. The loss (13) does not depend on the angles at all, because the output is maximally mixed and uncorrelated with the reference. Every trash pair is then in the state <span class="math inline">\(\hat I/4\)</span> and passes the Bell test with probability <span class="math inline">\(1/4\)</span> whatever the encoders are, so the loss is <span class="math inline">\(3/4\)</span> and its gradient vanishes. We train with the same starts and compare the spectra.</p>
+<div class="cell" data-execution_count="12">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>PAULI <span class="op">=</span> [I2, X, Y, Z]</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>W_dep <span class="op">=</span> np.array([np.kron(np.kron(PAULI[a], PAULI[b]), PAULI[c]) <span class="cf">for</span> a, b, c <span class="kw">in</span> product(<span class="bu">range</span>(<span class="dv">4</span>), repeat<span class="op">=</span><span class="dv">3</span>)])</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>J_dep <span class="op">=</span> choi_mixture(W_dep)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(J_dep, np.eye(D <span class="op">*</span> D) <span class="op">/</span> D <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>lam_dep <span class="op">=</span> np.sort(np.linalg.eigvalsh(J_dep))[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>bound_dep <span class="op">=</span> lam_dep[:DL <span class="op">**</span> <span class="dv">2</span>].<span class="bu">sum</span>()</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>loss_dep, snaps_dep, g0_dep <span class="op">=</span> train(W_dep)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>F_dep_curve <span class="op">=</span> np.array([choi_fidelity_of(snaps_dep[t], <span class="dv">0</span>, W_dep, J_dep) <span class="cf">for</span> t <span class="kw">in</span> steps_ck])</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(loss_dep, <span class="fl">0.75</span>, atol<span class="op">=</span><span class="fl">1e-12</span>) <span class="kw">and</span> g0_dep <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.allclose(F_dep_curve, <span class="dv">1</span> <span class="op">/</span> <span class="dv">16</span>, atol<span class="op">=</span><span class="fl">1e-10</span>) <span class="kw">and</span> <span class="bu">abs</span>(bound_dep <span class="op">-</span> <span class="dv">1</span> <span class="op">/</span> <span class="dv">16</span>) <span class="op">&lt;</span> <span class="fl">1e-12</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"depolarising: bound = </span><span class="sc">{</span>bound_dep<span class="sc">:.4f}</span><span class="ss">, loss = </span><span class="sc">{</span>loss_dep[<span class="dv">0</span>, <span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss"> at every step, "</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"largest gradient component </span><span class="sc">{</span>g0_dep<span class="sc">:.1e}</span><span class="ss">, Choi fidelity = </span><span class="sc">{</span>F_dep_curve[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>RESULTS.update(bound_dep<span class="op">=</span>bound_dep, loss_dep<span class="op">=</span><span class="bu">float</span>(loss_dep[<span class="dv">0</span>, <span class="dv">0</span>]), F_dep<span class="op">=</span><span class="bu">float</span>(F_dep_curve[<span class="op">-</span><span class="dv">1</span>]))</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.0</span>, <span class="fl">3.3</span>))</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> np.arange(<span class="dv">1</span>, D <span class="op">*</span> D <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>ax.axvspan(<span class="fl">0.5</span>, DL <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.5</span>, color<span class="op">=</span>BLUE, alpha<span class="op">=</span><span class="fl">0.10</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>ax.bar(idx, np.clip(lam_comp, <span class="dv">0</span>, <span class="va">None</span>), width<span class="op">=</span><span class="fl">0.8</span>, color<span class="op">=</span>BLUE, label<span class="op">=</span><span class="st">"compressible family (12)"</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>ax.step(np.r_[<span class="fl">0.5</span>, idx <span class="op">+</span> <span class="fl">0.5</span>], np.r_[lam_dep[<span class="dv">0</span>], lam_dep], where<span class="op">=</span><span class="st">"pre"</span>, color<span class="op">=</span>ORANGE, lw<span class="op">=</span><span class="fl">2.2</span>, label<span class="op">=</span><span class="st">"completely depolarising"</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>ax.axvline(DL <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.5</span>, color<span class="op">=</span>NAVY, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.3</span>)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>ax.text(DL <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">1.5</span>, <span class="fl">0.40</span>, <span class="vs">rf"$d^2=</span><span class="sc">{</span>DL <span class="op">**</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">$ largest"</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span> <span class="vs">rf"sum $=</span><span class="sc">{</span>bound_comp<span class="sc">:.2f}</span><span class="vs">$ (blue)"</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span> <span class="vs">rf"sum $=</span><span class="sc">{</span>bound_dep<span class="sc">:.4f}</span><span class="vs">$ (orange)"</span>,</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="fl">11.5</span>, color<span class="op">=</span>NAVY, va<span class="op">=</span><span class="st">"top"</span>)</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">0</span>, D <span class="op">*</span> D <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"eigenvalue index of the Choi state"</span>)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"eigenvalue"</span>)</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">"center right"</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070f_spectrum"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>depolarising: bound = 0.0625, loss = 0.7500 at every step, largest gradient component 6.9e-17, Choi fidelity = 0.0625</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070f-circuit-autoencoder_files/figure-html/cell-13-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The compressible family has four nonzero eigenvalues, all inside the shaded window of the <span class="math inline">\(d^2=4\)</span> largest, so the bound (11) allows a perfect reconstruction with one latent qubit. The depolarising channel spreads its weight evenly over all 64 eigenvalues, and only <span class="math inline">\(1/16\)</span> of it fits into the window.</p>
+<div class="cell" data-execution_count="13">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fig, (a1, a2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">10.0</span>, <span class="fl">3.5</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(STEPS <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(STARTS):</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    a1.semilogy(x, np.maximum(loss_comp[:, s], <span class="fl">1e-12</span>), color<span class="op">=</span>GRAY, lw<span class="op">=</span><span class="fl">0.8</span>, alpha<span class="op">=</span><span class="fl">0.45</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>a1.semilogy(x, np.maximum(loss_comp[:, best], <span class="fl">1e-12</span>), color<span class="op">=</span>BLUE, lw<span class="op">=</span><span class="fl">2.4</span>, label<span class="op">=</span><span class="st">"compressible, best start"</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>a1.semilogy(x, loss_dep[:, <span class="dv">0</span>], color<span class="op">=</span>ORANGE, lw<span class="op">=</span><span class="fl">2.4</span>, label<span class="op">=</span><span class="st">"completely depolarising"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>a1.plot([], [], color<span class="op">=</span>GRAY, lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="ss">f"compressible, all </span><span class="sc">{</span>STARTS<span class="sc">}</span><span class="ss"> starts"</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>a1.set_xlabel(<span class="st">"Adam step"</span>)<span class="op">;</span> a1.set_ylabel(<span class="st">"trash loss (13)"</span>)<span class="op">;</span> a1.set_ylim(<span class="fl">3e-6</span>, <span class="dv">2</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>a1.text(<span class="fl">0.02</span>, <span class="fl">1.0</span>, <span class="st">"(a)"</span>, transform<span class="op">=</span>a1.transAxes, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, va<span class="op">=</span><span class="st">"bottom"</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>a2.axhline(bound_comp, color<span class="op">=</span>BLUE, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.4</span>)<span class="op">;</span> a2.axhline(bound_dep, color<span class="op">=</span>ORANGE, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.4</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>a2.plot(steps_ck, F_curve, color<span class="op">=</span>BLUE, lw<span class="op">=</span><span class="fl">2.4</span>, marker<span class="op">=</span><span class="st">"o"</span>, ms<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>a2.plot(steps_ck, F_dep_curve, color<span class="op">=</span>ORANGE, lw<span class="op">=</span><span class="fl">2.4</span>)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>a2.text(STEPS <span class="op">*</span> <span class="fl">0.98</span>, bound_comp <span class="op">-</span> <span class="fl">0.05</span>, <span class="st">"bound (11)"</span>, color<span class="op">=</span>BLUE, ha<span class="op">=</span><span class="st">"right"</span>, va<span class="op">=</span><span class="st">"top"</span>, fontsize<span class="op">=</span><span class="fl">11.5</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>a2.text(STEPS <span class="op">*</span> <span class="fl">0.98</span>, bound_dep <span class="op">+</span> <span class="fl">0.04</span>, <span class="st">"bound (11) = 1/16"</span>, color<span class="op">=</span>ORANGE, ha<span class="op">=</span><span class="st">"right"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="fl">11.5</span>)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>a2.set_xlabel(<span class="st">"Adam step"</span>)<span class="op">;</span> a2.set_ylabel(<span class="st">"Choi fidelity"</span>)<span class="op">;</span> a2.set_ylim(<span class="dv">0</span>, <span class="fl">1.08</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>a2.text(<span class="fl">0.02</span>, <span class="fl">1.0</span>, <span class="st">"(b)"</span>, transform<span class="op">=</span>a2.transAxes, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>, va<span class="op">=</span><span class="st">"bottom"</span>)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>fig.tight_layout(w_pad<span class="op">=</span><span class="fl">2.0</span>, rect<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.88</span>))</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>fig.legend(<span class="op">*</span>a1.get_legend_handles_labels(), loc<span class="op">=</span><span class="st">"upper center"</span>, ncol<span class="op">=</span><span class="dv">3</span>, frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="fl">11.5</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">1.0</span>))</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">"fig_lab070f_training"</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="lab-070f-circuit-autoencoder_files/figure-html/cell-14-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Panel (a) shows the trash loss (13) of all 16 starts in grey. Seven starts fall below <span class="math inline">\(10^{-3}\)</span> and approach the lossless encoders, while the other nine stop on plateaus near <span class="math inline">\(0.19\)</span> and <span class="math inline">\(0.21\)</span>, local minima of the loss. The best start (blue) reaches a loss of about <span class="math inline">\(10^{-5}\)</span>. Panel (b) shows the Choi fidelity of the reconstruction for this start, computed from the full Choi states, which the training never used. It rises to the bound (11) together with the fall of the trash loss, as Proposition 1 predicts. The depolarising channel (orange) has a constant loss of <span class="math inline">\(3/4\)</span> and a Choi fidelity fixed at its bound <span class="math inline">\(1/16\)</span>, and no training can change either. The listed final values show that the starts stuck on plateaus also reconstruct poorly, with Choi fidelities between about <span class="math inline">\(0.34\)</span> and <span class="math inline">\(0.46\)</span>, so a low trash loss identifies the starts to keep.</p>
+</section>
+<section id="scope-and-limitations-of-the-example" class="level2">
+<h2 class="anchored" data-anchor-id="scope-and-limitations-of-the-example">11. Scope and limitations of the example</h2>
+<ul>
+<li>The Choi fidelity measures the reconstruction averaged over inputs, as Section 6 showed. A reconstruction with Choi fidelity close to one can still fail on a few inputs.</li>
+<li>Preparing a Choi state and running the Bell tests requires <span class="math inline">\(2N\)</span> qubits and <span class="math inline">\(N\)</span> Bell pairs, twice the size of the circuit being compressed.</li>
+<li>The family (12) was built from the same hardware-efficient circuit as the encoders, so we knew that lossless encoders exist inside the ansatz. For an unknown black box the right depth of the encoders and the existence of such encoders are unknown in advance, and the bound (11) is only an upper limit.</li>
+<li>Nine of the 16 starts end in local minima. The trash loss identifies them without access to the full Choi states.</li>
+<li>All numbers come from an exact simulation of three qubits. On a device each pass probability in (13) would be estimated from a finite number of Bell-test shots, and its gradient from the parameter-shift rule.</li>
+<li>Ref. [1] also uses the trained autoencoder to flag anomalous circuits through their reconstruction fidelity and to reduce depolarising noise. We did not reproduce these applications here.</li>
+</ul>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">12. Exercises</h2>
+<ol type="1">
+<li>Compute the Choi state of the amplitude-damping channel with Kraus operators <span class="math inline">\(\hat K_0=|0\rangle\langle0|+\sqrt{1-\gamma}\,|1\rangle\langle1|\)</span> and <span class="math inline">\(\hat K_1=\sqrt\gamma\,|0\rangle\langle1|\)</span>. Find its rank and check equation (5) on a random input.</li>
+<li>Replace the family (12) by six independent random three-qubit unitaries. Compute the spectrum of the Choi state and the bound (11) for one latent qubit, train the encoders, and compare the best Choi fidelity with the bound.</li>
+<li>Add dephasing with probability <span class="math inline">\(p\)</span> on qubit 0 after every member of (12). Predict the eigenvalues of the Choi state and the bound, then train and check.</li>
+<li>Estimate the loss (13) of the best start from <span class="math inline">\(M=1000\)</span> simulated Bell-test shots per trash pair and compare the shot noise with the trained value.</li>
+<li>Increase the number of starts to 64 and record which fraction reaches a loss below <span class="math inline">\(10^{-3}\)</span>.</li>
+</ol>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">13. Summary</h2>
+<p>The Choi–Jamiołkowski isomorphism turns a channel on <span class="math inline">\(N\)</span> qubits into a density matrix on <span class="math inline">\(2N\)</span> qubits, prepared by sending one half of <span class="math inline">\(N\)</span> Bell pairs through the channel. The map can be inverted by equation (5), so the Choi state contains the whole channel. Its rank is the Kraus rank, one for a unitary circuit and <span class="math inline">\(4^N\)</span> for complete depolarisation, and the fidelity of two Choi states compares two channels averaged over inputs. The quantum circuit autoencoder wraps an unknown channel in encoders <span class="math inline">\(\hat U\)</span> and <span class="math inline">\(\hat V\)</span> and keeps the part that acts on <span class="math inline">\(N-k\)</span> latent qubits. The reconstruction is lossless exactly when the encoded channel passes the trash qubits through unchanged, so a loss measured on the trash pairs alone trains the whole autoencoder. Its Choi fidelity cannot exceed the sum of the <span class="math inline">\(4^{N-k}\)</span> largest eigenvalues of the Choi state. A family of six three-qubit circuits that hide a one-qubit action reaches this bound after training, while the completely depolarising channel stays at <span class="math inline">\(1/16\)</span> with a loss that no choice of encoders changes.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ol type="1">
+<li>J. Wu, H. Fu, M. Zhu, H. Zhang, W. Xie and X.-Y. Li, Quantum circuit autoencoder, Phys. Rev.&nbsp;A <strong>109</strong>, 032623 (2024), <a href="https://doi.org/10.1103/PhysRevA.109.032623">doi:10.1103/PhysRevA.109.032623</a>.</li>
+<li>M.-D. Choi, Completely positive linear maps on complex matrices, Linear Algebra Appl. <strong>10</strong>, 285 (1975), <a href="https://doi.org/10.1016/0024-3795(75)90075-0">doi:10.1016/0024-3795(75)90075-0</a>.</li>
+<li>A. Jamiołkowski, Linear transformations which preserve trace and positive semidefiniteness of operators, Rep.&nbsp;Math. Phys. <strong>3</strong>, 275 (1972), <a href="https://doi.org/10.1016/0034-4877(72)90011-0">doi:10.1016/0034-4877(72)90011-0</a>.</li>
+<li>M. Horodecki, P. Horodecki and R. Horodecki, General teleportation channel, singlet fraction, and quasidistillation, Phys. Rev.&nbsp;A <strong>60</strong>, 1888 (1999), <a href="https://doi.org/10.1103/PhysRevA.60.1888">doi:10.1103/PhysRevA.60.1888</a>.</li>
+<li>M. A. Nielsen, A simple formula for the average gate fidelity of a quantum dynamical operation, Phys. Lett. A <strong>303</strong>, 249 (2002), <a href="https://doi.org/10.1016/S0375-9601(02)01272-0">doi:10.1016/S0375-9601(02)01272-0</a>.</li>
+<li>D. P. Kingma and J. Ba, Adam: a method for stochastic optimization, <a href="https://arxiv.org/abs/1412.6980">arXiv:1412.6980</a> (2014).</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../notebooks/lecture-12/lab-070e-xyz-three-ansatze.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Lab 070e: VQE for the XYZ chain, three ansätze</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../notebooks/lecture-12/lab-071a-random-states.html" class="pagination-link">
+        <span class="nav-page-text">Lab 071a: Random states and typicality</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Marcin Płodzień</div>   
+    <div class="nav-footer-right"><a href="https://chaos.if.uj.edu.pl/marcinplodzien/">Homepage</a> · <a href="mailto:marcin.plodzien@uj.edu.pl">Email</a> · <a href="https://orcid.org/0000-0002-0835-1644">ORCID</a> · <a href="https://scholar.google.com/citations?user=eC9nCmgAAAAJ&amp;hl=en">Scholar</a> · <a href="https://github.com/MarcinPlodzien">GitHub</a></div>
+  </div>
+</footer>
+
+
+
+</body></html>
