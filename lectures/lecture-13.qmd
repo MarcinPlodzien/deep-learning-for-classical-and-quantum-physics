@@ -1,0 +1,39 @@
+---
+title: "13 · Learning Quantum States and Hamiltonians"
+code-tools: false
+toc: false
+---
+
+A quantum device returns only bit strings, and this lecture asks what they reveal about the device itself. State tomography reconstructs the full density matrix from measurements in all Pauli settings, by linear inversion, least squares, projection onto physical states and maximum likelihood, and its cost grows exponentially with the number of qubits. Classical shadows estimate many local properties from randomised single-qubit measurements at a cost independent of the system size. A neural network trained on simulated data corrects few-shot tomographic estimates, following the attention-based method of Macarone Palmieri et al., including one-axis-twisted states of four qubits and their quantum Fisher information. Hamiltonian learning then infers the coefficients of the generator of the dynamics from measured bit strings by maximum likelihood through a differentiable forward model, with its identifiability limits, shot-noise and Cramér–Rao bounds, the rugged landscapes of strongly interacting models, neural differential equations as a remedy and a worked example of learning decay and dephasing rates of an open system.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-13.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-13.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-13.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 074: Quantum state tomography](../notebooks/lecture-13/lab-074-state-tomography.ipynb)
+
+One qubit from three settings, Pauli measurements of two qubits, linear inversion, unphysical estimates and their projection, maximum likelihood by the RρR iteration and by a Cholesky parametrisation, shot scaling and the cost wall.
+:::
+
+::: {.nb-item}
+[Lab 075: Classical shadows](../notebooks/lecture-13/lab-075-classical-shadows.ipynb)
+
+Random single-qubit measurements, snapshots and the inverse measurement channel, the 3^k variance, median of means, the energy and correlations of an eight-spin Ising chain from one data set, and independence of the system size.
+:::
+
+::: {.nb-item}
+[Lab 076: Neural-network tomography](../notebooks/lecture-13/lab-076-nn-tomography.ipynb)
+
+Bias of physical estimates, the Cholesky representation, a multilayer perceptron and a self-attention network trained from scratch on two qubits, then four qubits with one-axis-twisted states and their quantum Fisher information.
+:::
+
+::: {.nb-item}
+[Lab 077: Hamiltonian learning](../notebooks/lecture-13/lab-077-hamiltonian-learning.ipynb)
+
+Maximum-likelihood learning of an XYZ chain from bit strings, the Ĥ ↔ −Ĥ* ambiguity, shot noise and the Cramér–Rao bound, learning decay and dephasing rates, rugged landscapes of the PXP model and neural differential equations.
+:::
