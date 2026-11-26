@@ -1,0 +1,33 @@
+---
+title: "14 · Energy-Based Models"
+code-tools: false
+toc: false
+---
+
+An image becomes a vector of signs, and a network with one spin per pixel stores images as the valleys of an energy landscape. In the Hopfield network the Hebbian couplings place a valley at every stored pattern, single-spin updates only lower the energy, and the network completes damaged or partial images. The other stored patterns act as noise, which limits the capacity to about 0.138 N random patterns, and the Hebbian rule also leaves false memories such as inverted patterns and mixtures. Temperature turns the energy into the Gibbs distribution, and the Boltzmann machine learns its couplings from data by maximum likelihood, so that each coupling changes by a data correlation minus a model correlation. Hidden units let pair couplings describe correlations among many visible units. In the restricted Boltzmann machine each layer is sampled in one step, contrastive divergence shortens the sampling, and the trained machine generates new digits and new Ising configurations.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-14.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-14.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-14.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 078a: Memory of images](../notebooks/lecture-14/lab-078a-memory-of-images.ipynb)
+
+A Hopfield network stores portraits and digits and completes a damaged or half-covered image, and fails on a face it has never stored.
+:::
+
+::: {.nb-item}
+[Lab 078: The Hopfield network as an associative memory](../notebooks/lecture-14/lab-078-hopfield.ipynb)
+
+Hebbian couplings, single-spin updates that lower the energy, cross-talk between random patterns, the storage limit near 0.138 N and false memories.
+:::
+
+::: {.nb-item}
+[Lab 079: A restricted Boltzmann machine trained on Ising configurations](../notebooks/lecture-14/lab-079-rbm-ising.ipynb)
+
+Training by contrastive divergence on Monte Carlo configurations of the two-dimensional Ising model, sampling new configurations and comparing energy, magnetisation and the sign of the magnetisation with the data.
+:::

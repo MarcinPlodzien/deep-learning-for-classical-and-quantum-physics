@@ -1,0 +1,27 @@
+---
+title: "16 · Ground States and Time Evolution with Neural Quantum States"
+code-tools: false
+toc: false
+---
+
+The restricted Boltzmann machine of Lecture 15 returns the amplitude of a quantum state, and this lecture finds its parameters from the Hamiltonian alone, with no examples of the state. By the variational principle the energy of any trial state lies above the ground-state energy, so lowering the energy, a mean of local energies over configurations drawn from the network, moves the network towards the ground state. The gradient of the energy is a covariance between the local energy and the logarithmic derivatives of the amplitude. Stochastic reconfiguration rescales each step by the matrix of these derivatives, so that every step changes the state by a comparable amount, and it is equivalent to evolution in imaginary time, which cools the state. The trained network is compared with exact diagonalisation in its energy, correlations and entanglement. The same matrix then gives the equation of motion of the parameters in real time, and the network follows a quench of the transverse field, checked against the exact evolution of the chain.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-16.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-16.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-16.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 080b: Training a restricted Boltzmann machine towards the ground state](../notebooks/lecture-16/lab-080b-rbm-ground-state.ipynb)
+
+Energy as a mean of local energies, the gradient as a covariance, Metropolis sampling during training and the trained network against exact diagonalisation.
+:::
+
+::: {.nb-item}
+[Lab 088: Ground state and time evolution of a neural quantum state](../notebooks/lecture-16/lab-088-nqs-ground-state-time-evolution.ipynb)
+
+A network written from scratch and compared with NetKet, stochastic reconfiguration, entanglement of the trained state, and the equation of motion of the parameters after a quench, checked against the exact evolution.
+:::

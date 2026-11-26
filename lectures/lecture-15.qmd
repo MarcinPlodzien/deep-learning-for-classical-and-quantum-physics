@@ -1,0 +1,27 @@
+---
+title: "15 · Neural Quantum States and Entanglement Certification"
+code-tools: false
+toc: false
+---
+
+A quantum state of a chain of spins assigns an amplitude to every configuration, and the table of these amplitudes doubles with every added spin. A chain of two spins in a transverse field, solved in full at the start, accompanies every step of the lecture. The restricted Boltzmann machine of Lecture 14, with its hidden units summed out, returns an amplitude for every configuration from a small number of parameters. Summing out a hidden unit leaves couplings between the spins it touches, of two spins and of more spins at once, and complex parameters give the amplitudes phases. Configurations are drawn from the network as an experiment measures them, with a Metropolis walk that needs only ratios of amplitudes, and every expectation value, including products of Pauli operators, becomes a mean over these snapshots. Trained on measured bit strings with some of its weights cut, the same network shows which qubits of a measured state are entangled together, which certifies the entanglement depth of GHZ states and of Bell pairs.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-15.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-15.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-15.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 080: A restricted Boltzmann machine as the wave function of a spin chain](../notebooks/lecture-15/lab-080-rbm-quantum-state.ipynb)
+
+The amplitude table of a spin chain, the RBM amplitude with the hidden units summed out, the couplings a hidden unit induces, Metropolis sampling from amplitude ratios and expectation values of Pauli strings as means over snapshots.
+:::
+
+::: {.nb-item}
+[Lab 081: Entanglement depth from cut networks](../notebooks/lecture-15/lab-081-entanglement-depth.ipynb)
+
+Networks with weights cut between groups of qubits trained on measured bit strings in rotated settings, the loss gap between cut and full networks, and the entanglement depth of GHZ states and Bell pairs.
+:::

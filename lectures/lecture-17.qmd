@@ -1,0 +1,21 @@
+---
+title: "17 · Recurrent Neural Network Quantum States"
+code-tools: false
+toc: false
+---
+
+Any network that returns one amplitude for every spin configuration can serve as a quantum state, and this lecture builds one from a recurrent network. The chain rule of probability writes the probability of a configuration as a product of conditional probabilities, one spin at a time, and a recurrent cell carries the memory of the spins already read. The resulting amplitude is normalised by construction, and configurations are drawn exactly, one spin after another, with no Markov chain. A phase output gives complex amplitudes, and masking the conditional probabilities fixes the magnetisation, the U(1) symmetry of the XY chain. The network learns a state from measured snapshots, finds a ground state by lowering its energy, and follows the time evolution of a spin chain by fitting each time step, a least-squares problem whose damped linear system is the matrix of stochastic reconfiguration from Lecture 16.
+
+## Slides and lecture notes
+
+[Download the slides (PDF)](../slides/lecture-17.pdf){.btn .btn-outline-primary} [Download the lecture notes (PDF)](../notes/lecture-17.pdf){.btn .btn-outline-primary}
+
+<iframe src="../slides/lecture-17.pdf" width="100%" height="620" style="border:1px solid #dde6ef; border-radius:6px;"></iframe>
+
+## Notebooks
+
+::: {.nb-item}
+[Lab 089: Recurrent neural network quantum state](../notebooks/lecture-17/lab-089-rnn-quantum-state.ipynb)
+
+The autoregressive amplitude, exact sampling one spin at a time, phases and the U(1) mask, learning from snapshots, the ground-state energy and time evolution by fitting each time step.
+:::
